@@ -1,0 +1,68 @@
+sample curl commands
+
+// GET: GET ALL USERS
+
+# get users
+curl -H "Content-type: application/json" 'localhost:5000/api/v1/users'
+
+// GET: GET SINGLE USER
+
+# user
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/user'
+
+# user 2
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/user'
+
+// POST: ADD USER
+
+# user
+curl -H "Content-type: application/json" -d '{"info": {"wallet_address": "0xBEEF", "reddit_data": {"reddit_username": "ethereum1227", "link_karma": 1500, "comment_karma": 500, "account_created_utc": 123491823, "trophies": ["one-year-award"], "subreddits": ["ethereum", "bitcoin", "adchain"]}}}' 'localhost:5000/api/v1/adduser'
+
+# user2
+curl -H "Content-type: application/json" -d '{"info": {"wallet_address": "0xRAD", "reddit_data": {"reddit_username": "qa_adchain_registry", "link_karma": 0, "comment_karma": 0, "trophies": [], "subreddits": []}}}' 'localhost:5000/api/v1/adduser'
+
+// POST: UPDATE USER WALLET
+
+# user
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}, "wallet_address": "0xETHEREUM"}}' 'localhost:5000/api/v1/updatewallet'
+
+# user 2
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}, "wallet_address": "0xETHEREUM"}}' 'localhost:5000/api/v1/updatewallet'
+
+// POST: GET REDDIT INFO
+
+# user
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/updateredditinfo'
+
+# user 2
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/updateredditinfo'
+
+// POST: DELETE USER
+
+# user
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/removeuser'
+
+# user 2
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/removeuser'
+
+// POST: GENERATE 2FA CODE
+
+# user
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/generatetwoeffeh'
+
+# user 2
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/generatetwoeffeh'
+
+// POST: VALIDATE 2FA CODE
+
+# user
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/validatetwoeffeh'
+
+# user 2
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/validatetwoeffeh'
+
+// TODO
+// POST: GET KEYBASE INFO
+
+# update user + Keybase info
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/update'
