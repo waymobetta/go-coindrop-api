@@ -9,7 +9,7 @@ import (
 // TODO:
 // add Keybase data
 /*
-CREATE TABLE cd (
+CREATE TABLE coindropdb (
 	ID serial NOT NULL PRIMARY KEY,
 	reddit_username TEXT NOT NULL UNIQUE,
 	wallet_address TEXT NOT NULL UNIQUE,
