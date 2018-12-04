@@ -39,7 +39,7 @@ func addUser(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `INSERT INTO cd (reddit_username, wallet_address, comment_karma, link_karma, subreddits, trophies, posted_twofa_code, stored_twofa_code, is_validated) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`
+	sqlStatement := `INSERT INTO coindropdb (reddit_username, wallet_address, comment_karma, link_karma, subreddits, trophies, posted_twofa_code, stored_twofa_code, is_validated) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -87,7 +87,7 @@ func updateWallet(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db update
-	sqlStatement := `UPDATE cd SET wallet_address = $1 WHERE reddit_username = $2`
+	sqlStatement := `UPDATE coindropdb SET wallet_address = $1 WHERE reddit_username = $2`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -125,7 +125,7 @@ func updateRedditInfo(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db update
-	sqlStatement := `UPDATE cd SET comment_karma = $1, link_karma = $2, subreddits = $3, trophies = $4 WHERE reddit_username = $5`
+	sqlStatement := `UPDATE coindropdb SET comment_karma = $1, link_karma = $2, subreddits = $3, trophies = $4 WHERE reddit_username = $5`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -163,7 +163,7 @@ func updateTwoFA(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db update
-	sqlStatement := `UPDATE cd SET stored_twofa_code = $1, posted_twofa_code = $2, is_validated = $3 WHERE reddit_username = $4`
+	sqlStatement := `UPDATE coindropdb SET stored_twofa_code = $1, posted_twofa_code = $2, is_validated = $3 WHERE reddit_username = $4`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -195,7 +195,7 @@ func updateTwoFA(u *User) (*User, error) {
 // GetUsers returns info for all users
 func getUsers(users *Users) (*Users, error) {
 	// create SQL statement for db query
-	sqlStatement := `SELECT * FROM cd`
+	sqlStatement := `SELECT * FROM coindropdb`
 
 	// execute db query by passing in prepared SQL statement
 	rows, err := Client.Query(sqlStatement)
@@ -241,7 +241,7 @@ func getUsers(users *Users) (*Users, error) {
 // GetUser returns info for a single user
 func getUser(u *User) (*User, error) {
 	// create SQL statement for db writes
-	sqlStatement := `SELECT * FROM cd WHERE reddit_username = $1`
+	sqlStatement := `SELECT * FROM coindropdb WHERE reddit_username = $1`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -284,7 +284,7 @@ func removeUser(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `DELETE FROM cd WHERE reddit_username = $1`
+	sqlStatement := `DELETE FROM coindropdb WHERE reddit_username = $1`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
