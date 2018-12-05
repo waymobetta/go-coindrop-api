@@ -1,5 +1,9 @@
 sample curl commands
 
+===============================================================================
+PROFILE
+===============================================================================
+
 // GET: GET ALL USERS
 
 # get users
@@ -45,6 +49,16 @@ curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_u
 # user 2
 curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/removeuser'
 
+// TODO
+// POST: GET KEYBASE INFO
+
+# update user + Keybase info
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/update'
+
+===============================================================================
+TWOFA
+===============================================================================
+
 // POST: GENERATE 2FA CODE
 
 # user
@@ -61,8 +75,22 @@ curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_u
 # user 2
 curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/validatetwoeffeh'
 
-// TODO
-// POST: GET KEYBASE INFO
+===============================================================================
+AUTH
+===============================================================================
 
-# update user + Keybase info
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/update'
+// POST: SIGNUP USER
+
+# user
+curl -H "Content-type: application/json" -d '{"email": "ethereum1227", "password": "salad"}' 'localhost:5000/api/v1/signup'
+
+# user 2
+curl -H "Content-type: application/json" -d '{"email": "qa_adchain_registry", "password": "testest"}' 'localhost:5000/api/v1/signup'
+
+// POST: LOGIN USER
+
+# user
+curl -H "Content-Type: application/json" -d '{"email": "ethereum1227", "password": "beef"}' 'localhost:5000/api/v1/signin'
+
+# user 2
+curl -H "Content-Type: application/json" -d '{"email": "qa_adchain_registry", "password": "testest"}' 'localhost:5000/api/v1/signin'

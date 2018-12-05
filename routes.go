@@ -70,4 +70,16 @@ var routes = Routes{
 		"/api/v1/validatetwoeffeh",
 		validateTwoEffEhCode,
 	},
+	Route{
+		"SignUp",
+		"POST",
+		"/api/v1/signup",
+		signUp,
+	},
+	Route{
+		"SignIn",
+		"POST",
+		"/api/v1/signin",
+		signIn,
+	},
 }

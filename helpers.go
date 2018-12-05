@@ -5,24 +5,6 @@ import (
 	"strconv"
 )
 
-// SQL statement to create table
-// TODO:
-// add Keybase data
-/*
-CREATE TABLE coindropdb (
-	ID serial NOT NULL PRIMARY KEY,
-	reddit_username TEXT NOT NULL UNIQUE,
-	wallet_address TEXT NOT NULL UNIQUE,
-	comment_karma INTEGER NOT NULL,
-	link_karma INTEGER NOT NULL,
-	subreddits TEXT ARRAY NOT NULL,
-	trophies TEXT ARRAY NOT NULL,
-	posted_twofa_code TEXT NOT NULL,
-	stored_twofa_code TEXT NOT NULL,
-	is_validated BOOLEAN NOT NULL
-)
-*/
-
 var (
 	host     = os.Getenv("LOCAL_PG_HOST")
 	port, _  = strconv.Atoi(os.Getenv("LOCAL_PG_PORT"))
