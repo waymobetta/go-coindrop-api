@@ -78,6 +78,8 @@ func (s *StackOverflowData) GetProfileByUserID() (*StackOverflowData, error) {
 
 	fmt.Printf("[+] Found profile info for user: %s!\n", aboutProfResStruct.Items[0].DisplayName)
 
+	accounts := []string{}
+
 	// iterate over number of items in the response
 	// NOTE: there should only be a single item
 	for index := range aboutProfResStruct.Items {
