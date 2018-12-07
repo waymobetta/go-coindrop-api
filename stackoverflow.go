@@ -78,6 +78,7 @@ func (s *StackOverflowData) GetProfileByUserID() (*StackOverflowData, error) {
 
 	fmt.Printf("[+] Found profile info for user: %s!\n", aboutProfResStruct.Items[0].DisplayName)
 
+	// initialize empty accounts slice
 	accounts := []string{}
 
 	// iterate over number of items in the response
@@ -87,6 +88,7 @@ func (s *StackOverflowData) GetProfileByUserID() (*StackOverflowData, error) {
 			DisplayName:       aboutProfResStruct.Items[index].DisplayName,
 			ExchangeAccountID: aboutProfResStruct.Items[index].AccountID,
 			UserID:            aboutProfResStruct.Items[index].UserID,
+			Accounts:          accounts,
 			Communities: []Community{
 				Community{
 					Name:          "stackoverflow",
