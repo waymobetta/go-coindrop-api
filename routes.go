@@ -83,6 +83,18 @@ var routes = Routes{
 		signIn,
 	},
 	Route{
+		"StackUserAdd",
+		"POST",
+		"/api/v1/addstackuser",
+		addStackUser,
+	},
+	Route{
+		"StackUserGet",
+		"POST",
+		"/api/v1/stackuser",
+		getStackUser,
+	},
+	Route{
 		"GenerateStackVerificationCode",
 		"POST",
 		"/api/v1/generatestackverificationcode",
