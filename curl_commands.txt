@@ -62,7 +62,7 @@ curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_u
 // POST: GET USER
 
 # user
-curl -H "Content-type: application/json" -d '{"user_id":7253829}' 'localhost:5000/api/v1/getStackUser'
+curl -H "Content-type: application/json" -d '{"user_id":7253829}' 'localhost:5000/api/v1/getstackuser'
 
 // POST: ADD USER
 
