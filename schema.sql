@@ -2,7 +2,7 @@
 # TODO:
 # add Keybase data
 
-# profile info
+# reddit profile info
 CREATE TABLE coindropdb (
 	ID INTEGER NOT NULL PRIMARY KEY UNIQUE,
 	reddit_username TEXT NOT NULL UNIQUE,
@@ -15,6 +15,18 @@ CREATE TABLE coindropdb (
 	stored_twofa_code TEXT NOT NULL,
 	is_validated BOOLEAN NOT NULL,
 	FOREIGN KEY(ID) REFERENCES coindropdbusers(id)
+)
+
+# stack overflow profile info
+CREATE TABLE stackoverflowdb (
+	ID SERIAL NOT NULL PRIMARY KEY UNIQUE,
+	exchange_account_id INTEGER NOT NULL UNIQUE,
+	user_id INTEGER NOT NULL UNIQUE,
+	display_name TEXT NOT NULL,
+	accounts TEXT ARRAY NOT NULL,
+	posted_verification_code TEXT NOT NULL,
+	stored_verification_code TEXT NOT NULL,
+	is_validated BOOLEAN NOT NULL
 )
 
 # auth info
