@@ -154,7 +154,7 @@ func updateRedditInfo(u *User) (*User, error) {
 	return u, nil
 }
 
-// UpdateRedditInfo updates the listing and associated Reddit data of a single user
+// UpdateTwoFA updates the 2FA data of a single user
 func updateTwoFA(u *User) (*User, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := Client.Begin()
