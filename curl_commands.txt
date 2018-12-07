@@ -23,7 +23,7 @@ curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_u
 curl -H "Content-type: application/json" -d '{"info": {"wallet_address": "0xBEEF", "reddit_data": {"reddit_username": "ethereum1227", "link_karma": 1500, "comment_karma": 500, "account_created_utc": 123491823, "trophies": ["one-year-award"], "subreddits": ["ethereum", "bitcoin", "adchain"]}}}' 'localhost:5000/api/v1/adduser'
 
 # user2
-curl -H "Content-type: application/json" -d '{"info": {"wallet_address": "0xRAD", "reddit_data": {"reddit_username": "qa_adchain_registry", "link_karma": 0, "comment_karma": 0, "trophies": [], "subreddits": []}}}' 'localhost:5000/api/v1/adduser'
+curl -H "Content-type: application/json" -d '{"info": {"wallet_address": "", "reddit_data": {"reddit_username": "qa_adchain_registry", "link_karma": 0, "comment_karma": 0, "trophies": [], "subreddits": []}}}' 'localhost:5000/api/v1/adduser'
 
 // POST: UPDATE USER WALLET
 
@@ -49,15 +49,17 @@ curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_u
 # user 2
 curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/removeuser'
 
-// TODO
+/// TODO
 // POST: GET KEYBASE INFO
 
 # update user + Keybase info
 curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/update'
 
 ===============================================================================
-TWOFA
+VERIFICATION
 ===============================================================================
+
+/// REDDIT
 
 // POST: GENERATE 2FA CODE
 
@@ -74,6 +76,18 @@ curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_u
 
 # user 2
 curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/validatetwoeffeh'
+
+/// STACK OVERFLOW
+
+// POST: GENERATE VERIFICATION CODE
+
+# user
+curl -H "Content-type: application/json" -d '{"user_id": 7253829}' 'localhost:5000/api/v1/generatestackverificationcode'
+
+// POST: VALIDATE VERIFICATION CODE
+
+# user
+curl -H "Content-type: application/json" -d '{"user_id": 7253829}' 'localhost:5000/api/v1/validatestackverificationcode'
 
 ===============================================================================
 AUTH
