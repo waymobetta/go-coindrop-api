@@ -82,4 +82,16 @@ var routes = Routes{
 		"/api/v1/signin",
 		signIn,
 	},
+	Route{
+		"GenerateStackVerificationCode",
+		"POST",
+		"/api/v1/generatestackverificationcode",
+		generateStackVerificationCode,
+	},
+	Route{
+		"ValidateStackVerificationCode",
+		"POST",
+		"/api/v1/validatestackverificationcode",
+		validateStackVerificationCode,
+	},
 }
