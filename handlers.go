@@ -7,7 +7,11 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/waymobetta/go-stackoverflow/stackoverflow"
 )
+
+// PROFILE
 
 // userAdd adds a single user listing to db
 func userAdd(w http.ResponseWriter, r *http.Request) {
@@ -44,80 +48,6 @@ func userAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Printf("Successfully added user: %s\n\n", user.Info.RedditData.Username)
-}
-
-// walletUpdate handles updates to the wallet address for a user
-func walletUpdate(w http.ResponseWriter, r *http.Request) {
-	user := &User{}
-
-	// add limit for large payload protection
-	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	defer r.Body.Close()
-
-	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, &user)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// update the user listing in db
-	updatedUserData, err := updateWallet(user)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-
-	if err := json.NewEncoder(w).Encode(&updatedUserData); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	fmt.Printf("Successfully updated wallet address for user: %s\n\n", user.Info.RedditData.Username)
-}
-
-// twoFAUpdate handles updates to the 2FA data for a user
-func twoFAUpdate(w http.ResponseWriter, r *http.Request) {
-	user := &User{}
-
-	// add limit for large payload protection
-	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	defer r.Body.Close()
-
-	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, &user)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	// update the user listing in db
-	updatedUserData, err := updateTwoFA(user)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-
-	if err := json.NewEncoder(w).Encode(&updatedUserData); err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	fmt.Printf("Successfully updated 2FA info for user: %s\n\n", user.Info.RedditData.Username)
 }
 
 // usersGet handles queries to return all stored users
@@ -221,6 +151,82 @@ func userRemove(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully deleted user: %s\n\n", user.Info.RedditData.Username)
 }
 
+// walletUpdate handles updates to the wallet address for a user
+func walletUpdate(w http.ResponseWriter, r *http.Request) {
+	user := &User{}
+
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	defer r.Body.Close()
+
+	// unmarshal bytes into user struct
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// update the user listing in db
+	updatedUserData, err := updateWallet(user)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+
+	if err := json.NewEncoder(w).Encode(&updatedUserData); err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Printf("Successfully updated wallet address for user: %s\n\n", user.Info.RedditData.Username)
+}
+
+// REDDIT
+
+// twoFAUpdate handles updates to the 2FA data for a user
+func twoFAUpdate(w http.ResponseWriter, r *http.Request) {
+	user := &User{}
+
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	defer r.Body.Close()
+
+	// unmarshal bytes into user struct
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// update the user listing in db
+	updatedUserData, err := updateTwoFA(user)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+
+	if err := json.NewEncoder(w).Encode(&updatedUserData); err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Printf("Successfully updated 2FA info for user: %s\n\n", user.Info.RedditData.Username)
+}
+
 // generateTwoEffEhCode generates a temporary 2FA code
 func generateTwoEffEhCode(w http.ResponseWriter, r *http.Request) {
 	// declare new variable user of User struct
@@ -303,9 +309,6 @@ func validateTwoEffEhCode(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-
-	// update local user variable with stored info from db
-	// user.Info.TwoFAData.StoredTwoFACode = storedUserInfo.Info.TwoFAData.StoredTwoFACode
 
 	// check reddit for matching 2FA code
 	updatedUserObj, err := authSession.GetRecentPostsFromSubreddit(user)
@@ -405,4 +408,122 @@ func redditUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Printf("Successfully updated Reddit info for user: %s\n\n", user.Info.RedditData.Username)
+}
+
+// STACK OVERFLOW
+
+// generateStackVerificationCode creates a verifcation code for Stack Overflow
+func generateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
+	// declare new variable user of StackUser struct
+	stackUser := stackoverflow.StackOverflowData{}
+
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	defer r.Body.Close()
+
+	// unmarshal bytes into user struct
+	err = json.Unmarshal(body, &stackUser)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// generate temporary 2FA code
+	verificationCode := generateTwoFACode()
+
+	displayCode := fmt.Sprintf("[COINDROP.IO - IT PAYS TO CONTRIBUTE: %s", verificationCode)
+
+	// update local user object variable with generated 2FA code
+	stackUser.VerificationData.StoredVerificationCode = displayCode
+
+	// marshal into JSON
+	_, err = json.Marshal(&stackUser)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// store user verification data in db
+	stackUserData, err := updateVerificationCode(stackUser)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	// if err := json.NewEncoder(w).Encode(&stackUserData); err != nil {
+	if err := json.NewEncoder(w).Encode(displayCode); err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Printf("Successfully generated verification code for user: %v\n\n", stackUser.UserID)
+}
+
+// validateStackVerificationCode validates the temporary verification code
+func validateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
+	// declare new variable user of StackUser struct
+	stackUser := stackoverflow.StackOverflowData{}
+
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	defer r.Body.Close()
+
+	// unmarshal bytes into user struct
+	err = json.Unmarshal(body, &stackUser)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// pull stored verification code from DB
+	storedStackUser, err := getStackUser(stackUser)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// check Stack Overflow for matching verification code
+	updatedStackUser, err := stackUser.GetProfileByUserID()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Printf("Checking %s against %s\n\n", updatedStackUser.VerificationData.PostedVerificationCode, storedStackUser.VerificationData.StoredVerificationCode)
+
+	// secondary validation of 2FA code
+	if updatedStackUser.VerificationData.PostedVerificationCode != storedStackUser.Verificationdata.StoredVerificationCode {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// update 2FA field values
+	storedStackUser.VerificationData.PostedVerificationCode = updatedStackUser.VerificationData.PostedVerificationCode
+	storedStackUser.VerificationData.IsValidated = true
+
+	// update db with new info since 2FA codes matched
+	userData, err := updateVerificationCode(storedStackUser)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	if err := json.NewEncoder(w).Encode(&userData); err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Printf("Successfully validated verification code for user: %v\n\n", stackUser.UserID)
 }
