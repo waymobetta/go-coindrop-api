@@ -86,13 +86,13 @@ var routes = Routes{
 		"StackUserAdd",
 		"POST",
 		"/api/v1/addstackuser",
-		addStackUser,
+		stackUserAdd,
 	},
 	Route{
 		"StackUserGet",
 		"POST",
 		"/api/v1/stackuser",
-		getStackUser,
+		stackUserGet,
 	},
 	Route{
 		"GenerateStackVerificationCode",
