@@ -366,7 +366,7 @@ func addStackUser(s *StackOverflowData) (*StackOverflowData, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `INSERT INTO stackoverflowdb (exchange_id,user_id,display_name,accounts,posted_verification_code,stored_verification_code,is_validated) VALUES ($1,$2,$3,$4,$5,$6,$7)`
+	sqlStatement := `INSERT INTO stackoverflowdb (exchange_account_id,user_id,display_name,accounts,posted_verification_code,stored_verification_code,is_validated) VALUES ($1,$2,$3,$4,$5,$6,$7)`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -381,7 +381,7 @@ func addStackUser(s *StackOverflowData) (*StackOverflowData, error) {
 		&s.ExchangeAccountID,
 		&s.UserID,
 		&s.DisplayName,
-		&s.Accounts,
+		pq.Array(&s.Accounts),
 		&s.VerificationData.PostedVerificationCode,
 		&s.VerificationData.StoredVerificationCode,
 		&s.VerificationData.IsVerified,
@@ -426,12 +426,50 @@ func getStackUser(s *StackOverflowData) (*StackOverflowData, error) {
 		&s.ExchangeAccountID,
 		&s.UserID,
 		&s.DisplayName,
-		&s.Accounts,
+		pq.Array(&s.Accounts),
 		&s.VerificationData.PostedVerificationCode,
 		&s.VerificationData.StoredVerificationCode,
 		&s.VerificationData.IsVerified,
 	)
 	if err != nil {
+		return s, err
+	}
+
+	return s, nil
+}
+
+// updateStackAboutInfo updates the listing and associated Reddit data of a single user
+func updateStackAboutInfo(s *StackOverflowData) (*StackOverflowData, error) {
+	// for simplicity, update the listing rather than updating single value
+	tx, err := Client.Begin()
+	if err != nil {
+		return s, err
+	}
+
+	// create SQL statement for db update
+	sqlStatement := `UPDATE stackoverflowdb SET exchange_account_id = $1, accounts = $2 WHERE user_id = $3`
+
+	// prepare statement
+	stmt, err := Client.Prepare(sqlStatement)
+	if err != nil {
+		return s, err
+	}
+
+	defer stmt.Close()
+
+	// execute db write using unique reddit username as the identifier
+	_, err = stmt.Exec(s.ExchangeAccountID, pq.Array(s.Accounts), s.UserID)
+	if err != nil {
+		// rollback transaction if error thrown
+		tx.Rollback()
+		return s, err
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaction if error thrown
+		tx.Rollback()
 		return s, err
 	}
 

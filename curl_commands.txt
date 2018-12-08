@@ -72,7 +72,7 @@ curl -H "Content-type: application/json" -d '{"exchange_account_id":0,"user_id":
 // POST: UPDATE USER
 
 # user
-curl -H "Content-type: application/json" -d '{"user_id":7253829}' 'localhost:5000/api/v1/updatestackuser'
+curl -H "Content-type: application/json" -d '{"user_id":7253829}' 'localhost:5000/api/v1/updatestackinfo'
 
 ===============================================================================
 VERIFICATION

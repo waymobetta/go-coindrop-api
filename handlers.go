@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 // PROFILE
@@ -506,9 +507,10 @@ func generateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// generate temporary 2FA code
 	verificationCode := generateTwoFACode()
 
-	displayCode := fmt.Sprintf("[COINDROP.IO - IT PAYS TO CONTRIBUTE: %s", verificationCode)
+	// promotional display code
+	displayCode := fmt.Sprintf("[COINDROP.IO - IT PAYS TO CONTRIBUTE: %s]", verificationCode)
 
-	// update local user object variable with generated 2FA code
+	// update local user object variable with generated verification code
 	stackUser.VerificationData.StoredVerificationCode = displayCode
 
 	// marshal into JSON
@@ -572,8 +574,9 @@ func validateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("Checking %s against %s\n\n", updatedStackUser.VerificationData.PostedVerificationCode, storedStackUser.VerificationData.StoredVerificationCode)
 
-	// secondary validation of 2FA code
-	if updatedStackUser.VerificationData.PostedVerificationCode != storedStackUser.VerificationData.StoredVerificationCode {
+	// secondary validation to see if codes match
+	if !strings.Contains(updatedStackUser.VerificationData.PostedVerificationCode, storedStackUser.VerificationData.StoredVerificationCode) {
+		log.Println("[!] Verification codes do not match!\n")
 		http.Error(w, err.Error(), 500)
 		return
 	}
@@ -597,4 +600,57 @@ func validateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Printf("Successfully validated verification code for user: %v\n\n", stackUser.UserID)
+}
+
+// stackUserUpdate updates and returns profile info about the user
+func stackUserUpdate(w http.ResponseWriter, r *http.Request) {
+	// declare new variable of type User
+	stackUser := new(StackOverflowData)
+
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	defer r.Body.Close()
+
+	// unmarshal bytes into user struct
+	err = json.Unmarshal(body, &stackUser)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	log.Println("[+] Retrieving Stack Overflow About info\n")
+	// get general about info for user
+	stackUser, err = stackUser.GetProfileByUserID()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	log.Println("[+] Retrieving Stack Overflow associated accounts info\n")
+	// get list of trophies user has been awarded
+	stackUser, err = stackUser.GetAssociatedAccounts()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// update db with new Reddit profile info
+	userData, err := updateStackAboutInfo(stackUser)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	if err := json.NewEncoder(w).Encode(&userData); err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Printf("Successfully updated Reddit info for user: %v\n\n", stackUser.UserID)
 }
