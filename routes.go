@@ -95,6 +95,12 @@ var routes = Routes{
 		stackUserGet,
 	},
 	Route{
+		"StackUserUpdate",
+		"POST",
+		"/api/v1/updatestackinfo",
+		stackUserUpdate,
+	},
+	Route{
 		"GenerateStackVerificationCode",
 		"POST",
 		"/api/v1/generatestackverificationcode",
