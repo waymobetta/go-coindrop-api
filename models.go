@@ -74,6 +74,7 @@ type StackOverflowData struct {
 	ExchangeAccountID int              `json:"exchange_account_id"`
 	UserID            int              `json:"user_id"`
 	DisplayName       string           `json:"display_name"`
+	Accounts          []string         `json:"accounts"`
 	Communities       []Community      `json:"communities"`
 	VerificationData  VerificationData `json:"verification_data"`
 }
