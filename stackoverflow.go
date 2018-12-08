@@ -188,6 +188,10 @@ func (s *StackOverflowData) GetAssociatedAccounts() (*StackOverflowData, error) 
 				"Gold":   associatedCommunitiesStruct.Items[index].BadgeCounts.Gold,
 			},
 		}
+
+		// append community name to account slice
+		s.Accounts = append(s.Accounts, associatedCommunitiesStruct.Items[index].SiteName)
+
 		// append updated struct data to slice of objects
 		s.Communities = append(s.Communities, communityObj)
 	}
