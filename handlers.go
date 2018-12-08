@@ -7,8 +7,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-
-	"github.com/waymobetta/go-stackoverflow/stackoverflow"
 )
 
 // PROFILE
@@ -412,10 +410,83 @@ func redditUpdate(w http.ResponseWriter, r *http.Request) {
 
 // STACK OVERFLOW
 
+// stackUserAdd adds a single user listing to db
+func stackUserAdd(w http.ResponseWriter, r *http.Request) {
+	stackUser := &StackOverflowData{}
+
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	defer r.Body.Close()
+
+	// unmarshal bytes into user struct
+	err = json.Unmarshal(body, stackUser)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// add user listing to db
+	userData, err := addStackUser(stackUser)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+
+	if err := json.NewEncoder(w).Encode(&userData); err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Printf("Successfully added user: %v\n\n", stackUser.UserID)
+}
+
+// stackUserGet returns information about a single user
+func stackUserGet(w http.ResponseWriter, r *http.Request) {
+	stackUser := &StackOverflowData{}
+
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	defer r.Body.Close()
+
+	// unmarshal bytes into user struct
+	err = json.Unmarshal(body, &stackUser)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// get user listing by name
+	userData, err := getStackUser(stackUser)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	if err := json.NewEncoder(w).Encode(&userData); err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Printf("Successfully returned information for user: %v\n\n", stackUser.UserID)
+}
+
 // generateStackVerificationCode creates a verifcation code for Stack Overflow
 func generateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// declare new variable user of StackUser struct
-	stackUser := stackoverflow.StackOverflowData{}
+	stackUser := new(StackOverflowData)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -457,7 +528,7 @@ func generateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	// if err := json.NewEncoder(w).Encode(&stackUserData); err != nil {
-	if err := json.NewEncoder(w).Encode(displayCode); err != nil {
+	if err := json.NewEncoder(w).Encode(&stackUserData); err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
@@ -468,7 +539,7 @@ func generateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 // validateStackVerificationCode validates the temporary verification code
 func validateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// declare new variable user of StackUser struct
-	stackUser := stackoverflow.StackOverflowData{}
+	stackUser := new(StackOverflowData)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -502,14 +573,14 @@ func validateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Checking %s against %s\n\n", updatedStackUser.VerificationData.PostedVerificationCode, storedStackUser.VerificationData.StoredVerificationCode)
 
 	// secondary validation of 2FA code
-	if updatedStackUser.VerificationData.PostedVerificationCode != storedStackUser.Verificationdata.StoredVerificationCode {
+	if updatedStackUser.VerificationData.PostedVerificationCode != storedStackUser.VerificationData.StoredVerificationCode {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
 	// update 2FA field values
 	storedStackUser.VerificationData.PostedVerificationCode = updatedStackUser.VerificationData.PostedVerificationCode
-	storedStackUser.VerificationData.IsValidated = true
+	storedStackUser.VerificationData.IsVerified = true
 
 	// update db with new info since 2FA codes matched
 	userData, err := updateVerificationCode(storedStackUser)
