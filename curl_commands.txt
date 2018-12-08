@@ -69,6 +69,11 @@ curl -H "Content-type: application/json" -d '{"user_id":7253829}' 'localhost:500
 # user
 curl -H "Content-type: application/json" -d '{"exchange_account_id":0,"user_id":7253829,"display_name":"","accounts":[""],"posted_verification_code":"","stored_verification_code":"","is_verified":false}' 'localhost:5000/api/v1/addstackuser'
 
+// POST: UPDATE USER
+
+# user
+curl -H "Content-type: application/json" -d '{"user_id":7253829}' 'localhost:5000/api/v1/updatestackuser'
+
 ===============================================================================
 VERIFICATION
 ===============================================================================
