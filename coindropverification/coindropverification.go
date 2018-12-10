@@ -1,4 +1,4 @@
-package main
+package coindropverification
 
 import (
 	"fmt"
@@ -20,7 +20,8 @@ const (
 
 var src = rand.NewSource(time.Now().UnixNano())
 
-func generateTwoFACode() string {
+// GenerateVerificationCode generates random verification code
+func GenerateVerificationCode() string {
 	length := 28
 	byteSlice := make([]byte, length)
 	for i, cache, remain := length-1, src.Int63(), letterIdxMax; i >= 0; {

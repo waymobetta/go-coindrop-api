@@ -1,4 +1,4 @@
-package main
+package coindrophandlers
 
 import (
 	"encoding/json"
@@ -8,13 +8,18 @@ import (
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/waymobetta/go-coindrop-api/coindropverification"
+	"github.com/waymobetta/go-coindrop-api/goreddit"
+	"github.com/waymobetta/go-coindrop-api/gostackoverflow"
 )
 
 // PROFILE
 
-// userAdd adds a single user listing to db
-func userAdd(w http.ResponseWriter, r *http.Request) {
-	user := &User{}
+// UserAdd adds a single user listing to db
+func UserAdd(w http.ResponseWriter, r *http.Request) {
+	// initialize new variable user of User struct
+	user := new(goreddit.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -32,7 +37,7 @@ func userAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// add user listing to db
-	userData, err := addUser(user)
+	userData, err := goreddit.AddUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -49,12 +54,13 @@ func userAdd(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully added user: %s\n\n", user.Info.RedditData.Username)
 }
 
-// usersGet handles queries to return all stored users
-func usersGet(w http.ResponseWriter, r *http.Request) {
-	users := &Users{}
+// UsersGet handles queries to return all stored users
+func UsersGet(w http.ResponseWriter, r *http.Request) {
+	// initialize new variable user of User struct
+	users := new(goreddit.Users)
 
 	// return slice of structs of all user listings
-	_, err := getUsers(users)
+	_, err := goreddit.GetUsers(users)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -77,9 +83,10 @@ func usersGet(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully returned information for %d users\n\n", len(users.Users))
 }
 
-// userGet returns information about a single user
-func userGet(w http.ResponseWriter, r *http.Request) {
-	user := &User{}
+// UserGet returns information about a single user
+func UserGet(w http.ResponseWriter, r *http.Request) {
+	// initialize new variable user of User struct
+	user := new(goreddit.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -97,7 +104,7 @@ func userGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get user listing by name
-	userData, err := getUser(user)
+	userData, err := goreddit.GetUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -113,9 +120,10 @@ func userGet(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully returned information for user: %s\n\n", user.Info.RedditData.Username)
 }
 
-// userRemove removes a single user listing from db
-func userRemove(w http.ResponseWriter, r *http.Request) {
-	user := &User{}
+// UserRemove removes a single user listing from db
+func UserRemove(w http.ResponseWriter, r *http.Request) {
+	// initialize new variable user of User struct
+	user := new(goreddit.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -133,7 +141,7 @@ func userRemove(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// remove user listing from db
-	userData, err := removeUser(user)
+	userData, err := goreddit.RemoveUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -150,9 +158,10 @@ func userRemove(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully deleted user: %s\n\n", user.Info.RedditData.Username)
 }
 
-// walletUpdate handles updates to the wallet address for a user
-func walletUpdate(w http.ResponseWriter, r *http.Request) {
-	user := &User{}
+// WalletUpdate handles updates to the wallet address for a user
+func WalletUpdate(w http.ResponseWriter, r *http.Request) {
+	// initialize new variable user of User struct
+	user := new(goreddit.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -170,7 +179,7 @@ func walletUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// update the user listing in db
-	updatedUserData, err := updateWallet(user)
+	updatedUserData, err := goreddit.UpdateWallet(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -189,9 +198,10 @@ func walletUpdate(w http.ResponseWriter, r *http.Request) {
 
 // REDDIT
 
-// twoFAUpdate handles updates to the 2FA data for a user
-func twoFAUpdate(w http.ResponseWriter, r *http.Request) {
-	user := &User{}
+// UpdateRedditVerificationCode handles updates to the 2FA data for a user
+func UpdateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
+	// initialize new variable user of User struct
+	user := new(goreddit.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -209,7 +219,7 @@ func twoFAUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// update the user listing in db
-	updatedUserData, err := updateTwoFA(user)
+	updatedUserData, err := coindropverification.UpdateRedditVerificationCode(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -226,10 +236,10 @@ func twoFAUpdate(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully updated 2FA info for user: %s\n\n", user.Info.RedditData.Username)
 }
 
-// generateTwoEffEhCode generates a temporary 2FA code
-func generateTwoEffEhCode(w http.ResponseWriter, r *http.Request) {
-	// declare new variable user of User struct
-	user := &User{}
+// GenerateRedditVerificationCode generates a temporary 2FA code
+func GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
+	// initialize new variable user of User struct
+	user := new(goreddit.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -246,8 +256,8 @@ func generateTwoEffEhCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// generate temporary 2FA code
-	twoFACode := generateTwoFACode()
+	// generate temporary verification code
+	twoFACode := coindropverification.GenerateVerificationCode()
 
 	// update local user object variable with generated 2FA code
 	user.Info.TwoFAData.StoredTwoFACode = twoFACode
@@ -260,7 +270,7 @@ func generateTwoEffEhCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// store user 2FA data in db
-	userData, err := updateTwoFA(user)
+	userData, err := coindropverification.UpdateRedditVerificationCode(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -276,13 +286,13 @@ func generateTwoEffEhCode(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully generated 2FA code for user: %s\n\n", user.Info.RedditData.Username)
 }
 
-// ValidateTwoEffEhCode validates the temporary 2FA code
-func validateTwoEffEhCode(w http.ResponseWriter, r *http.Request) {
+// ValidateRedditVerificationCode validates the temporary 2FA code
+func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// declare new variable of type User
-	user := &User{}
+	user := new(goreddit.User)
 
 	// initialize struct for reddit auth sessions
-	authSession := new(AuthSessions)
+	authSession := new(goreddit.AuthSessions)
 
 	// initializes reddit OAuth sessions
 	authSession.InitRedditAuth()
@@ -303,7 +313,7 @@ func validateTwoEffEhCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// pull stored 2FA code from DB
-	storedUserInfo, err := getUser(user)
+	storedUserInfo, err := goreddit.GetUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -328,8 +338,8 @@ func validateTwoEffEhCode(w http.ResponseWriter, r *http.Request) {
 	storedUserInfo.Info.TwoFAData.PostedTwoFACode = updatedUserObj.Info.TwoFAData.PostedTwoFACode
 	storedUserInfo.Info.TwoFAData.IsValidated = true
 
-	// update db with new info since 2FA codes matched
-	userData, err := updateTwoFA(storedUserInfo)
+	// update db with new info since verification codes matched
+	userData, err := coindropverification.UpdateRedditVerificationCode(storedUserInfo)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -345,13 +355,13 @@ func validateTwoEffEhCode(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully validated 2FA code for user: %s\n\n", user.Info.RedditData.Username)
 }
 
-// getRedditInfo returns Reddit profile info about the user
-func redditUpdate(w http.ResponseWriter, r *http.Request) {
+// RedditUpdate returns Reddit profile info about the user
+func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	// declare new variable of type User
-	user := &User{}
+	user := new(goreddit.User)
 
 	// initialize struct for reddit auth sessions
-	authSession := new(AuthSessions)
+	authSession := new(goreddit.AuthSessions)
 
 	// initializes reddit OAuth sessions
 	authSession.InitRedditAuth()
@@ -373,7 +383,8 @@ func redditUpdate(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("[+] Retrieving Reddit About info\n")
 	// get general about info for user
-	if err = authSession.GetAboutInfo(user); err != nil {
+	user, err = authSession.GetAboutInfo(user)
+	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
@@ -387,13 +398,14 @@ func redditUpdate(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("[+] Retrieving Reddit Submitted info\n")
 	// get slice of subreddits user is subscribed to based on activity
-	if err = authSession.GetSubmittedInfo(user); err != nil {
+	user, err = authSession.GetSubmittedInfo(user)
+	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
 	// update db with new Reddit profile info
-	userData, err := updateRedditInfo(user)
+	userData, err := goreddit.UpdateRedditInfo(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -411,9 +423,9 @@ func redditUpdate(w http.ResponseWriter, r *http.Request) {
 
 // STACK OVERFLOW
 
-// stackUserAdd adds a single user listing to db
-func stackUserAdd(w http.ResponseWriter, r *http.Request) {
-	stackUser := &StackOverflowData{}
+// StackUserAdd adds a single user listing to db
+func StackUserAdd(w http.ResponseWriter, r *http.Request) {
+	stackUser := new(gostackoverflow.StackOverflowData)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -431,7 +443,7 @@ func stackUserAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// add user listing to db
-	userData, err := addStackUser(stackUser)
+	userData, err := gostackoverflow.AddStackUser(stackUser)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -448,9 +460,9 @@ func stackUserAdd(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully added user: %v\n\n", stackUser.UserID)
 }
 
-// stackUserGet returns information about a single user
-func stackUserGet(w http.ResponseWriter, r *http.Request) {
-	stackUser := &StackOverflowData{}
+// StackUserGet returns information about a single user
+func StackUserGet(w http.ResponseWriter, r *http.Request) {
+	stackUser := new(gostackoverflow.StackOverflowData)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -468,7 +480,7 @@ func stackUserGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get user listing by name
-	userData, err := getStackUser(stackUser)
+	userData, err := gostackoverflow.GetStackUser(stackUser)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -484,10 +496,10 @@ func stackUserGet(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully returned information for user: %v\n\n", stackUser.UserID)
 }
 
-// generateStackVerificationCode creates a verifcation code for Stack Overflow
-func generateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
+// GenerateStackVerificationCode creates a verifcation code for Stack Overflow
+func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// declare new variable user of StackUser struct
-	stackUser := new(StackOverflowData)
+	stackUser := new(gostackoverflow.StackOverflowData)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -505,7 +517,7 @@ func generateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// generate temporary 2FA code
-	verificationCode := generateTwoFACode()
+	verificationCode := coindropverification.GenerateVerificationCode()
 
 	// promotional display code
 	displayCode := fmt.Sprintf("[COINDROP.IO - IT PAYS TO CONTRIBUTE: %s]", verificationCode)
@@ -521,7 +533,7 @@ func generateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// store user verification data in db
-	stackUserData, err := updateVerificationCode(stackUser)
+	stackUserData, err := gostackoverflow.UpdateVerificationCode(stackUser)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -538,10 +550,10 @@ func generateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully generated verification code for user: %v\n\n", stackUser.UserID)
 }
 
-// validateStackVerificationCode validates the temporary verification code
-func validateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
+// ValidateStackVerificationCode validates the temporary verification code
+func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// declare new variable user of StackUser struct
-	stackUser := new(StackOverflowData)
+	stackUser := new(gostackoverflow.StackOverflowData)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -559,7 +571,7 @@ func validateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// pull stored verification code from DB
-	storedStackUser, err := getStackUser(stackUser)
+	storedStackUser, err := gostackoverflow.GetStackUser(stackUser)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -586,7 +598,7 @@ func validateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	storedStackUser.VerificationData.IsVerified = true
 
 	// update db with new info since 2FA codes matched
-	userData, err := updateVerificationCode(storedStackUser)
+	userData, err := gostackoverflow.UpdateVerificationCode(storedStackUser)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -602,10 +614,10 @@ func validateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully validated verification code for user: %v\n\n", stackUser.UserID)
 }
 
-// stackUserUpdate updates and returns profile info about the user
-func stackUserUpdate(w http.ResponseWriter, r *http.Request) {
+// StackUserUpdate updates and returns profile info about the user
+func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	// declare new variable of type User
-	stackUser := new(StackOverflowData)
+	stackUser := new(gostackoverflow.StackOverflowData)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -639,7 +651,7 @@ func stackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// update db with new Reddit profile info
-	userData, err := updateStackAboutInfo(stackUser)
+	userData, err := gostackoverflow.UpdateStackAboutInfo(stackUser)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return

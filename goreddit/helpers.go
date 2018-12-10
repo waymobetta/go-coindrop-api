@@ -1,21 +1,6 @@
-package main
+package goreddit
 
-import (
-	"os"
-	"strconv"
-)
-
-var (
-	host     = os.Getenv("LOCAL_PG_HOST")
-	port, _  = strconv.Atoi(os.Getenv("LOCAL_PG_PORT"))
-	user     = os.Getenv("LOCAL_PG_USER")
-	dbname   = os.Getenv("LOCAL_PG_DBNAME")
-	password = os.Getenv("LOCAL_PG_PASS")
-	// disable SSL for local testing
-	sslmode = "disable"
-)
-
-// helper function to remove duplicate subreddits from slice
+// removeDuplicates removes duplicate subreddits from slice
 func removeDuplicates(slice []string) []string {
 	// initialize map to store unique elements
 	nonUniqueMap := make(map[string]bool)

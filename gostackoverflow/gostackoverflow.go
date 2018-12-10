@@ -1,4 +1,4 @@
-package main
+package gostackoverflow
 
 import (
 	"encoding/json"
@@ -29,15 +29,6 @@ func (s *StackOverflowData) GetProfileByUserID() (*StackOverflowData, error) {
 
 	// concatenate endpoint with base URL of db
 	profileURL := fmt.Sprintf("%s%s", baseAPI, profileEndpoint)
-
-	// FOR API USAGE
-
-	// // marshal user object into JSON
-	// payload, err := json.Marshal(&u)
-	// if err != nil {
-	// 	err = fmt.Errorf("[!] Error marshalling JSON\n%v", err)
-	// 	return s, err
-	// }
 
 	// prepare GET request
 	req, err := http.NewRequest("GET", profileURL, nil)
@@ -121,15 +112,6 @@ func (s *StackOverflowData) GetAssociatedAccounts() (*StackOverflowData, error) 
 
 	// concatenate endpoint with base URL of db
 	associatedAccountsURL := fmt.Sprintf("%s%s", baseAPI, associatedAccountsEndpoint)
-
-	// FOR API USAGE
-
-	// // marshal user object into JSON
-	// payload, err := json.Marshal(&u)
-	// if err != nil {
-	// 	err = fmt.Errorf("[!] Error marshalling JSON\n%v", err)
-	// 	return s, err
-	// }
 
 	// prepare GET request
 	req, err := http.NewRequest("GET", associatedAccountsURL, nil)

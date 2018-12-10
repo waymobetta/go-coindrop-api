@@ -1,10 +1,12 @@
-package main
+package goreddit
 
 import (
-	"errors"
+	"fmt"
 	"os"
 
 	"github.com/jzelinskie/geddit"
+	"github.com/manifoldco/promptui"
+	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -50,13 +52,6 @@ func (a *AuthSessions) GetUserTrophies(redditObj *User) error {
 	// initialize new slice to store trophies
 	var trophySlice []string
 
-	// check if the user has no trophies
-	if len(trophies) <= 0 {
-		// create empty slice to prevent null value
-		redditObj.Info.RedditData.Trophies = []string{""}
-		return nil
-	}
-
 	// iterate over trophies object to add only trophy name to trophySlice
 	for _, trophy := range trophies {
 		trophySlice = append(trophySlice, trophy.Name)
@@ -66,11 +61,46 @@ func (a *AuthSessions) GetUserTrophies(redditObj *User) error {
 	return nil
 }
 
+// GetUserInfo method to simulate user input to application
+func (a *AuthSessions) GetUserInfo(redditObj *User) (*User, error) {
+	log.Info("[+] Obtaining user information from portal\n")
+
+	// prepare reddit username prompt
+	promptUsername := promptui.Prompt{
+		Label: "Reddit Username ",
+	}
+
+	// prepare Ethereum wallet prompt
+	promptWallet := promptui.Prompt{
+		Label: "Ethereum Address ",
+	}
+
+	// prompt user for reddit username
+	usernameInput, err := promptUsername.Run()
+	if err != nil {
+		return redditObj, err
+	}
+
+	// prompt user for Ethereum wallet address
+	walletInput, err := promptWallet.Run()
+	if err != nil {
+		log.Fatal(err)
+		return redditObj, err
+	}
+
+	// assign usernameInput and walletInput to user struct
+	redditObj.Info.RedditData.Username = usernameInput
+	redditObj.Info.WalletAddress = walletInput
+
+	return redditObj, nil
+}
+
 // GetRecentPostsFromSubreddit method to watch and pull last 5 posts from subreddit to match 2FA code
 func (a *AuthSessions) GetRecentPostsFromSubreddit(redditObj *User) (*User, error) {
 	// get 5 newest submissions from the subreddit
-	submissions, err := a.OAuthSession.SubredditSubmissions(TwoFASubredditName, "new", geddit.ListingOptions{Count: 5})
+	submissions, err := a.OAuthSession.SubredditSubmissions(TwoFASubredditName, "new", geddit.ListingOptions{Count: 1})
 	if err != nil {
+		fmt.Println(err)
 		return redditObj, err
 	}
 
@@ -88,16 +118,16 @@ func (a *AuthSessions) GetRecentPostsFromSubreddit(redditObj *User) (*User, erro
 		}
 	}
 	// if no 2FA match return error message
-	err = errors.New("[!] 2FA code not matched")
+	err = fmt.Errorf("[!] 2FA code not matched")
 	return redditObj, err
 }
 
 // GetAboutInfo method to retrieve general information about user
-func (a *AuthSessions) GetAboutInfo(redditObj *User) error {
+func (a *AuthSessions) GetAboutInfo(redditObj *User) (*User, error) {
 	// get about information of reddit user
 	redditProfile, err := a.OAuthSession.AboutRedditor(redditObj.Info.RedditData.Username)
 	if err != nil {
-		return err
+		return redditObj, err
 	}
 
 	// store select reddit profile info in user struct
@@ -105,30 +135,22 @@ func (a *AuthSessions) GetAboutInfo(redditObj *User) error {
 	redditObj.Info.RedditData.LinkKarma = redditProfile.LinkKarma
 	redditObj.Info.RedditData.AccountCreatedUTC = redditProfile.Created
 
-	return nil
+	return redditObj, nil
 }
 
 // GetSubmittedInfo method to retrieve slice of user's submitted posts
-func (a *AuthSessions) GetSubmittedInfo(redditObj *User) error {
+func (a *AuthSessions) GetSubmittedInfo(redditObj *User) (*User, error) {
 	// get submissions of reddit user
 	submissions, err := a.NoAuthSession.RedditorSubmissions(redditObj.Info.RedditData.Username, geddit.ListingOptions{Count: 25})
 	if err != nil {
-		return err
+		return redditObj, err
 	}
 
-	// TODO:
 	// initialize new map to store subreddits and associated score
 	// var subredditMap map[string]int
 
 	// initialize new slice to store subreddit names user has submitted to
 	var subredditSlice []string
-
-	// check if the user has not submitted anything
-	if len(submissions) <= 0 {
-		// create empty slice to prevent null value
-		redditObj.Info.RedditData.Subreddits = []string{""}
-		return nil
-	}
 
 	// iterate over submissions object to add subreddit name to subredditSlice
 	for _, submission := range submissions {
@@ -141,5 +163,12 @@ func (a *AuthSessions) GetSubmittedInfo(redditObj *User) error {
 	// assign uniqueSubredditSlice to user struct
 	redditObj.Info.RedditData.Subreddits = uniqueSubredditSlice
 
-	return nil
+	return redditObj, nil
 }
+
+// GetOverview method to retrieve overview of user account
+// TODO:
+// func (u *User) GetOverview() *User {
+// 	overviewURL := fmt.Sprintf("https://www.reddit.com/user/%s/overview.json", u.RedditData.Username)
+// 	return u
+// }

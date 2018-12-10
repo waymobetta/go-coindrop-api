@@ -9,15 +9,15 @@ PROFILE
 // GET: GET ALL USERS
 
 # get users
-curl -H "Content-type: application/json" 'localhost:5000/api/v1/users'
+curl -H "Content-type: application/json" 'localhost:5000/api/v1/getusers'
 
 // GET: GET SINGLE USER
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/user'
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/getuser'
 
 # user 2
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/user'
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/getuser'
 
 // POST: ADD USER
 
@@ -51,18 +51,12 @@ curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_u
 # user 2
 curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/removeuser'
 
-/// TODO
-// POST: GET KEYBASE INFO
-
-# update user + Keybase info
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/update'
-
 /// STACK OVERFLOW
 
 // POST: GET USER
 
 # user
-curl -H "Content-type: application/json" -d '{"user_id":7253829}' 'localhost:5000/api/v1/stackuser'
+curl -H "Content-type: application/json" -d '{"user_id":7253829}' 'localhost:5000/api/v1/getstackuser'
 
 // POST: ADD USER
 
@@ -83,18 +77,18 @@ VERIFICATION
 // POST: GENERATE 2FA CODE
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/generatetwoeffeh'
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/generateredditverificationcode'
 
 # user 2
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/generatetwoeffeh'
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/generateredditverificationcode'
 
 // POST: VALIDATE 2FA CODE
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/validatetwoeffeh'
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/validateredditverificationcode'
 
 # user 2
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/validatetwoeffeh'
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/validateredditverificationcode'
 
 /// STACK OVERFLOW
 

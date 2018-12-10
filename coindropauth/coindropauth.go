@@ -1,15 +1,16 @@
-package main
+package coindropauth
 
 import (
 	"encoding/json"
 	"fmt"
 	"net/http"
 
+	"github.com/waymobetta/go-coindrop-api/coindropdb"
 	"golang.org/x/crypto/bcrypt"
 )
 
-// signUp registers a user for coindrop
-func signUp(w http.ResponseWriter, r *http.Request) {
+// SignUp registers a user for coindrop
+func SignUp(w http.ResponseWriter, r *http.Request) {
 	// initialize new Credentials struct object
 	creds := &Credentials{}
 
@@ -27,7 +28,7 @@ func signUp(w http.ResponseWriter, r *http.Request) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(creds.Password), 8)
 
 	// Next, insert the username, along with the hashed password into the database
-	if _, err := Client.Query(`INSERT INTO coindropdbusers (email,password) VALUES ($1,$2)`, creds.Email, string(hashedPassword)); err != nil {
+	if _, err := coindropdb.Client.Query(`INSERT INTO coindropdbusers (email,password) VALUES ($1,$2)`, creds.Email, string(hashedPassword)); err != nil {
 		// If there is any issue with inserting into the database, return a 500 error
 		w.WriteHeader(http.StatusInternalServerError)
 		http.Error(w, err.Error(), 500)
@@ -45,8 +46,8 @@ func signUp(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("[*] Successful sign up for user:", creds.Email)
 }
 
-// signIn logs in a user for coindrop
-func signIn(w http.ResponseWriter, r *http.Request) {
+// SignIn logs in a user for coindrop
+func SignIn(w http.ResponseWriter, r *http.Request) {
 	// initialize new Credentials struct object
 	creds := &Credentials{}
 
@@ -59,7 +60,7 @@ func signIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Get the existing entry present in the database for the given username
-	row := Client.QueryRow(`SELECT password FROM coindropdbusers WHERE email=$1`, creds.Email)
+	row := coindropdb.Client.QueryRow(`SELECT password FROM coindropdbusers WHERE email=$1`, creds.Email)
 	if err != nil {
 		// If there is an issue with the database, return a 500 error
 		w.WriteHeader(http.StatusInternalServerError)
