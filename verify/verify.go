@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// Generate 2FA Code
+// generate verification code
 
 // code snippet credits:
 // https://stackoverflow.com/questions/22892120/how-to-generate-a-random-string-of-a-fixed-length-in-go

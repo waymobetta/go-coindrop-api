@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	// VerificationSubredditName name of subreddit used for 2FA
+	// VerificationSubredditName name of subreddit used for verification
 	VerificationSubredditName = "testing_QA_adChain"
 )
 
@@ -60,7 +60,7 @@ func (a *AuthSessions) GetUserTrophies(user *db.User) error {
 	return nil
 }
 
-// GetRecentPostsFromSubreddit method to watch and pull last 5 posts from subreddit to match 2FA code
+// GetRecentPostsFromSubreddit method to watch and pull last 5 posts from subreddit to match verification code
 func (a *AuthSessions) GetRecentPostsFromSubreddit(user *db.User) (*db.User, error) {
 	// get 5 newest submissions from the subreddit
 	submissions, err := a.OAuthSession.SubredditSubmissions(VerificationSubredditName, "new", geddit.ListingOptions{Count: 1})
@@ -71,19 +71,19 @@ func (a *AuthSessions) GetRecentPostsFromSubreddit(user *db.User) (*db.User, err
 
 	// iterate over the submissions
 	for _, submission := range submissions {
-		// check to ensure both author and 2FA code match
+		// check to ensure both author and verification code match
 		if submission.Author == user.Info.RedditData.Username && submission.Title == user.Info.RedditData.VerificationData.StoredVerificationCode {
-			// assign submission title (posted 2FA code) to user struct
+			// assign submission title (posted verification code) to user struct
 			user.Info.RedditData.VerificationData.PostedVerificationCode = submission.Title
 			if user.Info.RedditData.VerificationData.StoredVerificationCode == user.Info.RedditData.VerificationData.PostedVerificationCode {
-				// flip bool flag once 2FA code validated
+				// flip bool flag once verification code validated
 				user.Info.RedditData.VerificationData.IsVerified = true
 				return user, nil
 			}
 		}
 	}
-	// if no 2FA match return error message
-	err = fmt.Errorf("[!] 2FA code not matched")
+	// if no verification match return error message
+	err = fmt.Errorf("[!] Verification code not matched")
 	return user, err
 }
 

@@ -253,7 +253,7 @@ func UpdateRedditInfo(u *User) (*User, error) {
 
 /// VERIFICATION
 
-// UpdateRedditVerificationCode updates the 2FA data of a single user
+// UpdateRedditVerificationCode updates the verification data of a single user
 func UpdateRedditVerificationCode(u *User) (*User, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := Client.Begin()
