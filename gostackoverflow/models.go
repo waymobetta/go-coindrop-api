@@ -1,31 +1,5 @@
 package gostackoverflow
 
-// StackOverflowData struct contains all essential info for Stack User
-type StackOverflowData struct {
-	ExchangeAccountID int              `json:"exchange_account_id"`
-	UserID            int              `json:"user_id"`
-	DisplayName       string           `json:"display_name"`
-	Accounts          []string         `json:"accounts"`
-	Communities       []Community      `json:"communities"`
-	VerificationData  VerificationData `json:"verification_data"`
-}
-
-// VerificationData struct contains all info for validation of account
-type VerificationData struct {
-	PostedVerificationCode string `json:"posted_verification_code"`
-	StoredVerificationCode string `json:"stored_verification_code"`
-	IsVerified             bool   `json:"is_verified"`
-}
-
-// Community struct contains info about the communities
-type Community struct {
-	Name          string         `json:"community_name"`
-	Reputation    int            `json:"community_reputation"`
-	QuestionCount int            `json:"community_question_count"`
-	AnswerCount   int            `json:"community_answer_count"`
-	BadgeCounts   map[string]int `json:"community_badge_counts"`
-}
-
 // AboutProfileResponse struct contins profile info
 type AboutProfileResponse struct {
 	Items []struct {

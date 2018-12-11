@@ -5,13 +5,12 @@ import (
 	"os"
 
 	"github.com/jzelinskie/geddit"
-	"github.com/manifoldco/promptui"
-	log "github.com/sirupsen/logrus"
+	"github.com/waymobetta/go-coindrop-api/coindropdb"
 )
 
 var (
-	// TwoFASubredditName name of subreddit used for 2FA
-	TwoFASubredditName = "testing_QA_adChain"
+	// VerificationSubredditName name of subreddit used for 2FA
+	VerificationSubredditName = "testing_QA_adChain"
 )
 
 // InitRedditAuth initializes reddit OAuth session
@@ -43,9 +42,9 @@ func (a *AuthSessions) InitRedditAuth() (*AuthSessions, error) {
 }
 
 // GetUserTrophies method to retrieve slice of user trophies
-func (a *AuthSessions) GetUserTrophies(redditObj *User) error {
+func (a *AuthSessions) GetUserTrophies(user *coindropdb.User) error {
 	// get trophies of reddit user
-	trophies, err := a.OAuthSession.UserTrophies(redditObj.Info.RedditData.Username)
+	trophies, err := a.OAuthSession.UserTrophies(user.Info.RedditData.Username)
 	if err != nil {
 		return err
 	}
@@ -57,95 +56,62 @@ func (a *AuthSessions) GetUserTrophies(redditObj *User) error {
 		trophySlice = append(trophySlice, trophy.Name)
 	}
 	// assign trophySlice to User struct
-	redditObj.Info.RedditData.Trophies = trophySlice
+	user.Info.RedditData.Trophies = trophySlice
 	return nil
 }
 
-// GetUserInfo method to simulate user input to application
-func (a *AuthSessions) GetUserInfo(redditObj *User) (*User, error) {
-	log.Info("[+] Obtaining user information from portal\n")
-
-	// prepare reddit username prompt
-	promptUsername := promptui.Prompt{
-		Label: "Reddit Username ",
-	}
-
-	// prepare Ethereum wallet prompt
-	promptWallet := promptui.Prompt{
-		Label: "Ethereum Address ",
-	}
-
-	// prompt user for reddit username
-	usernameInput, err := promptUsername.Run()
-	if err != nil {
-		return redditObj, err
-	}
-
-	// prompt user for Ethereum wallet address
-	walletInput, err := promptWallet.Run()
-	if err != nil {
-		log.Fatal(err)
-		return redditObj, err
-	}
-
-	// assign usernameInput and walletInput to user struct
-	redditObj.Info.RedditData.Username = usernameInput
-	redditObj.Info.WalletAddress = walletInput
-
-	return redditObj, nil
-}
-
 // GetRecentPostsFromSubreddit method to watch and pull last 5 posts from subreddit to match 2FA code
-func (a *AuthSessions) GetRecentPostsFromSubreddit(redditObj *User) (*User, error) {
+func (a *AuthSessions) GetRecentPostsFromSubreddit(user *coindropdb.User) (*coindropdb.User, error) {
 	// get 5 newest submissions from the subreddit
-	submissions, err := a.OAuthSession.SubredditSubmissions(TwoFASubredditName, "new", geddit.ListingOptions{Count: 1})
+	submissions, err := a.OAuthSession.SubredditSubmissions(VerificationSubredditName, "new", geddit.ListingOptions{Count: 1})
 	if err != nil {
 		fmt.Println(err)
-		return redditObj, err
+		return user, err
 	}
 
 	// iterate over the submissions
 	for _, submission := range submissions {
 		// check to ensure both author and 2FA code match
-		if submission.Author == redditObj.Info.RedditData.Username && submission.Title == redditObj.Info.TwoFAData.StoredTwoFACode {
+		if submission.Author == user.Info.RedditData.Username && submission.Title == user.Info.RedditData.VerificationData.StoredVerificationCode {
 			// assign submission title (posted 2FA code) to user struct
-			redditObj.Info.TwoFAData.PostedTwoFACode = submission.Title
-			if redditObj.Info.TwoFAData.StoredTwoFACode == redditObj.Info.TwoFAData.PostedTwoFACode {
+			user.Info.RedditData.VerificationData.PostedVerificationCode = submission.Title
+			if user.Info.RedditData.VerificationData.StoredVerificationCode == user.Info.RedditData.VerificationData.PostedVerificationCode {
 				// flip bool flag once 2FA code validated
-				redditObj.Info.TwoFAData.IsValidated = true
-				return redditObj, nil
+				user.Info.RedditData.VerificationData.IsVerified = true
+				return user, nil
 			}
 		}
 	}
 	// if no 2FA match return error message
 	err = fmt.Errorf("[!] 2FA code not matched")
-	return redditObj, err
+	return user, err
 }
 
 // GetAboutInfo method to retrieve general information about user
-func (a *AuthSessions) GetAboutInfo(redditObj *User) (*User, error) {
+func (a *AuthSessions) GetAboutInfo(user *coindropdb.User) (*coindropdb.User, error) {
 	// get about information of reddit user
-	redditProfile, err := a.OAuthSession.AboutRedditor(redditObj.Info.RedditData.Username)
+	redditProfile, err := a.OAuthSession.AboutRedditor(user.Info.RedditData.Username)
 	if err != nil {
-		return redditObj, err
+		return user, err
 	}
 
 	// store select reddit profile info in user struct
-	redditObj.Info.RedditData.CommentKarma = redditProfile.CommentKarma
-	redditObj.Info.RedditData.LinkKarma = redditProfile.LinkKarma
-	redditObj.Info.RedditData.AccountCreatedUTC = redditProfile.Created
+	user.Info.RedditData.CommentKarma = redditProfile.CommentKarma
+	user.Info.RedditData.LinkKarma = redditProfile.LinkKarma
+	user.Info.RedditData.AccountCreatedUTC = redditProfile.Created
 
-	return redditObj, nil
+	return user, nil
 }
 
 // GetSubmittedInfo method to retrieve slice of user's submitted posts
-func (a *AuthSessions) GetSubmittedInfo(redditObj *User) (*User, error) {
+func (a *AuthSessions) GetSubmittedInfo(user *coindropdb.User) (*coindropdb.User, error) {
 	// get submissions of reddit user
-	submissions, err := a.NoAuthSession.RedditorSubmissions(redditObj.Info.RedditData.Username, geddit.ListingOptions{Count: 25})
+	submissions, err := a.NoAuthSession.RedditorSubmissions(user.Info.RedditData.Username, geddit.ListingOptions{Count: 25})
 	if err != nil {
-		return redditObj, err
+		return user, err
 	}
 
+	// TODO:
 	// initialize new map to store subreddits and associated score
 	// var subredditMap map[string]int
 
@@ -161,9 +127,9 @@ func (a *AuthSessions) GetSubmittedInfo(redditObj *User) (*User, error) {
 	uniqueSubredditSlice := removeDuplicates(subredditSlice)
 
 	// assign uniqueSubredditSlice to user struct
-	redditObj.Info.RedditData.Subreddits = uniqueSubredditSlice
+	user.Info.RedditData.Subreddits = uniqueSubredditSlice
 
-	return redditObj, nil
+	return user, nil
 }
 
 // GetOverview method to retrieve overview of user account

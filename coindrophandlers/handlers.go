@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/waymobetta/go-coindrop-api/coindropdb"
 	"github.com/waymobetta/go-coindrop-api/coindropverification"
 	"github.com/waymobetta/go-coindrop-api/goreddit"
 	"github.com/waymobetta/go-coindrop-api/gostackoverflow"
@@ -19,7 +20,7 @@ import (
 // UserAdd adds a single user listing to db
 func UserAdd(w http.ResponseWriter, r *http.Request) {
 	// initialize new variable user of User struct
-	user := new(goreddit.User)
+	user := new(coindropdb.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -37,7 +38,7 @@ func UserAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// add user listing to db
-	userData, err := goreddit.AddUser(user)
+	userData, err := coindropdb.AddUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -57,10 +58,10 @@ func UserAdd(w http.ResponseWriter, r *http.Request) {
 // UsersGet handles queries to return all stored users
 func UsersGet(w http.ResponseWriter, r *http.Request) {
 	// initialize new variable user of User struct
-	users := new(goreddit.Users)
+	users := new(coindropdb.Users)
 
 	// return slice of structs of all user listings
-	_, err := goreddit.GetUsers(users)
+	_, err := coindropdb.GetUsers(users)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -86,7 +87,7 @@ func UsersGet(w http.ResponseWriter, r *http.Request) {
 // UserGet returns information about a single user
 func UserGet(w http.ResponseWriter, r *http.Request) {
 	// initialize new variable user of User struct
-	user := new(goreddit.User)
+	user := new(coindropdb.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -104,7 +105,7 @@ func UserGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get user listing by name
-	userData, err := goreddit.GetUser(user)
+	userData, err := coindropdb.GetUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -123,7 +124,7 @@ func UserGet(w http.ResponseWriter, r *http.Request) {
 // UserRemove removes a single user listing from db
 func UserRemove(w http.ResponseWriter, r *http.Request) {
 	// initialize new variable user of User struct
-	user := new(goreddit.User)
+	user := new(coindropdb.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -141,7 +142,7 @@ func UserRemove(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// remove user listing from db
-	userData, err := goreddit.RemoveUser(user)
+	userData, err := coindropdb.RemoveUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -161,7 +162,7 @@ func UserRemove(w http.ResponseWriter, r *http.Request) {
 // WalletUpdate handles updates to the wallet address for a user
 func WalletUpdate(w http.ResponseWriter, r *http.Request) {
 	// initialize new variable user of User struct
-	user := new(goreddit.User)
+	user := new(coindropdb.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -179,7 +180,7 @@ func WalletUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// update the user listing in db
-	updatedUserData, err := goreddit.UpdateWallet(user)
+	updatedUserData, err := coindropdb.UpdateWallet(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -198,10 +199,10 @@ func WalletUpdate(w http.ResponseWriter, r *http.Request) {
 
 // REDDIT
 
-// UpdateRedditVerificationCode handles updates to the 2FA data for a user
+// UpdateRedditVerificationCode handles updates to the verification data for a user
 func UpdateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// initialize new variable user of User struct
-	user := new(goreddit.User)
+	user := new(coindropdb.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -219,7 +220,7 @@ func UpdateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// update the user listing in db
-	updatedUserData, err := coindropverification.UpdateRedditVerificationCode(user)
+	updatedUserData, err := coindropdb.UpdateRedditVerificationCode(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -233,13 +234,13 @@ func UpdateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully updated 2FA info for user: %s\n\n", user.Info.RedditData.Username)
+	fmt.Printf("Successfully updated verification info for user: %s\n\n", user.Info.RedditData.Username)
 }
 
-// GenerateRedditVerificationCode generates a temporary 2FA code
+// GenerateRedditVerificationCode generates a temporary verification code
 func GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// initialize new variable user of User struct
-	user := new(goreddit.User)
+	user := new(coindropdb.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -259,8 +260,8 @@ func GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// generate temporary verification code
 	twoFACode := coindropverification.GenerateVerificationCode()
 
-	// update local user object variable with generated 2FA code
-	user.Info.TwoFAData.StoredTwoFACode = twoFACode
+	// update local user object variable with generated verification code
+	user.Info.RedditData.VerificationData.StoredVerificationCode = twoFACode
 
 	// marshal into JSON
 	_, err = json.Marshal(&user)
@@ -269,8 +270,8 @@ func GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// store user 2FA data in db
-	userData, err := coindropverification.UpdateRedditVerificationCode(user)
+	// store user verification data in db
+	userData, err := coindropdb.UpdateRedditVerificationCode(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -283,13 +284,13 @@ func GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully generated 2FA code for user: %s\n\n", user.Info.RedditData.Username)
+	fmt.Printf("Successfully generated verification code for user: %s\n\n", user.Info.RedditData.Username)
 }
 
-// ValidateRedditVerificationCode validates the temporary 2FA code
+// ValidateRedditVerificationCode validates the temporary verification code
 func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// declare new variable of type User
-	user := new(goreddit.User)
+	user := new(coindropdb.User)
 
 	// initialize struct for reddit auth sessions
 	authSession := new(goreddit.AuthSessions)
@@ -312,34 +313,34 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// pull stored 2FA code from DB
-	storedUserInfo, err := goreddit.GetUser(user)
+	// pull stored verification code from DB
+	storedUserInfo, err := coindropdb.GetUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	// check reddit for matching 2FA code
+	// check reddit for matching verification code
 	updatedUserObj, err := authSession.GetRecentPostsFromSubreddit(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	fmt.Printf("Checking %s against %s\n\n", updatedUserObj.Info.TwoFAData.PostedTwoFACode, storedUserInfo.Info.TwoFAData.StoredTwoFACode)
+	fmt.Printf("Checking %s against %s\n\n", updatedUserObj.Info.RedditData.VerificationData.PostedVerificationCode, storedUserInfo.Info.RedditData.VerificationData.StoredVerificationCode)
 
-	// secondary validation of 2FA code
-	if updatedUserObj.Info.TwoFAData.PostedTwoFACode != storedUserInfo.Info.TwoFAData.StoredTwoFACode {
+	// secondary validation of verification code
+	if updatedUserObj.Info.RedditData.VerificationData.PostedVerificationCode != storedUserInfo.Info.RedditData.VerificationData.StoredVerificationCode {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	// update 2FA field values
-	storedUserInfo.Info.TwoFAData.PostedTwoFACode = updatedUserObj.Info.TwoFAData.PostedTwoFACode
-	storedUserInfo.Info.TwoFAData.IsValidated = true
+	// update verification field values
+	storedUserInfo.Info.RedditData.VerificationData.PostedVerificationCode = updatedUserObj.Info.RedditData.VerificationData.PostedVerificationCode
+	storedUserInfo.Info.RedditData.VerificationData.IsVerified = true
 
 	// update db with new info since verification codes matched
-	userData, err := coindropverification.UpdateRedditVerificationCode(storedUserInfo)
+	userData, err := coindropdb.UpdateRedditVerificationCode(storedUserInfo)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -352,13 +353,13 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully validated 2FA code for user: %s\n\n", user.Info.RedditData.Username)
+	fmt.Printf("Successfully validated verification code for user: %s\n\n", user.Info.RedditData.Username)
 }
 
 // RedditUpdate returns Reddit profile info about the user
 func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	// declare new variable of type User
-	user := new(goreddit.User)
+	user := new(coindropdb.User)
 
 	// initialize struct for reddit auth sessions
 	authSession := new(goreddit.AuthSessions)
@@ -405,7 +406,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// update db with new Reddit profile info
-	userData, err := goreddit.UpdateRedditInfo(user)
+	userData, err := coindropdb.UpdateRedditInfo(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -425,7 +426,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 
 // StackUserAdd adds a single user listing to db
 func StackUserAdd(w http.ResponseWriter, r *http.Request) {
-	stackUser := new(gostackoverflow.StackOverflowData)
+	user := new(coindropdb.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -436,14 +437,14 @@ func StackUserAdd(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, stackUser)
+	err = json.Unmarshal(body, user.Info.StackOverflowData)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
 	// add user listing to db
-	userData, err := gostackoverflow.AddStackUser(stackUser)
+	userData, err := coindropdb.AddStackUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -457,12 +458,12 @@ func StackUserAdd(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully added user: %v\n\n", stackUser.UserID)
+	fmt.Printf("Successfully added user: %v\n\n", user.Info.StackOverflowData.UserID)
 }
 
 // StackUserGet returns information about a single user
 func StackUserGet(w http.ResponseWriter, r *http.Request) {
-	stackUser := new(gostackoverflow.StackOverflowData)
+	user := new(coindropdb.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -473,14 +474,14 @@ func StackUserGet(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, &stackUser)
+	err = json.Unmarshal(body, user.Info.StackOverflowData)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
 	// get user listing by name
-	userData, err := gostackoverflow.GetStackUser(stackUser)
+	userData, err := coindropdb.GetStackUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -493,13 +494,13 @@ func StackUserGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully returned information for user: %v\n\n", stackUser.UserID)
+	fmt.Printf("Successfully returned information for user: %v\n\n", user.Info.StackOverflowData.UserID)
 }
 
 // GenerateStackVerificationCode creates a verifcation code for Stack Overflow
 func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
-	// declare new variable user of StackUser struct
-	stackUser := new(gostackoverflow.StackOverflowData)
+	// declare new variable user of User struct
+	user := new(coindropdb.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -510,30 +511,30 @@ func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, &stackUser)
+	err = json.Unmarshal(body, user.Info.StackOverflowData)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	// generate temporary 2FA code
+	// generate temporary verification code
 	verificationCode := coindropverification.GenerateVerificationCode()
 
 	// promotional display code
 	displayCode := fmt.Sprintf("[COINDROP.IO - IT PAYS TO CONTRIBUTE: %s]", verificationCode)
 
 	// update local user object variable with generated verification code
-	stackUser.VerificationData.StoredVerificationCode = displayCode
+	user.Info.StackOverflowData.VerificationData.StoredVerificationCode = displayCode
 
 	// marshal into JSON
-	_, err = json.Marshal(&stackUser)
+	_, err = json.Marshal(&user.Info.StackOverflowData)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
 	// store user verification data in db
-	stackUserData, err := gostackoverflow.UpdateVerificationCode(stackUser)
+	stackUserData, err := coindropdb.UpdateStackVerificationCode(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -547,13 +548,13 @@ func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully generated verification code for user: %v\n\n", stackUser.UserID)
+	fmt.Printf("Successfully generated verification code for user: %v\n\n", user.Info.StackOverflowData.UserID)
 }
 
 // ValidateStackVerificationCode validates the temporary verification code
 func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
-	// declare new variable user of StackUser struct
-	stackUser := new(gostackoverflow.StackOverflowData)
+	// declare new variable user of User struct
+	user := new(coindropdb.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -564,41 +565,41 @@ func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, &stackUser)
+	err = json.Unmarshal(body, &user.Info.StackOverflowData)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
 	// pull stored verification code from DB
-	storedStackUser, err := gostackoverflow.GetStackUser(stackUser)
+	storedStackUser, err := coindropdb.GetStackUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
 	// check Stack Overflow for matching verification code
-	updatedStackUser, err := stackUser.GetProfileByUserID()
+	updatedStackUser, err := gostackoverflow.GetProfileByUserID(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	fmt.Printf("Checking %s against %s\n\n", updatedStackUser.VerificationData.PostedVerificationCode, storedStackUser.VerificationData.StoredVerificationCode)
+	fmt.Printf("Checking %s against %s\n\n", storedStackUser.Info.StackOverflowData.VerificationData.PostedVerificationCode, storedStackUser.Info.StackOverflowData.VerificationData.StoredVerificationCode)
 
 	// secondary validation to see if codes match
-	if !strings.Contains(updatedStackUser.VerificationData.PostedVerificationCode, storedStackUser.VerificationData.StoredVerificationCode) {
+	if !strings.Contains(updatedStackUser.Info.StackOverflowData.VerificationData.PostedVerificationCode, storedStackUser.Info.StackOverflowData.VerificationData.StoredVerificationCode) {
 		log.Println("[!] Verification codes do not match!\n")
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
-	// update 2FA field values
-	storedStackUser.VerificationData.PostedVerificationCode = updatedStackUser.VerificationData.PostedVerificationCode
-	storedStackUser.VerificationData.IsVerified = true
+	// update verification field values
+	storedStackUser.Info.StackOverflowData.VerificationData.PostedVerificationCode = updatedStackUser.Info.StackOverflowData.VerificationData.PostedVerificationCode
+	storedStackUser.Info.StackOverflowData.VerificationData.IsVerified = true
 
-	// update db with new info since 2FA codes matched
-	userData, err := gostackoverflow.UpdateVerificationCode(storedStackUser)
+	// update db with new info since verification codes matched
+	userData, err := coindropdb.UpdateStackVerificationCode(storedStackUser)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -611,13 +612,13 @@ func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully validated verification code for user: %v\n\n", stackUser.UserID)
+	fmt.Printf("Successfully validated verification code for user: %v\n\n", user.Info.StackOverflowData.UserID)
 }
 
 // StackUserUpdate updates and returns profile info about the user
 func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	// declare new variable of type User
-	stackUser := new(gostackoverflow.StackOverflowData)
+	user := new(coindropdb.User)
 
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -628,7 +629,7 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, &stackUser)
+	err = json.Unmarshal(body, &user.Info.StackOverflowData)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -636,7 +637,7 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("[+] Retrieving Stack Overflow About info\n")
 	// get general about info for user
-	stackUser, err = stackUser.GetProfileByUserID()
+	user, err = gostackoverflow.GetProfileByUserID(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -644,14 +645,14 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("[+] Retrieving Stack Overflow associated accounts info\n")
 	// get list of trophies user has been awarded
-	stackUser, err = stackUser.GetAssociatedAccounts()
+	user, err = gostackoverflow.GetAssociatedAccounts(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
 	// update db with new Reddit profile info
-	userData, err := gostackoverflow.UpdateStackAboutInfo(stackUser)
+	userData, err := coindropdb.UpdateStackAboutInfo(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -664,5 +665,5 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully updated Reddit info for user: %v\n\n", stackUser.UserID)
+	fmt.Printf("Successfully updated Reddit info for user: %v\n\n", user.Info.StackOverflowData.UserID)
 }
