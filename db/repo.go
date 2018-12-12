@@ -53,9 +53,12 @@ func AddUser(u *User) (*User, error) {
 }
 
 // GetUsers returns info for all users
+// TODO:
+// return all users across multiple tables
+// currently only returns reddit users
 func GetUsers(users *Users) (*Users, error) {
 	// create SQL statement for db query
-	sqlStatement := `SELECT * FROM coindropdb`
+	sqlStatement := `SELECT * FROM coindropdb,stackoverflowdb`
 
 	// execute db query by passing in prepared SQL statement
 	rows, err := Client.Query(sqlStatement)
@@ -68,11 +71,13 @@ func GetUsers(users *Users) (*Users, error) {
 	// iterate over rows
 	for rows.Next() {
 		// initialize new struct per user in db to hold user info
-		var id int
+		var ID int
+		var userID int
 		user := User{}
 
 		err = rows.Scan(
-			&id,
+			// reddit
+			&userID,
 			&user.Info.RedditData.Username,
 			&user.Info.WalletAddress,
 			&user.Info.RedditData.CommentKarma,
@@ -82,6 +87,15 @@ func GetUsers(users *Users) (*Users, error) {
 			&user.Info.RedditData.VerificationData.PostedVerificationCode,
 			&user.Info.RedditData.VerificationData.StoredVerificationCode,
 			&user.Info.RedditData.VerificationData.IsVerified,
+			// stack overlow
+			&ID,
+			&user.Info.StackOverflowData.ExchangeAccountID,
+			&user.Info.StackOverflowData.UserID,
+			&user.Info.StackOverflowData.DisplayName,
+			pq.Array(&user.Info.StackOverflowData.Accounts),
+			&user.Info.StackOverflowData.VerificationData.PostedVerificationCode,
+			&user.Info.StackOverflowData.VerificationData.StoredVerificationCode,
+			&user.Info.StackOverflowData.VerificationData.IsVerified,
 		)
 		if err != nil {
 			return users, err
@@ -94,6 +108,8 @@ func GetUsers(users *Users) (*Users, error) {
 	if err != nil {
 		return users, err
 	}
+
+	sqlStatement = `SELECT * FROM coindropdb`
 
 	return users, nil
 }
