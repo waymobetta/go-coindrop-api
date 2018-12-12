@@ -55,8 +55,14 @@ func (a *AuthSessions) GetUserTrophies(user *db.User) error {
 	for _, trophy := range trophies {
 		trophySlice = append(trophySlice, trophy.Name)
 	}
+
+	if len(trophySlice) == 0 {
+		trophySlice = []string{""}
+	}
+
 	// assign trophySlice to User struct
 	user.Info.RedditData.Trophies = trophySlice
+
 	return nil
 }
 

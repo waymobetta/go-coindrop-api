@@ -33,7 +33,7 @@ curl -H "Content-type: application/json" -d '{"info": {"wallet_address": "", "re
 curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}, "wallet_address": "0xETHEREUM"}}' 'localhost:5000/api/v1/updatewallet'
 
 # user 2
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}, "wallet_address": "0xETHEREUM"}}' 'localhost:5000/api/v1/updatewallet'
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}, "wallet_address": "0xTESTWALLET"}}' 'localhost:5000/api/v1/updatewallet'
 
 // POST: GET REDDIT INFO
 

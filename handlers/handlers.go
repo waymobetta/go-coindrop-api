@@ -474,7 +474,7 @@ func StackUserGet(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, user.Info.StackOverflowData)
+	err = json.Unmarshal(body, &user.Info.StackOverflowData)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
