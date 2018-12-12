@@ -437,7 +437,7 @@ func UpdateStackAboutInfo(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db update
-	sqlStatement := `UPDATE stackoverflowdb SET exchange_account_id = $1, accounts = $2 WHERE user_id = $3`
+	sqlStatement := `UPDATE stackoverflowdb SET exchange_account_id = $1, display_name = $2, accounts = $3 WHERE user_id = $4`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -448,7 +448,7 @@ func UpdateStackAboutInfo(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique reddit username as the identifier
-	_, err = stmt.Exec(u.Info.StackOverflowData.ExchangeAccountID, pq.Array(u.Info.StackOverflowData.Accounts), u.Info.StackOverflowData.UserID)
+	_, err = stmt.Exec(u.Info.StackOverflowData.ExchangeAccountID, u.Info.StackOverflowData.DisplayName, pq.Array(u.Info.StackOverflowData.Accounts), u.Info.StackOverflowData.UserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()

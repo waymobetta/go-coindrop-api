@@ -79,7 +79,7 @@ func GetProfileByUserID(u *db.User) (*db.User, error) {
 	// NOTE: there should only be a single item
 	for index := range aboutProfResStruct.Items {
 		u.Info.StackOverflowData = db.StackOverflowData{
-			DisplayName:       aboutProfResStruct.Items[index].DisplayName,
+			DisplayName:       aboutProfResStruct.Items[0].DisplayName,
 			ExchangeAccountID: aboutProfResStruct.Items[index].AccountID,
 			UserID:            aboutProfResStruct.Items[index].UserID,
 			Accounts:          accounts,

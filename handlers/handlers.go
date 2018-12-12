@@ -56,6 +56,9 @@ func UserAdd(w http.ResponseWriter, r *http.Request) {
 }
 
 // UsersGet handles queries to return all stored users
+// TODO:
+// return all users across multiple tables
+// currently only returns reddit users
 func UsersGet(w http.ResponseWriter, r *http.Request) {
 	// initialize new variable user of User struct
 	users := new(db.Users)
@@ -511,7 +514,7 @@ func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, user.Info.StackOverflowData)
+	err = json.Unmarshal(body, &user.Info.StackOverflowData)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
