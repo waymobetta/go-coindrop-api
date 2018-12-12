@@ -18,7 +18,6 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
 		// If there is something wrong with the request body, return a 400 status
-		w.WriteHeader(http.StatusBadRequest)
 		http.Error(w, err.Error(), 400)
 		return
 	}
@@ -30,7 +29,6 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	// Next, insert the username, along with the hashed password into the database
 	if _, err := db.Client.Query(`INSERT INTO coindropdbusers (email,password) VALUES ($1,$2)`, creds.Email, string(hashedPassword)); err != nil {
 		// If there is any issue with inserting into the database, return a 500 error
-		w.WriteHeader(http.StatusInternalServerError)
 		http.Error(w, err.Error(), 500)
 		return
 	}
@@ -55,7 +53,6 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(creds)
 	if err != nil {
 		// If there is something wrong with the request body, return a 400 status
-		w.WriteHeader(http.StatusBadRequest)
 		http.Error(w, err.Error(), 400)
 		return
 	}
@@ -63,7 +60,6 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	row := db.Client.QueryRow(`SELECT password FROM coindropdbusers WHERE email=$1`, creds.Email)
 	if err != nil {
 		// If there is an issue with the database, return a 500 error
-		w.WriteHeader(http.StatusInternalServerError)
 		http.Error(w, err.Error(), 500)
 		return
 	}
@@ -74,11 +70,9 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if storedCreds.Email != creds.Email {
 			// If an entry with the username does not exist, send an "Unauthorized"(401) status
-			w.WriteHeader(http.StatusUnauthorized)
 			http.Error(w, err.Error(), 401)
 			return
 		}
-		w.WriteHeader(http.StatusInternalServerError)
 		http.Error(w, err.Error(), 500)
 		return
 	}
@@ -86,7 +80,6 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	// Compare the stored hashed password, with the hashed version of the password that was received
 	if err := bcrypt.CompareHashAndPassword([]byte(storedCreds.Password), []byte(creds.Password)); err != nil {
 		// If the two passwords don't match, return a 401 status
-		w.WriteHeader(http.StatusUnauthorized)
 		http.Error(w, err.Error(), 401)
 		return
 	}

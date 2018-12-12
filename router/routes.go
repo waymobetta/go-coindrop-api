@@ -73,7 +73,7 @@ var routes = Routes{
 		"SignIn",
 		"POST",
 		"/api/v1/signin",
-		auth.SignUp,
+		auth.SignIn,
 	},
 	Route{
 		"StackUserAdd",
