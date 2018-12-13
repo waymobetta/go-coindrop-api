@@ -25,10 +25,17 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	// Salt and hash the password using the bcrypt algorithm
 	// The second argument is the cost of hashing, which we arbitrarily set as 8 (this value can be more or less, depending on the computing power you wish to utilize)
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(creds.Password), 8)
+	if err != nil {
+		// If for some reason there is an error generating the password hash from the passed in password throw 500 error
+		http.Error(w, err.Error(), 500)
+		return
+	}
 
 	// Next, insert the username, along with the hashed password into the database
 	if _, err := db.Client.Query(`INSERT INTO coindropdbusers (email,password) VALUES ($1,$2)`, creds.Email, string(hashedPassword)); err != nil {
 		// If there is any issue with inserting into the database, return a 500 error
+
+		fmt.Println(http.StatusInternalServerError)
 		http.Error(w, err.Error(), 500)
 		return
 	}
