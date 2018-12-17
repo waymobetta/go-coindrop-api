@@ -52,7 +52,7 @@ func UserAdd(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully added user: %s\n\n", user.Info.RedditData.Username)
+	fmt.Printf("Successfully added user: %v\n\n", user.Info.ID)
 }
 
 // UsersGet handles queries to return all stored users
@@ -121,7 +121,7 @@ func UserGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully returned information for user: %s\n\n", user.Info.RedditData.Username)
+	fmt.Printf("Successfully returned information for user: %v\n\n", user.Info.ID)
 }
 
 // UserRemove removes a single user listing from db
@@ -159,7 +159,7 @@ func UserRemove(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully deleted user: %s\n\n", user.Info.RedditData.Username)
+	fmt.Printf("Successfully deleted user: %v\n\n", user.Info.ID)
 }
 
 // WalletUpdate handles updates to the wallet address for a user
@@ -197,7 +197,7 @@ func WalletUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully updated wallet address for user: %s\n\n", user.Info.RedditData.Username)
+	fmt.Printf("Successfully updated wallet address for user: %v\n\n", user.Info.ID)
 }
 
 // REDDIT
@@ -237,7 +237,7 @@ func UpdateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully updated verification info for user: %s\n\n", user.Info.RedditData.Username)
+	fmt.Printf("Successfully updated verification info for user: %v\n\n", user.Info.ID)
 }
 
 // GenerateRedditVerificationCode generates a temporary verification code
@@ -261,10 +261,10 @@ func GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// generate temporary verification code
-	twoFACode := verify.GenerateVerificationCode()
+	verificationCode := verify.GenerateVerificationCode()
 
 	// update local user object variable with generated verification code
-	user.Info.RedditData.VerificationData.StoredVerificationCode = twoFACode
+	user.Info.RedditData.VerificationData.StoredVerificationCode = verificationCode
 
 	// marshal into JSON
 	_, err = json.Marshal(&user)
@@ -287,7 +287,7 @@ func GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully generated verification code for user: %s\n\n", user.Info.RedditData.Username)
+	fmt.Printf("Successfully generated verification code for user: %v\n\n", user.Info.ID)
 }
 
 // ValidateRedditVerificationCode validates the temporary verification code
@@ -356,7 +356,7 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully validated verification code for user: %s\n\n", user.Info.RedditData.Username)
+	fmt.Printf("Successfully validated verification code for user: %v\n\n", user.Info.ID)
 }
 
 // RedditUpdate returns Reddit profile info about the user
@@ -422,7 +422,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully updated Reddit info for user: %s\n\n", user.Info.RedditData.Username)
+	fmt.Printf("Successfully updated Reddit info for user: %v\n\n", user.Info.ID)
 }
 
 // STACK OVERFLOW
@@ -461,7 +461,7 @@ func StackUserAdd(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully added user: %v\n\n", user.Info.StackOverflowData.UserID)
+	fmt.Printf("Successfully added user: %v\n\n", user.Info.ID)
 }
 
 // StackUserGet returns information about a single user
@@ -497,7 +497,7 @@ func StackUserGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully returned information for user: %v\n\n", user.Info.StackOverflowData.UserID)
+	fmt.Printf("Successfully returned information for user: %v\n\n", user.Info.ID)
 }
 
 // GenerateStackVerificationCode creates a verifcation code for Stack Overflow
@@ -551,7 +551,7 @@ func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully generated verification code for user: %v\n\n", user.Info.StackOverflowData.UserID)
+	fmt.Printf("Successfully generated verification code for user: %v\n\n", user.Info.ID)
 }
 
 // ValidateStackVerificationCode validates the temporary verification code
@@ -615,7 +615,7 @@ func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully validated verification code for user: %v\n\n", user.Info.StackOverflowData.UserID)
+	fmt.Printf("Successfully validated verification code for user: %v\n\n", user.Info.ID)
 }
 
 // StackUserUpdate updates and returns profile info about the user
@@ -668,5 +668,5 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully updated Reddit info for user: %v\n\n", user.Info.StackOverflowData.UserID)
+	fmt.Printf("Successfully updated Reddit info for user: %v\n\n", user.Info.ID)
 }
