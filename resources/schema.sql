@@ -13,15 +13,15 @@ CREATE TABLE coindrop_auth (
 # REDDIT
 CREATE TABLE coindrop_reddit (
 	ID INTEGER NOT NULL UNIQUE REFERENCES coindrop_auth(ID),
-	reddit_username TEXT NOT NULL UNIQUE,
+	username TEXT NOT NULL UNIQUE,
 	wallet_address TEXT NOT NULL UNIQUE,
 	comment_karma INTEGER NOT NULL,
 	link_karma INTEGER NOT NULL,
 	subreddits TEXT ARRAY NOT NULL,
 	trophies TEXT ARRAY NOT NULL,
-	posted_twofa_code TEXT NOT NULL,
-	stored_twofa_code TEXT NOT NULL,
-	is_validated BOOLEAN NOT NULL
+	posted_verification_code TEXT NOT NULL,
+	stored_verification_code TEXT NOT NULL,
+	is_verified BOOLEAN NOT NULL
 )
 
 # STACK OVERFLOW
@@ -33,5 +33,5 @@ CREATE TABLE coindrop_stackoverflow (
 	accounts TEXT ARRAY NOT NULL,
 	posted_verification_code TEXT NOT NULL,
 	stored_verification_code TEXT NOT NULL,
-	is_validated BOOLEAN NOT NULL
+	is_verified BOOLEAN NOT NULL
 )
