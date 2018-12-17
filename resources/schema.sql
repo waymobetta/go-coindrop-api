@@ -2,8 +2,6 @@
 # TODO:
 # add Keybase data
 
-### UPDATED TABLES
-
 # AUTH
 CREATE TABLE coindrop_auth (
   ID SERIAL NOT NULL UNIQUE,
