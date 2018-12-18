@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 
 	_ "github.com/lib/pq"
 	"github.com/waymobetta/wmb"
@@ -12,10 +13,13 @@ import (
 func init() {
 	wmb.Clear()
 
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s", host, port, user, password, dbname, sslmode)
+	args := os.Args
 
-	if host != "localhost" {
-		psqlInfo = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s", host, port, user, password, dbname)
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s", host, port, user, password, dbname)
+
+	if len(args) > 1 {
+		fmt.Println("[+] Connecting to localhost\n")
+		psqlInfo = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s", lHost, lPort, lUser, lPassword, lDbname, lSslmode)
 	}
 
 	_client, err := sql.Open("postgres", psqlInfo)
@@ -23,6 +27,5 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// defer Client.Close()
 	fmt.Println("api ready..\n")
 }
