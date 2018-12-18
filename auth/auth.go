@@ -32,7 +32,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Next, insert the username, along with the hashed password into the database
-	if _, err := db.Client.Query(`INSERT INTO coindropdbusers (email,password) VALUES ($1,$2)`, creds.Email, string(hashedPassword)); err != nil {
+	if _, err := db.Client.Query(`INSERT INTO coindrop_auth (email,password) VALUES ($1,$2)`, creds.Email, string(hashedPassword)); err != nil {
 		// If there is any issue with inserting into the database, return a 500 error
 		http.Error(w, err.Error(), 500)
 		return
@@ -62,7 +62,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Get the existing entry present in the database for the given username
-	row := db.Client.QueryRow(`SELECT password FROM coindropdbusers WHERE email=$1`, creds.Email)
+	row := db.Client.QueryRow(`SELECT password FROM coindrop_auth WHERE email=$1`, creds.Email)
 	if err != nil {
 		// If there is an issue with the database, return a 500 error
 		http.Error(w, err.Error(), 500)

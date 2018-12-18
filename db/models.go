@@ -17,6 +17,7 @@ type User struct {
 
 // Info info
 type Info struct {
+	ID                int                 `json:"id"`
 	WalletAddress     string              `json:"wallet_address"`
 	RedditData        RedditData          `json:"reddit_data"`
 	KeybaseData       keybase.KeybaseData `json:"keybase_data"`
@@ -27,7 +28,8 @@ type Info struct {
 
 // RedditData info
 type RedditData struct {
-	Username          string                  `json:"reddit_username"`
+	ID                int                     `json:"id"`
+	Username          string                  `json:"username"`
 	LinkKarma         int                     `json:"link_karma"`
 	CommentKarma      int                     `json:"comment_karma"`
 	AccountCreatedUTC float64                 `json:"account_created_utc"`
@@ -40,6 +42,7 @@ type RedditData struct {
 
 // StackOverflowData struct contains all essential info for Stack User
 type StackOverflowData struct {
+	ID                int                     `json:"id"`
 	ExchangeAccountID int                     `json:"exchange_account_id"`
 	UserID            int                     `json:"user_id"`
 	DisplayName       string                  `json:"display_name"`

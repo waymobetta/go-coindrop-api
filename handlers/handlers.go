@@ -316,7 +316,7 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// pull stored verification code from DB
+	// pull stored verification code + reddit username from DB
 	storedUserInfo, err := db.GetUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -324,7 +324,7 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check reddit for matching verification code
-	updatedUserObj, err := authSession.GetRecentPostsFromSubreddit(user)
+	updatedUserObj, err := authSession.GetRecentPostsFromSubreddit(storedUserInfo)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -385,6 +385,13 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// pull stored reddit username from DB
+	user, err = db.GetUser(user)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
 	log.Println("[+] Retrieving Reddit About info\n")
 	// get general about info for user
 	user, err = authSession.GetAboutInfo(user)
@@ -440,7 +447,7 @@ func StackUserAdd(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, &user.Info.StackOverflowData)
+	err = json.Unmarshal(body, &user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -477,7 +484,7 @@ func StackUserGet(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, &user.Info.StackOverflowData)
+	err = json.Unmarshal(body, &user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -514,7 +521,7 @@ func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, &user.Info.StackOverflowData)
+	err = json.Unmarshal(body, &user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -530,7 +537,7 @@ func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	user.Info.StackOverflowData.VerificationData.StoredVerificationCode = displayCode
 
 	// marshal into JSON
-	_, err = json.Marshal(&user.Info.StackOverflowData)
+	_, err = json.Marshal(&user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -568,7 +575,7 @@ func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, &user.Info.StackOverflowData)
+	err = json.Unmarshal(body, &user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -632,7 +639,14 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, &user.Info.StackOverflowData)
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// pull stored verification code from DB
+	user, err = db.GetStackUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -668,5 +682,5 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Successfully updated Reddit info for user: %v\n\n", user.Info.ID)
+	fmt.Printf("Successfully updated Stack Overflow info for user: %v\n\n", user.Info.ID)
 }

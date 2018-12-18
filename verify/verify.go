@@ -35,6 +35,6 @@ func GenerateVerificationCode() string {
 		cache >>= letterIdxBits
 		remain--
 	}
-	twoFACode := fmt.Sprintf("ADT-%s", string(byteSlice))
+	twoFACode := fmt.Sprintf("CD-%s", string(byteSlice))
 	return twoFACode
 }

@@ -13,43 +13,43 @@ curl -H "Content-type: application/json" 'localhost:5000/api/v1/getusers'
 
 // GET: GET SINGLE USER
 
-# user
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/getuser'
+# user (by id)
+curl -H "Content-type: application/json" -d '{"info": {"id":1}}' 'localhost:5000/api/v1/getreddituser'
 
 # user 2
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/getuser'
+curl -H "Content-type: application/json" -d '{"info": {"id":2}}' 'localhost:5000/api/v1/getreddituser'
 
 // POST: ADD USER
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"wallet_address": "0xBEEF", "reddit_data": {"reddit_username": "ethereum1227", "link_karma": 1500, "comment_karma": 500, "account_created_utc": 123491823, "trophies": ["one-year-award"], "subreddits": ["ethereum", "bitcoin", "adchain"]}}}' 'localhost:5000/api/v1/adduser'
+curl -H "Content-type: application/json" -d '{"info": {"id": 1, "wallet_address": "0xBEEF", "reddit_data": {"username": "ethereum1227", "link_karma": 1500, "comment_karma": 500, "account_created_utc": 123491823, "trophies": ["one-year-award"], "subreddits": ["ethereum", "bitcoin", "adchain"]}}}' 'localhost:5000/api/v1/addreddituser'
 
 # user2
-curl -H "Content-type: application/json" -d '{"info": {"wallet_address": "", "reddit_data": {"reddit_username": "qa_adchain_registry", "link_karma": 0, "comment_karma": 0, "trophies": [], "subreddits": []}}}' 'localhost:5000/api/v1/adduser'
+curl -H "Content-type: application/json" -d '{"info": {"id": 1, "wallet_address": "", "reddit_data": {"username": "", "link_karma": 0, "comment_karma": 0, "trophies": [], "subreddits": []}}}' 'localhost:5000/api/v1/addreddituser'
 
 // POST: UPDATE USER WALLET
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}, "wallet_address": "0xETHEREUM"}}' 'localhost:5000/api/v1/updatewallet'
+curl -H "Content-type: application/json" -d '{"info": {"id":1, "wallet_address": "0xETHEREUM"}}' 'localhost:5000/api/v1/updatewallet'
 
 # user 2
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}, "wallet_address": "0xTESTWALLET"}}' 'localhost:5000/api/v1/updatewallet'
+curl -H "Content-type: application/json" -d '{"info": {"id":2, "wallet_address": "0xTESTWALLET"}}' 'localhost:5000/api/v1/updatewallet'
 
 // POST: GET REDDIT INFO
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/updateredditinfo'
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"username": "ethereum1227"}}}' 'localhost:5000/api/v1/updateredditinfo'
 
 # user 2
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/updateredditinfo'
+curl -H "Content-type: application/json" -d '{"info": {"id":1}}' 'localhost:5000/api/v1/updateredditinfo'
 
 // POST: DELETE USER
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/removeuser'
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"username": "ethereum1227"}}}' 'localhost:5000/api/v1/removereddituser'
 
 # user 2
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/removeuser'
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/removereddituser'
 
 /// STACK OVERFLOW
 
@@ -61,12 +61,12 @@ curl -H "Content-type: application/json" -d '{"user_id":7253829}' 'localhost:500
 // POST: ADD USER
 
 # user
-curl -H "Content-type: application/json" -d '{"exchange_account_id":0,"user_id":7253829,"display_name":"","accounts":[""],"posted_verification_code":"","stored_verification_code":"","is_verified":false}' 'localhost:5000/api/v1/addstackuser'
+curl -H "Content-type: application/json" -d '{"info": {"id": 1, "stackoverflow_data": {"exchange_account_id": 0,"user_id": 0, "display_name": "","accounts": [],"posted_verification_code": "","stored_verification_code": "","is_verified": false}}}' 'localhost:5000/api/v1/addstackuser'
 
 // POST: UPDATE USER
 
 # user
-curl -H "Content-type: application/json" -d '{"user_id":7253829}' 'localhost:5000/api/v1/updatestackinfo'
+curl -H "Content-type: application/json" -d '{"info": {"id": 1}}' 'localhost:5000/api/v1/updatestackinfo'
 
 ===============================================================================
 VERIFICATION
@@ -77,30 +77,30 @@ VERIFICATION
 // POST: GENERATE VERIFICATION CODE
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/generateredditverificationcode'
+curl -H "Content-type: application/json" -d '{"info": {"id":2}}' 'localhost:5000/api/v1/generateredditverificationcode'
 
 # user 2
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/generateredditverificationcode'
+curl -H "Content-type: application/json" -d '{"info": {"id": 1, "reddit_data": {"username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/generateredditverificationcode'
 
 // POST: VALIDATE VERIFICATION CODE
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "ethereum1227"}}}' 'localhost:5000/api/v1/validateredditverificationcode'
+curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"username": "ethereum1227"}}}' 'localhost:5000/api/v1/validateredditverificationcode'
 
 # user 2
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"reddit_username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/validateredditverificationcode'
+curl -H "Content-type: application/json" -d '{"info": {"id":1}}' 'localhost:5000/api/v1/validateredditverificationcode'
 
 /// STACK OVERFLOW
 
 // POST: GENERATE VERIFICATION CODE
 
 # user
-curl -H "Content-type: application/json" -d '{"user_id": 7253829}' 'localhost:5000/api/v1/generatestackverificationcode'
+curl -H "Content-type: application/json" -d '{"info": {"id": 1, "stackoverflow_data": {"user_id": 7253829}}}' 'localhost:5000/api/v1/generatestackverificationcode'
 
 // POST: VALIDATE VERIFICATION CODE
 
 # user
-curl -H "Content-type: application/json" -d '{"user_id": 7253829}' 'localhost:5000/api/v1/validatestackverificationcode'
+curl -H "Content-type: application/json" -d '{"info": {"id": 1}}' 'localhost:5000/api/v1/validatestackverificationcode'
 
 ===============================================================================
 AUTH

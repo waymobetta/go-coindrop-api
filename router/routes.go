@@ -18,19 +18,19 @@ var routes = Routes{
 	Route{
 		"UserRemove",
 		"POST",
-		"/api/v1/removeuser",
+		"/api/v1/removereddituser",
 		handlers.UserRemove,
 	},
 	Route{
 		"UserAdd",
 		"POST",
-		"/api/v1/adduser",
+		"/api/v1/addreddituser",
 		handlers.UserAdd,
 	},
 	Route{
 		"UserGet",
 		"POST",
-		"/api/v1/getuser",
+		"/api/v1/getreddituser",
 		handlers.UserGet,
 	},
 	Route{
