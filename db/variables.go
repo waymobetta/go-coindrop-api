@@ -19,8 +19,6 @@ var (
 	user     = os.Getenv("AWS_COINDROP_STAGING_USER")
 	dbname   = os.Getenv("AWS_COINDROP_STAGING_DBNAME")
 	password = os.Getenv("AWS_COINDROP_STAGING_PASS")
-	// disable SSL for local testing
-	sslmode = "disable"
 
 	// environment variables for local db
 	lHost     = os.Getenv("LOCAL_PG_HOST")
