@@ -1,0 +1,7 @@
+{
+	"AWSEBDockerrunVersion": "1",
+	"Logging": "/app/go-coindrop-api",
+	"Image": {
+		"Update": "false"	
+	}
+}
