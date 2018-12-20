@@ -22,3 +22,9 @@ compress:
 .PHONY: done
 done:
 	@echo "done"
+
+.PHONY: prep
+prep:
+	@echo "prepping..\n"
+	@command rm -rf ../go-coindrop-api-EB; mkdir ../go-coindrop-api-EB; cp -r . ../go-coindrop-api-EB; rm -rf ../go-coindrop-api-EB/.git; cd ../go-coindrop-api-EB; zip ../go-coindrop-api-EB.zip -r * .[^.]*; mv ../go-coindrop-api-EB.zip ~/Desktop; rm -rf ~/go/src/github.com/waymobetta/go-coindrop-api-EB
+	
