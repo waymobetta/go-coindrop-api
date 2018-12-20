@@ -10,6 +10,12 @@ type Routes []Route
 
 var routes = Routes{
 	Route{
+		"HandleIndex",
+		"GET",
+		"/api/v1/test",
+		handlers.HandleIndex,
+	},
+	Route{
 		"UsersGet",
 		"GET",
 		"/api/v1/getusers",

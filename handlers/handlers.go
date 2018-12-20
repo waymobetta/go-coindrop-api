@@ -15,6 +15,13 @@ import (
 	"github.com/waymobetta/go-coindrop-api/verify"
 )
 
+// TEST
+
+// HandleIndex prints test to screen if successful
+func HandleIndex(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "test")
+}
+
 // PROFILE
 
 // UserAdd adds a single user listing to db

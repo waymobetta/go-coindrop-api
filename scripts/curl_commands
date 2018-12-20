@@ -49,14 +49,14 @@ curl -H "Content-type: application/json" -d '{"info": {"id":1}}' 'localhost:5000
 curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"username": "ethereum1227"}}}' 'localhost:5000/api/v1/removereddituser'
 
 # user 2
-curl -H "Content-type: application/json" -d '{"info": {"reddit_data": {"username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/removereddituser'
+curl -H "Content-type: application/json" -d '{"info": {"id": 1}}' 'localhost:5000/api/v1/removereddituser'
 
 /// STACK OVERFLOW
 
 // POST: GET USER
 
 # user
-curl -H "Content-type: application/json" -d '{"user_id":7253829}' 'localhost:5000/api/v1/getstackuser'
+curl -H "Content-type: application/json" -d '{"info": {"id": 1}}' 'localhost:5000/api/v1/getstackuser'
 
 // POST: ADD USER
 
