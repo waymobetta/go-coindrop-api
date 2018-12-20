@@ -9,7 +9,6 @@ RUN go get github.com/gorilla/mux
 RUN go get github.com/lib/pq
 RUN go get github.com/waymobetta/wmb
 RUN go get github.com/jzelinskie/geddit
-RUN go get github.com/waymobetta/go-coindrop-api
 RUN go get golang.org/x/crypto/bcrypt
 
 ADD . /app
