@@ -54,9 +54,6 @@ func AddUser(u *User) (*User, error) {
 }
 
 // GetUsers returns info for all users
-// TODO:
-// return all users across multiple tables
-// currently only returns reddit users
 func GetUsers(users *Users) (*Users, error) {
 	// create SQL statement for db query
 	sqlStatement := `SELECT * FROM coindrop_reddit,coindrop_stackoverflow`
