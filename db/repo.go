@@ -23,7 +23,7 @@ func AddUser(u *User) (*User, error) {
 
 	defer stmt.Close()
 
-	// execute db write using unique seller info hash to access data
+	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
 		u.Info.ID,
 		u.Info.RedditData.Username,
