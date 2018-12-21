@@ -41,8 +41,8 @@ func (a *AuthSessions) InitRedditAuth() (*AuthSessions, error) {
 	return a, nil
 }
 
-// GetUserTrophies method to retrieve slice of user trophies
-func (a *AuthSessions) GetUserTrophies(user *db.User) error {
+// GetRedditUserTrophies method to retrieve slice of user trophies
+func (a *AuthSessions) GetRedditUserTrophies(user *db.User) error {
 	// get trophies of reddit user
 	trophies, err := a.OAuthSession.UserTrophies(user.Info.RedditData.Username)
 	if err != nil {

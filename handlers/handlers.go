@@ -68,7 +68,7 @@ func UsersGet(w http.ResponseWriter, r *http.Request) {
 	users := new(db.Users)
 
 	// return slice of structs of all user listings
-	_, err := db.GetUsers(users)
+	_, err := db.GetRedditUsers(users)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -112,7 +112,7 @@ func UserGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get user listing by name
-	userData, err := db.GetUser(user)
+	userData, err := db.GetRedditUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -149,7 +149,7 @@ func UserRemove(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// remove user listing from db
-	userData, err := db.RemoveUser(user)
+	userData, err := db.RemoveRedditUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -321,7 +321,7 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// pull stored verification code + reddit username from DB
-	storedUserInfo, err := db.GetUser(user)
+	storedUserInfo, err := db.GetRedditUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -390,7 +390,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// pull stored reddit username from DB
-	user, err = db.GetUser(user)
+	user, err = db.GetRedditUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -406,7 +406,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("[+] Retrieving Reddit Trophy info\n")
 	// get list of trophies user has been awarded
-	if err = authSession.GetUserTrophies(user); err != nil {
+	if err = authSession.GetRedditUserTrophies(user); err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
