@@ -45,7 +45,7 @@ func UserAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// add user listing to db
-	userData, err := db.AddUser(user)
+	userData, err := db.AddRedditUser(user)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -63,9 +63,6 @@ func UserAdd(w http.ResponseWriter, r *http.Request) {
 }
 
 // UsersGet handles queries to return all stored users
-// TODO:
-// return all users across multiple tables
-// currently only returns reddit users
 func UsersGet(w http.ResponseWriter, r *http.Request) {
 	// initialize new variable user of User struct
 	users := new(db.Users)
