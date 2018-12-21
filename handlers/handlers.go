@@ -68,7 +68,7 @@ func UsersGet(w http.ResponseWriter, r *http.Request) {
 	users := new(db.Users)
 
 	// return slice of structs of all user listings
-	_, err := db.GetRedditUsers(users)
+	_, err := db.GetUsers(users)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
