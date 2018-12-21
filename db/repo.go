@@ -4,8 +4,8 @@ import (
 	"github.com/lib/pq"
 )
 
-// AddUser adds the listing and associated data of a single user
-func AddUser(u *User) (*User, error) {
+// AddRedditUser adds the listing and associated data of a single user
+func AddRedditUser(u *User) (*User, error) {
 	// initialize statement write to database
 	tx, err := Client.Begin()
 	if err != nil {
@@ -107,8 +107,8 @@ func GetUsers(users *Users) (*Users, error) {
 	return users, nil
 }
 
-// GetUser returns info for a single user
-func GetUser(u *User) (*User, error) {
+// GetRedditUser returns info for a single user
+func GetRedditUser(u *User) (*User, error) {
 	// create SQL statement for db writes
 	sqlStatement := `SELECT * FROM coindrop_reddit WHERE id = $1`
 
@@ -143,8 +143,8 @@ func GetUser(u *User) (*User, error) {
 	return u, nil
 }
 
-// RemoveUser removes the listing and associated data of a single user
-func RemoveUser(u *User) (*User, error) {
+// RemoveRedditUser removes the listing and associated data of a single user
+func RemoveRedditUser(u *User) (*User, error) {
 	// initialize statement write to database
 	tx, err := Client.Begin()
 	if err != nil {
