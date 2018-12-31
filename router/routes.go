@@ -16,6 +16,12 @@ var routes = Routes{
 		handlers.HandleIndex,
 	},
 	Route{
+		"GetID",
+		"POST",
+		"/api/v1/getid",
+		auth.GetID,
+	},
+	Route{
 		"UsersGet",
 		"GET",
 		"/api/v1/getusers",

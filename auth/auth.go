@@ -99,3 +99,42 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("[*] Successful sign in for user:", creds.Email)
 }
+
+// GetID gets a user id from their email
+func GetID(w http.ResponseWriter, r *http.Request) {
+	// initialize new Credentials struct object
+	creds := &Credentials{}
+
+	user := new(db.User)
+
+	// Parse and decode the request body into a new `Credentials` instance
+	err := json.NewDecoder(r.Body).Decode(creds)
+	if err != nil {
+		// If there is something wrong with the request body, return a 400 status
+		http.Error(w, err.Error(), 400)
+		return
+	}
+	// Get the existing entry present in the database for the given username
+	row := db.Client.QueryRow(`SELECT id FROM coindrop_auth WHERE email=$1`, creds.Email)
+	if err != nil {
+		// If there is an issue with the database, return a 500 error
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	// Store the obtained password in `storedCreds`
+	err = row.Scan(&user.Info.ID)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+
+	if err := json.NewEncoder(w).Encode(user.Info.ID); err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	fmt.Println("[*] Returned user id: ", user.Info.ID)
+}

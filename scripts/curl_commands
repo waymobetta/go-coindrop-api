@@ -61,7 +61,7 @@ curl -H "Content-type: application/json" -d '{"info": {"id": 1}}' 'localhost:500
 // POST: ADD USER
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"id": 1, "stackoverflow_data": {"exchange_account_id": 0,"user_id": 0, "display_name": "","accounts": [],"posted_verification_code": "","stored_verification_code": "","is_verified": false}}}' 'localhost:5000/api/v1/addstackuser'
+curl -H "Content-type: application/json" -d '{"info": {"id": 1, "stackoverflow_data": {"exchange_account_id": 0,"user_id": 7253829, "display_name": "","accounts": [],"posted_verification_code": "","stored_verification_code": "","is_verified": false}}}' 'localhost:5000/api/v1/addstackuser'
 
 // POST: UPDATE USER
 
@@ -95,7 +95,7 @@ curl -H "Content-type: application/json" -d '{"info": {"id":1}}' 'localhost:5000
 // POST: GENERATE VERIFICATION CODE
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"id": 1, "stackoverflow_data": {"user_id": 7253829}}}' 'localhost:5000/api/v1/generatestackverificationcode'
+curl -H "Content-type: application/json" -d '{"info": {"id": 1}}' 'localhost:5000/api/v1/generatestackverificationcode'
 
 // POST: VALIDATE VERIFICATION CODE
 

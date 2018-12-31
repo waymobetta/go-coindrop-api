@@ -539,6 +539,7 @@ func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 
 	// update local user object variable with generated verification code
 	user.Info.StackOverflowData.VerificationData.StoredVerificationCode = displayCode
+	user.Info.ID = user.Info.ID
 
 	// marshal into JSON
 	_, err = json.Marshal(&user)

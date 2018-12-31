@@ -308,7 +308,7 @@ func UpdateStackVerificationCode(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db update
-	sqlStatement := `UPDATE coindrop_stackoverflow SET user_id = $1, stored_verification_code = $2, posted_verification_code = $3, is_verified = $4 WHERE id = $5`
+	sqlStatement := `UPDATE coindrop_stackoverflow SET stored_verification_code = $1, posted_verification_code = $2, is_verified = $3 WHERE id = $4`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -319,7 +319,7 @@ func UpdateStackVerificationCode(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique reddit username as the identifier
-	_, err = stmt.Exec(u.Info.StackOverflowData.UserID, u.Info.StackOverflowData.VerificationData.StoredVerificationCode, u.Info.StackOverflowData.VerificationData.PostedVerificationCode, u.Info.StackOverflowData.VerificationData.IsVerified, u.Info.ID)
+	_, err = stmt.Exec(u.Info.StackOverflowData.VerificationData.StoredVerificationCode, u.Info.StackOverflowData.VerificationData.PostedVerificationCode, u.Info.StackOverflowData.VerificationData.IsVerified, u.Info.ID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
