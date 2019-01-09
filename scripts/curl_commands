@@ -106,5 +106,8 @@ TASKS
 // GET: ALL TASKS
 curl -H "Content-type: application/json" 'localhost:5000/api/v1/gettasks'
 
+// POST: ADD TASK
+curl -H "Content-type: application/json" -d '{"title": "test", "type": "promotion", "author": "adchain", "description": "test description", "token": "adtoken", "token_allocation": 2500, "badge_data": {"name": "test badge name"}}' 'localhost:5000/api/v1/addtask'
+
 // GET: TASKS ASSIGNED TO USER
 curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "56f2fc1c-48e9-4bb2-b850-3ed472902e2f"}}' 'localhost:5000/api/v1/getusertasks'
