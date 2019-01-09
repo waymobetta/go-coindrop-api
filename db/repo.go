@@ -85,6 +85,7 @@ func GetUsers(users *Users) (*Users, error) {
 			&user.Info.RedditData.VerificationData.IsVerified,
 			// stack overflow
 			&user.Info.ID,
+			&user.Info.AuthUserID,
 			&user.Info.StackOverflowData.ExchangeAccountID,
 			&user.Info.StackOverflowData.UserID,
 			&user.Info.StackOverflowData.DisplayName,
@@ -121,7 +122,7 @@ func GetRedditUser(u *User) (*User, error) {
 
 	defer stmt.Close()
 
-	row := stmt.QueryRow(u.Info.ID)
+	row := stmt.QueryRow(u.Info.AuthUserID)
 
 	// initialize new struct to hold user info
 
@@ -310,7 +311,7 @@ func UpdateStackVerificationCode(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db update
-	sqlStatement := `UPDATE coindrop_stackoverflow SET stored_verification_code = $1, posted_verification_code = $2, is_verified = $3 WHERE auth_user_id = $4`
+	sqlStatement := `UPDATE coindrop_stackoverflow SET user_id = $1, stored_verification_code = $2, posted_verification_code = $3, is_verified = $4 WHERE auth_user_id = $5`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -321,7 +322,7 @@ func UpdateStackVerificationCode(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique reddit username as the identifier
-	_, err = stmt.Exec(u.Info.StackOverflowData.VerificationData.StoredVerificationCode, u.Info.StackOverflowData.VerificationData.PostedVerificationCode, u.Info.StackOverflowData.VerificationData.IsVerified, u.Info.AuthUserID)
+	_, err = stmt.Exec(u.Info.StackOverflowData.UserID, u.Info.StackOverflowData.VerificationData.StoredVerificationCode, u.Info.StackOverflowData.VerificationData.PostedVerificationCode, u.Info.StackOverflowData.VerificationData.IsVerified, u.Info.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
@@ -401,7 +402,7 @@ func GetStackUser(u *User) (*User, error) {
 
 	defer stmt.Close()
 
-	row := stmt.QueryRow(u.Info.ID)
+	row := stmt.QueryRow(u.Info.AuthUserID)
 
 	err = row.Scan(
 		&u.Info.ID,
@@ -457,4 +458,48 @@ func UpdateStackAboutInfo(u *User) (*User, error) {
 	}
 
 	return u, nil
+}
+
+// GetTasks returns all available tasks
+func GetTasks(tasks *Tasks) (Tasks, error) {
+	tx, err := Client.Begin()
+	if err != nil {
+		return err
+	}
+
+	sqlStatement := `SELECT * FROM coindrop_tasks`
+
+	// execute db query by passing in prepared SQL statement
+	rows, err := Client.Query(sqlStatement)
+	if err != nil {
+		return tasks, err
+	}
+
+	defer rows.Close()
+
+	// iterate over rows
+	for rows.Next() {
+		// initialize new struct per user in db to hold user info
+		task := Task{}
+		err = rows.Scan(
+			&task.ID,
+			&task.Title,
+			&task.Author,
+			&task.Description,
+			&task.Token,
+			&task.TokenAllocation,
+			&task.BadgeData.Name,
+		)
+		if err != nil {
+			return tasks, err
+		}
+		// append task object to slice of tasks
+		tasks.Tasks = append(tasks.Tasks, task)
+	}
+	err = rows.Err()
+	if err != nil {
+		return tasks, err
+	}
+
+	return tasks, nil
 }
