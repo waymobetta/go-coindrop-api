@@ -60,3 +60,27 @@ type Community struct {
 	AnswerCount   int            `json:"community_answer_count"`
 	BadgeCounts   map[string]int `json:"community_badge_counts"`
 }
+
+// Tasks struct contains info about tasks
+type Tasks struct {
+	Tasks []Task `json:"tasks"`
+}
+
+// Task struct contains info about a task
+type Task struct {
+	ID              int    `json:"id"`
+	Title           string `json:"title"`
+	Author          string `json:"author"`
+	Description     string `json:"description"`
+	Token           string `json:"token"`
+	TokenAllocation int    `json:"token_allocation"`
+	BadgeData       Badge  `json:"badge_data"`
+}
+
+// Badge struct contains info about a badge
+type Badge struct {
+	ID          int    `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Recipients  int    `json:"recipients"`
+}
