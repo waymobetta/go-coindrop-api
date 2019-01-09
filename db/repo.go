@@ -13,7 +13,7 @@ func AddRedditUser(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `INSERT INTO coindrop_reddit (id, username, wallet_address, comment_karma, link_karma, subreddits, trophies, posted_verification_code, stored_verification_code, is_verified) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
+	sqlStatement := `INSERT INTO coindrop_reddit (auth_user_id, username, wallet_address, comment_karma, link_karma, subreddits, trophies, posted_verification_code, stored_verification_code, is_verified) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -25,7 +25,7 @@ func AddRedditUser(u *User) (*User, error) {
 
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
-		u.Info.ID,
+		u.Info.AuthUserID,
 		u.Info.RedditData.Username,
 		u.Info.WalletAddress,
 		u.Info.RedditData.LinkKarma,
@@ -73,6 +73,7 @@ func GetUsers(users *Users) (*Users, error) {
 		err = rows.Scan(
 			// reddit
 			&user.Info.ID,
+			&user.Info.AuthUserID,
 			&user.Info.RedditData.Username,
 			&user.Info.WalletAddress,
 			&user.Info.RedditData.CommentKarma,
@@ -110,7 +111,7 @@ func GetUsers(users *Users) (*Users, error) {
 // GetRedditUser returns info for a single user
 func GetRedditUser(u *User) (*User, error) {
 	// create SQL statement for db writes
-	sqlStatement := `SELECT * FROM coindrop_reddit WHERE id = $1`
+	sqlStatement := `SELECT * FROM coindrop_reddit WHERE auth_user_id = $1`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -126,6 +127,7 @@ func GetRedditUser(u *User) (*User, error) {
 
 	err = row.Scan(
 		&u.Info.ID,
+		&u.Info.AuthUserID,
 		&u.Info.RedditData.Username,
 		&u.Info.WalletAddress,
 		&u.Info.RedditData.CommentKarma,
@@ -152,7 +154,7 @@ func RemoveRedditUser(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `DELETE FROM coindrop_reddit WHERE id = $1`
+	sqlStatement := `DELETE FROM coindrop_reddit WHERE auth_user_id = $1`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -163,7 +165,7 @@ func RemoveRedditUser(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique ID as the identifier
-	_, err = stmt.Exec(u.Info.ID)
+	_, err = stmt.Exec(u.Info.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
@@ -190,7 +192,7 @@ func UpdateWallet(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db update
-	sqlStatement := `UPDATE coindrop_reddit SET wallet_address = $1 WHERE id = $2`
+	sqlStatement := `UPDATE coindrop_reddit SET wallet_address = $1 WHERE auth_user_id = $2`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -201,7 +203,7 @@ func UpdateWallet(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique ID as the identifier
-	_, err = stmt.Exec(u.Info.WalletAddress, u.Info.ID)
+	_, err = stmt.Exec(u.Info.WalletAddress, u.Info.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
@@ -230,7 +232,7 @@ func UpdateRedditInfo(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db update
-	sqlStatement := `UPDATE coindrop_reddit SET comment_karma = $1, link_karma = $2, subreddits = $3, trophies = $4 WHERE id = $5`
+	sqlStatement := `UPDATE coindrop_reddit SET comment_karma = $1, link_karma = $2, subreddits = $3, trophies = $4 WHERE auth_user_id = $5`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -241,7 +243,7 @@ func UpdateRedditInfo(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique ID as the identifier
-	_, err = stmt.Exec(u.Info.RedditData.CommentKarma, u.Info.RedditData.LinkKarma, pq.Array(u.Info.RedditData.Subreddits), pq.Array(u.Info.RedditData.Trophies), u.Info.ID)
+	_, err = stmt.Exec(u.Info.RedditData.CommentKarma, u.Info.RedditData.LinkKarma, pq.Array(u.Info.RedditData.Subreddits), pq.Array(u.Info.RedditData.Trophies), u.Info.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
@@ -270,7 +272,7 @@ func UpdateRedditVerificationCode(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db update
-	sqlStatement := `UPDATE coindrop_reddit SET username = $1, stored_verification_code = $2, posted_verification_code = $3, is_verified = $4 WHERE id = $5`
+	sqlStatement := `UPDATE coindrop_reddit SET username = $1, stored_verification_code = $2, posted_verification_code = $3, is_verified = $4 WHERE auth_user_id = $5`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -281,7 +283,7 @@ func UpdateRedditVerificationCode(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique reddit username as the identifier
-	_, err = stmt.Exec(u.Info.RedditData.Username, u.Info.RedditData.VerificationData.StoredVerificationCode, u.Info.RedditData.VerificationData.PostedVerificationCode, u.Info.RedditData.VerificationData.IsVerified, u.Info.ID)
+	_, err = stmt.Exec(u.Info.RedditData.Username, u.Info.RedditData.VerificationData.StoredVerificationCode, u.Info.RedditData.VerificationData.PostedVerificationCode, u.Info.RedditData.VerificationData.IsVerified, u.Info.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
@@ -308,7 +310,7 @@ func UpdateStackVerificationCode(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db update
-	sqlStatement := `UPDATE coindrop_stackoverflow SET stored_verification_code = $1, posted_verification_code = $2, is_verified = $3 WHERE id = $4`
+	sqlStatement := `UPDATE coindrop_stackoverflow SET stored_verification_code = $1, posted_verification_code = $2, is_verified = $3 WHERE auth_user_id = $4`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -319,7 +321,7 @@ func UpdateStackVerificationCode(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique reddit username as the identifier
-	_, err = stmt.Exec(u.Info.StackOverflowData.VerificationData.StoredVerificationCode, u.Info.StackOverflowData.VerificationData.PostedVerificationCode, u.Info.StackOverflowData.VerificationData.IsVerified, u.Info.ID)
+	_, err = stmt.Exec(u.Info.StackOverflowData.VerificationData.StoredVerificationCode, u.Info.StackOverflowData.VerificationData.PostedVerificationCode, u.Info.StackOverflowData.VerificationData.IsVerified, u.Info.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
@@ -348,7 +350,7 @@ func AddStackUser(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `INSERT INTO coindrop_stackoverflow (id, exchange_account_id,user_id,display_name,accounts,posted_verification_code,stored_verification_code,is_verified) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`
+	sqlStatement := `INSERT INTO coindrop_stackoverflow (auth_user_id, exchange_account_id,user_id,display_name,accounts,posted_verification_code,stored_verification_code,is_verified) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -360,7 +362,7 @@ func AddStackUser(u *User) (*User, error) {
 
 	// execute db write using unique seller info hash to access data
 	_, err = stmt.Exec(
-		&u.Info.ID,
+		&u.Info.AuthUserID,
 		&u.Info.StackOverflowData.ExchangeAccountID,
 		&u.Info.StackOverflowData.UserID,
 		&u.Info.StackOverflowData.DisplayName,
@@ -389,7 +391,7 @@ func AddStackUser(u *User) (*User, error) {
 // GetStackUser returns info for a single user
 func GetStackUser(u *User) (*User, error) {
 	// create SQL statement for db writes
-	sqlStatement := `SELECT * FROM coindrop_stackoverflow WHERE id = $1`
+	sqlStatement := `SELECT * FROM coindrop_stackoverflow WHERE auth_user_id = $1`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -403,6 +405,7 @@ func GetStackUser(u *User) (*User, error) {
 
 	err = row.Scan(
 		&u.Info.ID,
+		&u.Info.AuthUserID,
 		&u.Info.StackOverflowData.ExchangeAccountID,
 		&u.Info.StackOverflowData.UserID,
 		&u.Info.StackOverflowData.DisplayName,
@@ -427,7 +430,7 @@ func UpdateStackAboutInfo(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db update
-	sqlStatement := `UPDATE coindrop_stackoverflow SET exchange_account_id = $1, display_name = $2, accounts = $3 WHERE id = $4`
+	sqlStatement := `UPDATE coindrop_stackoverflow SET exchange_account_id = $1, display_name = $2, accounts = $3 WHERE auth_user_id = $4`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -438,7 +441,7 @@ func UpdateStackAboutInfo(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique reddit username as the identifier
-	_, err = stmt.Exec(u.Info.StackOverflowData.ExchangeAccountID, u.Info.StackOverflowData.DisplayName, pq.Array(u.Info.StackOverflowData.Accounts), u.Info.ID)
+	_, err = stmt.Exec(u.Info.StackOverflowData.ExchangeAccountID, u.Info.StackOverflowData.DisplayName, pq.Array(u.Info.StackOverflowData.Accounts), u.Info.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
