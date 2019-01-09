@@ -528,7 +528,7 @@ func AddTask(t *Task) (*Task, error) {
 		&t.Description,
 		&t.Token,
 		&t.TokenAllocation,
-		&t.BadgeData,
+		&t.BadgeData.Name,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
