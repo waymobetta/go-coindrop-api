@@ -506,7 +506,7 @@ func AddTask(t *Task) (*Task, error) {
 	// initialize statement write to database
 	tx, err := Client.Begin()
 	if err != nil {
-		return u, err
+		return t, err
 	}
 
 	// create SQL statement for db writes
@@ -515,7 +515,7 @@ func AddTask(t *Task) (*Task, error) {
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
 	if err != nil {
-		return u, err
+		return t, err
 	}
 
 	defer stmt.Close()
