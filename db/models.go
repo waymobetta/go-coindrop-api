@@ -70,6 +70,7 @@ type Tasks struct {
 type Task struct {
 	ID              int    `json:"id"`
 	Title           string `json:"title"`
+	Type            string `json:"type"`
 	Author          string `json:"author"`
 	Description     string `json:"description"`
 	Token           string `json:"token"`
