@@ -111,4 +111,10 @@ var routes = Routes{
 		"/api/v1/validatestackverificationcode",
 		handlers.ValidateStackVerificationCode,
 	},
+	Route{
+		"TasksGet",
+		"GET",
+		"/api/v1/gettasks",
+		handlers.GetTasks,
+	},
 }
