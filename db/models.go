@@ -18,6 +18,7 @@ type User struct {
 // Info info
 type Info struct {
 	ID                int                 `json:"id"`
+	AuthUserID        string              `json:"auth_user_id"`
 	WalletAddress     string              `json:"wallet_address"`
 	RedditData        RedditData          `json:"reddit_data"`
 	KeybaseData       keybase.KeybaseData `json:"keybase_data"`
