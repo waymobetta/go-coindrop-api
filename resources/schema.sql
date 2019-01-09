@@ -5,8 +5,7 @@
 # AUTH
 CREATE TABLE coindrop_auth (
   ID SERIAL NOT NULL UNIQUE,
-  email TEXT NOT NULL UNIQUE,
-  password TEXT NOT NULL,
+  user_id TEXT NOT NULL UNIQUE,
   PRIMARY KEY(ID)
 )
 
