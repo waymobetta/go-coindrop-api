@@ -13,8 +13,6 @@ func AddUserID(w http.ResponseWriter, r *http.Request) {
 	// initialize new Credentials struct object
 	creds := &Credentials{}
 
-	user := new(db.User)
-
 	// Parse and decode the request body into a new `Credentials` instance
 	err := json.NewDecoder(r.Body).Decode(creds)
 	if err != nil {
@@ -38,7 +36,7 @@ func AddUserID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("[*] Successful sign up for user:", creds.UserID)
+	fmt.Println("[*] Successfully added user:", creds.UserID)
 }
 
 // GetID gets a user id from their email
