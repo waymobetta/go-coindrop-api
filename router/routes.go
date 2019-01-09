@@ -117,4 +117,10 @@ var routes = Routes{
 		"/api/v1/gettasks",
 		handlers.TasksGet,
 	},
+	Route{
+		"TaskAdd",
+		"POST",
+		"/api/v1/addtask",
+		handlers.TaskAdd,
+	},
 }
