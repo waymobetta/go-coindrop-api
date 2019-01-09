@@ -6,10 +6,12 @@ import (
 	"net/http"
 
 	"github.com/waymobetta/go-coindrop-api/db"
+	"github.com/waymobetta/go-coindrop-api/utils"
 )
 
 // AddUserID adds an AWS cognito user ID to the coindrop_auth table
 func AddUserID(w http.ResponseWriter, r *http.Request) {
+	response := make(map[string]interface{})
 	// initialize new Credentials struct object
 	creds := &Credentials{}
 
@@ -28,19 +30,23 @@ func AddUserID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-
 	if err := json.NewEncoder(w).Encode(&creds); err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
 	fmt.Println("[*] Successfully added user:", creds.AuthUserID)
+
+	response = utils.Message(true, "success")
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Add("Content-type", "application/json")
+	utils.Respond(w, response)
+	return
 }
 
 // GetID gets a user id from their email
 func GetID(w http.ResponseWriter, r *http.Request) {
+	response := make(map[string]interface{})
 	// initialize new Credentials struct object
 	creds := &Credentials{}
 
@@ -67,13 +73,16 @@ func GetID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-
 	if err := json.NewEncoder(w).Encode(user.Info.ID); err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
 	fmt.Println("[*] Returned user id: ", user.Info.ID)
+
+	response = utils.Message(true, "success")
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Add("Content-type", "application/json")
+	utils.Respond(w, response)
+	return
 }
