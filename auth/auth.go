@@ -22,7 +22,7 @@ func AddUserID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Next, insert the AWS cognito user ID into the coindrop_auth table
-	if _, err := db.Client.Query(`INSERT INTO coindrop_auth (user_id) VALUES ($1)`, creds.UserID); err != nil {
+	if _, err := db.Client.Query(`INSERT INTO coindrop_auth (auth_user_id) VALUES ($1)`, creds.AuthUserID); err != nil {
 		// If there is any issue with inserting into the database, return a 500 error
 		http.Error(w, err.Error(), 500)
 		return
@@ -36,7 +36,7 @@ func AddUserID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("[*] Successfully added user:", creds.UserID)
+	fmt.Println("[*] Successfully added user:", creds.AuthUserID)
 }
 
 // GetID gets a user id from their email
@@ -54,7 +54,7 @@ func GetID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Get the existing entry present in the database for the given username
-	row := db.Client.QueryRow(`SELECT id FROM coindrop_auth WHERE user_id=$1`, creds.UserID)
+	row := db.Client.QueryRow(`SELECT id FROM coindrop_auth WHERE auth_user_id=$1`, creds.AuthUserID)
 	if err != nil {
 		// If there is an issue with the database, return a 500 error
 		http.Error(w, err.Error(), 500)
