@@ -115,6 +115,6 @@ var routes = Routes{
 		"TasksGet",
 		"GET",
 		"/api/v1/gettasks",
-		handlers.GetTasks,
+		handlers.TasksGet,
 	},
 }
