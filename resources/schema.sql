@@ -39,11 +39,12 @@ CREATE TABLE coindrop_stackoverflow (
 
 # TASKS
 CREATE TABLE coindrop_tasks (
-	task_id SERIAL NOT NULL UNIQUE,
-	task_name TEXT NOT NULL,
-	task_author TEXT NOT NULL UNIQUE,
-	task_description TEXT NOT NULL,
-	task_token_name TEXT NOT NULL,
-	task_token_allocation INTEGER NOT NULL,
-	task_badge TEXT NOT NULL UNIQUE
+	id SERIAL NOT NULL UNIQUE,
+	title TEXT NOT NULL,
+	type TEXT NOT NULL,
+	author TEXT NOT NULL UNIQUE,
+	description TEXT NOT NULL,
+	token_name TEXT,
+	token_allocation INTEGER,
+	badge TEXT UNIQUE
 )
