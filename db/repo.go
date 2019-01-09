@@ -500,3 +500,49 @@ func GetTasks(tasks *Tasks) (*Tasks, error) {
 
 	return tasks, nil
 }
+
+// AddTask adds the listing and associated data of a single task
+func AddTask(t *Task) (*Task, error) {
+	// initialize statement write to database
+	tx, err := Client.Begin()
+	if err != nil {
+		return u, err
+	}
+
+	// create SQL statement for db writes
+	sqlStatement := `INSERT INTO coindrop_tasks (title, type, author, description, token_name, token_allocation, badge) VALUES ($1,$2,$3,$4,$5,$6,$7)`
+
+	// prepare statement
+	stmt, err := Client.Prepare(sqlStatement)
+	if err != nil {
+		return u, err
+	}
+
+	defer stmt.Close()
+
+	// execute db write using unique user ID + associated data
+	_, err = stmt.Exec(
+		&t.Title,
+		&t.Type,
+		&t.Author,
+		&t.Description,
+		&t.Token,
+		&t.TokenAllocation,
+		&t.BadgeData,
+	)
+	if err != nil {
+		// rollback transaction if error thrown
+		tx.Rollback()
+		return t, err
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaciton if error thrown
+		tx.Rollback()
+		return t, err
+	}
+
+	return t, err
+}
