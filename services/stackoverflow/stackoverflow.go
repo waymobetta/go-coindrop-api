@@ -49,11 +49,6 @@ func GetProfileByUserID(u *db.User) (*db.User, error) {
 	}
 	defer res.Body.Close()
 
-	// return if not 200
-	if res.StatusCode != http.StatusOK {
-		return u, err
-	}
-
 	// read result of GET request
 	byteArr, err := ioutil.ReadAll(res.Body)
 	if err != nil {
