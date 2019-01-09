@@ -480,6 +480,7 @@ func GetTasks(tasks *Tasks) (*Tasks, error) {
 		err = rows.Scan(
 			&task.ID,
 			&task.Title,
+			&task.Type,
 			&task.Author,
 			&task.Description,
 			&task.Token,
