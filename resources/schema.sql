@@ -5,13 +5,14 @@
 # AUTH
 CREATE TABLE coindrop_auth (
   ID SERIAL NOT NULL UNIQUE,
-  user_id TEXT NOT NULL UNIQUE,
+  auth_user_id TEXT NOT NULL UNIQUE,
   PRIMARY KEY(ID)
 )
 
 # REDDIT
 CREATE TABLE coindrop_reddit (
-	ID INTEGER NOT NULL UNIQUE REFERENCES coindrop_auth(ID),
+	ID SERIAL NOT NULL UNIQUE REFERENCES coindrop_auth(ID),
+	auth_user_id TEXT NOT NULL UNIQUE,
 	username TEXT NOT NULL UNIQUE,
 	wallet_address TEXT NOT NULL UNIQUE,
 	comment_karma INTEGER NOT NULL,
@@ -26,6 +27,7 @@ CREATE TABLE coindrop_reddit (
 # STACK OVERFLOW
 CREATE TABLE coindrop_stackoverflow (
 	ID SERIAL NOT NULL UNIQUE REFERENCES coindrop_auth(ID),
+	auth_user_id TEXT NOT NULL UNIQUE,
 	exchange_account_id INTEGER NOT NULL UNIQUE,
 	user_id INTEGER NOT NULL UNIQUE,
 	display_name TEXT NOT NULL,
