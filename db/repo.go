@@ -461,12 +461,8 @@ func UpdateStackAboutInfo(u *User) (*User, error) {
 }
 
 // GetTasks returns all available tasks
-func GetTasks(tasks *Tasks) (Tasks, error) {
-	tx, err := Client.Begin()
-	if err != nil {
-		return err
-	}
-
+func GetTasks(tasks *Tasks) (*Tasks, error) {
+	// create SQL statement for db query
 	sqlStatement := `SELECT * FROM coindrop_tasks`
 
 	// execute db query by passing in prepared SQL statement
