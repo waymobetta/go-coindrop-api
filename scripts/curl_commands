@@ -106,18 +106,7 @@ curl -H "Content-type: application/json" -d '{"info": {"id": 1}}' 'localhost:500
 AUTH
 ===============================================================================
 
-// POST: SIGNUP USER
+// POST: ADD USER ID
 
 # user
-curl -H "Content-type: application/json" -d '{"email": "ethereum1227", "password": "salad"}' 'localhost:5000/api/v1/signup'
-
-# user 2
-curl -H "Content-type: application/json" -d '{"email": "qa_adchain_registry", "password": "testest"}' 'localhost:5000/api/v1/signup'
-
-// POST: LOGIN USER
-
-# user
-curl -H "Content-Type: application/json" -d '{"email": "ethereum1227", "password": "beef"}' 'localhost:5000/api/v1/signin'
-
-# user 2
-curl -H "Content-Type: application/json" -d '{"email": "qa_adchain_registry", "password": "testest"}' 'localhost:5000/api/v1/signin'
+curl -H "Content-type: application/json" -d '{"user_id": "abc-123-def-456"}' 'localhost:5000/api/v1/adduserid'
