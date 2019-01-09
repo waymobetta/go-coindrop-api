@@ -22,6 +22,12 @@ var routes = Routes{
 		auth.GetID,
 	},
 	Route{
+		"AddUserID",
+		"POST",
+		"/api/v1/adduserid",
+		auth.AddUserID,
+	},
+	Route{
 		"UsersGet",
 		"GET",
 		"/api/v1/getusers",
@@ -74,18 +80,6 @@ var routes = Routes{
 		"POST",
 		"/api/v1/validateredditverificationcode",
 		handlers.ValidateRedditVerificationCode,
-	},
-	Route{
-		"SignUp",
-		"POST",
-		"/api/v1/signup",
-		auth.SignUp,
-	},
-	Route{
-		"SignIn",
-		"POST",
-		"/api/v1/signin",
-		auth.SignIn,
 	},
 	Route{
 		"StackUserAdd",
