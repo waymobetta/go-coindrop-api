@@ -110,3 +110,6 @@ AUTH
 
 # user
 curl -H "Content-type: application/json" -d '{"user_id": "abc-123-def-456"}' 'localhost:5000/api/v1/adduserid'
+
+// POST: GET ID
+curl -H "Content-type: application/json" -d '{"user_id": "abc-123-def-456"}' 'localhost:5000/api/v1/getid'
