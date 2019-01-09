@@ -864,3 +864,47 @@ func TasksGet(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("Successfully returned information for %d tasks\n\n", len(tasks.Tasks))
 }
+
+// TaskAdd adds a single task listing to db
+func TaskAdd(w http.ResponseWriter, r *http.Request) {
+	response := make(map[string]interface{})
+	// initialize new variable user of User struct
+	task := new(db.Task)
+
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		response = utils.Message(false, "Error reading request body")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+	defer r.Body.Close()
+
+	// unmarshal bytes into user struct
+	err = json.Unmarshal(body, task)
+	if err != nil {
+		response = utils.Message(false, "JSON Unmarshal error")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+
+	// add user listing to db
+	_, err = db.AddTask(task)
+	if err != nil {
+		response = utils.Message(false, "Could not add task to db")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+
+	response = utils.Message(true, "success")
+	w.WriteHeader(http.StatusCreated)
+	utils.Respond(w, response)
+
+	fmt.Printf("Successfully added task: %s\n\n", task.Title)
+}
