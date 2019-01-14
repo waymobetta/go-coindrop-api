@@ -13,7 +13,7 @@ func AddRedditUser(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `INSERT INTO coindrop_reddit (auth_user_id, username, wallet_address, comment_karma, link_karma, subreddits, trophies, posted_verification_code, stored_verification_code, is_verified) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
+	sqlStatement := `INSERT INTO coindrop_reddit (auth_user_id, username, comment_karma, link_karma, subreddits, trophies, posted_verification_code, stored_verification_code, is_verified) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -27,7 +27,6 @@ func AddRedditUser(u *User) (*User, error) {
 	_, err = stmt.Exec(
 		u.Info.AuthUserID,
 		u.Info.RedditData.Username,
-		u.Info.WalletAddress,
 		u.Info.RedditData.LinkKarma,
 		u.Info.RedditData.CommentKarma,
 		pq.Array(u.Info.RedditData.Subreddits),
@@ -75,7 +74,6 @@ func GetUsers(users *Users) (*Users, error) {
 			&user.Info.ID,
 			&user.Info.AuthUserID,
 			&user.Info.RedditData.Username,
-			&user.Info.WalletAddress,
 			&user.Info.RedditData.CommentKarma,
 			&user.Info.RedditData.LinkKarma,
 			pq.Array(&user.Info.RedditData.Subreddits),
@@ -130,7 +128,6 @@ func GetRedditUser(u *User) (*User, error) {
 		&u.Info.ID,
 		&u.Info.AuthUserID,
 		&u.Info.RedditData.Username,
-		&u.Info.WalletAddress,
 		&u.Info.RedditData.CommentKarma,
 		&u.Info.RedditData.LinkKarma,
 		pq.Array(&u.Info.RedditData.Subreddits),
@@ -177,44 +174,6 @@ func RemoveRedditUser(u *User) (*User, error) {
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaciton if error thrown
-		tx.Rollback()
-		return u, err
-	}
-
-	return u, nil
-}
-
-// UpdateWallet updates the wallet address of a single user
-func UpdateWallet(u *User) (*User, error) {
-	// for simplicity, update the listing rather than updating single value
-	tx, err := Client.Begin()
-	if err != nil {
-		return u, err
-	}
-
-	// create SQL statement for db update
-	sqlStatement := `UPDATE coindrop_reddit SET wallet_address = $1 WHERE auth_user_id = $2`
-
-	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
-	if err != nil {
-		return u, err
-	}
-
-	defer stmt.Close()
-
-	// execute db write using unique ID as the identifier
-	_, err = stmt.Exec(u.Info.WalletAddress, u.Info.AuthUserID)
-	if err != nil {
-		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
-	}
-
-	// commit db write
-	err = tx.Commit()
-	if err != nil {
-		// rollback transaction if error thrown
 		tx.Rollback()
 		return u, err
 	}
@@ -460,6 +419,8 @@ func UpdateStackAboutInfo(u *User) (*User, error) {
 	return u, nil
 }
 
+// TASKS
+
 // GetTasks returns all available tasks
 func GetTasks(tasks *Tasks) (*Tasks, error) {
 	// create SQL statement for db query
@@ -545,4 +506,44 @@ func AddTask(t *Task) (*Task, error) {
 	}
 
 	return t, err
+}
+
+// AUTH
+
+// UpdateWallet updates the wallet address of a single user
+func UpdateWallet(u *User) (*User, error) {
+	// for simplicity, update the listing rather than updating single value
+	tx, err := Client.Begin()
+	if err != nil {
+		return u, err
+	}
+
+	// create SQL statement for db update
+	sqlStatement := `UPDATE coindrop_auth SET wallet_address = $1 WHERE auth_user_id = $2`
+
+	// prepare statement
+	stmt, err := Client.Prepare(sqlStatement)
+	if err != nil {
+		return u, err
+	}
+
+	defer stmt.Close()
+
+	// execute db write using unique ID as the identifier
+	_, err = stmt.Exec(u.Info.WalletAddress, u.Info.AuthUserID)
+	if err != nil {
+		// rollback transaction if error thrown
+		tx.Rollback()
+		return u, err
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaction if error thrown
+		tx.Rollback()
+		return u, err
+	}
+
+	return u, nil
 }
