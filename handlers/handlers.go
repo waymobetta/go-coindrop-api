@@ -190,50 +190,6 @@ func UserRemove(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully deleted user: %v\n\n", user.Info.AuthUserID)
 }
 
-// WalletUpdate handles updates to the wallet address for a user
-func WalletUpdate(w http.ResponseWriter, r *http.Request) {
-	response := make(map[string]interface{})
-	// initialize new variable user of User struct
-	user := new(db.User)
-
-	// add limit for large payload protection
-	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-	if err != nil {
-		response = utils.Message(false, "Error reading request body")
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Header().Add("Content-type", "application/json")
-		utils.Respond(w, response)
-		return
-	}
-	defer r.Body.Close()
-
-	// unmarshal bytes into user struct
-	err = json.Unmarshal(body, &user)
-	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Header().Add("Content-type", "application/json")
-		utils.Respond(w, response)
-		return
-	}
-
-	// update the user listing in db
-	_, err = db.UpdateWallet(user)
-	if err != nil {
-		response = utils.Message(false, "Could not update user wallet")
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Header().Add("Content-type", "application/json")
-		utils.Respond(w, response)
-		return
-	}
-
-	response = utils.Message(true, "success")
-	w.WriteHeader(http.StatusCreated)
-	utils.Respond(w, response)
-
-	fmt.Printf("Successfully updated wallet address for user: %v\n\n", user.Info.AuthUserID)
-}
-
 // REDDIT
 
 // UpdateRedditVerificationCode handles updates to the verification data for a user
@@ -885,7 +841,7 @@ func TaskAdd(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, task)
 	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
