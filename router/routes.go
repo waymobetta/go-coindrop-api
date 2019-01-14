@@ -16,10 +16,10 @@ var routes = Routes{
 		handlers.HandleIndex,
 	},
 	Route{
-		"GetID",
+		"GetWalletAddress",
 		"POST",
-		"/api/v1/getid",
-		auth.GetID,
+		"/api/v1/getwalletaddress",
+		auth.GetWalletAddress,
 	},
 	Route{
 		"AddUserID",
@@ -55,7 +55,7 @@ var routes = Routes{
 		"UpdateWallet",
 		"POST",
 		"/api/v1/updatewallet",
-		handlers.WalletUpdate,
+		auth.WalletUpdate,
 	},
 	Route{
 		"RedditUpdate",
