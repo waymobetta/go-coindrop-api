@@ -66,7 +66,7 @@ func UserAdd(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully added user: %v\n\n", user.Info.AuthUserID)
+	fmt.Printf("Successfully added reddit user: %v\n\n", user.Info.AuthUserID)
 }
 
 // UsersGet handles queries to return all stored users
@@ -515,7 +515,7 @@ func StackUserAdd(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully added user: %v\n\n", user.Info.AuthUserID)
+	fmt.Printf("Successfully added stack user: %v\n\n", user.Info.AuthUserID)
 }
 
 // StackUserGet returns information about a single user
