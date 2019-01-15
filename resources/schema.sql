@@ -6,7 +6,7 @@
 CREATE TABLE coindrop_auth (
   ID SERIAL NOT NULL UNIQUE,
   auth_user_id TEXT NOT NULL UNIQUE,
-  wallet_address TEXT NOT NULL UNIQUE,
+  wallet_address TEXT UNIQUE,
   PRIMARY KEY(ID)
 )
 
