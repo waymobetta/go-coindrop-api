@@ -22,7 +22,7 @@ curl -H "Content-type: application/json" -d '{"info": {"auth_user_id":"abc-123-d
 // POST: ADD USER
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "999", "wallet_address": "1", "reddit_data": {"username": "y", "link_karma": 0, "comment_karma": 0, "trophies": [], "subreddits": [],"verification_data":{"posted_verification_code":"","stored_verification_code":"","is_verified":false}}}}' 'localhost:5000/api/v1/addreddituser'
+curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "999", "reddit_data": {"username": "y", "link_karma": 0, "comment_karma": 0, "trophies": [], "subreddits": [],"verification_data":{"posted_verification_code":"","stored_verification_code":"","is_verified":false}}}}' 'localhost:5000/api/v1/addreddituser'
 
 // POST: GET REDDIT INFO
 
@@ -86,10 +86,10 @@ AUTH
 // POST: ADD USER ID
 
 # user
-curl -H "Content-type: application/json" -d '{"auth_user_id": "abc-123-def-456"}' 'localhost:5000/api/v1/adduserid'
+curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "abc-123-def-456"}}' 'localhost:5000/api/v1/adduserid'
 
 // POST: GET ID
-curl -H "Content-type: application/json" -d '{"auth_user_id": "abc-123-def-456"}' 'localhost:5000/api/v1/getid'
+curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "abc-123-def-456"}}' 'localhost:5000/api/v1/getid'
 
 // POST: UPDATE USER WALLET
 
