@@ -89,7 +89,7 @@ AUTH
 curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "abc-123-def-456"}}' 'localhost:5000/api/v1/adduserid'
 
 // POST: GET ID
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "abc-123-def-456"}}' 'localhost:5000/api/v1/getid'
+curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "abc-123-def-456"}}' 'localhost:5000/api/v1/getwalletaddress'
 
 // POST: UPDATE USER WALLET
 
