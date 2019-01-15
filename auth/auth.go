@@ -149,7 +149,7 @@ func GetWalletAddress(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response = utils.Message(true, "success")
+	response = utils.Message(true, user.Info.WalletAddress)
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Add("Content-type", "application/json")
 	utils.Respond(w, response)
