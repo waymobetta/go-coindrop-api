@@ -13,7 +13,7 @@ func AddRedditUser(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `INSERT INTO coindrop_reddit (auth_user_id, username, comment_karma, link_karma, subreddits, trophies, posted_verification_code, stored_verification_code, is_verified) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`
+	sqlStatement := `INSERT INTO coindrop_reddit (auth_user_id, username, comment_karma, link_karma, subreddits, trophies, posted_verification_code, stored_verification_code, is_verified) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
