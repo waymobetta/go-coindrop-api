@@ -34,7 +34,7 @@ func UserAdd(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -45,7 +45,7 @@ func UserAdd(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, user)
 	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -55,7 +55,7 @@ func UserAdd(w http.ResponseWriter, r *http.Request) {
 	// add user listing to db
 	_, err = db.AddRedditUser(user)
 	if err != nil {
-		response = utils.Message(false, "Could not add Reddit user to db")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -78,7 +78,7 @@ func UsersGet(w http.ResponseWriter, r *http.Request) {
 	// return slice of structs of all user listings
 	_, err := db.GetUsers(users)
 	if err != nil {
-		response = utils.Message(false, "Could not retrieve users from db")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -88,7 +88,7 @@ func UsersGet(w http.ResponseWriter, r *http.Request) {
 	// marshall into JSON
 	_, err = json.Marshal(users)
 	if err != nil {
-		response = utils.Message(false, "JSON Marshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -111,7 +111,7 @@ func UserGet(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -122,7 +122,7 @@ func UserGet(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -132,7 +132,7 @@ func UserGet(w http.ResponseWriter, r *http.Request) {
 	// get user listing by name
 	userData, err := db.GetRedditUser(user)
 	if err != nil {
-		response = utils.Message(false, "Could not get Reddit user")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -155,7 +155,7 @@ func UserRemove(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -166,7 +166,7 @@ func UserRemove(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -176,7 +176,7 @@ func UserRemove(w http.ResponseWriter, r *http.Request) {
 	// remove user listing from db
 	_, err = db.RemoveRedditUser(user)
 	if err != nil {
-		response = utils.Message(false, "Could not remove Reddit user")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -201,7 +201,7 @@ func UpdateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -212,7 +212,7 @@ func UpdateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -222,7 +222,7 @@ func UpdateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// update the user listing in db
 	_, err = db.UpdateRedditVerificationCode(user)
 	if err != nil {
-		response = utils.Message(false, "Could not update Reddit verification code")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -245,7 +245,7 @@ func GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -256,7 +256,7 @@ func GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -272,7 +272,7 @@ func GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// marshal into JSON
 	_, err = json.Marshal(&user)
 	if err != nil {
-		response = utils.Message(false, "JSON Marshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -282,7 +282,7 @@ func GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// store user verification data in db
 	_, err = db.UpdateRedditVerificationCode(user)
 	if err != nil {
-		response = utils.Message(false, "Could not update Reddit verification code")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -311,7 +311,7 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -322,7 +322,7 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -332,7 +332,7 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// pull stored verification code + reddit username from DB
 	storedUserInfo, err := db.GetRedditUser(user)
 	if err != nil {
-		response = utils.Message(false, "Could not get Reddit user")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -342,7 +342,7 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// check reddit for matching verification code
 	updatedUserObj, err := authSession.GetRecentPostsFromSubreddit(storedUserInfo)
 	if err != nil {
-		response = utils.Message(false, "Could not get recent subreddit posts")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -353,7 +353,7 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 
 	// secondary validation of verification code
 	if updatedUserObj.Info.RedditData.VerificationData.PostedVerificationCode != storedUserInfo.Info.RedditData.VerificationData.StoredVerificationCode {
-		response = utils.Message(false, "Verification codes do not match")
+		response = utils.Message(false, "unsuccessful")
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -367,7 +367,7 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// update db with new info since verification codes matched
 	_, err = db.UpdateRedditVerificationCode(storedUserInfo)
 	if err != nil {
-		response = utils.Message(false, "Could not update Reddit verification code")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -396,7 +396,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -407,7 +407,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -417,7 +417,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	// pull stored reddit username from DB
 	user, err = db.GetRedditUser(user)
 	if err != nil {
-		response = utils.Message(false, "Could not get Reddit user")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -428,7 +428,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	// get general about info for user
 	user, err = authSession.GetAboutInfo(user)
 	if err != nil {
-		response = utils.Message(false, "Could not get Reddit user about info")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -438,7 +438,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	log.Println("[+] Retrieving Reddit Trophy info\n")
 	// get list of trophies user has been awarded
 	if err = authSession.GetRedditUserTrophies(user); err != nil {
-		response = utils.Message(false, "Could not get Reddit user trophies")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -449,7 +449,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	// get slice of subreddits user is subscribed to based on activity
 	user, err = authSession.GetSubmittedInfo(user)
 	if err != nil {
-		response = utils.Message(false, "Could not get Reddit user submitted info")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -459,7 +459,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	// update db with new Reddit profile info
 	_, err = db.UpdateRedditInfo(user)
 	if err != nil {
-		response = utils.Message(false, "Could not update db with Reddit info")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -483,7 +483,7 @@ func StackUserAdd(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -494,7 +494,7 @@ func StackUserAdd(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -504,7 +504,7 @@ func StackUserAdd(w http.ResponseWriter, r *http.Request) {
 	// add user listing to db
 	_, err = db.AddStackUser(user)
 	if err != nil {
-		response = utils.Message(false, "Could not add Stack Overflow user")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -526,7 +526,7 @@ func StackUserGet(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -537,7 +537,7 @@ func StackUserGet(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -547,7 +547,7 @@ func StackUserGet(w http.ResponseWriter, r *http.Request) {
 	// get user listing by name
 	userData, err := db.GetStackUser(user)
 	if err != nil {
-		response = utils.Message(false, "Could not get Stack Overflow user")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -570,7 +570,7 @@ func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -581,7 +581,7 @@ func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -602,7 +602,7 @@ func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// marshal into JSON
 	_, err = json.Marshal(&user)
 	if err != nil {
-		response = utils.Message(false, "JSON Marshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -612,7 +612,7 @@ func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// store user verification data in db
 	_, err = db.UpdateStackVerificationCode(user)
 	if err != nil {
-		response = utils.Message(false, "Could not update Stack Overflow verification code")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -636,7 +636,7 @@ func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -647,7 +647,7 @@ func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -657,7 +657,7 @@ func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// pull stored verification code from DB
 	storedStackUser, err := db.GetStackUser(user)
 	if err != nil {
-		response = utils.Message(false, "Could not get user from db")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -667,7 +667,7 @@ func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// check Stack Overflow for matching verification code
 	updatedStackUser, err := stackoverflow.GetProfileByUserID(user)
 	if err != nil {
-		response = utils.Message(false, "Could not return profile information")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -694,7 +694,7 @@ func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	// update db with new info since verification codes matched
 	_, err = db.UpdateStackVerificationCode(storedStackUser)
 	if err != nil {
-		response = utils.Message(false, "Could not update db with verification code")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -717,7 +717,7 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -728,7 +728,7 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -738,7 +738,7 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	// pull stored verification code from DB
 	storedUserInfo, err := db.GetStackUser(user)
 	if err != nil {
-		response = utils.Message(false, "Could not get Stack Overflow user info")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -749,7 +749,7 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	// get general about info for user
 	_, err = stackoverflow.GetProfileByUserID(user)
 	if err != nil {
-		response = utils.Message(false, "Could not get Stack Overflow user about me info")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -760,7 +760,7 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	// get list of trophies user has been awarded
 	_, err = stackoverflow.GetAssociatedAccounts(user)
 	if err != nil {
-		response = utils.Message(false, "Could not get Stack Overflow user associated accounts info")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -774,7 +774,7 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	// update db with new Reddit profile info
 	_, err = db.UpdateStackAboutInfo(user)
 	if err != nil {
-		response = utils.Message(false, "Could not update db with Stack Overflow profile info")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -797,7 +797,7 @@ func TasksGet(w http.ResponseWriter, r *http.Request) {
 	// return slice of structs of all task listings
 	_, err := db.GetTasks(tasks)
 	if err != nil {
-		response = utils.Message(false, "Could not retrieve tasks from db")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -807,7 +807,7 @@ func TasksGet(w http.ResponseWriter, r *http.Request) {
 	// marshall into JSON
 	_, err = json.Marshal(tasks)
 	if err != nil {
-		response = utils.Message(false, "JSON Marshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -830,7 +830,7 @@ func TaskAdd(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -851,7 +851,7 @@ func TaskAdd(w http.ResponseWriter, r *http.Request) {
 	// add user listing to db
 	_, err = db.AddTask(task)
 	if err != nil {
-		response = utils.Message(false, "Could not add task to db")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
