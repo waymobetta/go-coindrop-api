@@ -21,7 +21,7 @@ func AddUserID(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -33,7 +33,7 @@ func AddUserID(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &user)
 	if err != nil {
 		fmt.Println(err)
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -43,7 +43,7 @@ func AddUserID(w http.ResponseWriter, r *http.Request) {
 	// Next, insert the AWS cognito user ID into the coindrop_auth table
 	if _, err := db.Client.Query(`INSERT INTO coindrop_auth (auth_user_id) VALUES ($1)`, user.Info.AuthUserID); err != nil {
 		// If there is any issue with inserting into the database, return a 500 error
-		response = utils.Message(false, "Could not add coindrop user to db")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -67,7 +67,7 @@ func WalletUpdate(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -78,7 +78,7 @@ func WalletUpdate(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -88,7 +88,7 @@ func WalletUpdate(w http.ResponseWriter, r *http.Request) {
 	// update the user listing in db
 	_, err = db.UpdateWallet(user)
 	if err != nil {
-		response = utils.Message(false, "Could not update user wallet")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -111,7 +111,7 @@ func GetWalletAddress(w http.ResponseWriter, r *http.Request) {
 	// add limit for large payload protection
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		response = utils.Message(false, "Error reading request body")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -123,7 +123,7 @@ func GetWalletAddress(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &user)
 	if err != nil {
 		fmt.Println(err)
-		response = utils.Message(false, "JSON Unmarshal error")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -134,7 +134,7 @@ func GetWalletAddress(w http.ResponseWriter, r *http.Request) {
 	row := db.Client.QueryRow(`SELECT wallet_address FROM coindrop_auth WHERE auth_user_id=$1`, user.Info.AuthUserID)
 	if err != nil {
 		// If there is an issue with the database, return a 500 error
-		response = utils.Message(false, "Could not get user info")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -142,7 +142,7 @@ func GetWalletAddress(w http.ResponseWriter, r *http.Request) {
 	}
 	err = row.Scan(&user.Info.WalletAddress)
 	if err != nil {
-		response = utils.Message(false, "Could not read rows from user info")
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
