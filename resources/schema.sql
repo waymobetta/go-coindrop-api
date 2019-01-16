@@ -14,7 +14,7 @@ CREATE TABLE coindrop_auth (
 CREATE TABLE coindrop_reddit (
 	ID SERIAL NOT NULL UNIQUE,
 	auth_user_id TEXT NOT NULL UNIQUE,
-	username TEXT NOT NULL UNIQUE,
+	username TEXT NOT NULL,
 	comment_karma INTEGER NOT NULL,
 	link_karma INTEGER NOT NULL,
 	subreddits TEXT ARRAY NOT NULL,
@@ -29,8 +29,8 @@ CREATE TABLE coindrop_reddit (
 CREATE TABLE coindrop_stackoverflow (
 	ID SERIAL NOT NULL UNIQUE,
 	auth_user_id TEXT NOT NULL UNIQUE,
-	exchange_account_id INTEGER UNIQUE NOT NULL,
-	user_id INTEGER UNIQUE NOT NULL,
+	exchange_account_id INTEGER NOT NULL,
+	user_id INTEGER NOT NULL,
 	display_name TEXT NOT NULL,
 	accounts TEXT ARRAY NOT NULL,
 	posted_verification_code TEXT NOT NULL,
