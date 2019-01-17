@@ -15,6 +15,8 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
+// code credit: https://github.com/mura123yasu/go-cognito/blob/master/verifyToken.go
+
 func getJSON(url string, target interface{}) error {
 	var myClient = &http.Client{Timeout: 10 * time.Second}
 	r, err := myClient.Get(url)
