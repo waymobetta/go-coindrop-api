@@ -59,8 +59,8 @@ func (s *ServiceUser) AuthMiddleware(next http.Handler) http.Handler {
 			w.Header().Add("Content-type", "application/json")
 			utils.Respond(w, response)
 		} else {
-			w.Header().Set("token", token.Raw)
-			fmt.Fprintln(w, "WELCOME!")
+			next.ServeHTTP(w, r)
+			return
 		}
 	})
 }
