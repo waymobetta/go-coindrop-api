@@ -66,8 +66,10 @@ func GetStackUser(u *User) (*User, error) {
 
 	defer stmt.Close()
 
+	// initialize row object
 	row := stmt.QueryRow(u.Info.AuthUserID)
 
+	// iterate over row object to retrieve queried value
 	err = row.Scan(
 		&u.Info.ID,
 		&u.Info.AuthUserID,

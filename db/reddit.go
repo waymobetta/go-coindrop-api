@@ -118,10 +118,10 @@ func GetRedditUser(u *User) (*User, error) {
 
 	defer stmt.Close()
 
+	// initialize row object
 	row := stmt.QueryRow(u.Info.AuthUserID)
 
-	// initialize new struct to hold user info
-
+	// iterate over row object to retrieve queried value
 	err = row.Scan(
 		&u.Info.ID,
 		&u.Info.AuthUserID,
