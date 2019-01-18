@@ -1,7 +1,6 @@
 package router
 
 import (
-	"github.com/waymobetta/go-coindrop-api/auth"
 	"github.com/waymobetta/go-coindrop-api/handlers"
 )
 
@@ -18,14 +17,14 @@ var routes = Routes{
 	Route{
 		"GetWalletAddress",
 		"POST",
-		"/api/v1/getwalletaddress",
-		auth.GetWalletAddress,
+		"/api/v1/getwallet",
+		handlers.WalletGet,
 	},
 	Route{
 		"AddUserID",
 		"POST",
 		"/api/v1/adduserid",
-		auth.AddUserID,
+		handlers.UserIDAdd,
 	},
 	Route{
 		"UsersGet",
