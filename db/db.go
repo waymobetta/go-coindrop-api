@@ -3,14 +3,14 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"os"
 
 	_ "github.com/lib/pq"
 	"github.com/waymobetta/wmb"
 )
 
-func init() {
+// New initializes a new db connection; synonymous with init
+func New() error {
 	wmb.Clear()
 
 	args := os.Args
@@ -25,7 +25,8 @@ func init() {
 	_client, err := sql.Open("postgres", psqlInfo)
 	Client = _client
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	fmt.Println("api ready..\n")
+	return nil
 }
