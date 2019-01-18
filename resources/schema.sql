@@ -44,10 +44,10 @@ CREATE TABLE coindrop_tasks (
 	id SERIAL NOT NULL UNIQUE,
 	title TEXT NOT NULL,
 	type TEXT NOT NULL,
-	author TEXT NOT NULL UNIQUE,
+	author TEXT NOT NULL,
 	description TEXT NOT NULL,
 	token_name TEXT,
 	token_allocation INTEGER,
-	badge TEXT UNIQUE,
+	badge TEXT,
 	PRIMARY KEY(ID)
 )
