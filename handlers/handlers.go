@@ -831,7 +831,7 @@ func TaskAdd(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
 		response = utils.Message(false, err)
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusUnprocessableEntity)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
 		return
@@ -842,7 +842,7 @@ func TaskAdd(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, task)
 	if err != nil {
 		response = utils.Message(false, err)
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusUnprocessableEntity)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
 		return
@@ -852,7 +852,7 @@ func TaskAdd(w http.ResponseWriter, r *http.Request) {
 	_, err = db.AddTask(task)
 	if err != nil {
 		response = utils.Message(false, err)
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusUnprocessableEntity)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
 		return
