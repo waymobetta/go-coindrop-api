@@ -68,17 +68,22 @@ type Tasks struct {
 
 // Task struct contains info about a task
 type Task struct {
-	ID              int      `json:"id"`
-	Title           string   `json:"title"`
-	Type            string   `json:"type"`
-	Author          string   `json:"author"`
-	Description     string   `json:"description"`
-	Token           string   `json:"token"`
-	TokenAllocation int      `json:"token_allocation"`
-	BadgeData       Badge    `json:"badge_data"`
-	UsersEnlisted   []string `json:"users_enlisted"`
-	UsersPassed     []string `json:"users_passed"`
-	UsersFailed     []string `json:"users_failed"`
+	ID              int    `json:"id"`
+	Title           string `json:"title"`
+	Type            string `json:"type"`
+	Author          string `json:"author"`
+	Description     string `json:"description"`
+	Token           string `json:"token"`
+	TokenAllocation int    `json:"token_allocation"`
+	BadgeData       Badge  `json:"badge_data"`
+}
+
+// TaskResults struct contains info about a specific task's results
+type TaskResults struct {
+	ID            int      `json:"id"`
+	UsersEnlisted []string `json:"users_enlisted"`
+	UsersPassed   []string `json:"users_passed"`
+	UsersFailed   []string `json:"users_failed"`
 }
 
 // Badge struct contains info about a badge
