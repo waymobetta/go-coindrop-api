@@ -51,3 +51,11 @@ CREATE TABLE coindrop_tasks (
 	badge TEXT,
 	PRIMARY KEY(ID)
 )
+
+# TASK RESULTS
+CREATE TABLE coindrop_tasks_results (
+	id SERIAL NOT NULL UNIQUE,	
+	users_enlisted TEXT ARRAY NOT NULL,
+	users_passed TEXT ARRAY NOT NULL,
+	users_failed TEXT ARRAY NOT NULL
+)
