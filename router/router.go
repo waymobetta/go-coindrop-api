@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/waymobetta/go-coindrop-api/auth"
 	"github.com/waymobetta/go-coindrop-api/logger"
+	"github.com/waymobetta/gognito"
 )
 
 // NewRouter method creates a custom new mux router
@@ -15,7 +15,7 @@ func NewRouter() *mux.Router {
 	region := os.Getenv("REACT_APP_AWS_COINDROP_COGNITO_REGION")
 	userPoolID := os.Getenv("REACT_APP_AWS_COINDROP_COGNITO_USER_POOL_ID")
 
-	su := &auth.ServiceUser{
+	su := &gognito.ServiceUser{
 		Region:     region,
 		UserPoolID: userPoolID,
 	}
