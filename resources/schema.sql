@@ -63,7 +63,6 @@ CREATE TABLE coindrop_tasks_results (
 CREATE TABLE coindrop_quizzes (
 	id SERIAL NOT NULL UNIQUE,
 	title TEXT NOT NULL,
-	description TEXT NOT NULL,
 	question_data TEXT NOT NULL,
 	answers_data TEXT NOT NULL
 )
