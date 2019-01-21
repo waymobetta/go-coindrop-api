@@ -55,7 +55,14 @@ CREATE TABLE coindrop_tasks (
 # TASK RESULTS
 CREATE TABLE coindrop_tasks_results (
 	id SERIAL NOT NULL UNIQUE,	
-	users_enlisted TEXT ARRAY NOT NULL,
 	users_passed TEXT ARRAY NOT NULL,
 	users_failed TEXT ARRAY NOT NULL
+)
+
+# QUIZZES
+CREATE TABLE coindrop_quizzes (
+	id SERIAL NOT NULL UNIQUE,
+	title TEXT NOT NULL,
+	question_data TEXT NOT NULL,
+	answers_data TEXT NOT NULL
 )
