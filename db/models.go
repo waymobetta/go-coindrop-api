@@ -80,10 +80,17 @@ type Task struct {
 
 // TaskResults struct contains info about a specific task's results
 type TaskResults struct {
-	ID            int      `json:"id"`
-	UsersEnlisted []string `json:"users_enlisted"`
-	UsersPassed   []string `json:"users_passed"`
-	UsersFailed   []string `json:"users_failed"`
+	ID          int      `json:"id"`
+	UsersPassed []string `json:"users_passed"`
+	UsersFailed []string `json:"users_failed"`
+}
+
+// Quiz struct contains info about
+type Quiz struct {
+	ID           int               `json:"id"`
+	Title        string            `json:"title"`
+	QuestionData map[string]string `json:"questions"`
+	AnswerData   map[string]string `json:"answers"`
 }
 
 // Badge struct contains info about a badge
