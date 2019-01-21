@@ -89,8 +89,8 @@ type TaskResults struct {
 type Quiz struct {
 	ID           int               `json:"id"`
 	Title        string            `json:"title"`
-	QuestionData map[string]string `json:"questions"`
-	AnswerData   map[string]string `json:"answers"`
+	QuestionData map[string]string `json:"question_data"`
+	AnswerData   map[string]string `json:"answer_data"`
 }
 
 // Badge struct contains info about a badge
