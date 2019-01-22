@@ -87,8 +87,13 @@ type TaskResults struct {
 
 // Quiz struct contains info about a quiz
 type Quiz struct {
-	ID       int        `json:"id"`
-	Title    string     `json:"title"`
+	ID       int      `json:"id"`
+	Title    string   `json:"title"`
+	QuizInfo QuizInfo `json:"quiz_info"`
+}
+
+// QuizInfo struct contains the list of QuizData objects
+type QuizInfo struct {
 	QuizData []QuizData `json:"quiz_data"`
 }
 
