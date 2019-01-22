@@ -59,6 +59,14 @@ CREATE TABLE coindrop_tasks_results (
 	users_failed TEXT ARRAY NOT NULL
 )
 
+# TASKS SPECIFIC TO USER
+CREATE TABLE coindrop_user_tasks (
+	id SERIAL NOT NULL UNIQUE,
+	auth_user_id TEXT NOT NULL UNIQUE,
+	assigned_tasks TEXT ARRAY NOT NULL,
+	completed_tasks TEXT ARRAY NOT NULL
+)
+
 # QUIZZES
 CREATE TABLE coindrop_quizzes (
 	id SERIAL NOT NULL UNIQUE,
