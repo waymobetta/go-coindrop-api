@@ -52,8 +52,8 @@ CREATE TABLE coindrop_tasks (
 	PRIMARY KEY(ID)
 )
 
-# TASK RESULTS
-CREATE TABLE coindrop_tasks_results (
+# QUIZ RESULTS
+CREATE TABLE coindrop_quiz_results (
 	id SERIAL NOT NULL UNIQUE,	
 	users_passed TEXT ARRAY NOT NULL,
 	users_failed TEXT ARRAY NOT NULL
