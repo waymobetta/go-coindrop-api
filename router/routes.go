@@ -125,7 +125,7 @@ var routes = Routes{
 	Route{
 		"ResultsGet",
 		"POST",
-		"/api/v1/getresuls",
+		"/api/v1/getresults",
 		handlers.ResultsGet,
 	},
 	Route{
