@@ -111,6 +111,15 @@ type QuizData struct {
 	Answer   string `json:"answer"`
 }
 
+// QuizResults struct contains info about a user's quiz results
+type QuizResults struct {
+	ID                 int    `json:"id"`
+	Title              string `json:"title"`
+	AuthUserID         string `json:"auth_user_id"`
+	QuestionsCorrect   int    `json:"questions_correct"`
+	QuestionsIncorrect int    `json:"questions_incorrect"`
+}
+
 // Badge struct contains info about a badge
 type Badge struct {
 	ID          int    `json:"id"`
