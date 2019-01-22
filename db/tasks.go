@@ -62,15 +62,15 @@ func AddTask(t *Task) (*Task, error) {
 
 	defer stmt.Close()
 
-	// execute db write using unique user ID + associated data
+	// execute db write using task title + associated data
 	_, err = stmt.Exec(
-		&t.Title,
-		&t.Type,
-		&t.Author,
-		&t.Description,
-		&t.Token,
-		&t.TokenAllocation,
-		&t.BadgeData.Name,
+		t.Title,
+		t.Type,
+		t.Author,
+		t.Description,
+		t.Token,
+		t.TokenAllocation,
+		t.BadgeData.Name,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
@@ -89,8 +89,8 @@ func AddTask(t *Task) (*Task, error) {
 	return t, err
 }
 
-// AssignTask adds the listing and associated data of a single task to a specific user
-func AssignTask(u *UserTasks) (*UserTasks, error) {
+// AddUserTask adds the listing and associated data of a single task to a specific user
+func AddUserTask(u *UserTask) (*UserTasks, error) {
 	// initialize statement write to database
 	tx, err := Client.Begin()
 	if err != nil {
@@ -110,9 +110,51 @@ func AssignTask(u *UserTasks) (*UserTasks, error) {
 
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
-		&u.AuthUserID,
-		jq(&u.AssignedTasks),
-		jq(&u.CompletedTasks),
+		u.AuthUserID,
+		jq(u.AssignedTasks),
+		jq(u.CompletedTasks),
+	)
+	if err != nil {
+		// rollback transaction if error thrown
+		tx.Rollback()
+		return u, err
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaciton if error thrown
+		tx.Rollback()
+		return u, err
+	}
+
+	return u, err
+}
+
+// UpdateUserTasks adds the listing and associated data of a single task to a specific user
+func UpdateUserTasks(u *UserTask) (*UserTask, error) {
+	// initialize statement write to database
+	tx, err := Client.Begin()
+	if err != nil {
+		return u, err
+	}
+
+	// create SQL statement for db writes
+	sqlStatement := `UPDATE coindrop_user_tasks SET completed_tasks = $1, assigned_tasks = $2 WHERE auth_user_id = $3`
+
+	// prepare statement
+	stmt, err := Client.Prepare(sqlStatement)
+	if err != nil {
+		return u, err
+	}
+
+	defer stmt.Close()
+
+	// execute db write using unique user ID + associated data
+	_, err = stmt.Exec(
+		u.AuthUserID,
+		jq(u.AssignedTasks),
+		jq(u.CompletedTasks),
 	)
 	if err != nil {
 		// rollback transaction if error thrown
