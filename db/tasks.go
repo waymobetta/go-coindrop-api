@@ -1,5 +1,7 @@
 package db
 
+import "github.com/lib/pq"
+
 // TASKS
 
 // GetTasks returns all available tasks
@@ -90,7 +92,7 @@ func AddTask(t *Task) (*Task, error) {
 }
 
 // AddUserTask adds the listing and associated data of a single task to a specific user
-func AddUserTask(u *UserTask) (*UserTasks, error) {
+func AddUserTask(u *UserTask) (*UserTask, error) {
 	// initialize statement write to database
 	tx, err := Client.Begin()
 	if err != nil {
@@ -111,8 +113,8 @@ func AddUserTask(u *UserTask) (*UserTasks, error) {
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
 		u.AuthUserID,
-		jq(u.AssignedTasks),
-		jq(u.CompletedTasks),
+		pq.Array(u.AssignedTasks),
+		pq.Array(u.CompletedTasks),
 	)
 	if err != nil {
 		// rollback transaction if error thrown
@@ -153,8 +155,8 @@ func UpdateUserTasks(u *UserTask) (*UserTask, error) {
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
 		u.AuthUserID,
-		jq(u.AssignedTasks),
-		jq(u.CompletedTasks),
+		pq.Array(u.AssignedTasks),
+		pq.Array(u.CompletedTasks),
 	)
 	if err != nil {
 		// rollback transaction if error thrown
