@@ -9,7 +9,7 @@ import (
 // GetQuiz returns all info for specific quiz
 func GetQuiz(q *Quiz) (*Quiz, error) {
 	// create SQL statement for db query
-	sqlStatement := `SELECT quiz_data FROM coindrop_quizzes WHERE title = $1`
+	sqlStatement := `SELECT * FROM coindrop_quizzes WHERE title = $1`
 
 	// execute db query by passing in prepared SQL statement
 	stmt, err := Client.Prepare(sqlStatement)
