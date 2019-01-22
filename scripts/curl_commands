@@ -124,3 +124,24 @@ curl -H "Content-type: application/json" -d '{"title": "test", "type": "promo", 
 
 // GET: TASKS ASSIGNED TO USER
 curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "56f2fc1c-48e9-4bb2-b850-3ed472902e2f"}}' 'localhost:5000/api/v1/getusertasks'
+
+===============================================================================
+QUIZZES
+===============================================================================
+
+// POST: ADD QUIZ
+
+# math quiz
+curl -H "Content-type: application/json" -H "Authorization: Bearer token" -d '{"title": "math quiz", "quiz_info": {"quiz_data": [{"question":"what is 1+1?", "answer": "2"}, {"question": "what is 2+2?", "answer": "4"}]}}' 'localhost:5000/api/v1/addquiz'
+
+# archaeologist
+curl -H "Content-type: application/json" -H "Authorization: Bearer token" -d '{"title": "archaeologist", "quiz_info": {"quiz_data": [{"question":"How many domains currently hold the status \"In Registry\" in the adChain Publisher Registry?", "answer": "20"}, {"question": "What is the name of the cryptocurrency used to curate the adChain Publisher Registry?", "answer": "adtoken"}, {"question": "And what is the contract address of this cryptocurrency?", "answer": "0x123"}, {"question": "What date did the adChain Publisher Release Candidate go live on the Ethereum Mainnet?", "answer": "0402418"}, {"question": "According to the \"Claiming ADT Rewards Breakdown\" located within the help section of the adChain Publisher Registry, how many ways are there to earn adToken rewards?", "answer": "3"}]}}' 'localhost:5000/api/v1/addquiz'
+
+// POST: GET QUIZ
+
+curl -H "Content-type: application/json" -H "Authorization: Bearer token" -d '{"title": "math quiz"}' 'localhost:5000/api/v1/getquiz'
+
+// POST: GET RESULTS
+
+# archaeologist
+curl -H "Content-type: application/json" -H "Authorization: Bearer token" -d '{"title": "archaeologist", "quiz_info": {"quiz_data": [{"question":"How many domains currently hold the status \"In Registry\" in the adChain Publisher Registry?", "answer": "31"}, {"question": "What is the name of the cryptocurrency used to curate the adChain Publisher Registry?", "answer": "adtoken"}, {"question": "And what is the contract address of this cryptocurrency?", "answer": "0x123"}, {"question": "What date did the adChain Publisher Release Candidate go live on the Ethereum Mainnet?", "answer": "0402418"}, {"question": "According to the \"Claiming ADT Rewards Breakdown\" located within the help section of the adChain Publisher Registry, how many ways are there to earn adToken rewards?", "answer": "3"}]}}' 'localhost:5000/api/v1/getresults' 
