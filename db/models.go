@@ -85,12 +85,17 @@ type TaskResults struct {
 	UsersFailed []string `json:"users_failed"`
 }
 
-// Quiz struct contains info about
+// Quiz struct contains info about a quiz
 type Quiz struct {
-	ID           int               `json:"id"`
-	Title        string            `json:"title"`
-	QuestionData map[string]string `json:"question_data"`
-	AnswerData   map[string]string `json:"answer_data"`
+	ID       int        `json:"id"`
+	Title    string     `json:"title"`
+	QuizData []QuizData `json:"quiz_data"`
+}
+
+// QuizData struct contains question and answer info about a quiz
+type QuizData struct {
+	Question string `json:"question"`
+	Answer   string `json:"answer"`
 }
 
 // Badge struct contains info about a badge
