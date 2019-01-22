@@ -134,3 +134,36 @@ func StoreQuizResults(q *QuizResults) (*QuizResults, error) {
 
 	return q, err
 }
+
+// GetQuizResults returns all info for specific quiz
+func GetQuizResults(q *QuizResults) (*QuizResults, error) {
+	// create SQL statement for db query
+	sqlStatement := `SELECT (questions_correct, questions_incorrect) FROM coindrop_quiz_results WHERE auth_user_id = $1 AND title = $2`
+
+	// execute db query by passing in prepared SQL statement
+	stmt, err := Client.Prepare(sqlStatement)
+	if err != nil {
+		return q, err
+	}
+
+	defer stmt.Close()
+
+	// initialize row object
+	row := stmt.QueryRow(q.AuthUserID, q.Title)
+
+	// iterate over row object to retrieve queried value
+	err = row.Scan(
+		&q.QuestionsCorrect,
+		&q.QuestionsIncorrect,
+	)
+	if err != nil {
+		return q, err
+	}
+
+	// Unmarshal JSON from temp string variable back into struct
+	if err != nil {
+		return q, err
+	}
+
+	return q, nil
+}
