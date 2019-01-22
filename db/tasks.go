@@ -88,3 +88,45 @@ func AddTask(t *Task) (*Task, error) {
 
 	return t, err
 }
+
+// AssignTask adds the listing and associated data of a single task to a specific user
+func AssignTask(u *UserTasks) (*UserTasks, error) {
+	// initialize statement write to database
+	tx, err := Client.Begin()
+	if err != nil {
+		return u, err
+	}
+
+	// create SQL statement for db writes
+	sqlStatement := `INSERT INTO coindrop_user_tasks (auth_user_id, assigned_tasks, completed_tasks) VALUES ($1,$2,$3)`
+
+	// prepare statement
+	stmt, err := Client.Prepare(sqlStatement)
+	if err != nil {
+		return u, err
+	}
+
+	defer stmt.Close()
+
+	// execute db write using unique user ID + associated data
+	_, err = stmt.Exec(
+		&u.AuthUserID,
+		jq(&u.AssignedTasks),
+		jq(&u.CompletedTasks),
+	)
+	if err != nil {
+		// rollback transaction if error thrown
+		tx.Rollback()
+		return u, err
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaciton if error thrown
+		tx.Rollback()
+		return u, err
+	}
+
+	return u, err
+}
