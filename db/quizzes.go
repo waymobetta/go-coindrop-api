@@ -93,9 +93,7 @@ func AddQuiz(q *Quiz) (*Quiz, error) {
 }
 
 // StoreQuizResults adds the quiz title and associated user results of a single quiz
-// TODO:
-/*
-func StoreQuizResults(q *Quiz) (*Quiz, error) {
+func StoreQuizResults(q *QuizResults) (*QuizResults, error) {
 	// initialize statement write to database
 	tx, err := Client.Begin()
 	if err != nil {
@@ -103,7 +101,7 @@ func StoreQuizResults(q *Quiz) (*Quiz, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `INSERT INTO coindrop_quizzes (title, quiz_data) VALUES ($1,$2)`
+	sqlStatement := `INSERT INTO coindrop_quiz_results (title, auth_user_id, questions_correct, questions_incorrect) VALUES ($1,$2,$3,$4)`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -115,7 +113,10 @@ func StoreQuizResults(q *Quiz) (*Quiz, error) {
 
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
-		&q.Title,
+		q.Title,
+		q.AuthUserID,
+		q.QuestionsCorrect,
+		q.QuestionsIncorrect,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
@@ -133,4 +134,3 @@ func StoreQuizResults(q *Quiz) (*Quiz, error) {
 
 	return q, err
 }
-*/
