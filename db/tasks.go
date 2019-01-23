@@ -1,7 +1,7 @@
 package db
 
 import (
-	"encoding/json"
+	"github.com/lib/pq"
 )
 
 // TASKS
@@ -116,14 +116,9 @@ func GetUserTasks(u *UserTask) (*UserTask, error) {
 	err = row.Scan(
 		&u.ID,
 		&u.AuthUserID,
-		&tempStr,
+		pq.Array(&u.Assigned),
+		pq.Array(&u.Completed),
 	)
-	if err != nil {
-		return u, err
-	}
-
-	// Unmarshal JSON from temp string variable back into struct
-	err = json.Unmarshal([]byte(tempStr), &u.TaskStatus)
 	if err != nil {
 		return u, err
 	}
@@ -131,14 +126,8 @@ func GetUserTasks(u *UserTask) (*UserTask, error) {
 	return u, nil
 }
 
-// AddUserTask adds the listing and associated data of a single task to a specific user
+// AddUserTask adds the listing and associated task data of a specific user
 func AddUserTask(u *UserTask) (*UserTask, error) {
-	// marshal JSON for ease of storage
-	byteArr, err := json.Marshal(&u.TaskStatus)
-	if err != nil {
-		return u, err
-	}
-
 	// initialize statement write to database
 	tx, err := Client.Begin()
 	if err != nil {
@@ -146,7 +135,7 @@ func AddUserTask(u *UserTask) (*UserTask, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `INSERT INTO coindrop_user_tasks (auth_user_id, task_status) VALUES ($1,$2)`
+	sqlStatement := `INSERT INTO coindrop_user_tasks (auth_user_id, assigned, completed) VALUES ($1,$2,$3)`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -159,8 +148,8 @@ func AddUserTask(u *UserTask) (*UserTask, error) {
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
 		u.AuthUserID,
-		// store marshaled JSON in db
-		string(byteArr),
+		pq.Array(u.Assigned),
+		pq.Array(u.Completed),
 	)
 	if err != nil {
 		// rollback transaction if error thrown
@@ -179,14 +168,8 @@ func AddUserTask(u *UserTask) (*UserTask, error) {
 	return u, err
 }
 
-// UpdateUserTaskStatus updates user's task status data
-func UpdateUserTaskStatus(u *UserTask) (*UserTask, error) {
-	// marshal JSON for ease of storage
-	byteArr, err := json.Marshal(&u.TaskStatus)
-	if err != nil {
-		return u, err
-	}
-
+// MarkUserTaskAssigned adds a task to the user's list of assigned tasks
+func MarkUserTaskAssigned(u *UserTask) (*UserTask, error) {
 	// initialize statement write to database
 	tx, err := Client.Begin()
 	if err != nil {
@@ -194,7 +177,7 @@ func UpdateUserTaskStatus(u *UserTask) (*UserTask, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `UPDATE coindrop_user_tasks SET task_status = $1 WHERE auth_user_id = $2`
+	sqlStatement := `UPDATE coindrop_user_tasks SET assigned = $1 WHERE auth_user_id = $2`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -206,7 +189,48 @@ func UpdateUserTaskStatus(u *UserTask) (*UserTask, error) {
 
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
-		string(byteArr),
+		pq.Array(u.Assigned),
+		u.AuthUserID,
+	)
+	if err != nil {
+		// rollback transaction if error thrown
+		tx.Rollback()
+		return u, err
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaciton if error thrown
+		tx.Rollback()
+		return u, err
+	}
+
+	return u, err
+}
+
+// MarkUserTaskCompleted adds a task to the user's list of completed tasks
+func MarkUserTaskCompleted(u *UserTask) (*UserTask, error) {
+	// initialize statement write to database
+	tx, err := Client.Begin()
+	if err != nil {
+		return u, err
+	}
+
+	// create SQL statement for db writes
+	sqlStatement := `UPDATE coindrop_user_tasks SET completed = $1 WHERE auth_user_id = $2`
+
+	// prepare statement
+	stmt, err := Client.Prepare(sqlStatement)
+	if err != nil {
+		return u, err
+	}
+
+	defer stmt.Close()
+
+	// execute db write using unique user ID + associated data
+	_, err = stmt.Exec(
+		pq.Array(u.Completed),
 		u.AuthUserID,
 	)
 	if err != nil {
