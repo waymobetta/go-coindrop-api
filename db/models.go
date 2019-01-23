@@ -76,6 +76,8 @@ type Task struct {
 	Token           string `json:"token"`
 	TokenAllocation int    `json:"token_allocation"`
 	BadgeData       Badge  `json:"badge_data"`
+	IsAssigned      bool   `json:"is_assigned"`
+	IsCompleted     bool   `json:"is_completed"`
 }
 
 // UserTask struct contains info about tasks for a specific user
