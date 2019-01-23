@@ -109,9 +109,6 @@ func GetUserTasks(u *UserTask) (*UserTask, error) {
 	// initialize row object
 	row := stmt.QueryRow(u.AuthUserID)
 
-	// create temp string variable to store marshaled JSON
-	var tempStr string
-
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
 		&u.ID,
@@ -177,7 +174,7 @@ func MarkUserTaskAssigned(u *UserTask) (*UserTask, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `UPDATE coindrop_user_tasks SET assigned = $1 WHERE auth_user_id = $2`
+	sqlStatement := `UPDATE coindrop_user_tasks SET assigned = array_append(assigned, $1) WHERE auth_user_id = $2`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -189,7 +186,7 @@ func MarkUserTaskAssigned(u *UserTask) (*UserTask, error) {
 
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
-		pq.Array(u.Assigned),
+		u.Assigned,
 		u.AuthUserID,
 	)
 	if err != nil {
@@ -218,7 +215,7 @@ func MarkUserTaskCompleted(u *UserTask) (*UserTask, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `UPDATE coindrop_user_tasks SET completed = $1 WHERE auth_user_id = $2`
+	sqlStatement := `UPDATE coindrop_user_tasks SET completed = array_append(completed, $1) WHERE auth_user_id = $2`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -230,7 +227,7 @@ func MarkUserTaskCompleted(u *UserTask) (*UserTask, error) {
 
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
-		pq.Array(u.Completed),
+		u.Completed,
 		u.AuthUserID,
 	)
 	if err != nil {
