@@ -93,6 +93,44 @@ func AddTask(t *Task) (*Task, error) {
 	return t, err
 }
 
+// GetUserTasks returns all info for specific quiz
+func GetUserTasks(u *UserTask) (*UserTask, error) {
+	// create SQL statement for db query
+	sqlStatement := `SELECT * FROM coindrop_user_tasks WHERE auth_user_id = $1`
+
+	// execute db query by passing in prepared SQL statement
+	stmt, err := Client.Prepare(sqlStatement)
+	if err != nil {
+		return u, err
+	}
+
+	defer stmt.Close()
+
+	// initialize row object
+	row := stmt.QueryRow(u.AuthUserID)
+
+	// create temp string variable to store marshaled JSON
+	var tempStr string
+
+	// iterate over row object to retrieve queried value
+	err = row.Scan(
+		&u.ID,
+		&u.AuthUserID,
+		&tempStr,
+	)
+	if err != nil {
+		return u, err
+	}
+
+	// Unmarshal JSON from temp string variable back into struct
+	err = json.Unmarshal([]byte(tempStr), &u.TaskStatus)
+	if err != nil {
+		return u, err
+	}
+
+	return u, nil
+}
+
 // AddUserTask adds the listing and associated data of a single task to a specific user
 func AddUserTask(u *UserTask) (*UserTask, error) {
 	// marshal JSON for ease of storage
@@ -139,44 +177,6 @@ func AddUserTask(u *UserTask) (*UserTask, error) {
 	}
 
 	return u, err
-}
-
-// GetUserTasks returns all info for specific quiz
-func GetUserTasks(u *UserTask) (*UserTask, error) {
-	// create SQL statement for db query
-	sqlStatement := `SELECT * FROM coindrop_user_tasks WHERE auth_user_id = $1`
-
-	// execute db query by passing in prepared SQL statement
-	stmt, err := Client.Prepare(sqlStatement)
-	if err != nil {
-		return u, err
-	}
-
-	defer stmt.Close()
-
-	// initialize row object
-	row := stmt.QueryRow(u.AuthUserID)
-
-	// create temp string variable to store marshaled JSON
-	var tempStr string
-
-	// iterate over row object to retrieve queried value
-	err = row.Scan(
-		&u.ID,
-		&u.AuthUserID,
-		&tempStr,
-	)
-	if err != nil {
-		return u, err
-	}
-
-	// Unmarshal JSON from temp string variable back into struct
-	err = json.Unmarshal([]byte(tempStr), &u.TaskStatus)
-	if err != nil {
-		return u, err
-	}
-
-	return u, nil
 }
 
 // UpdateUserTaskStatus updates user's task status data
