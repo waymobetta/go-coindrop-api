@@ -127,7 +127,7 @@ func UserTasksGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response = utils.Message(true, "success")
+	response = utils.Message(true, userTask.ListData)
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
@@ -255,11 +255,8 @@ func UserTaskAssign(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
-	userTask.Assigned = taskUser.Title
-	userTask.AuthUserID = taskUser.AuthUserID
-
 	// unmarshal bytes into task struct
-	err = json.Unmarshal(body, userTask)
+	err = json.Unmarshal(body, taskUser)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusUnprocessableEntity)
@@ -267,6 +264,9 @@ func UserTaskAssign(w http.ResponseWriter, r *http.Request) {
 		utils.Respond(w, response)
 		return
 	}
+
+	userTask.Assigned = taskUser.Title
+	userTask.AuthUserID = taskUser.AuthUserID
 
 	// update user listing in db
 	_, err = db.MarkUserTaskAssigned(userTask)
