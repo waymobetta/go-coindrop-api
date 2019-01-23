@@ -91,6 +91,12 @@ type TaskStatus struct {
 	Completed map[string]bool `json:"completed_tasks"`
 }
 
+// TaskUser struct contains necessary info for helping manage user's task assignment/completions
+type TaskUser struct {
+	AuthUserID string `json:"auth_user_id"`
+	Title      string `json:"title"`
+}
+
 // Quiz struct contains info about a quiz
 type Quiz struct {
 	ID         int      `json:"id"`
