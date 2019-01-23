@@ -14,7 +14,7 @@ import (
 // TasksGet handles queries to return all stored tasks
 func TasksGet(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
-	// initialize new variable user of User struct
+	// initialize new variable tasks of Tasks struct
 	tasks := new(db.Tasks)
 
 	// return slice of structs of all task listings
@@ -117,7 +117,7 @@ func UserTasksGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// update user listing in db
+	// get list of user's assigned and completed tasks
 	_, err = db.GetUserTasks(userTask)
 	if err != nil {
 		response = utils.Message(false, err)
@@ -127,7 +127,39 @@ func UserTasksGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response = utils.Message(true, userTask.ListData)
+	// initialize new variable tasks of Tasks struct
+	tasks := new(db.Tasks)
+
+	// get all tasks
+	tasks, err = db.GetTasks(tasks)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+
+	userTasks := new(db.Tasks)
+
+	// TODO:
+	// refactor
+	for task := range tasks.Tasks {
+		for assignedTask := range userTask.ListData.AssignedTasks {
+			if tasks.Tasks[task].Title == userTask.ListData.AssignedTasks[assignedTask] {
+				tasks.Tasks[task].IsAssigned = true
+				userTasks.Tasks = append(userTasks.Tasks, tasks.Tasks[task])
+			}
+		}
+		for completedTask := range userTask.ListData.CompletedTasks {
+			if tasks.Tasks[task].Title == userTask.ListData.CompletedTasks[completedTask] {
+				tasks.Tasks[task].IsCompleted = true
+				userTasks.Tasks = append(userTasks.Tasks, tasks.Tasks[task])
+			}
+		}
+	}
+
+	response = utils.Message(true, userTasks)
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
