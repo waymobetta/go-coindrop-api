@@ -95,9 +95,10 @@ type TaskResults struct {
 
 // Quiz struct contains info about a quiz
 type Quiz struct {
-	ID       int      `json:"id"`
-	Title    string   `json:"title"`
-	QuizInfo QuizInfo `json:"quiz_info"`
+	ID         int      `json:"id"`
+	Title      string   `json:"title"`
+	AuthUserID string   `json:"auth_user_id"`
+	QuizInfo   QuizInfo `json:"quiz_info"`
 }
 
 // QuizInfo struct contains the list of QuizData objects
