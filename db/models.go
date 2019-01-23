@@ -78,17 +78,12 @@ type Task struct {
 	BadgeData       Badge  `json:"badge_data"`
 }
 
-// UserTask struct contains info about a task for a specific user
+// UserTask struct contains info about tasks for a specific user
 type UserTask struct {
-	ID         int        `json:"id"`
-	AuthUserID string     `json:"auth_user_id"`
-	TaskStatus TaskStatus `json:"task_status"`
-}
-
-// TaskStatus struct contains status info about tasks
-type TaskStatus struct {
-	Assigned  map[string]bool `json:"assigned_tasks"`
-	Completed map[string]bool `json:"completed_tasks"`
+	ID         int      `json:"id"`
+	AuthUserID string   `json:"auth_user_id"`
+	Assigned   []string `json:"assigned"`
+	Completed  []string `json:"completed"`
 }
 
 // TaskUser struct contains necessary info for helping manage user's task assignment/completions
