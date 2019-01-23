@@ -65,8 +65,7 @@ CREATE TABLE coindrop_quiz_results (
 CREATE TABLE coindrop_user_tasks (
 	id SERIAL NOT NULL UNIQUE,
 	auth_user_id TEXT NOT NULL UNIQUE,
-	assigned_tasks TEXT ARRAY NOT NULL,
-	completed_tasks TEXT ARRAY NOT NULL
+	task_status TEXT NOT NULL
 )
 
 # QUIZZES
