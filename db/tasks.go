@@ -1,6 +1,8 @@
 package db
 
 import (
+	"fmt"
+
 	"github.com/lib/pq"
 )
 
@@ -113,10 +115,11 @@ func GetUserTasks(u *UserTask) (*UserTask, error) {
 	err = row.Scan(
 		&u.ID,
 		&u.AuthUserID,
-		pq.Array(&u.Assigned),
-		pq.Array(&u.Completed),
+		pq.Array(&u.ListData.AssignedTasks),
+		pq.Array(&u.ListData.CompletedTasks),
 	)
 	if err != nil {
+		fmt.Println(err)
 		return u, err
 	}
 
