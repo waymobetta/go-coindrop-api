@@ -185,57 +185,6 @@ func UserTaskAdd(w http.ResponseWriter, r *http.Request) {
 func UserTaskComplete(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 
-	// initialize new copy of Task struct in variable task
-	task := new(db.Task)
-
-	// initialize new copy of UserTask struct in variable userTask
-	userTask := new(db.UserTask)
-
-	// add limit for large payload protection
-	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-	if err != nil {
-		response = utils.Message(false, err)
-		w.WriteHeader(http.StatusUnprocessableEntity)
-		w.Header().Add("Content-type", "application/json")
-		utils.Respond(w, response)
-		return
-	}
-
-	defer r.Body.Close()
-
-	// unmarshal bytes into task struct
-	err = json.Unmarshal(body, task)
-	if err != nil {
-		response = utils.Message(false, err)
-		w.WriteHeader(http.StatusUnprocessableEntity)
-		w.Header().Add("Content-type", "application/json")
-		utils.Respond(w, response)
-		return
-	}
-
-	userTask.TaskStatus.Completed[task.Title] = true
-
-	// update user listing in db
-	_, err = db.UpdateUserTaskStatus(userTask)
-	if err != nil {
-		response = utils.Message(false, err)
-		w.WriteHeader(http.StatusUnprocessableEntity)
-		w.Header().Add("Content-type", "application/json")
-		utils.Respond(w, response)
-		return
-	}
-
-	response = utils.Message(true, "success")
-	w.WriteHeader(http.StatusCreated)
-	utils.Respond(w, response)
-
-	fmt.Printf("Successfully added completed task: %s for user: %s\n\n", task.Title, userTask.AuthUserID)
-}
-
-// UserTaskAssign adds an assigned task to a user's existing list of assigned tasks
-func UserTaskAssign(w http.ResponseWriter, r *http.Request) {
-	response := make(map[string]interface{})
-
 	// initialize new copy of TaskUser struct in variable taskUser
 	taskUser := new(db.TaskUser)
 
@@ -264,11 +213,63 @@ func UserTaskAssign(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userTask.TaskStatus.Assigned[taskUser.Title] = true
-	userTask.TaskStatus.Completed[taskUser.Title] = false
+	userTask.Completed = taskUser.Title
+	userTask.AuthUserID = taskUser.AuthUserID
 
 	// update user listing in db
-	_, err = db.UpdateUserTaskStatus(userTask)
+	_, err = db.MarkUserTaskCompleted(userTask)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+
+	response = utils.Message(true, "success")
+	w.WriteHeader(http.StatusCreated)
+	utils.Respond(w, response)
+
+	fmt.Printf("Successfully added completed task: %s for user: %s\n\n", taskUser.Title, userTask.AuthUserID)
+}
+
+// UserTaskAssign adds an assigned task to a user's existing list of assigned tasks
+func UserTaskAssign(w http.ResponseWriter, r *http.Request) {
+	response := make(map[string]interface{})
+
+	// initialize new copy of TaskUser struct in variable taskUser
+	taskUser := new(db.TaskUser)
+
+	// initialize new copy of UserTask struct in variable userTask
+	userTask := new(db.UserTask)
+
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+
+	defer r.Body.Close()
+
+	userTask.Assigned = taskUser.Title
+	userTask.AuthUserID = taskUser.AuthUserID
+
+	// unmarshal bytes into task struct
+	err = json.Unmarshal(body, userTask)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+
+	// update user listing in db
+	_, err = db.MarkUserTaskAssigned(userTask)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusUnprocessableEntity)
