@@ -123,13 +123,26 @@ curl -H "Content-type: application/json" -d '{"title": "learn the history of adc
 curl -H "Content-type: application/json" -d '{"title": "archaeologist", "type": "quiz", "author": "adchain", "description": "Prove your familiarity of our project by digging up some information in the adchain archaeology quiz!", "token": "adToken", "token_allocation": 5000, "badge_data": {"name": "archaeologist"}}' 'localhost:5000/api/v1/addtask'
 
 // POST: GET TASKS ASSIGNED TO USER
-curl -H "Content-type: application/json" -d '{"auth_user_id": ""}' 'localhost:5000/api/v1/getusertasks'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52"}' 'localhost:5000/api/v1/getusertasks'
 
 // POST: ADD USER TASK LISTING
-curl -H "Content-type: application/json" -H "Authorization: Bearer eyJraWQiOiJaVGcyQVAxVGNqN1Q3c21XU0ZQSitFQmhVMGlkMnFVcmtYZkI2bTRnVGl3PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI5MDZiYmY0Yy1iOWY0LTQ2OWItODc0MS03ZGQ4MTAyOWE1MjMiLCJldmVudF9pZCI6Ijk1MDY0N2NjLTFkZGYtMTFlOS1iZDA2LTkzODhlZGUwY2FmZSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE1NDgxMTgxNzIsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy13ZXN0LTIuYW1hem9uYXdzLmNvbVwvdXMtd2VzdC0yX09kOUxnSUVxeSIsImV4cCI6MTU0ODIxNjQ1MywiaWF0IjoxNTQ4MjEyODUzLCJqdGkiOiI2MWUxYmQ1MC0wZjIxLTQ3ZmUtYTc2Zi1mMzc4MzEzMTgwNzQiLCJjbGllbnRfaWQiOiI1dGY1YWZkMWprcWdpZmgwc2gyY3IzNTlrdiIsInVzZXJuYW1lIjoiOTA2YmJmNGMtYjlmNC00NjliLTg3NDEtN2RkODEwMjlhNTIzIn0.iX4WiU1TAhrsFR0teppycGJR19c9VnU-m2Yetxp3RABxoff7nnOC0OKjWRQ1DqsnJ9WF3R56m072FOhlkuUciiqeh39dZV_lXc0IJvu4wWF1ymiw_tMumc1EiIpvb5FCbQlnjOTehxy6jX2iodqBPUdZTcS2mCucmUXxMfmhdJzJziDCzrEp9UdQRKKKQtoC4l99Tqtj0RknSmt1mou5WRx9A0ZYALaEYwmH3hA3jZncVTlDI-55FqsqPXqACtzSFa6iLm3TbGVVoG2_KG1SeaLWjoPz37dE8HiPZXz4V5ITd01WeNIdx_sAquqBPa9Zk6GILDGTtBdSmn3YLmcW6w" -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52", "task_status": {"assigned_tasks":{},"completed_tasks":{}}}' 'localhost:5000/api/v1/addusertask'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52","assigned":[],"completed":[]}' 'localhost:5000/api/v1/addusertask'
 
 // POST: ASSIGN USER TASK
-curl -H "Content-type: application/json" -H "Authorization: Bearer eyJraWQiOiJaVGcyQVAxVGNqN1Q3c21XU0ZQSitFQmhVMGlkMnFVcmtYZkI2bTRnVGl3PSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI5MDZiYmY0Yy1iOWY0LTQ2OWItODc0MS03ZGQ4MTAyOWE1MjMiLCJldmVudF9pZCI6Ijk1MDY0N2NjLTFkZGYtMTFlOS1iZDA2LTkzODhlZGUwY2FmZSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE1NDgxMTgxNzIsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy13ZXN0LTIuYW1hem9uYXdzLmNvbVwvdXMtd2VzdC0yX09kOUxnSUVxeSIsImV4cCI6MTU0ODIxNjQ1MywiaWF0IjoxNTQ4MjEyODUzLCJqdGkiOiI2MWUxYmQ1MC0wZjIxLTQ3ZmUtYTc2Zi1mMzc4MzEzMTgwNzQiLCJjbGllbnRfaWQiOiI1dGY1YWZkMWprcWdpZmgwc2gyY3IzNTlrdiIsInVzZXJuYW1lIjoiOTA2YmJmNGMtYjlmNC00NjliLTg3NDEtN2RkODEwMjlhNTIzIn0.iX4WiU1TAhrsFR0teppycGJR19c9VnU-m2Yetxp3RABxoff7nnOC0OKjWRQ1DqsnJ9WF3R56m072FOhlkuUciiqeh39dZV_lXc0IJvu4wWF1ymiw_tMumc1EiIpvb5FCbQlnjOTehxy6jX2iodqBPUdZTcS2mCucmUXxMfmhdJzJziDCzrEp9UdQRKKKQtoC4l99Tqtj0RknSmt1mou5WRx9A0ZYALaEYwmH3hA3jZncVTlDI-55FqsqPXqACtzSFa6iLm3TbGVVoG2_KG1SeaLWjoPz37dE8HiPZXz4V5ITd01WeNIdx_sAquqBPa9Zk6GILDGTtBdSmn3YLmcW6w" -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52", "task_status": {"assigned_tasks":{"adchainarchaeologist":true},"completed_tasks":{}}}' 'localhost:5000/api/v1/assignusertask'
+
+1.
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52", "title": "archaeologist"}' 'localhost:5000/api/v1/assignusertask'
+
+2. 
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52", "title": "colonycontributor"}' 'localhost:5000/api/v1/assignusertask'
+
+// POST: COMPLETE USER TASK
+
+1.
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52", "title": "archaeologist"}' 'localhost:5000/api/v1/completeusertask'
+
+2. 
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52", "title": "colonycontributor"}' 'localhost:5000/api/v1/completeusertask'
 
 ===============================================================================
 QUIZZES
