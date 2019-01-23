@@ -88,6 +88,52 @@ func TaskAdd(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully added task: %s\n\n", task.Title)
 }
 
+// UserTasksGet returns all the associated task information for the user, including assigned and completed tasks
+func UserTasksGet(w http.ResponseWriter, r *http.Request) {
+	response := make(map[string]interface{})
+
+	// initialize new copy of UserTask struct in variable userTask
+	userTask := new(db.UserTask)
+
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+
+	defer r.Body.Close()
+
+	// unmarshal bytes into task struct
+	err = json.Unmarshal(body, userTask)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+
+	// update user listing in db
+	_, err = db.GetUserTasks(userTask)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+
+	response = utils.Message(true, "success")
+	w.WriteHeader(http.StatusCreated)
+	utils.Respond(w, response)
+
+	fmt.Printf("Successfully returned task data for user: %s\n\n", userTask.AuthUserID)
+}
+
 // UserTaskAdd adds a single user listing to the db
 func UserTaskAdd(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
@@ -121,7 +167,7 @@ func UserTaskAdd(w http.ResponseWriter, r *http.Request) {
 	// NOTE: userTask.TaskStatus.Assigned + "".Completed will both be empty maps
 	_, err = db.AddUserTask(userTask)
 	if err != nil {
-		repsonse = utils.Message(false, err)
+		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
@@ -167,7 +213,7 @@ func UserTaskComplete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userTask.CompletedTasks = append(userTask.CompletedTasks, task.Title)
+	userTask.TaskStatus.Completed[task.Title] = true
 
 	// update user listing in db
 	_, err = db.UpdateUserTaskStatus(userTask)
