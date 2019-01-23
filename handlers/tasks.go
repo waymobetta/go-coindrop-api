@@ -236,8 +236,8 @@ func UserTaskComplete(w http.ResponseWriter, r *http.Request) {
 func UserTaskAssign(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 
-	// initialize new copy of Task struct in variable task
-	task := new(db.Task)
+	// initialize new copy of TaskUser struct in variable taskUser
+	taskUser := new(db.TaskUser)
 
 	// initialize new copy of UserTask struct in variable userTask
 	userTask := new(db.UserTask)
@@ -255,7 +255,7 @@ func UserTaskAssign(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	// unmarshal bytes into task struct
-	err = json.Unmarshal(body, task)
+	err = json.Unmarshal(body, taskUser)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusUnprocessableEntity)
@@ -264,7 +264,8 @@ func UserTaskAssign(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userTask.TaskStatus.Assigned[task.Title] = true
+	userTask.TaskStatus.Assigned[taskUser.Title] = true
+	userTask.TaskStatus.Completed[taskUser.Title] = false
 
 	// update user listing in db
 	_, err = db.UpdateUserTaskStatus(userTask)
