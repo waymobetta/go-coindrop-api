@@ -108,22 +108,22 @@ curl -H "Content-type: application/json" 'localhost:5000/api/v1/gettasks'
 
 // POST: ADD TASK
 1.
-curl -H "Content-type: application/json" -d '{"title": "adchain acknowledged", "type": "action", "author": "adChain", "description": "adChain needs your help! The adChain team would like you to help them better regulate its TCR, the adChain Registry. <br/>Based on your talents, you seem like an ideal candidate for the task! Click <a href='/tasks/adchainaction'>here</a> to read a more detailed briefing!", "token": "adToken", "token_allocation": 5000, "badge_data": {"name": "adchain acknowledged"}}' 'localhost:5000/api/v1/addtask'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"title": "adchain acknowledged", "type": "action", "author": "adChain", "description": "adChain needs your help! The adChain team would like you to help them better regulate its TCR, the adChain Registry. <br/>Based on your talents, you seem like an ideal candidate for the task! Click <a href='/tasks/adchainaction'>here</a> to read a more detailed briefing!", "token": "adToken", "token_allocation": 5000, "badge_data": {"name": "adchain acknowledged"}}' 'localhost:5000/api/v1/addtask'
 
 2. 
-curl -H "Content-type: application/json" -d '{"title": "colony contributor", "type": "promotion", "author": "colony", "description": "The Colony project would like to invite you to help promote its upcoming token distrubtion event. Click <a href='https://colony.io/'>here</a> if you are interested!", "token": "Colony Network Token", "token_allocation": 2500, "badge_data": {"name": "colony contributor"}}' 'localhost:5000/api/v1/addtask'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"title": "colony contributor", "type": "promotion", "author": "colony", "description": "The Colony project would like to invite you to help promote its upcoming token distrubtion event. Click <a href='https://colony.io/'>here</a> if you are interested!", "token": "Colony Network Token", "token_allocation": 2500, "badge_data": {"name": "colony contributor"}}' 'localhost:5000/api/v1/addtask'
 
 3.
-curl -H "Content-type: application/json" -d '{"title": "coffee with chris", "type": "action", "author": "Level K", "description": "have coffee with Chris Winfrey from Level K", "token": "NONE", "token_allocation": 0, "badge_data": {"name": "levelk loyalist"}}' 'localhost:5000/api/v1/addtask'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"title": "coffee with chris", "type": "action", "author": "Level K", "description": "have coffee with Chris Winfrey from Level K", "token": "NONE", "token_allocation": 0, "badge_data": {"name": "levelk loyalist"}}' 'localhost:5000/api/v1/addtask'
 
 4.
-curl -H "Content-type: application/json" -d '{"title": "learn the history of adchain", "type": "action", "author": "adchain-2", "description": "learn the history of the adChain project, why we started adChain and how it got to where it is today", "token": "NONE", "token_allocation": 0, "badge_data": {"name": "adchain historian"}}' 'localhost:5000/api/v1/addtask'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"title": "learn the history of adchain", "type": "action", "author": "adchain-2", "description": "learn the history of the adChain project, why we started adChain and how it got to where it is today", "token": "NONE", "token_allocation": 0, "badge_data": {"name": "adchain historian"}}' 'localhost:5000/api/v1/addtask'
 
 5. 
-curl -H "Content-type: application/json" -d '{"title": "archaeologist", "type": "quiz", "author": "adchain", "description": "Prove your familiarity of our project by digging up some information in the adchain archaeology quiz!", "token": "adToken", "token_allocation": 5000, "badge_data": {"name": "archaeologist"}}' 'localhost:5000/api/v1/addtask'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"title": "archaeologist", "type": "quiz", "author": "adchain", "description": "Prove your familiarity of our project by digging up some information in the adchain archaeology quiz!", "token": "adToken", "token_allocation": 5000, "badge_data": {"name": "archaeologist"}}' 'localhost:5000/api/v1/addtask'
 
 // POST: GET TASKS ASSIGNED TO USER
-curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52"}' 'localhost:5000/api/v1/getusertasks'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "906bbf4c-b9f4-469b-8741-7dd81029a523"}' 'localhost:5000/api/v1/getusertasks'
 
 // POST: ADD USER TASK LISTING
 curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52","assigned":[],"completed":[]}' 'localhost:5000/api/v1/addusertask'
