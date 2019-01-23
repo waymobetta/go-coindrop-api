@@ -86,13 +86,6 @@ type UserTask struct {
 	CompletedTasks []string `json:"completed_tasks"`
 }
 
-// TaskResults struct contains info about a specific task's results
-type TaskResults struct {
-	ID          int      `json:"id"`
-	UsersPassed []string `json:"users_passed"`
-	UsersFailed []string `json:"users_failed"`
-}
-
 // Quiz struct contains info about a quiz
 type Quiz struct {
 	ID         int      `json:"id"`
