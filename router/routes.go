@@ -123,6 +123,12 @@ var routes = Routes{
 		handlers.TaskAdd,
 	},
 	Route{
+		"UserTasksGet",
+		"POST",
+		"/api/v1/getusertasks",
+		handlers.UserTasksGet,
+	},
+	Route{
 		"UserTaskAdd",
 		"POST",
 		"/api/v1/addusertask",
