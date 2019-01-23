@@ -281,5 +281,5 @@ func UserTaskAssign(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully assigned task: %s to user: %s\n\n", task.Title, userTask.AuthUserID)
+	fmt.Printf("Successfully assigned task: %s to user: %s\n\n", taskUser.Title, userTask.AuthUserID)
 }
