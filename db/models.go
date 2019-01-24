@@ -127,6 +127,7 @@ type QuizResults struct {
 	AuthUserID         string `json:"auth_user_id"`
 	QuestionsCorrect   int    `json:"questions_correct"`
 	QuestionsIncorrect int    `json:"questions_incorrect"`
+	HasTakenQuiz       bool   `json:"has_taken_quiz"`
 }
 
 // Badge struct contains info about a badge
