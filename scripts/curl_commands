@@ -86,7 +86,7 @@ AUTH
 // POST: ADD USER ID
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "abc-123-def-456"}}' 'localhost:5000/api/v1/adduserid'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"info": {"auth_user_id": "abc-123-def-456"}}' 'localhost:5000/api/v1/adduserid'
 
 // POST: GET ID
 curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "abc-123-def-456"}}' 'localhost:5000/api/v1/getwallet'
@@ -166,4 +166,4 @@ curl -H "Content-type: application/json" -H "Authorization: Bearer token" -d '{"
 curl -H "Content-type: application/json" -H "Authorization: Bearer token" -d '{"title": "archaeologist", "auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52", "quiz_info": {"quiz_data": [{"question":"How many domains currently hold the status \"In Registry\" in the adChain Publisher Registry?", "answer": "31"}, {"question": "What is the name of the cryptocurrency used to curate the adChain Publisher Registry?", "answer": "adtoken"}, {"question": "And what is the contract address of this cryptocurrency?", "answer": "0x123"}, {"question": "What date did the adChain Publisher Release Candidate go live on the Ethereum Mainnet?", "answer": "0402418"}, {"question": "According to the \"Claiming ADT Rewards Breakdown\" located within the help section of the adChain Publisher Registry, how many ways are there to earn adToken rewards?", "answer": "3"}]}}' 'localhost:5000/api/v1/postresults'
 
 // POST: GET RESULTS
-curl -H "Content-type: application/json" -H "Authorization: Bearer token" -d '{"title": "archaeologist", "auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52"}' 'localhost:5000/api/v1/getresults'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"title": "archaeologist", "auth_user_id": "906bbf4c-b9f4-469b-8741-7dd81029a523"}' 'localhost:5000/api/v1/getresults'
