@@ -162,7 +162,7 @@ func ResultsGet(w http.ResponseWriter, r *http.Request) {
 	_, err = db.GetQuizResults(quizResults)
 	if err != nil {
 		response = utils.Message(false, "no results found")
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusNoContent)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
 		return
