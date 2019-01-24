@@ -55,10 +55,11 @@ CREATE TABLE coindrop_tasks (
 # QUIZ RESULTS
 CREATE TABLE coindrop_quiz_results (
 	id SERIAL NOT NULL UNIQUE,
-	title TEXT NOT NULL UNIQUE,
-	auth_user_id TEXT NOT NULL UNIQUE,
+	title TEXT NOT NULL,
+	auth_user_id TEXT NOT NULL,
 	questions_correct INT NOT NULL,
-	questions_incorrect INT NOT NULL
+	questions_incorrect INT NOT NULL,
+	has_taken_quiz BOOLEAN
 )
 
 # TASKS SPECIFIC TO USER
