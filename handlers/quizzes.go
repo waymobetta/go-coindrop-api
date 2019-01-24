@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/db"
 	"github.com/waymobetta/go-coindrop-api/utils"
 )
@@ -51,11 +52,8 @@ func ResultsPost(w http.ResponseWriter, r *http.Request) {
 	// check to see if quiz has already been taken by user
 	_, err = db.GetQuizResults(storedQuizResults)
 	if err != nil {
-		response = utils.Message(false, err)
-		w.WriteHeader(http.StatusUnprocessableEntity)
-		w.Header().Add("Content-type", "application/json")
-		utils.Respond(w, response)
-		return
+		response = utils.Message(false, "no results found")
+		log.Println(response)
 	}
 
 	if storedQuizResults.HasTakenQuiz {
@@ -163,7 +161,7 @@ func ResultsGet(w http.ResponseWriter, r *http.Request) {
 	// unmarshals results of a specific quiz
 	_, err = db.GetQuizResults(quizResults)
 	if err != nil {
-		response = utils.Message(false, err)
+		response = utils.Message(false, "no results found")
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
