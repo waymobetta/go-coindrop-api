@@ -108,6 +108,8 @@ func ResultsPost(w http.ResponseWriter, r *http.Request) {
 
 	// store quiz information from user in variable to store to db
 	storedQuizResults = &db.QuizResults{
+		Title:              storedQuizResults.Title,
+		AuthUserID:         storedQuizResults.AuthUserID,
 		QuestionsCorrect:   correctCounter,
 		QuestionsIncorrect: incorrectCounter,
 		HasTakenQuiz:       true,
