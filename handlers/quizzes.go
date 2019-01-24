@@ -124,7 +124,7 @@ func ResultsPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response = utils.Message(true, "success")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
 	fmt.Printf("Successfully stored answers for: %s quiz from user: %s\n\n", quizResults.Title, quizResults.AuthUserID)
@@ -162,7 +162,7 @@ func ResultsGet(w http.ResponseWriter, r *http.Request) {
 	_, err = db.GetQuizResults(quizResults)
 	if err != nil {
 		response = utils.Message(false, "no results found")
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusNotFound)
 		w.Header().Add("Content-type", "application/json")
 		utils.Respond(w, response)
 		return
