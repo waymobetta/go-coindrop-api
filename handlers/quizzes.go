@@ -39,6 +39,33 @@ func ResultsPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// declare variable and assign to new copy of QuizResults struct
+	storedQuizResults := new(db.QuizResults)
+
+	// store quiz information from user in variable to store to db
+	storedQuizResults = &db.QuizResults{
+		Title:      quizResults.Title,
+		AuthUserID: quizResults.AuthUserID,
+	}
+
+	// check to see if quiz has already been taken by user
+	_, err = db.GetQuizResults(storedQuizResults)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+
+	if storedQuizResults.HasTakenQuiz {
+		response = utils.Message(false, "quiz results already submitted")
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+
 	// TODO:
 	// break up calculating quiz results into separate function
 
@@ -79,15 +106,11 @@ func ResultsPost(w http.ResponseWriter, r *http.Request) {
 
 	correctCounter = len(tried) - incorrectCounter
 
-	// declare variable and assign to new copy of QuizResults struct
-	storedQuizResults := new(db.QuizResults)
-
 	// store quiz information from user in variable to store to db
 	storedQuizResults = &db.QuizResults{
-		Title:              quizResults.Title,
-		AuthUserID:         quizResults.AuthUserID,
 		QuestionsCorrect:   correctCounter,
 		QuestionsIncorrect: incorrectCounter,
+		HasTakenQuiz:       true,
 	}
 
 	// store user's quiz results in db
