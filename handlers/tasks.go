@@ -148,12 +148,11 @@ func UserTasksGet(w http.ResponseWriter, r *http.Request) {
 		for assignedTask := range userTask.ListData.AssignedTasks {
 			if tasks.Tasks[task].Title == userTask.ListData.AssignedTasks[assignedTask] {
 				tasks.Tasks[task].IsAssigned = true
-				userTasks.Tasks = append(userTasks.Tasks, tasks.Tasks[task])
-			}
-		}
-		for completedTask := range userTask.ListData.CompletedTasks {
-			if tasks.Tasks[task].Title == userTask.ListData.CompletedTasks[completedTask] {
-				tasks.Tasks[task].IsCompleted = true
+				for completedTask := range userTask.ListData.CompletedTasks {
+					if tasks.Tasks[task].Title == userTask.ListData.CompletedTasks[completedTask] {
+						tasks.Tasks[task].IsCompleted = true
+					}
+				}
 				userTasks.Tasks = append(userTasks.Tasks, tasks.Tasks[task])
 			}
 		}
