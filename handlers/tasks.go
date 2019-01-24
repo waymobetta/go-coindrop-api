@@ -143,7 +143,7 @@ func UserTasksGet(w http.ResponseWriter, r *http.Request) {
 	userTasks := new(db.Tasks)
 
 	// TODO:
-	// refactor
+	// refactor to eliminate for loops if possible
 	for task := range tasks.Tasks {
 		for assignedTask := range userTask.ListData.AssignedTasks {
 			if tasks.Tasks[task].Title == userTask.ListData.AssignedTasks[assignedTask] {
