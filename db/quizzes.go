@@ -101,7 +101,7 @@ func StoreQuizResults(q *QuizResults) (*QuizResults, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `INSERT INTO coindrop_quiz_results (title, auth_user_id, questions_correct, questions_incorrect) VALUES ($1,$2,$3,$4)`
+	sqlStatement := `INSERT INTO coindrop_quiz_results (title, auth_user_id, questions_correct, questions_incorrect, has_taken_quiz) VALUES ($1,$2,$3,$4,$5)`
 
 	// prepare statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -117,6 +117,7 @@ func StoreQuizResults(q *QuizResults) (*QuizResults, error) {
 		q.AuthUserID,
 		q.QuestionsCorrect,
 		q.QuestionsIncorrect,
+		q.HasTakenQuiz,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
@@ -138,7 +139,7 @@ func StoreQuizResults(q *QuizResults) (*QuizResults, error) {
 // GetQuizResults returns all info for specific quiz
 func GetQuizResults(q *QuizResults) (*QuizResults, error) {
 	// create SQL statement for db query
-	sqlStatement := `SELECT questions_correct, questions_incorrect FROM coindrop_quiz_results WHERE title = $1 AND auth_user_id = $2`
+	sqlStatement := `SELECT questions_correct, questions_incorrect, has_taken_quiz FROM coindrop_quiz_results WHERE title = $1 AND auth_user_id = $2`
 
 	// execute db query by passing in prepared SQL statement
 	stmt, err := Client.Prepare(sqlStatement)
@@ -155,6 +156,7 @@ func GetQuizResults(q *QuizResults) (*QuizResults, error) {
 	err = row.Scan(
 		&q.QuestionsCorrect,
 		&q.QuestionsIncorrect,
+		&q.HasTakenQuiz,
 	)
 	if err != nil {
 		return q, err
