@@ -122,7 +122,7 @@ curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"title
 5. 
 curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"title": "archaeologist", "type": "quiz", "author": "adchain", "description": "Prove your familiarity of our project by digging up some information in the adchain archaeology quiz!", "token": "adToken", "token_allocation": 5000, "badge_data": {"name": "archaeologist"}}' 'localhost:5000/api/v1/addtask'
 
-// POST: GET TASKS ASSIGNED TO USER
+// POST: GET TASKS ASSIGNED TO/COMPLETED BY USER
 curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "906bbf4c-b9f4-469b-8741-7dd81029a523"}' 'localhost:5000/api/v1/getusertasks'
 
 // POST: ADD USER TASK LISTING
