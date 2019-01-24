@@ -138,7 +138,6 @@ func StoreQuizResults(q *QuizResults) (*QuizResults, error) {
 // GetQuizResults returns all info for specific quiz
 func GetQuizResults(q *QuizResults) (*QuizResults, error) {
 	// create SQL statement for db query
-	// sqlStatement := `SELECT (questions_correct, questions_incorrect) FROM coindrop_quiz_results WHERE title = $1 AND auth_user_id = $2`
 	sqlStatement := `SELECT questions_correct, questions_incorrect FROM coindrop_quiz_results WHERE title = $1 AND auth_user_id = $2`
 
 	// execute db query by passing in prepared SQL statement
