@@ -195,7 +195,6 @@ func UserTaskAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// add user task listing in db
-	// NOTE: userTask.TaskStatus.Assigned + "".Completed will both be empty maps
 	_, err = db.AddUserTask(userTask)
 	if err != nil {
 		response = utils.Message(false, err)
