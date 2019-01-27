@@ -27,7 +27,7 @@ curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "999", "r
 // POST: GET REDDIT INFO
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id":"56f2fc1c-48e9-4bb2-b850-3ed472902e2f"}}' 'localhost:5000/api/v1/updateredditinfo'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"info": {"auth_user_id":"6cf2f17c-c0c6-42a1-917c-cf3a66212977"}}' 'localhost:5000/api/v1/updateredditinfo'
 
 // POST: DELETE USER
 
