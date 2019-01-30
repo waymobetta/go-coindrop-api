@@ -1,10 +1,12 @@
 package etherscan
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -15,18 +17,48 @@ const (
 	baseAPI = "https://api.etherscan.io/api"
 )
 
-// add Etherscan struct specific for task
+// TODO:
+// update structs
+
+type ContractUser struct {
+	UserID  string `json:"user_id"`
+	Address string `json:"address"`
+}
+
+type TxResponse struct {
+	Status  string `json:"status"`
+	Message string `json:"message"`
+	Result  []struct {
+		BlockNumber       string `json:"blockNumber"`
+		TimeStamp         string `json:"timeStamp"`
+		Hash              string `json:"hash"`
+		Nonce             string `json:"nonce"`
+		BlockHash         string `json:"blockHash"`
+		TransactionIndex  string `json:"transactionIndex"`
+		From              string `json:"from"`
+		To                string `json:"to"`
+		Value             string `json:"value"`
+		Gas               string `json:"gas"`
+		GasPrice          string `json:"gasPrice"`
+		IsError           string `json:"isError"`
+		TxreceiptStatus   string `json:"txreceipt_status"`
+		Input             string `json:"input"`
+		ContractAddress   string `json:"contractAddress"`
+		CumulativeGasUsed string `json:"cumulativeGasUsed"`
+		GasUsed           string `json:"gasUsed"`
+		Confirmations     string `json:"confirmations"`
+	} `json:"result"`
+}
 
 // DidInteractWithContract method proves whether an address has recently interacted with a contract
-func DidInteractWithContract() (string, error) {
-	// Etherscan API key
+func (u *User) DidInteractWithContract(contract string) (bool, error) {
+	txRes := new(TxResponse)
+
 	etherscanAPIKey := os.Getenv("ETHERSCAN_API_KEY")
 
-	// user's wallet address
-	// current: test address
-	userAddress := "0x561A370e07ba44E61D9e478aF618D7e839E674C0"
+	baseURL := `https://api-rinkeby.etherscan.io/api`
 
-	userEtherscanTxURL := fmt.Sprintf("%s?module=account&action=txlist&address=%s&startblock=0&endblock=99999999&sort=asc&apikey=%s", rinkebyBaseAPI, userAddress, etherscanAPIKey)
+	userEtherscanTxURL := fmt.Sprintf("%s?module=account&action=txlist&address=%s&startblock=0&endblock=99999999&sort=asc&apikey=%s", baseURL, u.Address, etherscanAPIKey)
 
 	client := &http.Client{
 		Timeout: time.Duration(time.Second * 10),
@@ -35,7 +67,7 @@ func DidInteractWithContract() (string, error) {
 	req, err := http.NewRequest("GET", userEtherscanTxURL, nil)
 	if err != nil {
 		err = fmt.Errorf("[!] Error preparing GET request\n%v", err)
-		return "", err
+		return false, err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -43,20 +75,26 @@ func DidInteractWithContract() (string, error) {
 	res, err := client.Do(req)
 	if err != nil {
 		err = fmt.Errorf("[!] Error fetching etherscan transactions\n%v", err)
-		return "", err
+		return false, err
 	}
 	defer res.Body.Close()
 
 	byteArr, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		err = fmt.Errorf("[!] Error reading response body\n%v", err)
-		return "", err
+		return false, err
 	}
 
-	return string(byteArr), nil
+	if err := json.Unmarshal(byteArr, &txRes); err != nil {
+		err = fmt.Errorf("[!] Error unmarshalling JSON\n%v", err)
+		return false, err
+	}
 
-	// TODO:
-	// unmarshal into struct
-	// prevent address from being swapped with another address that has already submitted transaction
-	// proposed solution: discourage use of another user's wallet address as that is where the tokens will be sent to, and down the line potentially the ERC721 badge
+	for index := range txRes.Result {
+		if strings.ToUpper(txRes.Result[index].To) == strings.ToUpper(contract) && txRes.Result[index].TxreceiptStatus == "1" {
+			fmt.Println("[*] tx found!")
+			return true, nil
+		}
+	}
+	return false, nil
 }
