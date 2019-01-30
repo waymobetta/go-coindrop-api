@@ -1,11 +1,11 @@
 package handlers
 
 // PreferencesGet method returns user's preferences
-func PreferencesGet() {
+func (h *Handlers) PreferencesGet() {
 
 }
 
 // PreferencesUpdate method updates user's preferences
-func PreferencesUpdate() {
+func (h *Handlers) PreferencesUpdate() {
 
 }

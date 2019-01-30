@@ -7,18 +7,19 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/db"
 	"github.com/waymobetta/go-coindrop-api/utils"
 )
 
 // TasksGet handles queries to return all stored tasks
-func TasksGet(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) TasksGet(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable tasks of Tasks struct
 	tasks := new(db.Tasks)
 
 	// return slice of structs of all task listings
-	_, err := db.GetTasks(tasks)
+	_, err := h.db.GetTasks(tasks)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -41,11 +42,11 @@ func TasksGet(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully returned information for %d tasks\n\n", len(tasks.Tasks))
+	log.Printf("[handler] successfully returned information for %d tasks\n", len(tasks.Tasks))
 }
 
 // TaskAdd adds a single task listing to db
-func TaskAdd(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) TaskAdd(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable user of User struct
 	task := new(db.Task)
@@ -72,7 +73,7 @@ func TaskAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// add user listing to db
-	_, err = db.AddTask(task)
+	_, err = h.db.AddTask(task)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusUnprocessableEntity)
@@ -85,11 +86,11 @@ func TaskAdd(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully added task: %s\n\n", task.Title)
+	log.Printf("[handler] successfully added task: %s\n", task.Title)
 }
 
 // UserTasksGet returns all the associated task information for the user, including assigned and completed tasks
-func UserTasksGet(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) UserTasksGet(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 
 	// initialize new copy of UserTask struct in variable userTask
@@ -118,7 +119,7 @@ func UserTasksGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get list of user's assigned and completed tasks
-	_, err = db.GetUserTasks(userTask)
+	_, err = h.db.GetUserTasks(userTask)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusUnprocessableEntity)
@@ -131,7 +132,7 @@ func UserTasksGet(w http.ResponseWriter, r *http.Request) {
 	tasks := new(db.Tasks)
 
 	// get all tasks
-	tasks, err = db.GetTasks(tasks)
+	tasks, err = h.db.GetTasks(tasks)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusUnprocessableEntity)
@@ -166,7 +167,7 @@ func UserTasksGet(w http.ResponseWriter, r *http.Request) {
 }
 
 // UserTaskAdd adds a single user listing to the db
-func UserTaskAdd(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) UserTaskAdd(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 
 	// initialize new copy of UserTask struct in variable userTask
@@ -195,7 +196,7 @@ func UserTaskAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// add user task listing in db
-	_, err = db.AddUserTask(userTask)
+	_, err = h.db.AddUserTask(userTask)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusUnprocessableEntity)
@@ -208,11 +209,11 @@ func UserTaskAdd(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully added task listing for user: %s\n\n", userTask.AuthUserID)
+	log.Printf("[handler] successfully added task listing for user: %s\n", userTask.AuthUserID)
 }
 
 // UserTaskComplete adds a completed task to the existing list of completed tasks
-func UserTaskComplete(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) UserTaskComplete(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 
 	// initialize new copy of TaskUser struct in variable taskUser
@@ -247,7 +248,7 @@ func UserTaskComplete(w http.ResponseWriter, r *http.Request) {
 	userTask.AuthUserID = taskUser.AuthUserID
 
 	// update user listing in db
-	_, err = db.MarkUserTaskCompleted(userTask)
+	_, err = h.db.MarkUserTaskCompleted(userTask)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusUnprocessableEntity)
@@ -260,11 +261,11 @@ func UserTaskComplete(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully added completed task: %s for user: %s\n\n", taskUser.Title, userTask.AuthUserID)
+	log.Printf("[handler] successfully added completed task: %s for user: %s\n", taskUser.Title, userTask.AuthUserID)
 }
 
 // UserTaskAssign adds an assigned task to a user's existing list of assigned tasks
-func UserTaskAssign(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) UserTaskAssign(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 
 	// initialize new copy of TaskUser struct in variable taskUser
@@ -299,7 +300,7 @@ func UserTaskAssign(w http.ResponseWriter, r *http.Request) {
 	userTask.AuthUserID = taskUser.AuthUserID
 
 	// update user listing in db
-	_, err = db.MarkUserTaskAssigned(userTask)
+	_, err = h.db.MarkUserTaskAssigned(userTask)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusUnprocessableEntity)
@@ -312,5 +313,5 @@ func UserTaskAssign(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully assigned task: %s to user: %s\n\n", taskUser.Title, userTask.AuthUserID)
+	log.Printf("[handler] successfully assigned task: %s to user: %s\n", taskUser.Title, userTask.AuthUserID)
 }

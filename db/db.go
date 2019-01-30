@@ -3,30 +3,44 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"os"
 
-	_ "github.com/lib/pq"
-	"github.com/waymobetta/wmb"
+	log "github.com/sirupsen/logrus"
+
+	_ "github.com/lib/pq" // required
 )
 
-// New initializes a new db connection; synonymous with init
-func New() error {
-	wmb.Clear()
+// DB ...
+type DB struct {
+	client *sql.DB
+}
 
-	args := os.Args
+// Config ...
+type Config struct {
+	Host    string
+	Port    int
+	User    string
+	Pass    string
+	Dbname  string
+	SSLMode string
+}
 
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s", host, port, user, password, dbname)
-
-	if len(args) > 1 {
-		fmt.Println("[+] Connecting to localhost\n")
-		psqlInfo = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s", lHost, lPort, lUser, lPassword, lDbname, lSslmode)
+// NewDB initializes a new database connection
+func NewDB(config *Config) *DB {
+	sslMode := "enable"
+	if config.SSLMode != "" {
+		sslMode = config.SSLMode
 	}
 
-	_client, err := sql.Open("postgres", psqlInfo)
-	Client = _client
+	conn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s", config.Host, config.Port, config.User, config.Pass, config.Dbname, sslMode)
+
+	log.Printf("[db] connecting to database; %s:%v/%s", config.Host, config.Port, config.Dbname)
+
+	client, err := sql.Open("postgres", conn)
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
-	fmt.Println("api ready..\n")
-	return nil
+
+	return &DB{
+		client: client,
+	}
 }

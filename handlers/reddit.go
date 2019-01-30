@@ -2,11 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/waymobetta/go-coindrop-api/db"
 	"github.com/waymobetta/go-coindrop-api/services/reddit"
@@ -14,10 +14,8 @@ import (
 	"github.com/waymobetta/go-coindrop-api/verify"
 )
 
-// REDDIT
-
 // RedditUserAdd adds a single user listing to db
-func RedditUserAdd(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) RedditUserAdd(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable user of User struct
 	user := new(db.User)
@@ -44,7 +42,7 @@ func RedditUserAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// add user listing to db
-	_, err = db.AddRedditUser(user)
+	_, err = h.db.AddRedditUser(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -57,17 +55,17 @@ func RedditUserAdd(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully added reddit user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully added reddit user: %v\n\n", user.Info.AuthUserID)
 }
 
 // UsersGet handles queries to return all stored users
-func UsersGet(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) UsersGet(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable user of User struct
 	users := new(db.Users)
 
 	// return slice of structs of all user listings
-	_, err := db.GetUsers(users)
+	_, err := h.db.GetUsers(users)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -90,11 +88,11 @@ func UsersGet(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully returned information for %d users\n\n", len(users.Users))
+	log.Printf("[handler] successfully returned information for %d users\n", len(users.Users))
 }
 
 // RedditUserGet returns information about a single user
-func RedditUserGet(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) RedditUserGet(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable user of User struct
 	user := new(db.User)
@@ -121,7 +119,7 @@ func RedditUserGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get user listing by name
-	userData, err := db.GetRedditUser(user)
+	userData, err := h.db.GetRedditUser(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -134,11 +132,11 @@ func RedditUserGet(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully returned information for user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully returned information for user: %v\n", user.Info.AuthUserID)
 }
 
 // RedditUserRemove removes a single user listing from db
-func RedditUserRemove(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) RedditUserRemove(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable user of User struct
 	user := new(db.User)
@@ -165,7 +163,7 @@ func RedditUserRemove(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// remove user listing from db
-	_, err = db.RemoveRedditUser(user)
+	_, err = h.db.RemoveRedditUser(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -178,13 +176,11 @@ func RedditUserRemove(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully deleted user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully deleted user: %v\n\n", user.Info.AuthUserID)
 }
 
-// REDDIT
-
 // UpdateRedditVerificationCode handles updates to the verification data for a user
-func UpdateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) UpdateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable user of User struct
 	user := new(db.User)
@@ -211,7 +207,7 @@ func UpdateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// update the user listing in db
-	_, err = db.UpdateRedditVerificationCode(user)
+	_, err = h.db.UpdateRedditVerificationCode(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -224,11 +220,11 @@ func UpdateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully updated verification info for user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully updated verification info for user: %v\n", user.Info.AuthUserID)
 }
 
 // GenerateRedditVerificationCode generates a temporary verification code
-func GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable user of User struct
 	user := new(db.User)
@@ -271,7 +267,7 @@ func GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// store user verification data in db
-	_, err = db.UpdateRedditVerificationCode(user)
+	_, err = h.db.UpdateRedditVerificationCode(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -284,11 +280,11 @@ func GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully generated verification code for user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully generated verification code for user: %v\n", user.Info.AuthUserID)
 }
 
 // ValidateRedditVerificationCode validates the temporary verification code
-func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// declare new variable of type User
 	user := new(db.User)
@@ -321,7 +317,7 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// pull stored verification code + reddit username from DB
-	storedUserInfo, err := db.GetRedditUser(user)
+	storedUserInfo, err := h.db.GetRedditUser(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -340,7 +336,7 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Checking %s against %s\n\n", updatedUserObj.Info.RedditData.VerificationData.PostedVerificationCode, storedUserInfo.Info.RedditData.VerificationData.StoredVerificationCode)
+	log.Printf("[handler] checking %s against %s\n", updatedUserObj.Info.RedditData.VerificationData.PostedVerificationCode, storedUserInfo.Info.RedditData.VerificationData.StoredVerificationCode)
 
 	// secondary validation of verification code
 	if updatedUserObj.Info.RedditData.VerificationData.PostedVerificationCode != storedUserInfo.Info.RedditData.VerificationData.StoredVerificationCode {
@@ -356,7 +352,7 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	storedUserInfo.Info.RedditData.VerificationData.IsVerified = true
 
 	// update db with new info since verification codes matched
-	_, err = db.UpdateRedditVerificationCode(storedUserInfo)
+	_, err = h.db.UpdateRedditVerificationCode(storedUserInfo)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -369,11 +365,11 @@ func ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully validated verification code for user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully validated verification code for user: %v\n", user.Info.AuthUserID)
 }
 
 // RedditUpdate returns Reddit profile info about the user
-func RedditUpdate(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// declare new variable of type User
 	user := new(db.User)
@@ -406,7 +402,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// pull stored reddit username from DB
-	user, err = db.GetRedditUser(user)
+	user, err = h.db.GetRedditUser(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -415,7 +411,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("[+] Retrieving Reddit About info\n")
+	log.Println("[handler] retrieving Reddit About info")
 	// get general about info for user
 	user, err = authSession.GetAboutInfo(user)
 	if err != nil {
@@ -426,7 +422,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("[+] Retrieving Reddit Trophy info\n")
+	log.Println("[handler] retrieving Reddit Trophy info")
 	// get list of trophies user has been awarded
 	if err = authSession.GetRedditUserTrophies(user); err != nil {
 		response = utils.Message(false, err)
@@ -436,7 +432,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("[+] Retrieving Reddit Submitted info\n")
+	log.Println("[handler] retrieving Reddit Submitted info")
 	// get slice of subreddits user is subscribed to based on activity
 	user, err = authSession.GetSubmittedInfo(user)
 	if err != nil {
@@ -448,7 +444,7 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// update db with new Reddit profile info
-	_, err = db.UpdateRedditInfo(user)
+	_, err = h.db.UpdateRedditInfo(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -461,5 +457,5 @@ func RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully updated Reddit info for user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully updated Reddit info for user: %v\n", user.Info.AuthUserID)
 }

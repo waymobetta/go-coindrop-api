@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/waymobetta/go-coindrop-api/db"
 	"github.com/waymobetta/go-coindrop-api/services/stackoverflow"
@@ -15,10 +16,8 @@ import (
 	"github.com/waymobetta/go-coindrop-api/verify"
 )
 
-// STACK OVERFLOW
-
 // StackUserAdd adds a single user listing to db
-func StackUserAdd(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) StackUserAdd(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	user := new(db.User)
 
@@ -44,7 +43,7 @@ func StackUserAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// add user listing to db
-	_, err = db.AddStackUser(user)
+	_, err = h.db.AddStackUser(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -57,11 +56,11 @@ func StackUserAdd(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully added stack user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully added stack user: %v\n", user.Info.AuthUserID)
 }
 
 // StackUserGet returns information about a single user
-func StackUserGet(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) StackUserGet(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	user := new(db.User)
 
@@ -87,7 +86,7 @@ func StackUserGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get user listing by name
-	userData, err := db.GetStackUser(user)
+	userData, err := h.db.GetStackUser(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -100,11 +99,11 @@ func StackUserGet(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully returned information for user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully returned information for user: %v\n", user.Info.AuthUserID)
 }
 
 // GenerateStackVerificationCode creates a verifcation code for Stack Overflow
-func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// declare new variable user of User struct
 	user := new(db.User)
@@ -134,12 +133,11 @@ func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	verificationCode := verify.GenerateVerificationCode()
 
 	// promotional display code
+	// TODO: store in db and read from db
 	displayCode := fmt.Sprintf("[COINDROP.IO - IT PAYS TO CONTRIBUTE: %s]", verificationCode)
 
 	// update local user object variable with generated verification code
 	user.Info.StackOverflowData.VerificationData.StoredVerificationCode = displayCode
-	user.Info.StackOverflowData.UserID = user.Info.StackOverflowData.UserID
-	user.Info.AuthUserID = user.Info.AuthUserID
 
 	// marshal into JSON
 	_, err = json.Marshal(&user)
@@ -152,7 +150,7 @@ func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// store user verification data in db
-	_, err = db.UpdateStackVerificationCode(user)
+	_, err = h.db.UpdateStackVerificationCode(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -165,11 +163,11 @@ func GenerateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully generated verification code for user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully generated verification code for user: %v\n", user.Info.AuthUserID)
 }
 
 // ValidateStackVerificationCode validates the temporary verification code
-func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 
 	// declare new variable user of User struct
@@ -197,7 +195,7 @@ func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// pull stored verification code from DB
-	storedStackUser, err := db.GetStackUser(user)
+	storedStackUser, err := h.db.GetStackUser(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -216,11 +214,11 @@ func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Checking %s against %s\n\n", storedStackUser.Info.StackOverflowData.VerificationData.PostedVerificationCode, storedStackUser.Info.StackOverflowData.VerificationData.StoredVerificationCode)
+	log.Printf("[handler] checking %s against %s\n", storedStackUser.Info.StackOverflowData.VerificationData.PostedVerificationCode, storedStackUser.Info.StackOverflowData.VerificationData.StoredVerificationCode)
 
 	// secondary validation to see if codes match
 	if !strings.Contains(updatedStackUser.Info.StackOverflowData.VerificationData.PostedVerificationCode, storedStackUser.Info.StackOverflowData.VerificationData.StoredVerificationCode) {
-		log.Println("[!] Verification codes do not match!\n")
+		log.Warnf("[handler] Verification codes do not match!")
 
 		response = utils.Message(false, "unsuccessful")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -234,7 +232,7 @@ func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	storedStackUser.Info.StackOverflowData.VerificationData.IsVerified = true
 
 	// update db with new info since verification codes matched
-	_, err = db.UpdateStackVerificationCode(storedStackUser)
+	_, err = h.db.UpdateStackVerificationCode(storedStackUser)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -247,11 +245,11 @@ func ValidateStackVerificationCode(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully validated verification code for user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully validated verification code for user: %v\n", user.Info.AuthUserID)
 }
 
 // StackUserUpdate updates and returns profile info about the user
-func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// declare new variable of type User
 	user := new(db.User)
@@ -278,7 +276,7 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// pull stored verification code from DB
-	storedUserInfo, err := db.GetStackUser(user)
+	storedUserInfo, err := h.db.GetStackUser(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -287,7 +285,7 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("[+] Retrieving Stack Overflow About info\n")
+	log.Println("[handler] retrieving Stack Overflow About info")
 	// get general about info for user
 	_, err = stackoverflow.GetProfileByUserID(user)
 	if err != nil {
@@ -298,7 +296,7 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("[+] Retrieving Stack Overflow associated accounts info\n")
+	log.Println("[handler] retrieving Stack Overflow associated accounts info")
 	// get list of trophies user has been awarded
 	_, err = stackoverflow.GetAssociatedAccounts(user)
 	if err != nil {
@@ -314,7 +312,7 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	user.Info.StackOverflowData.VerificationData.IsVerified = storedUserInfo.Info.StackOverflowData.VerificationData.IsVerified
 
 	// update db with new Reddit profile info
-	_, err = db.UpdateStackAboutInfo(user)
+	_, err = h.db.UpdateStackAboutInfo(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -327,5 +325,5 @@ func StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully updated Stack Overflow info for user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully updated Stack Overflow info for user: %v\n", user.Info.AuthUserID)
 }

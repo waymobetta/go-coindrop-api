@@ -1,11 +1,9 @@
 package db
 
-// AUTH
-
 // AddUserID inserts an AWS cognito user ID to the coindrop_auth table
-func AddUserID(u *User) (*User, error) {
+func (db *DB) AddUserID(u *User) (*User, error) {
 	// for simplicity, update the listing rather than updating single value
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return u, err
 	}
@@ -14,7 +12,7 @@ func AddUserID(u *User) (*User, error) {
 	sqlStatement := `INSERT INTO coindrop_auth (auth_user_id) VALUES ($1)`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}
@@ -43,9 +41,9 @@ func AddUserID(u *User) (*User, error) {
 // WALLET
 
 // UpdateWallet updates the wallet address of a single user
-func UpdateWallet(u *User) (*User, error) {
+func (db *DB) UpdateWallet(u *User) (*User, error) {
 	// for simplicity, update the listing rather than updating single value
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return u, err
 	}
@@ -54,7 +52,7 @@ func UpdateWallet(u *User) (*User, error) {
 	sqlStatement := `UPDATE coindrop_auth SET wallet_address = $1 WHERE auth_user_id = $2`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}
@@ -81,12 +79,12 @@ func UpdateWallet(u *User) (*User, error) {
 }
 
 // GetWallet updates the wallet address of a single user
-func GetWallet(u *User) (*User, error) {
+func (db *DB) GetWallet(u *User) (*User, error) {
 	// create SQL statement for db update
 	sqlStatement := `SELECT wallet_address FROM coindrop_auth WHERE auth_user_id=$1`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}

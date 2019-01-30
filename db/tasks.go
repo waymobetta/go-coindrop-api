@@ -1,20 +1,16 @@
 package db
 
 import (
-	"fmt"
-
 	"github.com/lib/pq"
 )
 
-// TASKS
-
 // GetTasks returns all available tasks
-func GetTasks(tasks *Tasks) (*Tasks, error) {
+func (db *DB) GetTasks(tasks *Tasks) (*Tasks, error) {
 	// create SQL statement for db query
 	sqlStatement := `SELECT * FROM coindrop_tasks`
 
 	// execute db query by passing in prepared SQL statement
-	rows, err := Client.Query(sqlStatement)
+	rows, err := db.client.Query(sqlStatement)
 	if err != nil {
 		return tasks, err
 	}
@@ -50,9 +46,9 @@ func GetTasks(tasks *Tasks) (*Tasks, error) {
 }
 
 // AddTask adds the listing and associated data of a single task
-func AddTask(t *Task) (*Task, error) {
+func (db *DB) AddTask(t *Task) (*Task, error) {
 	// initialize statement write to database
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return t, err
 	}
@@ -61,7 +57,7 @@ func AddTask(t *Task) (*Task, error) {
 	sqlStatement := `INSERT INTO coindrop_tasks (title, type, author, description, token_name, token_allocation, badge) VALUES ($1,$2,$3,$4,$5,$6,$7)`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return t, err
 	}
@@ -96,12 +92,12 @@ func AddTask(t *Task) (*Task, error) {
 }
 
 // GetUserTasks returns all info for specific quiz
-func GetUserTasks(u *UserTask) (*UserTask, error) {
+func (db *DB) GetUserTasks(u *UserTask) (*UserTask, error) {
 	// create SQL statement for db query
 	sqlStatement := `SELECT * FROM coindrop_user_tasks WHERE auth_user_id = $1`
 
 	// execute db query by passing in prepared SQL statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}
@@ -119,7 +115,6 @@ func GetUserTasks(u *UserTask) (*UserTask, error) {
 		pq.Array(&u.ListData.CompletedTasks),
 	)
 	if err != nil {
-		fmt.Println(err)
 		return u, err
 	}
 
@@ -127,9 +122,9 @@ func GetUserTasks(u *UserTask) (*UserTask, error) {
 }
 
 // AddUserTask adds the listing and associated task data of a specific user
-func AddUserTask(u *UserTask) (*UserTask, error) {
+func (db *DB) AddUserTask(u *UserTask) (*UserTask, error) {
 	// initialize statement write to database
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return u, err
 	}
@@ -138,7 +133,7 @@ func AddUserTask(u *UserTask) (*UserTask, error) {
 	sqlStatement := `INSERT INTO coindrop_user_tasks (auth_user_id, assigned, completed) VALUES ($1,$2,$3)`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}
@@ -169,9 +164,9 @@ func AddUserTask(u *UserTask) (*UserTask, error) {
 }
 
 // MarkUserTaskAssigned adds a task to the user's list of assigned tasks
-func MarkUserTaskAssigned(u *UserTask) (*UserTask, error) {
+func (db *DB) MarkUserTaskAssigned(u *UserTask) (*UserTask, error) {
 	// initialize statement write to database
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return u, err
 	}
@@ -180,7 +175,7 @@ func MarkUserTaskAssigned(u *UserTask) (*UserTask, error) {
 	sqlStatement := `UPDATE coindrop_user_tasks SET assigned = array_append(assigned, $1) WHERE auth_user_id = $2`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}
@@ -210,9 +205,9 @@ func MarkUserTaskAssigned(u *UserTask) (*UserTask, error) {
 }
 
 // MarkUserTaskCompleted adds a task to the user's list of completed tasks
-func MarkUserTaskCompleted(u *UserTask) (*UserTask, error) {
+func (db *DB) MarkUserTaskCompleted(u *UserTask) (*UserTask, error) {
 	// initialize statement write to database
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return u, err
 	}
@@ -221,7 +216,7 @@ func MarkUserTaskCompleted(u *UserTask) (*UserTask, error) {
 	sqlStatement := `UPDATE coindrop_user_tasks SET completed = array_append(completed, $1) WHERE auth_user_id = $2`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}

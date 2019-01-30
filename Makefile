@@ -27,4 +27,11 @@ done:
 prep:
 	@echo "prepping..\n"
 	@command rm -rf ../go-coindrop-api-EB; mkdir ../go-coindrop-api-EB; cp -r . ../go-coindrop-api-EB; rm -rf ../go-coindrop-api-EB/.git; cd ../go-coindrop-api-EB; zip ../go-coindrop-api-EB.zip -r * .[^.]*; mv ../go-coindrop-api-EB.zip ~/Desktop; rm -rf ~/go/src/github.com/waymobetta/go-coindrop-api-EB
-	
+
+.PHONY: goa
+goa:
+	@goagen bootstrap -d github.com/waymobetta/go-coindrop-api/design
+
+.PHONY: docs/swagger
+docs/swagger:
+	@cp swagger/swagger.json web/docs/swagger.json

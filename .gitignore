@@ -1,6 +1,13 @@
 .DS_Store
 .env
 
+bin/
+dist/
+build/
+
+# Do NOT ignore vendor
+# vendor/
+
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

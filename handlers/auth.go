@@ -7,12 +7,14 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/waymobetta/go-coindrop-api/db"
 	"github.com/waymobetta/go-coindrop-api/utils"
 )
 
 // UserIDAdd adds an AWS cognito user ID to the coindrop_auth table
-func UserIDAdd(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) UserIDAdd(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 
 	// initialize new user struct object
@@ -32,7 +34,7 @@ func UserIDAdd(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		fmt.Println(err)
+		log.Errorf("[db] %v\n", err)
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
@@ -41,7 +43,7 @@ func UserIDAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Next, insert the AWS cognito user ID into the coindrop_auth table
-	_, err = db.AddUserID(user)
+	_, err = h.db.AddUserID(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -55,11 +57,11 @@ func UserIDAdd(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-type", "application/json")
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully added coindrop user: %v\n\n", user.Info.AuthUserID)
+	fmt.Printf("[db] successfully added coindrop user: %v\n", user.Info.AuthUserID)
 }
 
 // WalletUpdate handles updates to the wallet address for a user
-func WalletUpdate(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) WalletUpdate(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable user of User struct
 	user := new(db.User)
@@ -86,7 +88,7 @@ func WalletUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// update the user listing in db
-	_, err = db.UpdateWallet(user)
+	_, err = h.db.UpdateWallet(user)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -99,11 +101,11 @@ func WalletUpdate(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully updated wallet address for user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[db] successfully updated wallet address for user: %v\n", user.Info.AuthUserID)
 }
 
 // WalletGet gets a user's wallet address from their auth_user_id
-func WalletGet(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) WalletGet(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new user struct object
 	user := new(db.User)
@@ -122,7 +124,7 @@ func WalletGet(w http.ResponseWriter, r *http.Request) {
 	// unmarshal bytes into user struct
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		fmt.Println(err)
+		log.Errorf("[db] %v\n", err)
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
@@ -131,7 +133,7 @@ func WalletGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get the existing entry present in the database for the given username
-	user, err = db.GetWallet(user)
+	user, err = h.db.GetWallet(user)
 	if err != nil {
 		// If there is an issue with the database, return a 500 error
 		response = utils.Message(false, err)
@@ -146,5 +148,5 @@ func WalletGet(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-type", "application/json")
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully returned wallet address for user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[db] successfully returned wallet address for user: %v\n", user.Info.AuthUserID)
 }

@@ -3,9 +3,9 @@ package db
 import "github.com/lib/pq"
 
 // AddRedditUser adds the listing and associated data of a single user
-func AddRedditUser(u *User) (*User, error) {
+func (db *DB) AddRedditUser(u *User) (*User, error) {
 	// initialize statement write to database
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return u, err
 	}
@@ -14,7 +14,7 @@ func AddRedditUser(u *User) (*User, error) {
 	sqlStatement := `INSERT INTO coindrop_reddit (auth_user_id, username, comment_karma, link_karma, subreddits, trophies, posted_verification_code, stored_verification_code, is_verified) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}
@@ -51,12 +51,12 @@ func AddRedditUser(u *User) (*User, error) {
 }
 
 // GetUsers returns info for all users
-func GetUsers(users *Users) (*Users, error) {
+func (db *DB) GetUsers(users *Users) (*Users, error) {
 	// create SQL statement for db query
 	sqlStatement := `SELECT * FROM coindrop_reddit,coindrop_stackoverflow`
 
 	// execute db query by passing in prepared SQL statement
-	rows, err := Client.Query(sqlStatement)
+	rows, err := db.client.Query(sqlStatement)
 	if err != nil {
 		return users, err
 	}
@@ -106,12 +106,12 @@ func GetUsers(users *Users) (*Users, error) {
 }
 
 // GetRedditUser returns info for a single user
-func GetRedditUser(u *User) (*User, error) {
+func (db *DB) GetRedditUser(u *User) (*User, error) {
 	// create SQL statement for db writes
 	sqlStatement := `SELECT * FROM coindrop_reddit WHERE auth_user_id = $1`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}
@@ -142,9 +142,9 @@ func GetRedditUser(u *User) (*User, error) {
 }
 
 // RemoveRedditUser removes the listing and associated data of a single user
-func RemoveRedditUser(u *User) (*User, error) {
+func (db *DB) RemoveRedditUser(u *User) (*User, error) {
 	// initialize statement write to database
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return u, err
 	}
@@ -153,7 +153,7 @@ func RemoveRedditUser(u *User) (*User, error) {
 	sqlStatement := `DELETE FROM coindrop_reddit WHERE auth_user_id = $1`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}
@@ -182,9 +182,9 @@ func RemoveRedditUser(u *User) (*User, error) {
 /// REDDIT
 
 // UpdateRedditInfo updates the listing and associated Reddit data of a single user
-func UpdateRedditInfo(u *User) (*User, error) {
+func (db *DB) UpdateRedditInfo(u *User) (*User, error) {
 	// for simplicity, update the listing rather than updating single value
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return u, err
 	}
@@ -193,7 +193,7 @@ func UpdateRedditInfo(u *User) (*User, error) {
 	sqlStatement := `UPDATE coindrop_reddit SET comment_karma = $1, link_karma = $2, subreddits = $3, trophies = $4 WHERE auth_user_id = $5`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}
@@ -222,9 +222,9 @@ func UpdateRedditInfo(u *User) (*User, error) {
 /// VERIFICATION
 
 // UpdateRedditVerificationCode updates the verification data of a single user
-func UpdateRedditVerificationCode(u *User) (*User, error) {
+func (db *DB) UpdateRedditVerificationCode(u *User) (*User, error) {
 	// for simplicity, update the listing rather than updating single value
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return u, err
 	}
@@ -233,7 +233,7 @@ func UpdateRedditVerificationCode(u *User) (*User, error) {
 	sqlStatement := `UPDATE coindrop_reddit SET username = $1, stored_verification_code = $2, posted_verification_code = $3, is_verified = $4 WHERE auth_user_id = $5`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}
