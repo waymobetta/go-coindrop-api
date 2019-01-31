@@ -1,12 +1,22 @@
 package handlers
 
+import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
+
+	"github.com/waymobetta/go-coindrop-api/db"
+	"github.com/waymobetta/go-coindrop-api/utils"
+)
+
 // TODO:
 // create 2 table schemas:
 // 1. to store actions (linked to tasks table)
 // 2. to store results of action tasks
 
-/*
-// ActionsGet handles queries to return all stored tasks
+// ActionGet handles queries to return all stored tasks
 func (h *Handlers) ActionGet(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable tasks of Tasks struct
@@ -67,7 +77,7 @@ func (h *Handlers) ActionAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// add task action listing to db
-	_, err = h.db.AddAction(task)
+	_, err = h.db.AddTask(task)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusUnprocessableEntity)
@@ -82,4 +92,3 @@ func (h *Handlers) ActionAdd(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("Successfully added task: %s\n\n", task.Title)
 }
-*/
