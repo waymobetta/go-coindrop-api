@@ -12,19 +12,27 @@ make start
 
 ### Environments
 
-add env vars to `.env.local`, then run:
+export env vars in `.env.local`
+
+example:
+
+```
+export POSTGRES_HOST="localhost"
+```
+
+then run:
 
 ```bash
 make start/local
 ```
 
-add env vars to `.env.staging`, then run:
+export env vars in `.env.staging`, then run:
 
 ```bash
 make start/staging
 ```
 
-add env vars to `.env.prod`, then run:
+export env vars in `.env.prod`, then run:
 
 ```bash
 make start/prod
