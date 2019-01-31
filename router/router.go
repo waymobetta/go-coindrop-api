@@ -180,6 +180,18 @@ func NewRouter(config *Config) *mux.Router {
 			hdlrs.ResultsGet,
 		},
 		{
+			"ActionAdd",
+			"POST",
+			"/api/v1/addaction",
+			hdlrs.ActionAdd,
+		},
+		{
+			"ActionGet",
+			"POST",
+			"/api/v1/getaction",
+			hdlrs.ActionGet,
+		},
+		{
 			"QuizAdd",
 			"POST",
 			"/api/v1/addquiz",
