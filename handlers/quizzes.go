@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -13,7 +12,7 @@ import (
 )
 
 // ResultsPost handles posting quiz results of a specific quiz
-func ResultsPost(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) ResultsPost(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 
 	// initialize new copy of Quiz struct to hold quiz info
@@ -50,7 +49,7 @@ func ResultsPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check to see if quiz has already been taken by user
-	_, err = db.GetQuizResults(storedQuizResults)
+	_, err = h.db.GetQuizResults(storedQuizResults)
 	if err != nil {
 		response = utils.Message(false, "no results found")
 		log.Println(response)
@@ -73,7 +72,7 @@ func ResultsPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// unmarshals results of a specific quiz
-	_, err = db.GetQuiz(quizResults)
+	_, err = h.db.GetQuiz(quizResults)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -114,7 +113,7 @@ func ResultsPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// store user's quiz results in db
-	_, err = db.StoreQuizResults(storedQuizResults)
+	_, err = h.db.StoreQuizResults(storedQuizResults)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -127,11 +126,11 @@ func ResultsPost(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully stored answers for: %s quiz from user: %s\n\n", quizResults.Title, quizResults.AuthUserID)
+	log.Printf("[db] successfully stored answers for: %s quiz from user: %s\n", quizResults.Title, quizResults.AuthUserID)
 }
 
 // ResultsGet handles queries to return all info results of a specific quiz
-func ResultsGet(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) ResultsGet(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 
 	// initialize new copy of Quiz struct to hold quiz info
@@ -159,7 +158,7 @@ func ResultsGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// unmarshals results of a specific quiz
-	_, err = db.GetQuizResults(quizResults)
+	_, err = h.db.GetQuizResults(quizResults)
 	if err != nil {
 		response = utils.Message(false, "no results found")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -172,11 +171,11 @@ func ResultsGet(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully returned information for quiz: %s\n\n", quizResults.Title)
+	log.Printf("[db] successfully returned information for quiz: %s\n", quizResults.Title)
 }
 
 // QuizGet handles queries to return all info of a specific quiz
-func QuizGet(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) QuizGet(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable user of User struct
 	quiz := new(db.Quiz)
@@ -203,7 +202,7 @@ func QuizGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// unmarshals results of a specific quiz
-	_, err = db.GetQuiz(quiz)
+	_, err = h.db.GetQuiz(quiz)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -221,11 +220,11 @@ func QuizGet(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully returned information for quiz: %s\n\n", quiz.Title)
+	log.Printf("[db] successfully returned information for quiz: %s\n", quiz.Title)
 }
 
 // QuizAdd adds a single quiz listing to db
-func QuizAdd(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) QuizAdd(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable user of User struct
 	quiz := new(db.Quiz)
@@ -252,7 +251,7 @@ func QuizAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// add quiz data to db
-	_, err = db.AddQuiz(quiz)
+	_, err = h.db.AddQuiz(quiz)
 	if err != nil {
 		response = utils.Message(false, err)
 		w.WriteHeader(http.StatusUnprocessableEntity)
@@ -265,5 +264,5 @@ func QuizAdd(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully added quiz: %s\n\n", quiz.Title)
+	log.Printf("[db] successfully added quiz: %s\n", quiz.Title)
 }

@@ -8,6 +8,8 @@ import (
 	"os"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -20,11 +22,13 @@ const (
 // TODO:
 // update structs
 
+// ContractUser ...
 type ContractUser struct {
 	UserID  string `json:"user_id"`
 	Address string `json:"address"`
 }
 
+// TxResponse ...
 type TxResponse struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
@@ -66,7 +70,7 @@ func (u *User) DidInteractWithContract(contract string) (bool, error) {
 
 	req, err := http.NewRequest("GET", userEtherscanTxURL, nil)
 	if err != nil {
-		err = fmt.Errorf("[!] Error preparing GET request\n%v", err)
+		log.Errorf("[etherscan] Error preparing GET request; %v\n", err)
 		return false, err
 	}
 
@@ -74,25 +78,25 @@ func (u *User) DidInteractWithContract(contract string) (bool, error) {
 
 	res, err := client.Do(req)
 	if err != nil {
-		err = fmt.Errorf("[!] Error fetching etherscan transactions\n%v", err)
+		log.Errorf("[etherscan] Error fetching etherscan transactions; %v\n", err)
 		return false, err
 	}
 	defer res.Body.Close()
 
 	byteArr, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		err = fmt.Errorf("[!] Error reading response body\n%v", err)
+		log.Errorf("[etherscan] Error reading response body; %v\n", err)
 		return false, err
 	}
 
 	if err := json.Unmarshal(byteArr, &txRes); err != nil {
-		err = fmt.Errorf("[!] Error unmarshalling JSON\n%v", err)
+		log.Errorf("[etherscan] Error unmarshalling JSON; %v\n", err)
 		return false, err
 	}
 
 	for index := range txRes.Result {
 		if strings.ToUpper(txRes.Result[index].To) == strings.ToUpper(contract) && txRes.Result[index].TxreceiptStatus == "1" {
-			fmt.Println("[*] tx found!")
+			log.Println("[eterhscan] tx found!")
 			return true, nil
 		}
 	}

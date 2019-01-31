@@ -5,9 +5,7 @@ import (
 	"net/http"
 )
 
-// TEST
-
 // HandleIndex prints test to screen if successful
-func HandleIndex(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) HandleIndex(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "test")
 }

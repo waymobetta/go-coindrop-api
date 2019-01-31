@@ -1,16 +1,19 @@
 package reddit
 
 import (
-	"fmt"
+	"errors"
 	"os"
 
 	"github.com/jzelinskie/geddit"
+	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/db"
 )
 
 var (
 	// VerificationSubredditName name of subreddit used for verification
 	VerificationSubredditName = "testing_QA_adChain"
+	// ErrVerificationNotMatch .
+	ErrVerificationNotMatch = errors.New("Verification code does not match")
 )
 
 // InitRedditAuth initializes reddit OAuth session
@@ -71,7 +74,6 @@ func (a *AuthSessions) GetRecentPostsFromSubreddit(user *db.User) (*db.User, err
 	// get 5 newest submissions from the subreddit
 	submissions, err := a.OAuthSession.SubredditSubmissions(VerificationSubredditName, "new", geddit.ListingOptions{Count: 1})
 	if err != nil {
-		fmt.Println(err)
 		return user, err
 	}
 
@@ -89,8 +91,8 @@ func (a *AuthSessions) GetRecentPostsFromSubreddit(user *db.User) (*db.User, err
 		}
 	}
 	// if no verification match return error message
-	err = fmt.Errorf("[!] Verification code not matched")
-	return user, err
+	log.Errorln("[reddit] Verification code not matched")
+	return user, ErrVerificationNotMatch
 }
 
 // GetAboutInfo method to retrieve general information about user

@@ -3,43 +3,44 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"os"
 
-	_ "github.com/lib/pq"
-	"github.com/waymobetta/wmb"
+	log "github.com/sirupsen/logrus"
+
+	_ "github.com/lib/pq" // required
 )
 
-// New initializes a new db connection; synonymous with init
-func New() error {
-	// clear screen
-	wmb.Clear()
+// DB ...
+type DB struct {
+	client *sql.DB
+}
 
-	args := os.Args
+// Config ...
+type Config struct {
+	Host    string
+	Port    int
+	User    string
+	Pass    string
+	Dbname  string
+	SSLMode string
+}
 
-	if len(args) < 2 {
-		fmt.Println("usage: go-coindrop-api <localhost/staging/prod>")
-		os.Exit(0)
+// NewDB initializes a new database connection
+func NewDB(config *Config) *DB {
+	sslMode := "enable"
+	if config.SSLMode != "" {
+		sslMode = config.SSLMode
 	}
 
-	var psqlInfo string
+	conn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s", config.Host, config.Port, config.User, config.Pass, config.Dbname, sslMode)
 
-	switch {
-	case args[1] == "localhost":
-		fmt.Println("[*] Connecting to localhost")
-		psqlInfo = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s", lHost, lPort, lUser, lPassword, lDbname, lSslmode)
-	case args[1] == "staging":
-		fmt.Println("[*] Connecting to staging")
-		psqlInfo = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s", host, port, user, password, dbname)
-	case args[1] == "prod":
-		fmt.Println("[*] Connecting to prod")
-		psqlInfo = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s", pHost, pPort, pUser, pPassword, pDbname)
-	}
+	log.Printf("[db] connecting to database; %s:%v/%s", config.Host, config.Port, config.Dbname)
 
-	_client, err := sql.Open("postgres", psqlInfo)
-	Client = _client
+	client, err := sql.Open("postgres", conn)
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
-	fmt.Println("api ready..")
-	return nil
+
+	return &DB{
+		client: client,
+	}
 }

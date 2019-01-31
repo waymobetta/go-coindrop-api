@@ -4,15 +4,13 @@ import (
 	"encoding/json"
 )
 
-// QUIZZES
-
 // GetQuiz returns all info for specific quiz
-func GetQuiz(q *Quiz) (*Quiz, error) {
+func (db *DB) GetQuiz(q *Quiz) (*Quiz, error) {
 	// create SQL statement for db query
 	sqlStatement := `SELECT * FROM coindrop_quizzes WHERE title = $1`
 
 	// execute db query by passing in prepared SQL statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return q, err
 	}
@@ -45,7 +43,7 @@ func GetQuiz(q *Quiz) (*Quiz, error) {
 }
 
 // AddQuiz adds the listing and associated data of a single quiz
-func AddQuiz(q *Quiz) (*Quiz, error) {
+func (db *DB) AddQuiz(q *Quiz) (*Quiz, error) {
 	// marshal JSON for ease of storage
 	byteArr, err := json.Marshal(&q.QuizInfo.QuizData)
 	if err != nil {
@@ -53,7 +51,7 @@ func AddQuiz(q *Quiz) (*Quiz, error) {
 	}
 
 	// initialize statement write to database
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return q, err
 	}
@@ -62,7 +60,7 @@ func AddQuiz(q *Quiz) (*Quiz, error) {
 	sqlStatement := `INSERT INTO coindrop_quizzes (title, quiz_data) VALUES ($1,$2)`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return q, err
 	}
@@ -93,9 +91,9 @@ func AddQuiz(q *Quiz) (*Quiz, error) {
 }
 
 // StoreQuizResults adds the quiz title and associated user results of a single quiz
-func StoreQuizResults(q *QuizResults) (*QuizResults, error) {
+func (db *DB) StoreQuizResults(q *QuizResults) (*QuizResults, error) {
 	// initialize statement write to database
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return q, err
 	}
@@ -104,7 +102,7 @@ func StoreQuizResults(q *QuizResults) (*QuizResults, error) {
 	sqlStatement := `INSERT INTO coindrop_quiz_results (title, auth_user_id, questions_correct, questions_incorrect, has_taken_quiz) VALUES ($1,$2,$3,$4,$5)`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return q, err
 	}
@@ -137,12 +135,12 @@ func StoreQuizResults(q *QuizResults) (*QuizResults, error) {
 }
 
 // GetQuizResults returns all info for specific quiz
-func GetQuizResults(q *QuizResults) (*QuizResults, error) {
+func (db *DB) GetQuizResults(q *QuizResults) (*QuizResults, error) {
 	// create SQL statement for db query
 	sqlStatement := `SELECT questions_correct, questions_incorrect, has_taken_quiz FROM coindrop_quiz_results WHERE title = $1 AND auth_user_id = $2`
 
 	// execute db query by passing in prepared SQL statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return q, err
 	}

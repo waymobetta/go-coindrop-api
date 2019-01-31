@@ -1,0 +1,71 @@
+consumes:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+definitions:
+  GoaExampleUser:
+    description: A user (default view)
+    example:
+      id: 7626296731781855290
+      name: Facere voluptates.
+    properties:
+      id:
+        description: Unique user ID
+        example: 7626296731781855290
+        format: int64
+        type: integer
+      name:
+        description: Name of user
+        example: Facere voluptates.
+        type: string
+    required:
+    - id
+    - name
+    title: 'Mediatype identifier: application/vnd.goa.example.user+json; view=default'
+    type: object
+host: localhost:8080
+info:
+  description: A simple goa service
+  title: The Coindrop API
+  version: ""
+paths:
+  /users/{userID}:
+    get:
+      description: Get user by id
+      operationId: user#show
+      parameters:
+      - description: User ID
+        in: path
+        name: userID
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.example.user+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GoaExampleUser'
+        "404":
+          description: Not Found
+      schemes:
+      - http
+      summary: show user
+      tags:
+      - user
+produces:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+responses:
+  NotFound:
+    description: Not Found
+  OK:
+    description: OK
+    schema:
+      $ref: '#/definitions/GoaExampleUser'
+schemes:
+- http
+swagger: "2.0"

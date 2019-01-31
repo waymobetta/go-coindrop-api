@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/waymobetta/go-coindrop-api/db"
 	"github.com/waymobetta/go-coindrop-api/verify"
 )
@@ -26,7 +28,7 @@ var (
 
 // GetProfileByUserID fetches basic user profile info by unique user ID
 func GetProfileByUserID(u *db.User) (*db.User, error) {
-	fmt.Printf("Collecting profile information for user ID: %v\n\n", u.Info.StackOverflowData.UserID)
+	log.Printf("[stackoverflow] collecting profile information for user ID: %v\n", u.Info.StackOverflowData.UserID)
 
 	profileEndpoint := fmt.Sprintf("/users/%v?order=desc&sort=reputation&site=stackoverflow&filter=!-*jbN*IioeFP", u.Info.StackOverflowData.UserID)
 
@@ -36,7 +38,7 @@ func GetProfileByUserID(u *db.User) (*db.User, error) {
 	// prepare GET request
 	req, err := http.NewRequest("GET", profileURL, nil)
 	if err != nil {
-		err = fmt.Errorf("[!] Error preparing GET request for user profile info\n%v", err)
+		log.Errorf("[stackoverflow] Error preparing GET request for user profile info; %v\n", err)
 		return u, err
 	}
 	req.Header.Set("Content-Type", "application/json")
@@ -44,7 +46,7 @@ func GetProfileByUserID(u *db.User) (*db.User, error) {
 	// execute GET request
 	res, err := client.Do(req)
 	if err != nil {
-		err = fmt.Errorf("[!] Error fetching user profile info\n%v", err)
+		log.Errorf("[stackoverflow] Error fetching user profile info; %v\n", err)
 		return u, err
 	}
 	defer res.Body.Close()
@@ -52,7 +54,7 @@ func GetProfileByUserID(u *db.User) (*db.User, error) {
 	// read result of GET request
 	byteArr, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		err = fmt.Errorf("[!] Error reading response body\n%v", err)
+		log.Errorf("[stackoverflow] Error reading response body; %v\n", err)
 		return u, err
 	}
 
@@ -61,11 +63,11 @@ func GetProfileByUserID(u *db.User) (*db.User, error) {
 
 	// unmarshal JSON into AboutProfileResponse struct
 	if err := json.Unmarshal(byteArr, &aboutProfResStruct); err != nil {
-		err = fmt.Errorf("[!] Error unmarshalling JSON\n%v", err)
+		log.Errorf("[stackoverflow] Error unmarshalling JSON; %v\n", err)
 		return u, err
 	}
 
-	fmt.Printf("[+] Found profile info for user: %s!\n", aboutProfResStruct.Items[0].DisplayName)
+	log.Printf("[stackoverflow] found profile info for user: %s!\n", aboutProfResStruct.Items[0].DisplayName)
 
 	// initialize empty accounts slice
 	accounts := []string{}
@@ -104,7 +106,7 @@ func GetProfileByUserID(u *db.User) (*db.User, error) {
 
 // GetAssociatedAccounts method fetches associated communities of user
 func GetAssociatedAccounts(u *db.User) (*db.User, error) {
-	fmt.Printf("Collecting associated account information for user: %s\n", u.Info.StackOverflowData.DisplayName)
+	log.Printf("[stackoverflow] collecting associated account information for user: %s\n", u.Info.StackOverflowData.DisplayName)
 
 	associatedAccountsEndpoint := fmt.Sprintf("/users/%v/associated", u.Info.StackOverflowData.ExchangeAccountID)
 
@@ -114,7 +116,7 @@ func GetAssociatedAccounts(u *db.User) (*db.User, error) {
 	// prepare GET request
 	req, err := http.NewRequest("GET", associatedAccountsURL, nil)
 	if err != nil {
-		err = fmt.Errorf("[!] Error preparing GET request for user associated accounts info\n%v", err)
+		log.Errorf("[stackoverflow] Error preparing GET request for user associated accounts info; %v\n", err)
 		return u, err
 	}
 	req.Header.Set("Content-Type", "application/json")
@@ -122,7 +124,7 @@ func GetAssociatedAccounts(u *db.User) (*db.User, error) {
 	// execute GET request
 	res, err := client.Do(req)
 	if err != nil {
-		err = fmt.Errorf("[!] Error fetching user profile info\n%v", err)
+		log.Errorf("[stackoverflow] Error fetching user profile info; %v\n", err)
 		return u, err
 	}
 	defer res.Body.Close()
@@ -135,7 +137,7 @@ func GetAssociatedAccounts(u *db.User) (*db.User, error) {
 	// read result of GET request
 	byteArr, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		err = fmt.Errorf("[!] Error reading response body\n%v", err)
+		log.Errorf("[stackoverflow] Error reading response body\n%v", err)
 		return u, err
 	}
 
@@ -144,11 +146,11 @@ func GetAssociatedAccounts(u *db.User) (*db.User, error) {
 
 	// unmarshal JSON into AssociatedCommunitiesResponse struct
 	if err := json.Unmarshal(byteArr, &associatedCommunitiesStruct); err != nil {
-		err = fmt.Errorf("[!] Error unmarshalling JSON\n%v", err)
+		log.Errorf("[stackoverflow] Error unmarshalling JSON; %v\n", err)
 		return u, err
 	}
 
-	fmt.Printf("[+] Found associated account info for user: %s!\n", u.Info.StackOverflowData.DisplayName)
+	log.Printf("[stackoverflow] Found associated account info for user: %s!\n", u.Info.StackOverflowData.DisplayName)
 
 	// initialize new struct object to hold Community data
 	communityObj := db.Community{}

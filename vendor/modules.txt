@@ -1,0 +1,82 @@
+# github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da
+github.com/armon/go-metrics
+# github.com/beefsack/go-rate v0.0.0-20180408011153-efa7637bb9b6
+github.com/beefsack/go-rate
+# github.com/dgrijalva/jwt-go v3.2.0+incompatible
+github.com/dgrijalva/jwt-go
+# github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598
+github.com/dimfeld/httppath
+# github.com/dimfeld/httptreemux v5.0.1+incompatible
+github.com/dimfeld/httptreemux
+# github.com/fatih/color v1.7.0
+github.com/fatih/color
+# github.com/goadesign/goa v1.4.1
+github.com/goadesign/goa
+github.com/goadesign/goa/middleware
+github.com/goadesign/goa/goatest
+github.com/goadesign/goa/client
+github.com/goadesign/goa/design
+github.com/goadesign/goa/design/apidsl
+github.com/goadesign/goa/uuid
+github.com/goadesign/goa/dslengine
+# github.com/gofrs/uuid v3.2.0+incompatible
+github.com/gofrs/uuid
+# github.com/golang/protobuf v1.2.0
+github.com/golang/protobuf/proto
+# github.com/google/go-querystring v1.0.0
+github.com/google/go-querystring/query
+# github.com/gorilla/handlers v1.4.0
+github.com/gorilla/handlers
+# github.com/gorilla/mux v1.7.0
+github.com/gorilla/mux
+# github.com/hashicorp/go-immutable-radix v1.0.0
+github.com/hashicorp/go-immutable-radix
+# github.com/hashicorp/golang-lru v0.5.0
+github.com/hashicorp/golang-lru/simplelru
+# github.com/inconshreveable/mousetrap v1.0.0
+github.com/inconshreveable/mousetrap
+# github.com/jzelinskie/geddit v0.0.0-20190113234025-a9d9445ed681
+github.com/jzelinskie/geddit
+# github.com/konsorten/go-windows-terminal-sequences v1.0.1
+github.com/konsorten/go-windows-terminal-sequences
+# github.com/lib/pq v1.0.0
+github.com/lib/pq
+github.com/lib/pq/oid
+# github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d
+github.com/manveru/faker
+# github.com/mattn/go-colorable v0.0.9
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.4
+github.com/mattn/go-isatty
+# github.com/sirupsen/logrus v1.3.0
+github.com/sirupsen/logrus
+# github.com/spf13/cobra v0.0.3
+github.com/spf13/cobra
+# github.com/spf13/pflag v1.0.3
+github.com/spf13/pflag
+# github.com/waymobetta/gognito v0.0.0-20190119050508-7c95da5c18c9
+github.com/waymobetta/gognito
+# github.com/waymobetta/wmb v0.0.0-20180226053614-b7f39fbf8259
+github.com/waymobetta/wmb
+# github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea
+github.com/zach-klippenstein/goregen
+# golang.org/x/crypto v0.0.0-20180904163835-0709b304e793
+golang.org/x/crypto/ssh/terminal
+# golang.org/x/net v0.0.0-20190125091013-d26f9f9a57f3
+golang.org/x/net/websocket
+golang.org/x/net/context
+golang.org/x/net/context/ctxhttp
+# golang.org/x/oauth2 v0.0.0-20190130055435-99b60b757ec1
+golang.org/x/oauth2
+golang.org/x/oauth2/internal
+# golang.org/x/sys v0.0.0-20180905080454-ebe1bf3edb33
+golang.org/x/sys/unix
+golang.org/x/sys/windows
+# google.golang.org/appengine v1.4.0
+google.golang.org/appengine/urlfetch
+google.golang.org/appengine/internal
+google.golang.org/appengine/internal/urlfetch
+google.golang.org/appengine/internal/base
+google.golang.org/appengine/internal/datastore
+google.golang.org/appengine/internal/log
+google.golang.org/appengine/internal/remote_api

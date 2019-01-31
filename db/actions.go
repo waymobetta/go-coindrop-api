@@ -3,12 +3,12 @@ package db
 import "encoding/json"
 
 // GetAction returns all info for specific quiz
-func GetAction(q *Quiz) (*Quiz, error) {
+func (db *DB) GetAction(q *Quiz) (*Quiz, error) {
 	// create SQL statement for db query
 	sqlStatement := `SELECT * FROM coindrop_quizzes WHERE title = $1`
 
 	// execute db query by passing in prepared SQL statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return q, err
 	}
@@ -41,7 +41,7 @@ func GetAction(q *Quiz) (*Quiz, error) {
 }
 
 // AddAction adds the listing and associated data of a single quiz
-func AddAction(q *Quiz) (*Quiz, error) {
+func (db *DB) AddAction(q *Quiz) (*Quiz, error) {
 	// marshal JSON for ease of storage
 	byteArr, err := json.Marshal(&q.QuizInfo.QuizData)
 	if err != nil {
@@ -49,7 +49,7 @@ func AddAction(q *Quiz) (*Quiz, error) {
 	}
 
 	// initialize statement write to database
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return q, err
 	}
@@ -58,7 +58,7 @@ func AddAction(q *Quiz) (*Quiz, error) {
 	sqlStatement := `INSERT INTO coindrop_quizzes (title, quiz_data) VALUES ($1,$2)`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return q, err
 	}

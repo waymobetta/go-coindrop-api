@@ -4,12 +4,10 @@ import (
 	"github.com/lib/pq"
 )
 
-/// STACK OVERFLOW
-
 // AddStackUser adds the listing and associated data of a single user
-func AddStackUser(u *User) (*User, error) {
+func (db *DB) AddStackUser(u *User) (*User, error) {
 	// initialize statement write to database
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return u, err
 	}
@@ -18,7 +16,7 @@ func AddStackUser(u *User) (*User, error) {
 	sqlStatement := `INSERT INTO coindrop_stackoverflow (auth_user_id, exchange_account_id,user_id,display_name,accounts,posted_verification_code,stored_verification_code,is_verified) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}
@@ -54,12 +52,12 @@ func AddStackUser(u *User) (*User, error) {
 }
 
 // GetStackUser returns info for a single user
-func GetStackUser(u *User) (*User, error) {
+func (db *DB) GetStackUser(u *User) (*User, error) {
 	// create SQL statement for db writes
 	sqlStatement := `SELECT * FROM coindrop_stackoverflow WHERE auth_user_id = $1`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}
@@ -89,9 +87,9 @@ func GetStackUser(u *User) (*User, error) {
 }
 
 // UpdateStackAboutInfo updates the listing and associated Reddit data of a single user
-func UpdateStackAboutInfo(u *User) (*User, error) {
+func (db *DB) UpdateStackAboutInfo(u *User) (*User, error) {
 	// for simplicity, update the listing rather than updating single value
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return u, err
 	}
@@ -100,7 +98,7 @@ func UpdateStackAboutInfo(u *User) (*User, error) {
 	sqlStatement := `UPDATE coindrop_stackoverflow SET exchange_account_id = $1, display_name = $2, accounts = $3 WHERE auth_user_id = $4`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}
@@ -127,9 +125,9 @@ func UpdateStackAboutInfo(u *User) (*User, error) {
 }
 
 // UpdateStackVerificationCode updates the verification code of a single user
-func UpdateStackVerificationCode(u *User) (*User, error) {
+func (db *DB) UpdateStackVerificationCode(u *User) (*User, error) {
 	// for simplicity, update the listing rather than updating single value
-	tx, err := Client.Begin()
+	tx, err := db.client.Begin()
 	if err != nil {
 		return u, err
 	}
@@ -138,7 +136,7 @@ func UpdateStackVerificationCode(u *User) (*User, error) {
 	sqlStatement := `UPDATE coindrop_stackoverflow SET user_id = $1, stored_verification_code = $2, posted_verification_code = $3, is_verified = $4 WHERE auth_user_id = $5`
 
 	// prepare statement
-	stmt, err := Client.Prepare(sqlStatement)
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
 		return u, err
 	}
