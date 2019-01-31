@@ -7,7 +7,7 @@ package handlers
 
 /*
 // ActionsGet handles queries to return all stored tasks
-func (h *Handlers) ActionsGet(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) ActionGet(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable tasks of Tasks struct
 	tasks := new(db.Tasks)
