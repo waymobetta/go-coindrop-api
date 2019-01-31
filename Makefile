@@ -4,6 +4,15 @@ all: deploy
 start:
 	@go run cmd/start.go
 
+start/local:
+	@(. .env.local && go run cmd/start.go)
+
+start/staging:
+	@(. .env.staging && go run cmd/start.go)
+
+start/prod:
+	@(. .env.prod && go run cmd/start.go)
+
 deploy: build compress
 	@echo "deploying..\n"
 	@MAKE done
