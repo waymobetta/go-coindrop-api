@@ -17,6 +17,45 @@ import (
 	"strconv"
 )
 
+// CreateUserContext provides the user create action context.
+type CreateUserContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	AuthUserID *string
+}
+
+// NewCreateUserContext parses the incoming request URL and body, performs validations and creates the
+// context used by the user controller create action.
+func NewCreateUserContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateUserContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := CreateUserContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramAuthUserID := req.Params["authUserID"]
+	if len(paramAuthUserID) > 0 {
+		rawAuthUserID := paramAuthUserID[0]
+		rctx.AuthUserID = &rawAuthUserID
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *CreateUserContext) OK(r *User) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *CreateUserContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
 // ShowUserContext provides the user show action context.
 type ShowUserContext struct {
 	context.Context
@@ -47,9 +86,9 @@ func NewShowUserContext(ctx context.Context, r *http.Request, service *goa.Servi
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowUserContext) OK(r *GoaExampleUser) error {
+func (ctx *ShowUserContext) OK(r *User) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.example.user+json")
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }

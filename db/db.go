@@ -33,7 +33,7 @@ func NewDB(config *Config) *DB {
 
 	conn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s", config.Host, config.Port, config.User, config.Pass, config.Dbname, sslMode)
 
-	log.Printf("[db] connecting to database; %s:%v/%s", config.Host, config.Port, config.Dbname)
+	log.Printf("[db] connecting to database: %s:%v/%s", config.Host, config.Port, config.Dbname)
 
 	client, err := sql.Open("postgres", conn)
 	if err != nil {

@@ -13,6 +13,10 @@ start/staging:
 start/prod:
 	@(. .env.prod && go run cmd/start.go)
 
+.PHONY: start/docs
+start/docs:
+	@(cd web/documentation && python -m SimpleHTTPServer 8000)
+
 deploy: build compress
 	@echo "deploying..\n"
 	@MAKE done
@@ -41,6 +45,6 @@ prep:
 goa:
 	@goagen bootstrap -d github.com/waymobetta/go-coindrop-api/design
 
-.PHONY: docs/swagger
-docs/swagger:
-	@cp swagger/swagger.json web/docs/swagger.json
+.PHONY: swagger
+swagger:
+	@(goagen swagger -d github.com/waymobetta/go-coindrop-api/design && cp swagger/swagger.json web/documentation/swagger.json)

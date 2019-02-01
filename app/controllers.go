@@ -34,6 +34,7 @@ func initService(service *goa.Service) {
 // UserController is the controller interface for the User actions.
 type UserController interface {
 	goa.Muxer
+	Create(*CreateUserContext) error
 	Show(*ShowUserContext) error
 }
 
@@ -41,6 +42,21 @@ type UserController interface {
 func MountUserController(service *goa.Service, ctrl UserController) {
 	initService(service)
 	var h goa.Handler
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateUserContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Create(rctx)
+	}
+	service.Mux.Handle("POST", "/users", ctrl.MuxHandler("create", h, nil))
+	service.LogInfo("mount", "ctrl", "User", "action", "Create", "route", "POST /users")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request

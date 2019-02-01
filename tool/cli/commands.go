@@ -27,6 +27,13 @@ import (
 )
 
 type (
+	// CreateUserCommand is the command line data structure for the create action of user
+	CreateUserCommand struct {
+		// Cognito Auth User ID
+		AuthUserID  string
+		PrettyPrint bool
+	}
+
 	// ShowUserCommand is the command line data structure for the show action of user
 	ShowUserCommand struct {
 		// User ID
@@ -39,17 +46,31 @@ type (
 func RegisterCommands(app *cobra.Command, c *client.Client) {
 	var command, sub *cobra.Command
 	command = &cobra.Command{
-		Use:   "show",
-		Short: `Get user by id`,
+		Use:   "create",
+		Short: `Create a new user`,
 	}
-	tmp1 := new(ShowUserCommand)
+	tmp1 := new(CreateUserCommand)
 	sub = &cobra.Command{
-		Use:   `user ["/users/USERID"]`,
+		Use:   `user ["/users"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
 	tmp1.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp1.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "show",
+		Short: `Get user by id`,
+	}
+	tmp2 := new(ShowUserCommand)
+	sub = &cobra.Command{
+		Use:   `user ["/users/USERID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
+	}
+	tmp2.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp2.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 }
@@ -205,6 +226,32 @@ func boolArray(ins []string) ([]bool, error) {
 		vals = append(vals, *val)
 	}
 	return vals, nil
+}
+
+// Run makes the HTTP request corresponding to the CreateUserCommand command.
+func (cmd *CreateUserCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/users"
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.CreateUser(ctx, path, stringFlagVal("authUserID", cmd.AuthUserID))
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *CreateUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var authUserID string
+	cc.Flags().StringVar(&cmd.AuthUserID, "authUserID", authUserID, `Cognito Auth User ID`)
 }
 
 // Run makes the HTTP request corresponding to the ShowUserCommand command.

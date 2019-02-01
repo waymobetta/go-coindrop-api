@@ -17,16 +17,16 @@ import (
 
 // A user (default view)
 //
-// Identifier: application/vnd.goa.example.user+json; view=default
-type GoaExampleUser struct {
+// Identifier: application/vnd.user+json; view=default
+type User struct {
 	// Unique user ID
 	ID int `form:"id" json:"id" yaml:"id" xml:"id"`
 	// Name of user
 	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
 }
 
-// Validate validates the GoaExampleUser media type instance.
-func (mt *GoaExampleUser) Validate() (err error) {
+// Validate validates the User media type instance.
+func (mt *User) Validate() (err error) {
 
 	if mt.Name == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "name"))
@@ -34,9 +34,9 @@ func (mt *GoaExampleUser) Validate() (err error) {
 	return
 }
 
-// DecodeGoaExampleUser decodes the GoaExampleUser instance encoded in resp body.
-func (c *Client) DecodeGoaExampleUser(resp *http.Response) (*GoaExampleUser, error) {
-	var decoded GoaExampleUser
+// DecodeUser decodes the User instance encoded in resp body.
+func (c *Client) DecodeUser(resp *http.Response) (*User, error) {
+	var decoded User
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
 }

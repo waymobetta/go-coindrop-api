@@ -6,8 +6,12 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/goadesign/goa"
+	"github.com/goadesign/goa/middleware"
 	"github.com/gorilla/handlers"
 	log "github.com/sirupsen/logrus"
+	"github.com/waymobetta/go-coindrop-api/app"
+	controllers "github.com/waymobetta/go-coindrop-api/controllers"
 	"github.com/waymobetta/go-coindrop-api/db"
 	routehandlers "github.com/waymobetta/go-coindrop-api/handlers"
 	"github.com/waymobetta/go-coindrop-api/router"
@@ -56,4 +60,27 @@ func main() {
 	host := fmt.Sprintf("0.0.0.0:%s", port)
 	log.Printf("[cmd] listening on %s\n", host)
 	log.Fatal(http.ListenAndServe(host, rootHandler))
+
+	// TODO: merge current routes with goa routes
+
+	// Create service
+	service := goa.New("coindrop")
+
+	// Mount middleware
+	service.Use(middleware.RequestID())
+	service.Use(middleware.LogRequest(true))
+	service.Use(middleware.ErrorHandler(service, true))
+	service.Use(middleware.Recover())
+
+	// Mount "user" controller
+	c := controllers.NewUserController(service, dbs)
+	app.MountUserController(service, c)
+
+	_ = service
+	/*
+		// Start service
+		if err := service.ListenAndServe(":8080"); err != nil {
+			service.LogError("startup", "err", err)
+		}
+	*/
 }

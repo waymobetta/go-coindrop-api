@@ -16,16 +16,16 @@ import (
 
 // A user (default view)
 //
-// Identifier: application/vnd.goa.example.user+json; view=default
-type GoaExampleUser struct {
+// Identifier: application/vnd.user+json; view=default
+type User struct {
 	// Unique user ID
 	ID int `form:"id" json:"id" yaml:"id" xml:"id"`
 	// Name of user
 	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
 }
 
-// Validate validates the GoaExampleUser media type instance.
-func (mt *GoaExampleUser) Validate() (err error) {
+// Validate validates the User media type instance.
+func (mt *User) Validate() (err error) {
 
 	if mt.Name == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "name"))

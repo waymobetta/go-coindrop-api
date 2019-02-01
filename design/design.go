@@ -16,6 +16,16 @@ var _ = Resource("user", func() { // Resources group related API endpoints
 	BasePath("/users")      // together. They map to REST resources for REST
 	DefaultMedia(UserMedia) // services.
 
+	Action("create", func() {
+		Description("Create a new user")
+		Routing(POST(""))
+		Params(func() {
+			Param("authUserID", String, "Cognito Auth User ID")
+		})
+		Response(OK)
+		Response(NotFound)
+	})
+
 	Action("show", func() { // Actions define a single API endpoint together
 		Description("Get user by id") // with its path, parameters (both path
 		Routing(GET("/:userID"))      // parameters and querystring values) and payload
@@ -28,7 +38,7 @@ var _ = Resource("user", func() { // Resources group related API endpoints
 })
 
 // UserMedia defines the media type used to render users.
-var UserMedia = MediaType("application/vnd.goa.example.user+json", func() {
+var UserMedia = MediaType("application/vnd.user+json", func() {
 	Description("A user")
 	Attributes(func() { // Attributes define the media type shape.
 		Attribute("id", Integer, "Unique user ID")

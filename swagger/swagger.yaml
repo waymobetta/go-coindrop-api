@@ -4,7 +4,7 @@ consumes:
 - application/gob
 - application/x-gob
 definitions:
-  GoaExampleUser:
+  User:
     description: A user (default view)
     example:
       id: 7626296731781855290
@@ -22,7 +22,7 @@ definitions:
     required:
     - id
     - name
-    title: 'Mediatype identifier: application/vnd.goa.example.user+json; view=default'
+    title: 'Mediatype identifier: application/vnd.user+json; view=default'
     type: object
 host: localhost:8080
 info:
@@ -30,6 +30,30 @@ info:
   title: The Coindrop API
   version: ""
 paths:
+  /users:
+    post:
+      description: Create a new user
+      operationId: user#create
+      parameters:
+      - description: Cognito Auth User ID
+        in: query
+        name: authUserID
+        required: false
+        type: string
+      produces:
+      - application/vnd.user+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "404":
+          description: Not Found
+      schemes:
+      - http
+      summary: create user
+      tags:
+      - user
   /users/{userID}:
     get:
       description: Get user by id
@@ -41,12 +65,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.example.user+json
+      - application/vnd.user+json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/GoaExampleUser'
+            $ref: '#/definitions/User'
         "404":
           description: Not Found
       schemes:
@@ -65,7 +89,7 @@ responses:
   OK:
     description: OK
     schema:
-      $ref: '#/definitions/GoaExampleUser'
+      $ref: '#/definitions/User'
 schemes:
 - http
 swagger: "2.0"
