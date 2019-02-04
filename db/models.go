@@ -1,6 +1,8 @@
 package db
 
 import (
+	"time"
+
 	"github.com/waymobetta/go-coindrop-api/services/keybase"
 	"github.com/waymobetta/go-coindrop-api/verify"
 )
@@ -136,4 +138,47 @@ type Badge struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Recipients  int    `json:"recipients"`
+}
+
+// TypeformWebHookResponse struct contains info from the TypeformWebHook response
+type TypeformWebHookResponse struct {
+	EventID      string `json:"event_id"`
+	EventType    string `json:"event_type"`
+	FormResponse struct {
+		FormID      string    `json:"form_id"`
+		Token       string    `json:"token"`
+		LandedAt    time.Time `json:"landed_at"`
+		SubmittedAt time.Time `json:"submitted_at"`
+		Definition  struct {
+			ID     string `json:"id"`
+			Title  string `json:"title"`
+			Fields []struct {
+				ID         string `json:"id"`
+				Title      string `json:"title"`
+				Type       string `json:"type"`
+				Ref        string `json:"ref"`
+				Properties struct {
+				} `json:"properties"`
+				Choices []struct {
+					ID    string `json:"id"`
+					Label string `json:"label"`
+				} `json:"choices"`
+				AllowMultipleSelections bool `json:"allow_multiple_selections,omitempty"`
+			} `json:"fields"`
+		} `json:"definition"`
+		Answers []struct {
+			Type   string `json:"type"`
+			Choice struct {
+				Label string `json:"label"`
+			} `json:"choice,omitempty"`
+			Field struct {
+				ID   string `json:"id"`
+				Type string `json:"type"`
+				Ref  string `json:"ref"`
+			} `json:"field"`
+			Choices struct {
+				Labels []string `json:"labels"`
+			} `json:"choices,omitempty"`
+		} `json:"answers"`
+	} `json:"form_response"`
 }
