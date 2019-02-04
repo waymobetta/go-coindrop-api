@@ -162,9 +162,7 @@ func (h *Handlers) TypeformWebHookPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("=======================================\n")
-
-	fmt.Println("Received quiz submission from IP:", r.RemoteAddr)
+	fmt.Println("[db] received quiz submission from IP:", r.RemoteAddr)
 
 	var finalAnswers []string
 
@@ -180,7 +178,10 @@ func (h *Handlers) TypeformWebHookPost(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	fmt.Printf("%d answers collected\n", len(finalAnswers))
+	fmt.Printf("[db] %d answers collected\n", len(finalAnswers))
+
+	// TODO:
+	// compare answers with stored answer key to provide results
 
 	response = utils.Message(true, finalAnswers)
 	w.WriteHeader(http.StatusOK)
