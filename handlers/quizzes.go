@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -127,6 +128,65 @@ func (h *Handlers) ResultsPost(w http.ResponseWriter, r *http.Request) {
 	utils.Respond(w, response)
 
 	log.Printf("[db] successfully stored answers for: %s quiz from user: %s\n", quizResults.Title, quizResults.AuthUserID)
+}
+
+// TypeformWebHookPost handles POST requests from the Typeform service
+func (h *Handlers) TypeformWebHookPost(w http.ResponseWriter, r *http.Request) {
+	response := make(map[string]interface{})
+
+	tfRes := new(db.TypeformWebHookResponse)
+
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+	defer r.Body.Close()
+
+	fileName := "typeform_data"
+	err = ioutil.WriteFile(fileName, body, 0644)
+	if err != nil {
+		return
+	}
+
+	err = json.Unmarshal(body, tfRes)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+
+	fmt.Println("=======================================\n")
+
+	fmt.Println("Received quiz submission from IP:", r.RemoteAddr)
+
+	var finalAnswers []string
+
+	for i := range tfRes.FormResponse.Answers {
+		if tfRes.FormResponse.Answers[i].Choice.Label != "" {
+		}
+
+		finalAnswers = append(finalAnswers, tfRes.FormResponse.Answers[i].Choice.Label)
+
+		if len(tfRes.FormResponse.Answers[i].Choices.Labels) > 1 {
+			for j := range tfRes.FormResponse.Answers[i].Choices.Labels {
+				finalAnswers = append(finalAnswers, tfRes.FormResponse.Answers[i].Choices.Labels[j])
+			}
+		}
+	}
+	fmt.Printf("%d answers collected\n", len(finalAnswers))
+
+	response = utils.Message(true, finalAnswers)
+	w.WriteHeader(http.StatusOK)
+	utils.Respond(w, response)
+
+	fmt.Printf("Successfully returned information for event: %s\n\n", tfRes.EventID)
 }
 
 // ResultsGet handles queries to return all info results of a specific quiz
