@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+	"time"
+
 	goaclient "github.com/goadesign/goa/client"
 	"github.com/spf13/cobra"
 	"github.com/waymobetta/go-coindrop-api/client"
 	"github.com/waymobetta/go-coindrop-api/tool/cli"
-	"net/http"
-	"os"
-	"time"
 )
 
 func main() {
