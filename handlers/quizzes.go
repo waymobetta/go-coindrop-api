@@ -186,7 +186,7 @@ func (h *Handlers) TypeformWebHookPost(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully returned information for event: %s\n\n", tfRes.EventID)
+	fmt.Printf("[db] successfully returned information for event: %s\n\n", tfRes.EventID)
 }
 
 // ResultsGet handles queries to return all info results of a specific quiz
