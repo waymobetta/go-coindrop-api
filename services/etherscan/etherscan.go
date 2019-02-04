@@ -96,7 +96,7 @@ func (u *User) DidInteractWithContract(contract string) (bool, error) {
 
 	for index := range txRes.Result {
 		if strings.ToUpper(txRes.Result[index].To) == strings.ToUpper(contract) && txRes.Result[index].TxreceiptStatus == "1" {
-			log.Println("[eterhscan] tx found!")
+			log.Println("[etherscan] tx found!")
 			return true, nil
 		}
 	}
