@@ -13,7 +13,7 @@ var _ = API("coindrop", func() { // API defines the microservice endpoint and
 })
 
 var _ = Resource("user", func() { // Resources group related API endpoints
-	BasePath("/users")      // together. They map to REST resources for REST
+	BasePath("/v1/users")   // together. They map to REST resources for REST
 	DefaultMedia(UserMedia) // services.
 
 	Action("create", func() {
@@ -24,6 +24,9 @@ var _ = Resource("user", func() { // Resources group related API endpoints
 		})
 		Response(OK)
 		Response(NotFound)
+		Response(BadRequest, StandardErrorMedia)
+		Response(Gone, StandardErrorMedia)
+		Response(InternalServerError, StandardErrorMedia)
 	})
 
 	Action("show", func() { // Actions define a single API endpoint together
@@ -48,5 +51,27 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 	View("default", func() { // View defines a rendering of the media type.
 		Attribute("id") // Media types may have multiple views and must
 		Attribute("name")
+	})
+})
+
+// StandardErrorMedia defines the standard error type.
+var StandardErrorMedia = MediaType("application/standard_error+json", func() {
+	Description("A standard error response")
+
+	Attributes(func() {
+		Attribute("code", Integer, "A code that describes the error", func() {
+			Example(400)
+		})
+		Attribute("message", String, "A message that describes the error", func() {
+			Example("Bad Request")
+
+		})
+
+		Required("code", "message")
+	})
+
+	View("default", func() {
+		Attribute("code")
+		Attribute("message")
 	})
 })

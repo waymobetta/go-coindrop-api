@@ -26,7 +26,10 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 
 	// Put your logic here
 
-	res := &app.User{}
+	res := &app.User{
+		ID:   0,
+		Name: "",
+	}
 	return ctx.OK(res)
 	// UserController_Create: end_implement
 }

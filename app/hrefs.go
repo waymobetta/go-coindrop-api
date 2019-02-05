@@ -18,5 +18,5 @@ import (
 // UserHref returns the resource href.
 func UserHref(userID interface{}) string {
 	paramuserID := strings.TrimLeftFunc(fmt.Sprintf("%v", userID), func(r rune) bool { return r == '/' })
-	return fmt.Sprintf("/users/%v", paramuserID)
+	return fmt.Sprintf("/v1/users/%v", paramuserID)
 }

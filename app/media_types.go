@@ -14,6 +14,25 @@ import (
 	"github.com/goadesign/goa"
 )
 
+// A standard error response (default view)
+//
+// Identifier: application/standard_error+json; view=default
+type StandardError struct {
+	// A code that describes the error
+	Code int `form:"code" json:"code" yaml:"code" xml:"code"`
+	// A message that describes the error
+	Message string `form:"message" json:"message" yaml:"message" xml:"message"`
+}
+
+// Validate validates the StandardError media type instance.
+func (mt *StandardError) Validate() (err error) {
+
+	if mt.Message == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "message"))
+	}
+	return
+}
+
 // A user (default view)
 //
 // Identifier: application/vnd.user+json; view=default

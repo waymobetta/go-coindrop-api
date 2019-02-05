@@ -21,7 +21,7 @@ import (
 // CreateUserPath computes a request path to the create action of user.
 func CreateUserPath() string {
 
-	return fmt.Sprintf("/users")
+	return fmt.Sprintf("/v1/users")
 }
 
 // Create a new user
@@ -56,7 +56,7 @@ func (c *Client) NewCreateUserRequest(ctx context.Context, path string, authUser
 func ShowUserPath(userID int) string {
 	param0 := strconv.Itoa(userID)
 
-	return fmt.Sprintf("/users/%s", param0)
+	return fmt.Sprintf("/v1/users/%s", param0)
 }
 
 // Get user by id

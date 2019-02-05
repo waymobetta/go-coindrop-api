@@ -38,6 +38,14 @@ export env vars in `.env.prod`, then run:
 make start/prod
 ```
 
+### Goa
+
+generate controllers
+
+
+```bash
+make goa
+```
 
 ## License
 

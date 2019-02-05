@@ -55,8 +55,8 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 		}
 		return ctrl.Create(rctx)
 	}
-	service.Mux.Handle("POST", "/users", ctrl.MuxHandler("create", h, nil))
-	service.LogInfo("mount", "ctrl", "User", "action", "Create", "route", "POST /users")
+	service.Mux.Handle("POST", "/v1/users", ctrl.MuxHandler("create", h, nil))
+	service.LogInfo("mount", "ctrl", "User", "action", "Create", "route", "POST /v1/users")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -70,6 +70,6 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 		}
 		return ctrl.Show(rctx)
 	}
-	service.Mux.Handle("GET", "/users/:userID", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "User", "action", "Show", "route", "GET /users/:userID")
+	service.Mux.Handle("GET", "/v1/users/:userID", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "User", "action", "Show", "route", "GET /v1/users/:userID")
 }

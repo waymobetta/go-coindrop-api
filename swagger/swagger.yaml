@@ -4,6 +4,26 @@ consumes:
 - application/gob
 - application/x-gob
 definitions:
+  Standard_error:
+    description: A standard error response (default view)
+    example:
+      code: 400
+      message: Bad Request
+    properties:
+      code:
+        description: A code that describes the error
+        example: 400
+        format: int64
+        type: integer
+      message:
+        description: A message that describes the error
+        example: Bad Request
+        type: string
+    required:
+    - code
+    - message
+    title: 'Mediatype identifier: application/standard_error+json; view=default'
+    type: object
   User:
     description: A user (default view)
     example:
@@ -30,7 +50,7 @@ info:
   title: The Coindrop API
   version: ""
 paths:
-  /users:
+  /v1/users:
     post:
       description: Create a new user
       operationId: user#create
@@ -41,20 +61,33 @@ paths:
         required: false
         type: string
       produces:
+      - application/standard_error+json
       - application/vnd.user+json
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
         "404":
           description: Not Found
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
       schemes:
       - http
       summary: create user
       tags:
       - user
-  /users/{userID}:
+  /v1/users/{userID}:
     get:
       description: Get user by id
       operationId: user#show

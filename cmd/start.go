@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 
 	"github.com/goadesign/goa"
@@ -58,8 +59,7 @@ func main() {
 		port = os.Getenv("PORT")
 	}
 	host := fmt.Sprintf("0.0.0.0:%s", port)
-	log.Printf("[cmd] listening on %s\n", host)
-	log.Fatal(http.ListenAndServe(host, rootHandler))
+	//log.Fatal(http.ListenAndServe(host, rootHandler))
 
 	// TODO: merge current routes with goa routes
 
@@ -76,11 +76,26 @@ func main() {
 	c := controllers.NewUserController(service, dbs)
 	app.MountUserController(service, c)
 
-	_ = service
-	/*
-		// Start service
-		if err := service.ListenAndServe(":8080"); err != nil {
-			service.LogError("startup", "err", err)
+	// goa handler
+	goaHandler := service.Server.Handler
+
+	rootMux := http.NewServeMux()
+
+	// merge handlers
+	rootMux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		goaRoutesRegex := regexp.MustCompile(`v1/users`)
+		// Update regex to include any base goa routes in order to properly forward to goa handler
+		isGoaRoute := goaRoutesRegex.Match([]byte(r.URL.Path))
+
+		if isGoaRoute {
+			goaHandler.ServeHTTP(w, r)
+		} else {
+			rootHandler.ServeHTTP(w, r)
 		}
-	*/
+	})
+
+	log.Printf("[cmd] listening on %s\n", host)
+
+	// Start service
+	panic(http.ListenAndServe(host, rootMux))
 }
