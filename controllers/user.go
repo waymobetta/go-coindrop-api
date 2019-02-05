@@ -28,7 +28,6 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 
 	// Put your logic here
 	// initialize new user struct object
-	return ctx.OK(&app.User{})
 	user := new(db.User)
 	user.AuthUserID = ctx.Payload.CognitoAuthUserID
 
