@@ -46,7 +46,7 @@ func (h *Handlers) ActionGet(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully returned information for %d tasks\n\n", len(tasks.Tasks))
+	fmt.Printf("[db] successfully returned information for %d tasks\n\n", len(tasks.Tasks))
 }
 
 // ActionAdd adds a single action task listing to db
@@ -90,5 +90,5 @@ func (h *Handlers) ActionAdd(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	fmt.Printf("Successfully added task: %s\n\n", task.Title)
+	fmt.Printf("[db] successfully added task: %s\n\n", task.Title)
 }
