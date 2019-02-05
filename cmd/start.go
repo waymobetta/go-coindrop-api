@@ -10,6 +10,7 @@ import (
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
 	"github.com/gorilla/handlers"
+	"github.com/rs/cors"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	controllers "github.com/waymobetta/go-coindrop-api/controllers"
@@ -20,16 +21,6 @@ import (
 )
 
 func main() {
-	cors := handlers.CORS(
-		handlers.AllowedHeaders(
-			[]string{"X-Requested-With", "Content-Type", "Authorization"},
-		),
-		handlers.AllowedMethods(
-			[]string{"GET", "POST", "OPTIONS"},
-		),
-		handlers.AllowedOrigins([]string{"*"}),
-	)
-
 	dbport, err := strconv.Atoi(os.Getenv("POSTGRES_PORT"))
 	if err != nil {
 		log.Fatal(err)
@@ -53,7 +44,15 @@ func main() {
 		Handlers:   hdlrs,
 	})
 
-	rootHandler := cors(rtr)
+	rootHandler := handlers.CORS(
+		handlers.AllowedHeaders(
+			[]string{"X-Requested-With", "Content-Type", "Authorization"},
+		),
+		handlers.AllowedMethods(
+			[]string{"GET", "POST", "OPTIONS"},
+		),
+		handlers.AllowedOrigins([]string{"*"}),
+	)(rtr)
 
 	port := "5000"
 	if os.Getenv("PORT") != "" {
@@ -62,9 +61,7 @@ func main() {
 	host := fmt.Sprintf("0.0.0.0:%s", port)
 	//log.Fatal(http.ListenAndServe(host, rootHandler))
 
-	// TODO: merge current routes with goa routes
-
-	// Create service
+	// Create goa service
 	service := goa.New("coindrop")
 
 	// Mount middleware
@@ -82,7 +79,7 @@ func main() {
 
 	rootMux := http.NewServeMux()
 
-	// merge handlers
+	// NOTE: merging current routes with goa routes
 	rootMux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// limit payload sizes
 		r.Body = http.MaxBytesReader(w, r.Body, 1048576)
@@ -101,5 +98,5 @@ func main() {
 	log.Printf("[cmd] listening on %s\n", host)
 
 	// Start service
-	panic(http.ListenAndServe(host, rootMux))
+	panic(http.ListenAndServe(host, cors.Default().Handler(rootMux)))
 }
