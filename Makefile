@@ -44,7 +44,9 @@ prep:
 .PHONY: goa
 goa:
 	@goagen bootstrap -d github.com/waymobetta/go-coindrop-api/design && rm main.go user.go
+	@MAKE swagger
 
 .PHONY: swagger
 swagger:
+	@echo "generating swagger spec"
 	@(goagen swagger -d github.com/waymobetta/go-coindrop-api/design && cp swagger/swagger.json web/documentation/swagger.json)
