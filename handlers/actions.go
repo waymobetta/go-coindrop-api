@@ -16,7 +16,7 @@ import (
 // 1. to store actions (linked to tasks table)
 // 2. to store results of action tasks
 
-// ActionGet handles queries to return all stored tasks
+// ActionGet handles queries to return a specific action task
 func (h *Handlers) ActionGet(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable tasks of Tasks struct
@@ -49,7 +49,7 @@ func (h *Handlers) ActionGet(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Successfully returned information for %d tasks\n\n", len(tasks.Tasks))
 }
 
-// ActionAdd adds a single task listing to db
+// ActionAdd adds a single action task listing to db
 func (h *Handlers) ActionAdd(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	// initialize new variable user of User struct
