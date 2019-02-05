@@ -14,11 +14,6 @@ type Users struct {
 
 // User info
 type User struct {
-	Info Info `json:"info"`
-}
-
-// Info info
-type Info struct {
 	ID                int                 `json:"id"`
 	AuthUserID        string              `json:"auth_user_id"`
 	WalletAddress     string              `json:"wallet_address"`

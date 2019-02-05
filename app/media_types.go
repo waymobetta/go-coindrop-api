@@ -37,17 +37,12 @@ func (mt *StandardError) Validate() (err error) {
 //
 // Identifier: application/vnd.user+json; view=default
 type User struct {
+	// Cognito auth user ID
+	CognitoAuthUserID *string `form:"cognitoAuthUserId,omitempty" json:"cognitoAuthUserId,omitempty" yaml:"cognitoAuthUserId,omitempty" xml:"cognitoAuthUserId,omitempty"`
 	// Unique user ID
 	ID int `form:"id" json:"id" yaml:"id" xml:"id"`
 	// Name of user
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
-}
-
-// Validate validates the User media type instance.
-func (mt *User) Validate() (err error) {
-
-	if mt.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "name"))
-	}
-	return
+	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Wallet address
+	WalletAddress *string `form:"walletAddress,omitempty" json:"walletAddress,omitempty" yaml:"walletAddress,omitempty" xml:"walletAddress,omitempty"`
 }

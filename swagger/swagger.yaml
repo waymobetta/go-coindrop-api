@@ -27,22 +27,44 @@ definitions:
   User:
     description: A user (default view)
     example:
-      id: 7626296731781855290
-      name: Facere voluptates.
+      cognitoAuthUserId: Eaque facere voluptates consequatur nihil odit.
+      id: 7547923669139885077
+      name: Quae aut cumque consequatur.
+      walletAddress: Velit hic illum veniam magni nam.
     properties:
+      cognitoAuthUserId:
+        description: Cognito auth user ID
+        example: Eaque facere voluptates consequatur nihil odit.
+        type: string
       id:
         description: Unique user ID
-        example: 7626296731781855290
+        example: 7547923669139885077
         format: int64
         type: integer
       name:
         description: Name of user
-        example: Facere voluptates.
+        example: Quae aut cumque consequatur.
+        type: string
+      walletAddress:
+        description: Wallet address
+        example: Velit hic illum veniam magni nam.
         type: string
     required:
     - id
-    - name
     title: 'Mediatype identifier: application/vnd.user+json; view=default'
+    type: object
+  UserPayload:
+    description: User payload
+    example:
+      cognitoAuthUserId: Et quis.
+    properties:
+      cognitoAuthUserId:
+        description: Cognito auth user ID
+        example: Et quis.
+        type: string
+    required:
+    - cognitoAuthUserId
+    title: UserPayload
     type: object
 host: localhost:8080
 info:
@@ -55,11 +77,12 @@ paths:
       description: Create a new user
       operationId: user#create
       parameters:
-      - description: Cognito Auth User ID
-        in: query
-        name: authUserID
-        required: false
-        type: string
+      - description: User payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UserPayload'
       produces:
       - application/standard_error+json
       - application/vnd.user+json

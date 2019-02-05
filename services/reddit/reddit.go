@@ -47,7 +47,7 @@ func (a *AuthSessions) InitRedditAuth() (*AuthSessions, error) {
 // GetRedditUserTrophies method to retrieve slice of user trophies
 func (a *AuthSessions) GetRedditUserTrophies(user *db.User) error {
 	// get trophies of reddit user
-	trophies, err := a.OAuthSession.UserTrophies(user.Info.RedditData.Username)
+	trophies, err := a.OAuthSession.UserTrophies(user.RedditData.Username)
 	if err != nil {
 		return err
 	}
@@ -64,7 +64,7 @@ func (a *AuthSessions) GetRedditUserTrophies(user *db.User) error {
 	}
 
 	// assign trophySlice to User struct
-	user.Info.RedditData.Trophies = trophySlice
+	user.RedditData.Trophies = trophySlice
 
 	return nil
 }
@@ -80,12 +80,13 @@ func (a *AuthSessions) GetRecentPostsFromSubreddit(user *db.User) (*db.User, err
 	// iterate over the submissions
 	for _, submission := range submissions {
 		// check to ensure both author and verification code match
-		if submission.Author == user.Info.RedditData.Username && submission.Title == user.Info.RedditData.VerificationData.StoredVerificationCode {
+		if submission.Author == user.RedditData.Username &&
+			submission.Title == user.RedditData.VerificationData.StoredVerificationCode {
 			// assign submission title (posted verification code) to user struct
-			user.Info.RedditData.VerificationData.PostedVerificationCode = submission.Title
-			if user.Info.RedditData.VerificationData.StoredVerificationCode == user.Info.RedditData.VerificationData.PostedVerificationCode {
+			user.RedditData.VerificationData.PostedVerificationCode = submission.Title
+			if user.RedditData.VerificationData.StoredVerificationCode == user.RedditData.VerificationData.PostedVerificationCode {
 				// flip bool flag once verification code validated
-				user.Info.RedditData.VerificationData.IsVerified = true
+				user.RedditData.VerificationData.IsVerified = true
 				return user, nil
 			}
 		}
@@ -98,15 +99,15 @@ func (a *AuthSessions) GetRecentPostsFromSubreddit(user *db.User) (*db.User, err
 // GetAboutInfo method to retrieve general information about user
 func (a *AuthSessions) GetAboutInfo(user *db.User) (*db.User, error) {
 	// get about information of reddit user
-	redditProfile, err := a.OAuthSession.AboutRedditor(user.Info.RedditData.Username)
+	redditProfile, err := a.OAuthSession.AboutRedditor(user.RedditData.Username)
 	if err != nil {
 		return user, err
 	}
 
 	// store select reddit profile info in user struct
-	user.Info.RedditData.CommentKarma = redditProfile.CommentKarma
-	user.Info.RedditData.LinkKarma = redditProfile.LinkKarma
-	user.Info.RedditData.AccountCreatedUTC = redditProfile.Created
+	user.RedditData.CommentKarma = redditProfile.CommentKarma
+	user.RedditData.LinkKarma = redditProfile.LinkKarma
+	user.RedditData.AccountCreatedUTC = redditProfile.Created
 
 	return user, nil
 }
@@ -114,7 +115,7 @@ func (a *AuthSessions) GetAboutInfo(user *db.User) (*db.User, error) {
 // GetSubmittedInfo method to retrieve slice of user's submitted posts
 func (a *AuthSessions) GetSubmittedInfo(user *db.User) (*db.User, error) {
 	// get submissions of reddit user
-	submissions, err := a.NoAuthSession.RedditorSubmissions(user.Info.RedditData.Username, geddit.ListingOptions{Count: 25})
+	submissions, err := a.NoAuthSession.RedditorSubmissions(user.RedditData.Username, geddit.ListingOptions{Count: 25})
 	if err != nil {
 		return user, err
 	}
@@ -135,7 +136,7 @@ func (a *AuthSessions) GetSubmittedInfo(user *db.User) (*db.User, error) {
 	uniqueSubredditSlice := removeDuplicates(subredditSlice)
 
 	// assign uniqueSubredditSlice to user struct
-	user.Info.RedditData.Subreddits = uniqueSubredditSlice
+	user.RedditData.Subreddits = uniqueSubredditSlice
 
 	return user, nil
 }

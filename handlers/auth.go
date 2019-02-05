@@ -57,7 +57,7 @@ func (h *Handlers) UserIDAdd(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-type", "application/json")
 	utils.Respond(w, response)
 
-	fmt.Printf("[db] successfully added coindrop user: %v\n", user.Info.AuthUserID)
+	fmt.Printf("[db] successfully added coindrop user: %v\n", user.AuthUserID)
 }
 
 // WalletUpdate handles updates to the wallet address for a user
@@ -101,7 +101,7 @@ func (h *Handlers) WalletUpdate(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	log.Printf("[db] successfully updated wallet address for user: %v\n", user.Info.AuthUserID)
+	log.Printf("[db] successfully updated wallet address for user: %v\n", user.AuthUserID)
 }
 
 // WalletGet gets a user's wallet address from their auth_user_id
@@ -143,10 +143,10 @@ func (h *Handlers) WalletGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response = utils.Message(true, user.Info.WalletAddress)
+	response = utils.Message(true, user.WalletAddress)
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Add("Content-type", "application/json")
 	utils.Respond(w, response)
 
-	log.Printf("[db] successfully returned wallet address for user: %v\n", user.Info.AuthUserID)
+	log.Printf("[db] successfully returned wallet address for user: %v\n", user.AuthUserID)
 }

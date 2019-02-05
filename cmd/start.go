@@ -15,6 +15,7 @@ import (
 	controllers "github.com/waymobetta/go-coindrop-api/controllers"
 	"github.com/waymobetta/go-coindrop-api/db"
 	routehandlers "github.com/waymobetta/go-coindrop-api/handlers"
+	mw "github.com/waymobetta/go-coindrop-api/middleware"
 	"github.com/waymobetta/go-coindrop-api/router"
 )
 
@@ -77,12 +78,15 @@ func main() {
 	app.MountUserController(service, c)
 
 	// goa handler
-	goaHandler := service.Server.Handler
+	goaHandler := mw.RateLimitHandler(service.Server.Handler)
 
 	rootMux := http.NewServeMux()
 
 	// merge handlers
 	rootMux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		// limit payload sizes
+		r.Body = http.MaxBytesReader(w, r.Body, 1048576)
+
 		goaRoutesRegex := regexp.MustCompile(`v1/users`)
 		// Update regex to include any base goa routes in order to properly forward to goa handler
 		isGoaRoute := goaRoutesRegex.Match([]byte(r.URL.Path))

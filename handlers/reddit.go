@@ -55,7 +55,7 @@ func (h *Handlers) RedditUserAdd(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	log.Printf("[handler] successfully added reddit user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully added reddit user: %v\n\n", user.AuthUserID)
 }
 
 // UsersGet handles queries to return all stored users
@@ -132,7 +132,7 @@ func (h *Handlers) RedditUserGet(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	log.Printf("[handler] successfully returned information for user: %v\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully returned information for user: %v\n", user.AuthUserID)
 }
 
 // RedditUserRemove removes a single user listing from db
@@ -176,7 +176,7 @@ func (h *Handlers) RedditUserRemove(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	log.Printf("[handler] successfully deleted user: %v\n\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully deleted user: %v\n\n", user.AuthUserID)
 }
 
 // UpdateRedditVerificationCode handles updates to the verification data for a user
@@ -220,7 +220,7 @@ func (h *Handlers) UpdateRedditVerificationCode(w http.ResponseWriter, r *http.R
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	log.Printf("[handler] successfully updated verification info for user: %v\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully updated verification info for user: %v\n", user.AuthUserID)
 }
 
 // GenerateRedditVerificationCode generates a temporary verification code
@@ -254,7 +254,7 @@ func (h *Handlers) GenerateRedditVerificationCode(w http.ResponseWriter, r *http
 	verificationCode := verify.GenerateVerificationCode()
 
 	// update local user object variable with generated verification code
-	user.Info.RedditData.VerificationData.StoredVerificationCode = verificationCode
+	user.RedditData.VerificationData.StoredVerificationCode = verificationCode
 
 	// marshal into JSON
 	_, err = json.Marshal(&user)
@@ -280,7 +280,7 @@ func (h *Handlers) GenerateRedditVerificationCode(w http.ResponseWriter, r *http
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	log.Printf("[handler] successfully generated verification code for user: %v\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully generated verification code for user: %v\n", user.AuthUserID)
 }
 
 // ValidateRedditVerificationCode validates the temporary verification code
@@ -336,10 +336,10 @@ func (h *Handlers) ValidateRedditVerificationCode(w http.ResponseWriter, r *http
 		return
 	}
 
-	log.Printf("[handler] checking %s against %s\n", updatedUserObj.Info.RedditData.VerificationData.PostedVerificationCode, storedUserInfo.Info.RedditData.VerificationData.StoredVerificationCode)
+	log.Printf("[handler] checking %s against %s\n", updatedUserObj.RedditData.VerificationData.PostedVerificationCode, storedUserInfo.RedditData.VerificationData.StoredVerificationCode)
 
 	// secondary validation of verification code
-	if updatedUserObj.Info.RedditData.VerificationData.PostedVerificationCode != storedUserInfo.Info.RedditData.VerificationData.StoredVerificationCode {
+	if updatedUserObj.RedditData.VerificationData.PostedVerificationCode != storedUserInfo.RedditData.VerificationData.StoredVerificationCode {
 		response = utils.Message(false, "unsuccessful")
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Add("Content-type", "application/json")
@@ -348,8 +348,8 @@ func (h *Handlers) ValidateRedditVerificationCode(w http.ResponseWriter, r *http
 	}
 
 	// update verification field values
-	storedUserInfo.Info.RedditData.VerificationData.PostedVerificationCode = updatedUserObj.Info.RedditData.VerificationData.PostedVerificationCode
-	storedUserInfo.Info.RedditData.VerificationData.IsVerified = true
+	storedUserInfo.RedditData.VerificationData.PostedVerificationCode = updatedUserObj.RedditData.VerificationData.PostedVerificationCode
+	storedUserInfo.RedditData.VerificationData.IsVerified = true
 
 	// update db with new info since verification codes matched
 	_, err = h.db.UpdateRedditVerificationCode(storedUserInfo)
@@ -365,7 +365,7 @@ func (h *Handlers) ValidateRedditVerificationCode(w http.ResponseWriter, r *http
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	log.Printf("[handler] successfully validated verification code for user: %v\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully validated verification code for user: %v\n", user.AuthUserID)
 }
 
 // RedditUpdate returns Reddit profile info about the user
@@ -457,5 +457,5 @@ func (h *Handlers) RedditUpdate(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	log.Printf("[handler] successfully updated Reddit info for user: %v\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully updated Reddit info for user: %v\n", user.AuthUserID)
 }

@@ -23,15 +23,15 @@ func (db *DB) AddRedditUser(u *User) (*User, error) {
 
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
-		u.Info.AuthUserID,
-		u.Info.RedditData.Username,
-		u.Info.RedditData.LinkKarma,
-		u.Info.RedditData.CommentKarma,
-		pq.Array(u.Info.RedditData.Subreddits),
-		pq.Array(u.Info.RedditData.Trophies),
-		u.Info.RedditData.VerificationData.PostedVerificationCode,
-		u.Info.RedditData.VerificationData.StoredVerificationCode,
-		u.Info.RedditData.VerificationData.IsVerified,
+		u.AuthUserID,
+		u.RedditData.Username,
+		u.RedditData.LinkKarma,
+		u.RedditData.CommentKarma,
+		pq.Array(u.RedditData.Subreddits),
+		pq.Array(u.RedditData.Trophies),
+		u.RedditData.VerificationData.PostedVerificationCode,
+		u.RedditData.VerificationData.StoredVerificationCode,
+		u.RedditData.VerificationData.IsVerified,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
@@ -69,26 +69,26 @@ func (db *DB) GetUsers(users *Users) (*Users, error) {
 		user := User{}
 		err = rows.Scan(
 			// reddit
-			&user.Info.ID,
-			&user.Info.AuthUserID,
-			&user.Info.RedditData.Username,
-			&user.Info.RedditData.CommentKarma,
-			&user.Info.RedditData.LinkKarma,
-			pq.Array(&user.Info.RedditData.Subreddits),
-			pq.Array(&user.Info.RedditData.Trophies),
-			&user.Info.RedditData.VerificationData.PostedVerificationCode,
-			&user.Info.RedditData.VerificationData.StoredVerificationCode,
-			&user.Info.RedditData.VerificationData.IsVerified,
+			&user.ID,
+			&user.AuthUserID,
+			&user.RedditData.Username,
+			&user.RedditData.CommentKarma,
+			&user.RedditData.LinkKarma,
+			pq.Array(&user.RedditData.Subreddits),
+			pq.Array(&user.RedditData.Trophies),
+			&user.RedditData.VerificationData.PostedVerificationCode,
+			&user.RedditData.VerificationData.StoredVerificationCode,
+			&user.RedditData.VerificationData.IsVerified,
 			// stack overflow
-			&user.Info.ID,
-			&user.Info.AuthUserID,
-			&user.Info.StackOverflowData.ExchangeAccountID,
-			&user.Info.StackOverflowData.UserID,
-			&user.Info.StackOverflowData.DisplayName,
-			pq.Array(&user.Info.StackOverflowData.Accounts),
-			&user.Info.StackOverflowData.VerificationData.PostedVerificationCode,
-			&user.Info.StackOverflowData.VerificationData.StoredVerificationCode,
-			&user.Info.StackOverflowData.VerificationData.IsVerified,
+			&user.ID,
+			&user.AuthUserID,
+			&user.StackOverflowData.ExchangeAccountID,
+			&user.StackOverflowData.UserID,
+			&user.StackOverflowData.DisplayName,
+			pq.Array(&user.StackOverflowData.Accounts),
+			&user.StackOverflowData.VerificationData.PostedVerificationCode,
+			&user.StackOverflowData.VerificationData.StoredVerificationCode,
+			&user.StackOverflowData.VerificationData.IsVerified,
 		)
 		if err != nil {
 			return users, err
@@ -119,20 +119,20 @@ func (db *DB) GetRedditUser(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// initialize row object
-	row := stmt.QueryRow(u.Info.AuthUserID)
+	row := stmt.QueryRow(u.AuthUserID)
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
-		&u.Info.ID,
-		&u.Info.AuthUserID,
-		&u.Info.RedditData.Username,
-		&u.Info.RedditData.CommentKarma,
-		&u.Info.RedditData.LinkKarma,
-		pq.Array(&u.Info.RedditData.Subreddits),
-		pq.Array(&u.Info.RedditData.Trophies),
-		&u.Info.RedditData.VerificationData.PostedVerificationCode,
-		&u.Info.RedditData.VerificationData.StoredVerificationCode,
-		&u.Info.RedditData.VerificationData.IsVerified,
+		&u.ID,
+		&u.AuthUserID,
+		&u.RedditData.Username,
+		&u.RedditData.CommentKarma,
+		&u.RedditData.LinkKarma,
+		pq.Array(&u.RedditData.Subreddits),
+		pq.Array(&u.RedditData.Trophies),
+		&u.RedditData.VerificationData.PostedVerificationCode,
+		&u.RedditData.VerificationData.StoredVerificationCode,
+		&u.RedditData.VerificationData.IsVerified,
 	)
 	if err != nil {
 		return u, err
@@ -161,7 +161,7 @@ func (db *DB) RemoveRedditUser(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique ID as the identifier
-	_, err = stmt.Exec(u.Info.AuthUserID)
+	_, err = stmt.Exec(u.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
@@ -201,7 +201,7 @@ func (db *DB) UpdateRedditInfo(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique ID as the identifier
-	_, err = stmt.Exec(u.Info.RedditData.CommentKarma, u.Info.RedditData.LinkKarma, pq.Array(u.Info.RedditData.Subreddits), pq.Array(u.Info.RedditData.Trophies), u.Info.AuthUserID)
+	_, err = stmt.Exec(u.RedditData.CommentKarma, u.RedditData.LinkKarma, pq.Array(u.RedditData.Subreddits), pq.Array(u.RedditData.Trophies), u.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
@@ -241,7 +241,7 @@ func (db *DB) UpdateRedditVerificationCode(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique reddit username as the identifier
-	_, err = stmt.Exec(u.Info.RedditData.Username, u.Info.RedditData.VerificationData.StoredVerificationCode, u.Info.RedditData.VerificationData.PostedVerificationCode, u.Info.RedditData.VerificationData.IsVerified, u.Info.AuthUserID)
+	_, err = stmt.Exec(u.RedditData.Username, u.RedditData.VerificationData.StoredVerificationCode, u.RedditData.VerificationData.PostedVerificationCode, u.RedditData.VerificationData.IsVerified, u.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()

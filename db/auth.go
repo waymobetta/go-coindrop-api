@@ -20,7 +20,7 @@ func (db *DB) AddUserID(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique ID as the identifier
-	_, err = stmt.Exec(u.Info.AuthUserID)
+	_, err = stmt.Exec(u.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
@@ -60,7 +60,7 @@ func (db *DB) UpdateWallet(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique ID as the identifier
-	_, err = stmt.Exec(u.Info.WalletAddress, u.Info.AuthUserID)
+	_, err = stmt.Exec(u.WalletAddress, u.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
@@ -92,11 +92,11 @@ func (db *DB) GetWallet(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// initialize row object
-	row := stmt.QueryRow(u.Info.AuthUserID)
+	row := stmt.QueryRow(u.AuthUserID)
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
-		&u.Info.WalletAddress,
+		&u.WalletAddress,
 	)
 
 	if err != nil {

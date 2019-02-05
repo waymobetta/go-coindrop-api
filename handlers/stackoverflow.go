@@ -56,7 +56,7 @@ func (h *Handlers) StackUserAdd(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	utils.Respond(w, response)
 
-	log.Printf("[handler] successfully added stack user: %v\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully added stack user: %v\n", user.AuthUserID)
 }
 
 // StackUserGet returns information about a single user
@@ -99,7 +99,7 @@ func (h *Handlers) StackUserGet(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	log.Printf("[handler] successfully returned information for user: %v\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully returned information for user: %v\n", user.AuthUserID)
 }
 
 // GenerateStackVerificationCode creates a verifcation code for Stack Overflow
@@ -137,7 +137,7 @@ func (h *Handlers) GenerateStackVerificationCode(w http.ResponseWriter, r *http.
 	displayCode := fmt.Sprintf("[COINDROP.IO - IT PAYS TO CONTRIBUTE: %s]", verificationCode)
 
 	// update local user object variable with generated verification code
-	user.Info.StackOverflowData.VerificationData.StoredVerificationCode = displayCode
+	user.StackOverflowData.VerificationData.StoredVerificationCode = displayCode
 
 	// marshal into JSON
 	_, err = json.Marshal(&user)
@@ -163,7 +163,7 @@ func (h *Handlers) GenerateStackVerificationCode(w http.ResponseWriter, r *http.
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	log.Printf("[handler] successfully generated verification code for user: %v\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully generated verification code for user: %v\n", user.AuthUserID)
 }
 
 // ValidateStackVerificationCode validates the temporary verification code
@@ -214,10 +214,10 @@ func (h *Handlers) ValidateStackVerificationCode(w http.ResponseWriter, r *http.
 		return
 	}
 
-	log.Printf("[handler] checking %s against %s\n", storedStackUser.Info.StackOverflowData.VerificationData.PostedVerificationCode, storedStackUser.Info.StackOverflowData.VerificationData.StoredVerificationCode)
+	log.Printf("[handler] checking %s against %s\n", storedStackUser.StackOverflowData.VerificationData.PostedVerificationCode, storedStackUser.StackOverflowData.VerificationData.StoredVerificationCode)
 
 	// secondary validation to see if codes match
-	if !strings.Contains(updatedStackUser.Info.StackOverflowData.VerificationData.PostedVerificationCode, storedStackUser.Info.StackOverflowData.VerificationData.StoredVerificationCode) {
+	if !strings.Contains(updatedStackUser.StackOverflowData.VerificationData.PostedVerificationCode, storedStackUser.StackOverflowData.VerificationData.StoredVerificationCode) {
 		log.Warnf("[handler] Verification codes do not match!")
 
 		response = utils.Message(false, "unsuccessful")
@@ -228,8 +228,8 @@ func (h *Handlers) ValidateStackVerificationCode(w http.ResponseWriter, r *http.
 	}
 
 	// update verification field values
-	storedStackUser.Info.StackOverflowData.VerificationData.PostedVerificationCode = updatedStackUser.Info.StackOverflowData.VerificationData.PostedVerificationCode
-	storedStackUser.Info.StackOverflowData.VerificationData.IsVerified = true
+	storedStackUser.StackOverflowData.VerificationData.PostedVerificationCode = updatedStackUser.StackOverflowData.VerificationData.PostedVerificationCode
+	storedStackUser.StackOverflowData.VerificationData.IsVerified = true
 
 	// update db with new info since verification codes matched
 	_, err = h.db.UpdateStackVerificationCode(storedStackUser)
@@ -245,7 +245,7 @@ func (h *Handlers) ValidateStackVerificationCode(w http.ResponseWriter, r *http.
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	log.Printf("[handler] successfully validated verification code for user: %v\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully validated verification code for user: %v\n", user.AuthUserID)
 }
 
 // StackUserUpdate updates and returns profile info about the user
@@ -307,9 +307,9 @@ func (h *Handlers) StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user.Info.StackOverflowData.VerificationData.PostedVerificationCode = storedUserInfo.Info.StackOverflowData.VerificationData.PostedVerificationCode
-	user.Info.StackOverflowData.VerificationData.StoredVerificationCode = storedUserInfo.Info.StackOverflowData.VerificationData.StoredVerificationCode
-	user.Info.StackOverflowData.VerificationData.IsVerified = storedUserInfo.Info.StackOverflowData.VerificationData.IsVerified
+	user.StackOverflowData.VerificationData.PostedVerificationCode = storedUserInfo.StackOverflowData.VerificationData.PostedVerificationCode
+	user.StackOverflowData.VerificationData.StoredVerificationCode = storedUserInfo.StackOverflowData.VerificationData.StoredVerificationCode
+	user.StackOverflowData.VerificationData.IsVerified = storedUserInfo.StackOverflowData.VerificationData.IsVerified
 
 	// update db with new Reddit profile info
 	_, err = h.db.UpdateStackAboutInfo(user)
@@ -325,5 +325,5 @@ func (h *Handlers) StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	utils.Respond(w, response)
 
-	log.Printf("[handler] successfully updated Stack Overflow info for user: %v\n", user.Info.AuthUserID)
+	log.Printf("[handler] successfully updated Stack Overflow info for user: %v\n", user.AuthUserID)
 }

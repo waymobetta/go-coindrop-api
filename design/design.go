@@ -1,8 +1,8 @@
 package design // The convention consists of naming the design
 // package "design"
 import (
-	. "github.com/goadesign/goa/design" // Use . imports to enable the DSL
-	. "github.com/goadesign/goa/design/apidsl"
+	. "github.com/goadesign/goa/design"        // Use . imports to enable the DSL
+	. "github.com/goadesign/goa/design/apidsl" // Use . imports to enable the DSL
 )
 
 var _ = API("coindrop", func() { // API defines the microservice endpoint and
@@ -19,9 +19,7 @@ var _ = Resource("user", func() { // Resources group related API endpoints
 	Action("create", func() {
 		Description("Create a new user")
 		Routing(POST(""))
-		Params(func() {
-			Param("authUserID", String, "Cognito Auth User ID")
-		})
+		Payload(UserPayload)
 		Response(OK)
 		Response(NotFound)
 		Response(BadRequest, StandardErrorMedia)
@@ -45,13 +43,24 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 	Description("A user")
 	Attributes(func() { // Attributes define the media type shape.
 		Attribute("id", Integer, "Unique user ID")
+		Attribute("cognitoAuthUserId", String, "Cognito auth user ID")
 		Attribute("name", String, "Name of user")
-		Required("id", "name")
+		Attribute("walletAddress", String, "Wallet address")
+		Required("id")
 	})
 	View("default", func() { // View defines a rendering of the media type.
 		Attribute("id") // Media types may have multiple views and must
+		Attribute("cognitoAuthUserId")
 		Attribute("name")
+		Attribute("walletAddress")
 	})
+})
+
+// UserPayload is the payload for creating a user
+var UserPayload = Type("UserPayload", func() {
+	Description("User payload")
+	Attribute("cognitoAuthUserId", String, "Cognito auth user ID")
+	Required("cognitoAuthUserId")
 })
 
 // StandardErrorMedia defines the standard error type.

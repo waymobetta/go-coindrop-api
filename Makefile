@@ -43,7 +43,7 @@ prep:
 
 .PHONY: goa
 goa:
-	@goagen bootstrap -d github.com/waymobetta/go-coindrop-api/design
+	@goagen bootstrap -d github.com/waymobetta/go-coindrop-api/design && rm main.go user.go
 
 .PHONY: swagger
 swagger:

@@ -22,7 +22,7 @@ type CreateUserContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	AuthUserID *string
+	Payload *UserPayload
 }
 
 // NewCreateUserContext parses the incoming request URL and body, performs validations and creates the
@@ -34,11 +34,6 @@ func NewCreateUserContext(ctx context.Context, r *http.Request, service *goa.Ser
 	req := goa.ContextRequest(ctx)
 	req.Request = r
 	rctx := CreateUserContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramAuthUserID := req.Params["authUserID"]
-	if len(paramAuthUserID) > 0 {
-		rawAuthUserID := paramAuthUserID[0]
-		rctx.AuthUserID = &rawAuthUserID
-	}
 	return &rctx, err
 }
 

@@ -29,8 +29,8 @@ import (
 type (
 	// CreateUserCommand is the command line data structure for the create action of user
 	CreateUserCommand struct {
-		// Cognito Auth User ID
-		AuthUserID  string
+		Payload     string
+		ContentType string
 		PrettyPrint bool
 	}
 
@@ -53,7 +53,14 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	sub = &cobra.Command{
 		Use:   `user ["/v1/users"]`,
 		Short: ``,
-		RunE:  func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
+		Long: `
+
+Payload example:
+
+{
+   "cognitoAuthUserId": "Et quis."
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
 	tmp1.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp1.PrettyPrint, "pp", false, "Pretty print response body")
@@ -236,9 +243,16 @@ func (cmd *CreateUserCommand) Run(c *client.Client, args []string) error {
 	} else {
 		path = "/v1/users"
 	}
+	var payload client.UserPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.CreateUser(ctx, path, stringFlagVal("authUserID", cmd.AuthUserID))
+	resp, err := c.CreateUser(ctx, path, &payload, cmd.ContentType)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -250,8 +264,8 @@ func (cmd *CreateUserCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *CreateUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var authUserID string
-	cc.Flags().StringVar(&cmd.AuthUserID, "authUserID", authUserID, `Cognito Auth User ID`)
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 }
 
 // Run makes the HTTP request corresponding to the ShowUserCommand command.
