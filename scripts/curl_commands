@@ -14,42 +14,42 @@ curl -H "Content-type: application/json" 'localhost:5000/api/v1/getusers'
 // GET: GET SINGLE USER
 
 # user (by id)
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id":""}}' 'localhost:5000/api/v1/getreddituser'
+curl -H "Content-type: application/json" -d '{"auth_user_id":""}' 'localhost:5000/api/v1/getreddituser'
 
 # user 2
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id":""}}' 'localhost:5000/api/v1/getreddituser'
+curl -H "Content-type: application/json" -d '{"auth_user_id":""}' 'localhost:5000/api/v1/getreddituser'
 
 // POST: ADD USER
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "999", "reddit_data": {"username": "y", "link_karma": 0, "comment_karma": 0, "trophies": [], "subreddits": [],"verification_data":{"posted_verification_code":"","stored_verification_code":"","is_verified":false}}}}' 'localhost:5000/api/v1/addreddituser'
+curl -H "Content-type: application/json" -d '{"auth_user_id": "999", "reddit_data": {"username": "y", "link_karma": 0, "comment_karma": 0, "trophies": [], "subreddits": [],"verification_data":{"posted_verification_code":"","stored_verification_code":"","is_verified":false}}}' 'localhost:5000/api/v1/addreddituser'
 
 // POST: GET REDDIT INFO
 
 # user
-curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"info": {"auth_user_id":""}}' 'localhost:5000/api/v1/updateredditinfo'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id":""}' 'localhost:5000/api/v1/updateredditinfo'
 
 // POST: DELETE USER
 
 # user 
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": ""}}' 'localhost:5000/api/v1/removereddituser'
+curl -H "Content-type: application/json" -d '{"auth_user_id": ""}' 'localhost:5000/api/v1/removereddituser'
 
 /// STACK OVERFLOW
 
 // POST: GET USER
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": ""}}' 'localhost:5000/api/v1/getstackuser'
+curl -H "Content-type: application/json" -d '{"auth_user_id": ""}' 'localhost:5000/api/v1/getstackuser'
 
 // POST: ADD USER
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "", "stackoverflow_data": {"exchange_account_id": 1,"user_id": 5, "display_name": "yoo","accounts": [], "verification_data":{"posted_verification_code": "","stored_verification_code": "","is_verified": false}}}}' 'localhost:5000/api/v1/addstackuser'
+curl -H "Content-type: application/json" -d '{"auth_user_id": "", "stackoverflow_data": {"exchange_account_id": 1,"user_id": 5, "display_name": "yoo","accounts": [], "verification_data":{"posted_verification_code": "","stored_verification_code": "","is_verified": false}}}' 'localhost:5000/api/v1/addstackuser'
 
 // POST: UPDATE USER
 
 # user
-curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"info": {"auth_user_id": ""}}' 'localhost:5000/api/v1/updatestackinfo'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": ""}' 'localhost:5000/api/v1/updatestackinfo'
 
 ===============================================================================
 VERIFICATION
@@ -60,24 +60,24 @@ VERIFICATION
 // POST: GENERATE VERIFICATION CODE
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "abc-123-def-456", "reddit_data": {"username": "qa_adchain_registry"}}}' 'localhost:5000/api/v1/generateredditverificationcode'
+curl -H "Content-type: application/json" -d '{"auth_user_id": "abc-123-def-456", "reddit_data": {"username": "qa_adchain_registry"}}' 'localhost:5000/api/v1/generateredditverificationcode'
 
 // POST: VALIDATE VERIFICATION CODE
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id":""}}' 'localhost:5000/api/v1/validateredditverificationcode'
+curl -H "Content-type: application/json" -d '{"auth_user_id":""}' 'localhost:5000/api/v1/validateredditverificationcode'
 
 /// STACK OVERFLOW
 
 // POST: GENERATE VERIFICATION CODE
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "", "stackoverflow_data": {"user_id": 7253829}}}' 'localhost:5000/api/v1/generatestackverificationcode'
+curl -H "Content-type: application/json" -d '{"auth_user_id": "", "stackoverflow_data": {"user_id": 7253829}}' 'localhost:5000/api/v1/generatestackverificationcode'
 
 // POST: VALIDATE VERIFICATION CODE
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": ""}}' 'localhost:5000/api/v1/validatestackverificationcode'
+curl -H "Content-type: application/json" -d '{"auth_user_id": ""}' 'localhost:5000/api/v1/validatestackverificationcode'
 
 ===============================================================================
 AUTH
@@ -86,10 +86,10 @@ AUTH
 // POST: ADD USER ID
 
 # user
-curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"info": {"auth_user_id": ""}}' 'localhost:5000/api/v1/adduserid'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": ""}' 'localhost:5000/api/v1/adduserid'
 
 // POST: GET ID
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": ""}}' 'localhost:5000/api/v1/getwallet'
+curl -H "Content-type: application/json" -d '{"auth_user_id": ""}' 'localhost:5000/api/v1/getwallet'
 
 // POST: UPDATE USER WALLET
 
