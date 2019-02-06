@@ -14,10 +14,10 @@ curl -H "Content-type: application/json" 'localhost:5000/api/v1/getusers'
 // GET: GET SINGLE USER
 
 # user (by id)
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id":"236b10f9-10e2-4568-b770-caa8733d5cdd"}}' 'localhost:5000/api/v1/getreddituser'
+curl -H "Content-type: application/json" -d '{"info": {"auth_user_id":""}}' 'localhost:5000/api/v1/getreddituser'
 
 # user 2
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id":"abc-123-def-456"}}' 'localhost:5000/api/v1/getreddituser'
+curl -H "Content-type: application/json" -d '{"info": {"auth_user_id":""}}' 'localhost:5000/api/v1/getreddituser'
 
 // POST: ADD USER
 
@@ -27,29 +27,29 @@ curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "999", "r
 // POST: GET REDDIT INFO
 
 # user
-curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"info": {"auth_user_id":"6cf2f17c-c0c6-42a1-917c-cf3a66212977"}}' 'localhost:5000/api/v1/updateredditinfo'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"info": {"auth_user_id":""}}' 'localhost:5000/api/v1/updateredditinfo'
 
 // POST: DELETE USER
 
 # user 
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "abc-123-def-456"}}' 'localhost:5000/api/v1/removereddituser'
+curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": ""}}' 'localhost:5000/api/v1/removereddituser'
 
 /// STACK OVERFLOW
 
 // POST: GET USER
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "abc-123-def-456"}}' 'localhost:5000/api/v1/getstackuser'
+curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": ""}}' 'localhost:5000/api/v1/getstackuser'
 
 // POST: ADD USER
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "56f2fc1c-48e9-4bb2-b850-3ed472902e2fg", "stackoverflow_data": {"exchange_account_id": 1,"user_id": 5, "display_name": "yoo","accounts": [], "verification_data":{"posted_verification_code": "","stored_verification_code": "","is_verified": false}}}}' 'localhost:5000/api/v1/addstackuser'
+curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "", "stackoverflow_data": {"exchange_account_id": 1,"user_id": 5, "display_name": "yoo","accounts": [], "verification_data":{"posted_verification_code": "","stored_verification_code": "","is_verified": false}}}}' 'localhost:5000/api/v1/addstackuser'
 
 // POST: UPDATE USER
 
 # user
-curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"info": {"auth_user_id": "6cf2f17c-c0c6-42a1-917c-cf3a66212977"}}' 'localhost:5000/api/v1/updatestackinfo'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"info": {"auth_user_id": ""}}' 'localhost:5000/api/v1/updatestackinfo'
 
 ===============================================================================
 VERIFICATION
@@ -65,19 +65,19 @@ curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "abc-123-
 // POST: VALIDATE VERIFICATION CODE
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id":"56f2fc1c-48e9-4bb2-b850-3ed472902e2f"}}' 'localhost:5000/api/v1/validateredditverificationcode'
+curl -H "Content-type: application/json" -d '{"info": {"auth_user_id":""}}' 'localhost:5000/api/v1/validateredditverificationcode'
 
 /// STACK OVERFLOW
 
 // POST: GENERATE VERIFICATION CODE
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "56f2fc1c-48e9-4bb2-b850-3ed472902e2f", "stackoverflow_data": {"user_id": 7253829}}}' 'localhost:5000/api/v1/generatestackverificationcode'
+curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "", "stackoverflow_data": {"user_id": 7253829}}}' 'localhost:5000/api/v1/generatestackverificationcode'
 
 // POST: VALIDATE VERIFICATION CODE
 
 # user
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "56f2fc1c-48e9-4bb2-b850-3ed472902e2f"}}' 'localhost:5000/api/v1/validatestackverificationcode'
+curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": ""}}' 'localhost:5000/api/v1/validatestackverificationcode'
 
 ===============================================================================
 AUTH
@@ -86,18 +86,18 @@ AUTH
 // POST: ADD USER ID
 
 # user
-curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"info": {"auth_user_id": "abc-123-def-456"}}' 'localhost:5000/api/v1/adduserid'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"info": {"auth_user_id": ""}}' 'localhost:5000/api/v1/adduserid'
 
 // POST: GET ID
-curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": "abc-123-def-456"}}' 'localhost:5000/api/v1/getwallet'
+curl -H "Content-type: application/json" -d '{"info": {"auth_user_id": ""}}' 'localhost:5000/api/v1/getwallet'
 
 // POST: UPDATE USER WALLET
 
 # user
-curl -H "Content-type: application/json" -d '{"auth_user_id":"abc-123-def-456", "wallet_address": "0xETHEREUM"}' 'localhost:5000/api/v1/updatewallet'
+curl -H "Content-type: application/json" -d '{"auth_user_id":"", "wallet_address": "0xETHEREUM"}' 'localhost:5000/api/v1/updatewallet'
 
 # user 2
-curl -H "Content-type: application/json" -d '{"auth_user_id":"abc-123-def-456", "wallet_address": "0xTESTWALLET"}' 'localhost:5000/api/v1/updatewallet'
+curl -H "Content-type: application/json" -d '{"auth_user_id":"", "wallet_address": "0xTESTWALLET"}' 'localhost:5000/api/v1/updatewallet'
 
 ===============================================================================
 TASKS
@@ -123,26 +123,26 @@ curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"title
 curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"title": "archaeologist", "type": "quiz", "author": "adchain", "description": "Prove your familiarity of our project by digging up some information in the adchain archaeology quiz!", "token": "adToken", "token_allocation": 5000, "badge_data": {"name": "archaeologist"}}' 'localhost:5000/api/v1/addtask'
 
 // POST: GET TASKS ASSIGNED TO/COMPLETED BY USER
-curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "906bbf4c-b9f4-469b-8741-7dd81029a523"}' 'localhost:5000/api/v1/getusertasks'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": ""}' 'localhost:5000/api/v1/getusertasks'
 
 // POST: ADD USER TASK LISTING
-curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52","assigned":[],"completed":[]}' 'localhost:5000/api/v1/addusertask'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "","assigned":[],"completed":[]}' 'localhost:5000/api/v1/addusertask'
 
 // POST: ASSIGN USER TASK
 
 1.
-curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52", "title": "archaeologist"}' 'localhost:5000/api/v1/assignusertask'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "", "title": "archaeologist"}' 'localhost:5000/api/v1/assignusertask'
 
 2. 
-curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52", "title": "colonycontributor"}' 'localhost:5000/api/v1/assignusertask'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "", "title": "colonycontributor"}' 'localhost:5000/api/v1/assignusertask'
 
 // POST: COMPLETE USER TASK
 
 1.
-curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52", "title": "archaeologist"}' 'localhost:5000/api/v1/completeusertask'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "", "title": "archaeologist"}' 'localhost:5000/api/v1/completeusertask'
 
 2. 
-curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52", "title": "colonycontributor"}' 'localhost:5000/api/v1/completeusertask'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"auth_user_id": "", "title": "colonycontributor"}' 'localhost:5000/api/v1/completeusertask'
 
 ===============================================================================
 QUIZZES
@@ -158,12 +158,12 @@ curl -H "Content-type: application/json" -H "Authorization: Bearer token" -d '{"
 
 // POST: GET QUIZ
 
-curl -H "Content-type: application/json" -H "Authorization: Bearer token" -d '{"title": "math quiz"}' 'localhost:5000/api/v1/getquiz'
+curl -H "Content-type: application/json" -H "Authorization: Bearer token" -d '{"title": "archaeologist"}' 'localhost:5000/api/v1/getquiz'
 
 // POST: POST RESULTS
 
 # archaeologist
-curl -H "Content-type: application/json" -H "Authorization: Bearer token" -d '{"title": "archaeologist", "auth_user_id": "371e0035-a5db-473a-a1ed-30ac784d4f52", "quiz_info": {"quiz_data": [{"question":"How many domains currently hold the status \"In Registry\" in the adChain Publisher Registry?", "answer": "31"}, {"question": "What is the name of the cryptocurrency used to curate the adChain Publisher Registry?", "answer": "adtoken"}, {"question": "And what is the contract address of this cryptocurrency?", "answer": "0x123"}, {"question": "What date did the adChain Publisher Release Candidate go live on the Ethereum Mainnet?", "answer": "0402418"}, {"question": "According to the \"Claiming ADT Rewards Breakdown\" located within the help section of the adChain Publisher Registry, how many ways are there to earn adToken rewards?", "answer": "3"}]}}' 'localhost:5000/api/v1/postresults'
+curl -H "Content-type: application/json" -H "Authorization: Bearer token" -d '{"title": "archaeologist", "auth_user_id": "", "quiz_info": {"quiz_data": [{"question":"How many domains currently hold the status \"In Registry\" in the adChain Publisher Registry?", "answer": "31"}, {"question": "What is the name of the cryptocurrency used to curate the adChain Publisher Registry?", "answer": "adtoken"}, {"question": "And what is the contract address of this cryptocurrency?", "answer": "0x123"}, {"question": "What date did the adChain Publisher Release Candidate go live on the Ethereum Mainnet?", "answer": "0402418"}, {"question": "According to the \"Claiming ADT Rewards Breakdown\" located within the help section of the adChain Publisher Registry, how many ways are there to earn adToken rewards?", "answer": "3"}]}}' 'localhost:5000/api/v1/postresults'
 
 // POST: GET RESULTS
-curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"title": "archaeologist", "auth_user_id": "906bbf4c-b9f4-469b-8741-7dd81029a523"}' 'localhost:5000/api/v1/getresults'
+curl -H "Content-type: application/json" -H "Authorization: Bearer " -d '{"title": "archaeologist", "auth_user_id": ""}' 'localhost:5000/api/v1/getresults'
