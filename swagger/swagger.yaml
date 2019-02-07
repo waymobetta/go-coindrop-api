@@ -56,17 +56,30 @@ definitions:
   UserPayload:
     description: User payload
     example:
-      cognitoAuthUserId: Et quis.
+      cognitoAuthUserId: Iure amet.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Et quis.
+        example: Iure amet.
         type: string
     required:
     - cognitoAuthUserId
     title: UserPayload
     type: object
-host: localhost:8080
+  Wallet:
+    description: A wallet (default view)
+    example:
+      walletAddress: Unde aliquam voluptatibus ut.
+    properties:
+      walletAddress:
+        description: wallet address
+        example: Unde aliquam voluptatibus ut.
+        type: string
+    required:
+    - walletAddress
+    title: 'Mediatype identifier: application/vnd.wallet+json; view=default'
+    type: object
+host: localhost:5000
 info:
   description: A simple goa service
   title: The Coindrop API
@@ -134,6 +147,33 @@ paths:
       summary: show user
       tags:
       - user
+  /v1/wallets:
+    get:
+      description: Get user wallet
+      operationId: wallet#show
+      parameters:
+      - description: userID
+        in: query
+        name: userID
+        required: false
+        type: string
+      produces:
+      - application/standard_error+json
+      - application/vnd.wallet+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Wallet'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      summary: show wallet
+      tags:
+      - wallet
 produces:
 - application/json
 - application/xml
