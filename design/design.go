@@ -9,7 +9,7 @@ var _ = API("coindrop", func() { // API defines the microservice endpoint and
 	Title("The Coindrop API")           // other global properties. There should be one
 	Description("A simple goa service") // and exactly one API definition appearing in
 	Scheme("http")                      // the design.
-	Host("localhost:8080")
+	Host("localhost:5000")
 })
 
 var _ = Resource("user", func() { // Resources group related API endpoints
@@ -38,6 +38,20 @@ var _ = Resource("user", func() { // Resources group related API endpoints
 	})
 })
 
+var _ = Resource("wallet", func() {
+	BasePath("/v1/wallets")
+
+	Action("show", func() {
+		Description("Get user wallet")
+		Routing(GET(""))
+		Params(func() {
+			Param("userID", String, "userID") // "asb-123-asd-23"
+		})
+		Response(OK, WalletMedia)
+		Response(NotFound, StandardErrorMedia)
+	})
+})
+
 // UserMedia defines the media type used to render users.
 var UserMedia = MediaType("application/vnd.user+json", func() {
 	Description("A user")
@@ -52,6 +66,19 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 		Attribute("id") // Media types may have multiple views and must
 		Attribute("cognitoAuthUserId")
 		Attribute("name")
+		Attribute("walletAddress")
+	})
+})
+
+// WalletMedia ...
+var WalletMedia = MediaType("application/vnd.wallet+json", func() {
+	Description("A wallet")
+	Attributes(func() {
+		Attribute("userID", String, "user ID")
+		Attribute("walletAddress", String, "wallet address")
+		Required("walletAddress")
+	})
+	View("default", func() {
 		Attribute("walletAddress")
 	})
 })
