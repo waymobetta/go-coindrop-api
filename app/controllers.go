@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.4.1
+// --version=v1.3.1
 
 package app
 
@@ -93,4 +93,31 @@ func unmarshalCreateUserPayload(ctx context.Context, service *goa.Service, req *
 	}
 	goa.ContextRequest(ctx).Payload = payload.Publicize()
 	return nil
+}
+
+// WalletController is the controller interface for the Wallet actions.
+type WalletController interface {
+	goa.Muxer
+	Show(*ShowWalletContext) error
+}
+
+// MountWalletController "mounts" a Wallet resource controller on the given service.
+func MountWalletController(service *goa.Service, ctrl WalletController) {
+	initService(service)
+	var h goa.Handler
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowWalletContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	service.Mux.Handle("GET", "/v1/wallets", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Wallet", "action", "Show", "route", "GET /v1/wallets")
 }

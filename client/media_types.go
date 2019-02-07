@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.4.1
+// --version=v1.3.1
 
 package client
 
@@ -58,6 +58,29 @@ type User struct {
 // DecodeUser decodes the User instance encoded in resp body.
 func (c *Client) DecodeUser(resp *http.Response) (*User, error) {
 	var decoded User
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// A wallet (default view)
+//
+// Identifier: application/vnd.wallet+json; view=default
+type Wallet struct {
+	// wallet address
+	WalletAddress string `form:"walletAddress" json:"walletAddress" yaml:"walletAddress" xml:"walletAddress"`
+}
+
+// Validate validates the Wallet media type instance.
+func (mt *Wallet) Validate() (err error) {
+	if mt.WalletAddress == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "walletAddress"))
+	}
+	return
+}
+
+// DecodeWallet decodes the Wallet instance encoded in resp body.
+func (c *Client) DecodeWallet(resp *http.Response) (*Wallet, error) {
+	var decoded Wallet
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
 }

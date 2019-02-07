@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.4.1
+// --version=v1.3.1
 
 package app
 
@@ -116,4 +116,45 @@ func (ctx *ShowUserContext) OK(r *User) error {
 func (ctx *ShowUserContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
 	return nil
+}
+
+// ShowWalletContext provides the wallet show action context.
+type ShowWalletContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	UserID *string
+}
+
+// NewShowWalletContext parses the incoming request URL and body, performs validations and creates the
+// context used by the wallet controller show action.
+func NewShowWalletContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowWalletContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ShowWalletContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramUserID := req.Params["userID"]
+	if len(paramUserID) > 0 {
+		rawUserID := paramUserID[0]
+		rctx.UserID = &rawUserID
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowWalletContext) OK(r *Wallet) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.wallet+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowWalletContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
 }

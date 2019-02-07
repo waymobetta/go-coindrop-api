@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.4.1
+// --version=v1.3.1
 
 package app
 
@@ -45,4 +45,20 @@ type User struct {
 	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
 	// Wallet address
 	WalletAddress *string `form:"walletAddress,omitempty" json:"walletAddress,omitempty" yaml:"walletAddress,omitempty" xml:"walletAddress,omitempty"`
+}
+
+// A wallet (default view)
+//
+// Identifier: application/vnd.wallet+json; view=default
+type Wallet struct {
+	// wallet address
+	WalletAddress string `form:"walletAddress" json:"walletAddress" yaml:"walletAddress" xml:"walletAddress"`
+}
+
+// Validate validates the Wallet media type instance.
+func (mt *Wallet) Validate() (err error) {
+	if mt.WalletAddress == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "walletAddress"))
+	}
+	return
 }
