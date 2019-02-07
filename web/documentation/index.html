@@ -79,7 +79,7 @@ window.onload = function() {
     response.json()
     .then(function(json) {
       json.schemes[0] = window.location.protocol.slice(0, -1)
-      json.host = window.location.host
+      // json.host = window.location.host
 
       const ui = SwaggerUIBundle({
         spec: json,
