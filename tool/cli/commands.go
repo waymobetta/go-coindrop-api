@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.4.1
+// --version=v1.3.1
 
 package cli
 
@@ -40,6 +40,13 @@ type (
 		UserID      int
 		PrettyPrint bool
 	}
+
+	// ShowWalletCommand is the command line data structure for the show action of wallet
+	ShowWalletCommand struct {
+		// userID
+		UserID      string
+		PrettyPrint bool
+	}
 )
 
 // RegisterCommands registers the resource action CLI commands.
@@ -58,7 +65,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 Payload example:
 
 {
-   "cognitoAuthUserId": "Et quis."
+   "cognitoAuthUserId": "Iure amet."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
@@ -68,7 +75,7 @@ Payload example:
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "show",
-		Short: `Get user by id`,
+		Short: `show action`,
 	}
 	tmp2 := new(ShowUserCommand)
 	sub = &cobra.Command{
@@ -78,6 +85,15 @@ Payload example:
 	}
 	tmp2.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp2.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp3 := new(ShowWalletCommand)
+	sub = &cobra.Command{
+		Use:   `wallet ["/v1/wallets"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
+	}
+	tmp3.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp3.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 }
@@ -292,4 +308,30 @@ func (cmd *ShowUserCommand) Run(c *client.Client, args []string) error {
 func (cmd *ShowUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var userID int
 	cc.Flags().IntVar(&cmd.UserID, "userID", userID, `User ID`)
+}
+
+// Run makes the HTTP request corresponding to the ShowWalletCommand command.
+func (cmd *ShowWalletCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/v1/wallets"
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ShowWallet(ctx, path, stringFlagVal("userID", cmd.UserID))
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ShowWalletCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var userID string
+	cc.Flags().StringVar(&cmd.UserID, "userID", userID, `userID`)
 }
