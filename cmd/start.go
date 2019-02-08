@@ -6,6 +6,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
@@ -59,7 +60,6 @@ func main() {
 		port = os.Getenv("PORT")
 	}
 	host := fmt.Sprintf("0.0.0.0:%s", port)
-	//log.Fatal(http.ListenAndServe(host, rootHandler))
 
 	// Create goa service
 	service := goa.New("coindrop")
@@ -96,6 +96,8 @@ func main() {
 
 		if isGoaRoute {
 			goaHandler.ServeHTTP(w, r)
+		} else if strings.HasPrefix(r.URL.Path, "/documentation") {
+			http.FileServer(http.Dir("./web")).ServeHTTP(w, r)
 		} else {
 			rootHandler.ServeHTTP(w, r)
 		}

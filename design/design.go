@@ -29,9 +29,12 @@ var _ = Resource("user", func() { // Resources group related API endpoints
 
 	Action("show", func() { // Actions define a single API endpoint together
 		Description("Get user by id") // with its path, parameters (both path
-		Routing(GET("/:userID"))      // parameters and querystring values) and payload
+		Routing(GET("/:userId"))      // parameters and querystring values) and payload
 		Params(func() {               // (shape of the request body).
-			Param("userID", Integer, "User ID")
+			Param("userId", String, "User ID", func() {
+				Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
+				Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
+			})
 		})
 		Response(OK)       // Responses define the shape and status code
 		Response(NotFound) // of HTTP responses.
@@ -45,7 +48,10 @@ var _ = Resource("wallet", func() {
 		Description("Get user wallet")
 		Routing(GET(""))
 		Params(func() {
-			Param("userID", String, "userID") // "asb-123-asd-23"
+			Param("userId", String, "User ID", func() {
+				Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
+				Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
+			})
 		})
 		Response(OK, WalletMedia)
 		Response(NotFound, StandardErrorMedia)
@@ -59,7 +65,10 @@ var _ = Resource("task", func() {
 		Description("Get user task")
 		Routing(GET(""))
 		Params(func() {
-			Param("userID", String, "userID") // "asb-123-asd-23"
+			Param("userId", String, "User ID", func() {
+				Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
+				Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
+			})
 		})
 		Response(OK, TaskMedia)
 		Response(NotFound, StandardErrorMedia)
@@ -70,7 +79,7 @@ var _ = Resource("task", func() {
 var UserMedia = MediaType("application/vnd.user+json", func() {
 	Description("A user")
 	Attributes(func() { // Attributes define the media type shape.
-		Attribute("id", Integer, "Unique user ID")
+		Attribute("id", String, "Unique user ID")
 		Attribute("cognitoAuthUserId", String, "Cognito auth user ID")
 		Attribute("name", String, "Name of user")
 		Attribute("walletAddress", String, "Wallet address")
@@ -88,7 +97,10 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 var WalletMedia = MediaType("application/vnd.wallet+json", func() {
 	Description("A wallet")
 	Attributes(func() {
-		Attribute("userID", String, "user ID")
+		Attribute("userId", String, "User ID", func() {
+			Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
+			Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
+		})
 		Attribute("walletAddress", String, "wallet address")
 		Required("walletAddress")
 	})
@@ -101,7 +113,7 @@ var WalletMedia = MediaType("application/vnd.wallet+json", func() {
 var TaskMedia = MediaType("application/vnd.task+json", func() {
 	Description("A task")
 	Attributes(func() {
-		Attribute("userID", String, "user ID")
+		Attribute("userId", String, "user ID")
 		Attribute("taskName", String, "task name")
 		Required("taskName")
 	})

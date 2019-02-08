@@ -44,7 +44,7 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 	log.Printf("[controller/user] successfully added coindrop user: %v\n", user.AuthUserID)
 
 	res := &app.User{
-		ID:                0,
+		ID:                "",
 		CognitoAuthUserID: &user.AuthUserID,
 		WalletAddress:     &user.WalletAddress,
 	}

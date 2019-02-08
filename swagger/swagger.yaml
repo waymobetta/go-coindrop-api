@@ -41,9 +41,9 @@ definitions:
     description: A user (default view)
     example:
       cognitoAuthUserId: Hic illum veniam magni nam perferendis.
-      id: 7.79689816071064e+18
-      name: Ut unde aliquam voluptatibus.
-      walletAddress: Aspernatur iure amet tenetur non ut.
+      id: Quis ut unde aliquam voluptatibus.
+      name: Aspernatur iure amet tenetur non ut.
+      walletAddress: Corrupti eum fugit eaque.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
@@ -51,16 +51,15 @@ definitions:
         type: string
       id:
         description: Unique user ID
-        example: 7.79689816071064e+18
-        format: int64
-        type: integer
+        example: Quis ut unde aliquam voluptatibus.
+        type: string
       name:
         description: Name of user
-        example: Ut unde aliquam voluptatibus.
+        example: Aspernatur iure amet tenetur non ut.
         type: string
       walletAddress:
         description: Wallet address
-        example: Aspernatur iure amet tenetur non ut.
+        example: Corrupti eum fugit eaque.
         type: string
     required:
     - id
@@ -103,9 +102,10 @@ paths:
       description: Get user task
       operationId: task#show
       parameters:
-      - description: userID
+      - description: User ID
         in: query
-        name: userID
+        name: userId
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
         required: false
         type: string
       produces:
@@ -163,16 +163,17 @@ paths:
       summary: create user
       tags:
       - user
-  /v1/users/{userID}:
+  /v1/users/{userId}:
     get:
       description: Get user by id
       operationId: user#show
       parameters:
       - description: User ID
         in: path
-        name: userID
+        name: userId
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
         required: true
-        type: integer
+        type: string
       produces:
       - application/vnd.user+json
       responses:
@@ -192,9 +193,10 @@ paths:
       description: Get user wallet
       operationId: wallet#show
       parameters:
-      - description: userID
+      - description: User ID
         in: query
-        name: userID
+        name: userId
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
         required: false
         type: string
       produces:
