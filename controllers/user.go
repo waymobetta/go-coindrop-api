@@ -48,6 +48,7 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 		CognitoAuthUserID: &user.AuthUserID,
 		WalletAddress:     &user.WalletAddress,
 	}
+
 	return ctx.OK(res)
 	// UserController_Create: end_implement
 }

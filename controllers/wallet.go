@@ -56,6 +56,21 @@ func (c *WalletController) Update(ctx *app.UpdateWalletContext) error {
 
 	// Put your logic here
 
-	return nil
+	user := new(db.User)
+	user.AuthUserID = ctx.Payload.CognitoAuthUserID
+	user.WalletAddress = ctx.Payload.WalletAddress
+
+	_, err := c.db.UpdateWallet(user)
+	if err != nil {
+		log.Errorf("[controller/user] %v", err)
+		return ctx.BadRequest(&app.StandardError{
+			Code:    400,
+			Message: "could not insert user to db",
+		})
+	}
+
+	log.Printf("[controller/user] successfully updated wallet for coindrop user: %v\n", user.AuthUserID)
+
+	return ctx.OK(nil)
 	// WalletController_Update: end_implement
 }
