@@ -94,7 +94,7 @@ curl -H "Content-type: application/json" -d '{"auth_user_id": ""}' 'localhost:50
 // POST: UPDATE USER WALLET
 
 # user
-curl -H "Content-type: application/json" -d '{"auth_user_id":"", "wallet_address": "0xETHEREUM"}' 'localhost:5000/api/v1/updatewallet'
+curl -H "Content-type: application/json" -d '{"auth_user_id":"3d0a93ec-ae4d-4377-9efe-44f2b3c6a7f3", "wallet_address": "0xETHEREUM"}' 'localhost:5000/v1/wallets'
 
 # user 2
 curl -H "Content-type: application/json" -d '{"auth_user_id":"", "wallet_address": "0xTESTWALLET"}' 'localhost:5000/api/v1/updatewallet'
