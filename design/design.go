@@ -52,6 +52,20 @@ var _ = Resource("wallet", func() {
 	})
 })
 
+var _ = Resource("task", func() {
+	BasePath("/v1/tasks")
+
+	Action("show", func() {
+		Description("Get user task")
+		Routing(GET(""))
+		Params(func() {
+			Param("userID", String, "userID") // "asb-123-asd-23"
+		})
+		Response(OK, TaskMedia)
+		Response(NotFound, StandardErrorMedia)
+	})
+})
+
 // UserMedia defines the media type used to render users.
 var UserMedia = MediaType("application/vnd.user+json", func() {
 	Description("A user")
@@ -80,6 +94,19 @@ var WalletMedia = MediaType("application/vnd.wallet+json", func() {
 	})
 	View("default", func() {
 		Attribute("walletAddress")
+	})
+})
+
+// TaskMedia ...
+var TaskMedia = MediaType("application/vnd.task+json", func() {
+	Description("A task")
+	Attributes(func() {
+		Attribute("userID", String, "user ID")
+		Attribute("taskName", String, "task name")
+		Required("taskName")
+	})
+	View("default", func() {
+		Attribute("taskName")
 	})
 })
 

@@ -77,6 +77,9 @@ func main() {
 	walletCtrlr := controllers.NewWalletController(service, dbs)
 	app.MountWalletController(service, walletCtrlr)
 
+	taskCtrlr := controllers.NewTaskController(service)
+	app.MountTaskController(service, taskCtrlr)
+
 	// goa handler
 	goaHandler := mw.RateLimitHandler(service.Server.Handler)
 
@@ -87,7 +90,7 @@ func main() {
 		// limit payload sizes
 		r.Body = http.MaxBytesReader(w, r.Body, 1048576)
 
-		goaRoutesRegex := regexp.MustCompile(`v1/(users|wallets)`)
+		goaRoutesRegex := regexp.MustCompile(`v1/(users|wallets|tasks)`)
 		// Update regex to include any base goa routes in order to properly forward to goa handler
 		isGoaRoute := goaRoutesRegex.Match([]byte(r.URL.Path))
 

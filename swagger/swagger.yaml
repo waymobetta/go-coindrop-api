@@ -24,30 +24,43 @@ definitions:
     - message
     title: 'Mediatype identifier: application/standard_error+json; view=default'
     type: object
+  Task:
+    description: A task (default view)
+    example:
+      taskName: Eaque facere voluptates consequatur nihil odit.
+    properties:
+      taskName:
+        description: task name
+        example: Eaque facere voluptates consequatur nihil odit.
+        type: string
+    required:
+    - taskName
+    title: 'Mediatype identifier: application/vnd.task+json; view=default'
+    type: object
   User:
     description: A user (default view)
     example:
-      cognitoAuthUserId: Eaque facere voluptates consequatur nihil odit.
-      id: 7547923669139885077
-      name: Quae aut cumque consequatur.
-      walletAddress: Velit hic illum veniam magni nam.
+      cognitoAuthUserId: Hic illum veniam magni nam perferendis.
+      id: 7.79689816071064e+18
+      name: Ut unde aliquam voluptatibus.
+      walletAddress: Aspernatur iure amet tenetur non ut.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Eaque facere voluptates consequatur nihil odit.
+        example: Hic illum veniam magni nam perferendis.
         type: string
       id:
         description: Unique user ID
-        example: 7547923669139885077
+        example: 7.79689816071064e+18
         format: int64
         type: integer
       name:
         description: Name of user
-        example: Quae aut cumque consequatur.
+        example: Ut unde aliquam voluptatibus.
         type: string
       walletAddress:
         description: Wallet address
-        example: Velit hic illum veniam magni nam.
+        example: Aspernatur iure amet tenetur non ut.
         type: string
     required:
     - id
@@ -56,11 +69,11 @@ definitions:
   UserPayload:
     description: User payload
     example:
-      cognitoAuthUserId: Iure amet.
+      cognitoAuthUserId: Omnis labore.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Iure amet.
+        example: Omnis labore.
         type: string
     required:
     - cognitoAuthUserId
@@ -69,11 +82,11 @@ definitions:
   Wallet:
     description: A wallet (default view)
     example:
-      walletAddress: Unde aliquam voluptatibus ut.
+      walletAddress: Autem est.
     properties:
       walletAddress:
         description: wallet address
-        example: Unde aliquam voluptatibus ut.
+        example: Autem est.
         type: string
     required:
     - walletAddress
@@ -85,6 +98,33 @@ info:
   title: The Coindrop API
   version: ""
 paths:
+  /v1/tasks:
+    get:
+      description: Get user task
+      operationId: task#show
+      parameters:
+      - description: userID
+        in: query
+        name: userID
+        required: false
+        type: string
+      produces:
+      - application/standard_error+json
+      - application/vnd.task+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Task'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      summary: show task
+      tags:
+      - task
   /v1/users:
     post:
       description: Create a new user
