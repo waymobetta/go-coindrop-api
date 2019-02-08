@@ -126,6 +126,7 @@ func unmarshalCreateUserPayload(ctx context.Context, service *goa.Service, req *
 type WalletController interface {
 	goa.Muxer
 	Show(*ShowWalletContext) error
+	Update(*UpdateWalletContext) error
 }
 
 // MountWalletController "mounts" a Wallet resource controller on the given service.
@@ -147,4 +148,40 @@ func MountWalletController(service *goa.Service, ctrl WalletController) {
 	}
 	service.Mux.Handle("GET", "/v1/wallets", ctrl.MuxHandler("show", h, nil))
 	service.LogInfo("mount", "ctrl", "Wallet", "action", "Show", "route", "GET /v1/wallets")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateWalletContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*WalletPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	service.Mux.Handle("POST", "/v1/wallets", ctrl.MuxHandler("update", h, unmarshalUpdateWalletPayload))
+	service.LogInfo("mount", "ctrl", "Wallet", "action", "Update", "route", "POST /v1/wallets")
+}
+
+// unmarshalUpdateWalletPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateWalletPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &walletPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
 }

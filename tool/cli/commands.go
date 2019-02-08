@@ -55,6 +55,13 @@ type (
 		UserID      string
 		PrettyPrint bool
 	}
+
+	// UpdateWalletCommand is the command line data structure for the update action of wallet
+	UpdateWalletCommand struct {
+		Payload     string
+		ContentType string
+		PrettyPrint bool
+	}
 )
 
 // RegisterCommands registers the resource action CLI commands.
@@ -111,6 +118,28 @@ Payload example:
 	}
 	tmp4.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp4.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "update",
+		Short: `Update user wallet`,
+	}
+	tmp5 := new(UpdateWalletCommand)
+	sub = &cobra.Command{
+		Use:   `wallet ["/v1/wallets"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "cognitoAuthUserId": "Et non.",
+   "walletAddress": "Corporis aut ullam."
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
+	}
+	tmp5.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp5.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 }
@@ -377,4 +406,37 @@ func (cmd *ShowWalletCommand) Run(c *client.Client, args []string) error {
 func (cmd *ShowWalletCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var userID string
 	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
+}
+
+// Run makes the HTTP request corresponding to the UpdateWalletCommand command.
+func (cmd *UpdateWalletCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/v1/wallets"
+	}
+	var payload client.WalletPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.UpdateWallet(ctx, path, &payload, cmd.ContentType)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *UpdateWalletCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 }

@@ -11,6 +11,7 @@
 package client
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"net/http"
@@ -47,6 +48,49 @@ func (c *Client) NewShowWalletRequest(ctx context.Context, path string, userID *
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, err
+	}
+	return req, nil
+}
+
+// UpdateWalletPath computes a request path to the update action of wallet.
+func UpdateWalletPath() string {
+
+	return fmt.Sprintf("/v1/wallets")
+}
+
+// Update user wallet
+func (c *Client) UpdateWallet(ctx context.Context, path string, payload *WalletPayload, contentType string) (*http.Response, error) {
+	req, err := c.NewUpdateWalletRequest(ctx, path, payload, contentType)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewUpdateWalletRequest create the request corresponding to the update action endpoint of the wallet resource.
+func (c *Client) NewUpdateWalletRequest(ctx context.Context, path string, payload *WalletPayload, contentType string) (*http.Request, error) {
+	var body bytes.Buffer
+	if contentType == "" {
+		contentType = "*/*" // Use default encoder
+	}
+	err := c.Encoder.Encode(payload, &body, contentType)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode body: %s", err)
+	}
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("POST", u.String(), &body)
+	if err != nil {
+		return nil, err
+	}
+	header := req.Header
+	if contentType == "*/*" {
+		header.Set("Content-Type", "application/json")
+	} else {
+		header.Set("Content-Type", contentType)
 	}
 	return req, nil
 }

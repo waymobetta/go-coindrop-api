@@ -49,3 +49,13 @@ func (c *WalletController) Show(ctx *app.ShowWalletContext) error {
 	return ctx.OK(res)
 	// WalletController_Show: end_implement
 }
+
+// Update runs the update action.
+func (c *WalletController) Update(ctx *app.UpdateWalletContext) error {
+	// WalletController_Update: start_implement
+
+	// Put your logic here
+
+	return nil
+	// WalletController_Update: end_implement
+}
