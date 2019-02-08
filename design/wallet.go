@@ -20,6 +20,17 @@ var _ = Resource("wallet", func() {
 		Response(OK, WalletMedia)
 		Response(NotFound, StandardErrorMedia)
 	})
+
+	Action("update", func() {
+		Description("Update user wallet")
+		Routing(POST(""))
+		Payload(WalletPayload)
+		Response(OK)
+		Response(NotFound)
+		Response(BadRequest, StandardErrorMedia)
+		Response(Gone, StandardErrorMedia)
+		Response(InternalServerError, StandardErrorMedia)
+	})
 })
 
 // WalletMedia ...
@@ -36,4 +47,12 @@ var WalletMedia = MediaType("application/vnd.wallet+json", func() {
 	View("default", func() {
 		Attribute("walletAddress")
 	})
+})
+
+// WalletPayload is the payload for updating a user's wallet
+var WalletPayload = Type("WalletPayload", func() {
+	Description("Wallet payload")
+	Attribute("cognitoAuthUserId", String, "Cognito auth user ID")
+	Attribute("walletAddress", String, "Wallet address")
+	Required("cognitoAuthUserId", "walletAddress")
 })
