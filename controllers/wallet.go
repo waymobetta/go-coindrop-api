@@ -27,12 +27,23 @@ func (c *WalletController) Show(ctx *app.ShowWalletContext) error {
 
 	// Put your logic here
 
-	log.Println(ctx.Params.Get("userId"))
+	user := new(db.User)
+	user.AuthUserID = ctx.Params.Get("userId")
 
-	walletAddress := "hello world"
+	// return a user's wallet using the AWS cognito user ID as the key
+	_, err := c.db.GetWallet(user)
+	if err != nil {
+		log.Errorf("[controller/user] %v", err)
+		return ctx.NotFound(&app.StandardError{
+			Code:    400,
+			Message: "could not get wallet from db",
+		})
+	}
+
+	log.Printf("[controller/user] returned wallet for coindrop user: %v\n", user.AuthUserID)
 
 	res := &app.Wallet{
-		WalletAddress: walletAddress,
+		WalletAddress: user.WalletAddress,
 	}
 
 	return ctx.OK(res)
