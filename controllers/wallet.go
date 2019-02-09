@@ -33,14 +33,14 @@ func (c *WalletController) Show(ctx *app.ShowWalletContext) error {
 	// return a user's wallet using the AWS cognito user ID as the key
 	_, err := c.db.GetWallet(user)
 	if err != nil {
-		log.Errorf("[controller/user] %v", err)
+		log.Errorf("[controller/wallet] %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
 			Message: "could not get wallet from db",
 		})
 	}
 
-	log.Printf("[controller/user] returned wallet for coindrop user: %v\n", user.AuthUserID)
+	log.Printf("[controller/wallet] returned wallet for coindrop user: %v\n", user.AuthUserID)
 
 	res := &app.Wallet{
 		WalletAddress: user.WalletAddress,
@@ -62,14 +62,14 @@ func (c *WalletController) Update(ctx *app.UpdateWalletContext) error {
 
 	_, err := c.db.UpdateWallet(user)
 	if err != nil {
-		log.Errorf("[controller/user] %v", err)
+		log.Errorf("[controller/wallet] %v", err)
 		return ctx.BadRequest(&app.StandardError{
 			Code:    400,
-			Message: "could not insert user to db",
+			Message: "could not update wallet in db",
 		})
 	}
 
-	log.Printf("[controller/user] successfully updated wallet for coindrop user: %v\n", user.AuthUserID)
+	log.Printf("[controller/wallet] successfully updated wallet for coindrop user: %v\n", user.AuthUserID)
 
 	return ctx.OK(nil)
 	// WalletController_Update: end_implement
