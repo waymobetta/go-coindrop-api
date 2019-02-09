@@ -77,7 +77,7 @@ func main() {
 	walletCtrlr := controllers.NewWalletController(service, dbs)
 	app.MountWalletController(service, walletCtrlr)
 
-	taskCtrlr := controllers.NewTaskController(service)
+	taskCtrlr := controllers.NewTaskController(service, dbs)
 	app.MountTaskController(service, taskCtrlr)
 
 	// goa handler
