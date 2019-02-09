@@ -16,23 +16,23 @@ import (
 	"net/http"
 )
 
-// ShowTaskContext provides the task show action context.
-type ShowTaskContext struct {
+// ShowTasksContext provides the tasks show action context.
+type ShowTasksContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
 	UserID *string
 }
 
-// NewShowTaskContext parses the incoming request URL and body, performs validations and creates the
-// context used by the task controller show action.
-func NewShowTaskContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowTaskContext, error) {
+// NewShowTasksContext parses the incoming request URL and body, performs validations and creates the
+// context used by the tasks controller show action.
+func NewShowTasksContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowTasksContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := ShowTaskContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := ShowTasksContext{Context: ctx, ResponseData: resp, RequestData: req}
 	paramUserID := req.Params["userId"]
 	if len(paramUserID) > 0 {
 		rawUserID := paramUserID[0]
@@ -47,15 +47,15 @@ func NewShowTaskContext(ctx context.Context, r *http.Request, service *goa.Servi
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowTaskContext) OK(r *Task) error {
+func (ctx *ShowTasksContext) OK(r *Tasks) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.task+json")
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.tasks+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *ShowTaskContext) NotFound(r *StandardError) error {
+func (ctx *ShowTasksContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}

@@ -33,20 +33,12 @@ func (mt *StandardError) Validate() (err error) {
 	return
 }
 
-// A task (default view)
+// Tasks (default view)
 //
-// Identifier: application/vnd.task+json; view=default
-type Task struct {
-	// task name
-	TaskName string `form:"taskName" json:"taskName" yaml:"taskName" xml:"taskName"`
-}
-
-// Validate validates the Task media type instance.
-func (mt *Task) Validate() (err error) {
-	if mt.TaskName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "taskName"))
-	}
-	return
+// Identifier: application/vnd.tasks+json; view=default
+type Tasks struct {
+	// list of tasks
+	TaskList interface{} `form:"taskList" json:"taskList" yaml:"taskList" xml:"taskList"`
 }
 
 // A user (default view)

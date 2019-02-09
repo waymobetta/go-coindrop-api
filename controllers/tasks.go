@@ -7,23 +7,23 @@ import (
 	"github.com/waymobetta/go-coindrop-api/db"
 )
 
-// TaskController implements the task resource.
-type TaskController struct {
+// TasksController implements the tasks resource.
+type TasksController struct {
 	*goa.Controller
 	db *db.DB
 }
 
-// NewTaskController creates a task controller.
-func NewTaskController(service *goa.Service, db *db.DB) *TaskController {
-	return &TaskController{
-		Controller: service.NewController("TaskController"),
+// NewTasksController creates a tasks controller.
+func NewTasksController(service *goa.Service, db *db.DB) *TasksController {
+	return &TasksController{
+		Controller: service.NewController("TasksController"),
 		db:         db,
 	}
 }
 
 // Show runs the show action.
-func (c *TaskController) Show(ctx *app.ShowTaskContext) error {
-	// TaskController_Show: start_implement
+func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
+	// TasksController_Show: start_implement
 
 	// Put your logic here
 
@@ -38,7 +38,7 @@ func (c *TaskController) Show(ctx *app.ShowTaskContext) error {
 			Message: "could not get user's tasks from db",
 		})
 	}
-	
+
 	// initialize new variable tasks of Tasks struct
 	tasks := new(db.Tasks)
 
@@ -51,7 +51,7 @@ func (c *TaskController) Show(ctx *app.ShowTaskContext) error {
 			Message: "could not get tasks from db",
 		})
 	}
-	
+
 	userTasks := new(db.Tasks)
 
 	// TODO:
@@ -72,12 +72,9 @@ func (c *TaskController) Show(ctx *app.ShowTaskContext) error {
 
 	log.Printf("[controller/task] returned task for coindrop user: %v\n", userTask.AuthUserID)
 
-	// TODO:
-	// need fix to return entire slice of struct objects instead of simply returning a string
-
-	res := &app.Task{
-		TaskName: userTasks.Tasks[0].Title,
+	res := &app.Tasks{
+		TaskList: userTasks.Tasks,
 	}
 	return ctx.OK(res)
-	// TaskController_Show: end_implement
+	// TasksController_Show: end_implement
 }

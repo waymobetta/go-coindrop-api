@@ -31,14 +31,14 @@ func initService(service *goa.Service) {
 	service.Decoder.Register(goa.NewJSONDecoder, "*/*")
 }
 
-// TaskController is the controller interface for the Task actions.
-type TaskController interface {
+// TasksController is the controller interface for the Tasks actions.
+type TasksController interface {
 	goa.Muxer
-	Show(*ShowTaskContext) error
+	Show(*ShowTasksContext) error
 }
 
-// MountTaskController "mounts" a Task resource controller on the given service.
-func MountTaskController(service *goa.Service, ctrl TaskController) {
+// MountTasksController "mounts" a Tasks resource controller on the given service.
+func MountTasksController(service *goa.Service, ctrl TasksController) {
 	initService(service)
 	var h goa.Handler
 
@@ -48,14 +48,14 @@ func MountTaskController(service *goa.Service, ctrl TaskController) {
 			return err
 		}
 		// Build the context
-		rctx, err := NewShowTaskContext(ctx, req, service)
+		rctx, err := NewShowTasksContext(ctx, req, service)
 		if err != nil {
 			return err
 		}
 		return ctrl.Show(rctx)
 	}
 	service.Mux.Handle("GET", "/v1/tasks", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Task", "action", "Show", "route", "GET /v1/tasks")
+	service.LogInfo("mount", "ctrl", "Tasks", "action", "Show", "route", "GET /v1/tasks")
 }
 
 // UserController is the controller interface for the User actions.

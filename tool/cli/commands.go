@@ -28,8 +28,8 @@ import (
 )
 
 type (
-	// ShowTaskCommand is the command line data structure for the show action of task
-	ShowTaskCommand struct {
+	// ShowTasksCommand is the command line data structure for the show action of tasks
+	ShowTasksCommand struct {
 		// User ID
 		UserID      string
 		PrettyPrint bool
@@ -80,7 +80,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 Payload example:
 
 {
-   "cognitoAuthUserId": "Omnis labore."
+   "cognitoAuthUserId": "Autem est."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
@@ -92,9 +92,9 @@ Payload example:
 		Use:   "show",
 		Short: `show action`,
 	}
-	tmp2 := new(ShowTaskCommand)
+	tmp2 := new(ShowTasksCommand)
 	sub = &cobra.Command{
-		Use:   `task ["/v1/tasks"]`,
+		Use:   `tasks ["/v1/tasks"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
@@ -133,8 +133,8 @@ Payload example:
 Payload example:
 
 {
-   "cognitoAuthUserId": "Et non.",
-   "walletAddress": "Corporis aut ullam."
+   "cognitoAuthUserId": "Omnis labore.",
+   "walletAddress": "Et non."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
 	}
@@ -297,8 +297,8 @@ func boolArray(ins []string) ([]bool, error) {
 	return vals, nil
 }
 
-// Run makes the HTTP request corresponding to the ShowTaskCommand command.
-func (cmd *ShowTaskCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the ShowTasksCommand command.
+func (cmd *ShowTasksCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
@@ -307,7 +307,7 @@ func (cmd *ShowTaskCommand) Run(c *client.Client, args []string) error {
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ShowTask(ctx, path, stringFlagVal("userId", cmd.UserID))
+	resp, err := c.ShowTasks(ctx, path, stringFlagVal("userId", cmd.UserID))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -318,7 +318,7 @@ func (cmd *ShowTaskCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ShowTaskCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+func (cmd *ShowTasksCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var userID string
 	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
 }

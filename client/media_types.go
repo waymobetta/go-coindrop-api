@@ -41,25 +41,17 @@ func (c *Client) DecodeStandardError(resp *http.Response) (*StandardError, error
 	return &decoded, err
 }
 
-// A task (default view)
+// Tasks (default view)
 //
-// Identifier: application/vnd.task+json; view=default
-type Task struct {
-	// task name
-	TaskName string `form:"taskName" json:"taskName" yaml:"taskName" xml:"taskName"`
+// Identifier: application/vnd.tasks+json; view=default
+type Tasks struct {
+	// list of tasks
+	TaskList interface{} `form:"taskList" json:"taskList" yaml:"taskList" xml:"taskList"`
 }
 
-// Validate validates the Task media type instance.
-func (mt *Task) Validate() (err error) {
-	if mt.TaskName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "taskName"))
-	}
-	return
-}
-
-// DecodeTask decodes the Task instance encoded in resp body.
-func (c *Client) DecodeTask(resp *http.Response) (*Task, error) {
-	var decoded Task
+// DecodeTasks decodes the Tasks instance encoded in resp body.
+func (c *Client) DecodeTasks(resp *http.Response) (*Tasks, error) {
+	var decoded Tasks
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
 }

@@ -15,8 +15,8 @@ import (
 	"strings"
 )
 
-// TaskHref returns the resource href.
-func TaskHref() string {
+// TasksHref returns the resource href.
+func TasksHref() string {
 	return "/v1/tasks"
 }
 

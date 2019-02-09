@@ -77,8 +77,8 @@ func main() {
 	walletCtrlr := controllers.NewWalletController(service, dbs)
 	app.MountWalletController(service, walletCtrlr)
 
-	taskCtrlr := controllers.NewTaskController(service, dbs)
-	app.MountTaskController(service, taskCtrlr)
+	tasksCtrlr := controllers.NewTasksController(service, dbs)
+	app.MountTasksController(service, tasksCtrlr)
 
 	// goa handler
 	goaHandler := mw.RateLimitHandler(service.Server.Handler)

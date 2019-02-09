@@ -24,42 +24,41 @@ definitions:
     - message
     title: 'Mediatype identifier: application/standard_error+json; view=default'
     type: object
-  Task:
-    description: A task (default view)
+  Tasks:
+    description: Tasks (default view)
     example:
-      taskName: Eaque facere voluptates consequatur nihil odit.
+      taskList: false
     properties:
-      taskName:
-        description: task name
-        example: Eaque facere voluptates consequatur nihil odit.
-        type: string
+      taskList:
+        description: list of tasks
+        example: false
     required:
-    - taskName
-    title: 'Mediatype identifier: application/vnd.task+json; view=default'
+    - taskList
+    title: 'Mediatype identifier: application/vnd.tasks+json; view=default'
     type: object
   User:
     description: A user (default view)
     example:
-      cognitoAuthUserId: Hic illum veniam magni nam perferendis.
-      id: Quis ut unde aliquam voluptatibus.
-      name: Aspernatur iure amet tenetur non ut.
-      walletAddress: Corrupti eum fugit eaque.
+      cognitoAuthUserId: Aut cumque consequatur asperiores velit hic illum.
+      id: Magni nam perferendis et quis ut.
+      name: Aliquam voluptatibus ut aspernatur iure amet.
+      walletAddress: Non ut.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Hic illum veniam magni nam perferendis.
+        example: Aut cumque consequatur asperiores velit hic illum.
         type: string
       id:
         description: Unique user ID
-        example: Quis ut unde aliquam voluptatibus.
+        example: Magni nam perferendis et quis ut.
         type: string
       name:
         description: Name of user
-        example: Aspernatur iure amet tenetur non ut.
+        example: Aliquam voluptatibus ut aspernatur iure amet.
         type: string
       walletAddress:
         description: Wallet address
-        example: Corrupti eum fugit eaque.
+        example: Non ut.
         type: string
     required:
     - id
@@ -68,11 +67,11 @@ definitions:
   UserPayload:
     description: User payload
     example:
-      cognitoAuthUserId: Omnis labore.
+      cognitoAuthUserId: Autem est.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Omnis labore.
+        example: Autem est.
         type: string
     required:
     - cognitoAuthUserId
@@ -81,11 +80,11 @@ definitions:
   Wallet:
     description: A wallet (default view)
     example:
-      walletAddress: Autem est.
+      walletAddress: Corrupti eum fugit eaque.
     properties:
       walletAddress:
         description: wallet address
-        example: Autem est.
+        example: Corrupti eum fugit eaque.
         type: string
     required:
     - walletAddress
@@ -94,16 +93,16 @@ definitions:
   WalletPayload:
     description: Wallet payload
     example:
-      cognitoAuthUserId: Et non.
-      walletAddress: Corporis aut ullam.
+      cognitoAuthUserId: Omnis labore.
+      walletAddress: Et non.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Et non.
+        example: Omnis labore.
         type: string
       walletAddress:
         description: Wallet address
-        example: Corporis aut ullam.
+        example: Et non.
         type: string
     required:
     - cognitoAuthUserId
@@ -118,8 +117,8 @@ info:
 paths:
   /v1/tasks:
     get:
-      description: Get user task
-      operationId: task#show
+      description: Get user tasks
+      operationId: tasks#show
       parameters:
       - description: User ID
         in: query
@@ -129,21 +128,21 @@ paths:
         type: string
       produces:
       - application/standard_error+json
-      - application/vnd.task+json
+      - application/vnd.tasks+json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/Task'
+            $ref: '#/definitions/Tasks'
         "404":
           description: Not Found
           schema:
             $ref: '#/definitions/Standard_error'
       schemes:
       - http
-      summary: show task
+      summary: show tasks
       tags:
-      - task
+      - tasks
   /v1/users:
     post:
       description: Create a new user

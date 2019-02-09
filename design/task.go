@@ -5,11 +5,11 @@ import (
 	. "github.com/goadesign/goa/design/apidsl" // Use . imports to enable the DSL
 )
 
-var _ = Resource("task", func() {
+var _ = Resource("tasks", func() {
 	BasePath("/v1/tasks")
 
 	Action("show", func() {
-		Description("Get user task")
+		Description("Get user tasks")
 		Routing(GET(""))
 		Params(func() {
 			Param("userId", String, "User ID", func() {
@@ -17,20 +17,20 @@ var _ = Resource("task", func() {
 				Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
 			})
 		})
-		Response(OK, TaskMedia)
+		Response(OK, TasksMedia)
 		Response(NotFound, StandardErrorMedia)
 	})
 })
 
-// TaskMedia ...
-var TaskMedia = MediaType("application/vnd.task+json", func() {
-	Description("A task")
+// TasksMedia ...
+var TasksMedia = MediaType("application/vnd.tasks+json", func() {
+	Description("Tasks")
 	Attributes(func() {
 		Attribute("userId", String, "user ID")
-		Attribute("taskName", String, "task name")
-		Required("taskName")
+		Attribute("taskList", Any, "list of tasks")
+		Required("taskList")
 	})
 	View("default", func() {
-		Attribute("taskName")
+		Attribute("taskList")
 	})
 })
