@@ -24,6 +24,31 @@ definitions:
     - message
     title: 'Mediatype identifier: application/standard_error+json; view=default'
     type: object
+  TaskPayload:
+    description: Task payload
+    example:
+      cognitoAuthUserId: Autem est.
+      taskName: Omnis labore.
+      taskState: Et non.
+    properties:
+      cognitoAuthUserId:
+        description: Cognito auth user ID
+        example: Autem est.
+        type: string
+      taskName:
+        description: task name
+        example: Omnis labore.
+        type: string
+      taskState:
+        description: task state
+        example: Et non.
+        type: string
+    required:
+    - cognitoAuthUserId
+    - taskName
+    - taskState
+    title: TaskPayload
+    type: object
   Tasks:
     description: Tasks (default view)
     example:
@@ -67,11 +92,11 @@ definitions:
   UserPayload:
     description: User payload
     example:
-      cognitoAuthUserId: Autem est.
+      cognitoAuthUserId: Corporis aut ullam.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Autem est.
+        example: Corporis aut ullam.
         type: string
     required:
     - cognitoAuthUserId
@@ -93,16 +118,16 @@ definitions:
   WalletPayload:
     description: Wallet payload
     example:
-      cognitoAuthUserId: Omnis labore.
-      walletAddress: Et non.
+      cognitoAuthUserId: Officiis odit vero eum.
+      walletAddress: Quo rerum saepe adipisci error itaque velit.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Omnis labore.
+        example: Officiis odit vero eum.
         type: string
       walletAddress:
         description: Wallet address
-        example: Et non.
+        example: Quo rerum saepe adipisci error itaque velit.
         type: string
     required:
     - cognitoAuthUserId
@@ -141,6 +166,41 @@ paths:
       schemes:
       - http
       summary: show tasks
+      tags:
+      - tasks
+    post:
+      description: Update user task state
+      operationId: tasks#update
+      parameters:
+      - description: Task payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/TaskPayload'
+      produces:
+      - application/standard_error+json
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      summary: update tasks
       tags:
       - tasks
   /v1/users:
@@ -279,8 +339,6 @@ responses:
     description: Not Found
   OK:
     description: OK
-    schema:
-      $ref: '#/definitions/User'
 schemes:
 - http
 swagger: "2.0"

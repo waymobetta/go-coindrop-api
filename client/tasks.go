@@ -11,6 +11,7 @@
 package client
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"net/http"
@@ -47,6 +48,49 @@ func (c *Client) NewShowTasksRequest(ctx context.Context, path string, userID *s
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, err
+	}
+	return req, nil
+}
+
+// UpdateTasksPath computes a request path to the update action of tasks.
+func UpdateTasksPath() string {
+
+	return fmt.Sprintf("/v1/tasks")
+}
+
+// Update user task state
+func (c *Client) UpdateTasks(ctx context.Context, path string, payload *TaskPayload, contentType string) (*http.Response, error) {
+	req, err := c.NewUpdateTasksRequest(ctx, path, payload, contentType)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewUpdateTasksRequest create the request corresponding to the update action endpoint of the tasks resource.
+func (c *Client) NewUpdateTasksRequest(ctx context.Context, path string, payload *TaskPayload, contentType string) (*http.Request, error) {
+	var body bytes.Buffer
+	if contentType == "" {
+		contentType = "*/*" // Use default encoder
+	}
+	err := c.Encoder.Encode(payload, &body, contentType)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode body: %s", err)
+	}
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("POST", u.String(), &body)
+	if err != nil {
+		return nil, err
+	}
+	header := req.Header
+	if contentType == "*/*" {
+		header.Set("Content-Type", "application/json")
+	} else {
+		header.Set("Content-Type", contentType)
 	}
 	return req, nil
 }

@@ -14,6 +14,69 @@ import (
 	"github.com/goadesign/goa"
 )
 
+// Task payload
+type taskPayload struct {
+	// Cognito auth user ID
+	CognitoAuthUserID *string `form:"cognitoAuthUserId,omitempty" json:"cognitoAuthUserId,omitempty" yaml:"cognitoAuthUserId,omitempty" xml:"cognitoAuthUserId,omitempty"`
+	// task name
+	TaskName *string `form:"taskName,omitempty" json:"taskName,omitempty" yaml:"taskName,omitempty" xml:"taskName,omitempty"`
+	// task state
+	TaskState *string `form:"taskState,omitempty" json:"taskState,omitempty" yaml:"taskState,omitempty" xml:"taskState,omitempty"`
+}
+
+// Validate validates the taskPayload type instance.
+func (ut *taskPayload) Validate() (err error) {
+	if ut.CognitoAuthUserID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "cognitoAuthUserId"))
+	}
+	if ut.TaskName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "taskName"))
+	}
+	if ut.TaskState == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "taskState"))
+	}
+	return
+}
+
+// Publicize creates TaskPayload from taskPayload
+func (ut *taskPayload) Publicize() *TaskPayload {
+	var pub TaskPayload
+	if ut.CognitoAuthUserID != nil {
+		pub.CognitoAuthUserID = *ut.CognitoAuthUserID
+	}
+	if ut.TaskName != nil {
+		pub.TaskName = *ut.TaskName
+	}
+	if ut.TaskState != nil {
+		pub.TaskState = *ut.TaskState
+	}
+	return &pub
+}
+
+// Task payload
+type TaskPayload struct {
+	// Cognito auth user ID
+	CognitoAuthUserID string `form:"cognitoAuthUserId" json:"cognitoAuthUserId" yaml:"cognitoAuthUserId" xml:"cognitoAuthUserId"`
+	// task name
+	TaskName string `form:"taskName" json:"taskName" yaml:"taskName" xml:"taskName"`
+	// task state
+	TaskState string `form:"taskState" json:"taskState" yaml:"taskState" xml:"taskState"`
+}
+
+// Validate validates the TaskPayload type instance.
+func (ut *TaskPayload) Validate() (err error) {
+	if ut.CognitoAuthUserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "cognitoAuthUserId"))
+	}
+	if ut.TaskName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "taskName"))
+	}
+	if ut.TaskState == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "taskState"))
+	}
+	return
+}
+
 // User payload
 type userPayload struct {
 	// Cognito auth user ID

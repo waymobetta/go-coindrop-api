@@ -20,6 +20,17 @@ var _ = Resource("tasks", func() {
 		Response(OK, TasksMedia)
 		Response(NotFound, StandardErrorMedia)
 	})
+
+	Action("update", func() {
+		Description("Update user task state")
+		Routing(POST(""))
+		Payload(TaskPayload)
+		Response(OK)
+		Response(NotFound)
+		Response(BadRequest, StandardErrorMedia)
+		Response(Gone, StandardErrorMedia)
+		Response(InternalServerError, StandardErrorMedia)
+	})
 })
 
 // TasksMedia ...
@@ -33,4 +44,13 @@ var TasksMedia = MediaType("application/vnd.tasks+json", func() {
 	View("default", func() {
 		Attribute("taskList")
 	})
+})
+
+// TaskPayload is the payload for creating a task
+var TaskPayload = Type("TaskPayload", func() {
+	Description("Task payload")
+	Attribute("cognitoAuthUserId", String, "Cognito auth user ID")
+	Attribute("taskName", String, "task name")
+	Attribute("taskState", String, "task state")
+	Required("cognitoAuthUserId", "taskName", "taskState")
 })

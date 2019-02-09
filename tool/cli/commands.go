@@ -35,6 +35,13 @@ type (
 		PrettyPrint bool
 	}
 
+	// UpdateTasksCommand is the command line data structure for the update action of tasks
+	UpdateTasksCommand struct {
+		Payload     string
+		ContentType string
+		PrettyPrint bool
+	}
+
 	// CreateUserCommand is the command line data structure for the create action of user
 	CreateUserCommand struct {
 		Payload     string
@@ -80,7 +87,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 Payload example:
 
 {
-   "cognitoAuthUserId": "Autem est."
+   "cognitoAuthUserId": "Corporis aut ullam."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
@@ -122,9 +129,27 @@ Payload example:
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "update",
-		Short: `Update user wallet`,
+		Short: `update action`,
 	}
-	tmp5 := new(UpdateWalletCommand)
+	tmp5 := new(UpdateTasksCommand)
+	sub = &cobra.Command{
+		Use:   `tasks ["/v1/tasks"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "cognitoAuthUserId": "Autem est.",
+   "taskName": "Omnis labore.",
+   "taskState": "Et non."
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
+	}
+	tmp5.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp5.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp6 := new(UpdateWalletCommand)
 	sub = &cobra.Command{
 		Use:   `wallet ["/v1/wallets"]`,
 		Short: ``,
@@ -133,13 +158,13 @@ Payload example:
 Payload example:
 
 {
-   "cognitoAuthUserId": "Omnis labore.",
-   "walletAddress": "Et non."
+   "cognitoAuthUserId": "Officiis odit vero eum.",
+   "walletAddress": "Quo rerum saepe adipisci error itaque velit."
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp6.Run(c, args) },
 	}
-	tmp5.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp5.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp6.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp6.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 }
@@ -321,6 +346,39 @@ func (cmd *ShowTasksCommand) Run(c *client.Client, args []string) error {
 func (cmd *ShowTasksCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var userID string
 	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
+}
+
+// Run makes the HTTP request corresponding to the UpdateTasksCommand command.
+func (cmd *UpdateTasksCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/v1/tasks"
+	}
+	var payload client.TaskPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.UpdateTasks(ctx, path, &payload, cmd.ContentType)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *UpdateTasksCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 }
 
 // Run makes the HTTP request corresponding to the CreateUserCommand command.

@@ -35,6 +35,7 @@ func initService(service *goa.Service) {
 type TasksController interface {
 	goa.Muxer
 	Show(*ShowTasksContext) error
+	Update(*UpdateTasksContext) error
 }
 
 // MountTasksController "mounts" a Tasks resource controller on the given service.
@@ -56,6 +57,42 @@ func MountTasksController(service *goa.Service, ctrl TasksController) {
 	}
 	service.Mux.Handle("GET", "/v1/tasks", ctrl.MuxHandler("show", h, nil))
 	service.LogInfo("mount", "ctrl", "Tasks", "action", "Show", "route", "GET /v1/tasks")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateTasksContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*TaskPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	service.Mux.Handle("POST", "/v1/tasks", ctrl.MuxHandler("update", h, unmarshalUpdateTasksPayload))
+	service.LogInfo("mount", "ctrl", "Tasks", "action", "Update", "route", "POST /v1/tasks")
+}
+
+// unmarshalUpdateTasksPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateTasksPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &taskPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
 }
 
 // UserController is the controller interface for the User actions.
