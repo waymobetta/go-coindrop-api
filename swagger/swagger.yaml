@@ -4,6 +4,30 @@ consumes:
 - application/gob
 - application/x-gob
 definitions:
+  Quiz:
+    description: Quiz (default view)
+    example:
+      quizObject: false
+    properties:
+      quizObject:
+        description: Quiz object
+        example: false
+    required:
+    - quizObject
+    title: 'Mediatype identifier: application/vnd.quiz+json; view=default'
+    type: object
+  Results:
+    description: Quiz results (default view)
+    example:
+      quizResultsList: "1973-10-26T23:57:41Z"
+    properties:
+      quizResultsList:
+        description: quiz results list
+        example: "1973-10-26T23:57:41Z"
+    required:
+    - quizResultsList
+    title: 'Mediatype identifier: application/vnd.results+json; view=default'
+    type: object
   Standard_error:
     description: A standard error response (default view)
     example:
@@ -52,11 +76,11 @@ definitions:
   Tasks:
     description: Tasks (default view)
     example:
-      taskList: false
+      taskList: 348fa2ce-70ad-46c0-84d8-05b0a35b62b5
     properties:
       taskList:
         description: list of tasks
-        example: false
+        example: 348fa2ce-70ad-46c0-84d8-05b0a35b62b5
     required:
     - taskList
     title: 'Mediatype identifier: application/vnd.tasks+json; view=default'
@@ -64,22 +88,22 @@ definitions:
   User:
     description: A user (default view)
     example:
-      cognitoAuthUserId: Aut cumque consequatur asperiores velit hic illum.
-      id: Magni nam perferendis et quis ut.
-      name: Aliquam voluptatibus ut aspernatur iure amet.
+      cognitoAuthUserId: Perferendis et quis ut unde.
+      id: Voluptatibus ut.
+      name: Iure amet.
       walletAddress: Non ut.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Aut cumque consequatur asperiores velit hic illum.
+        example: Perferendis et quis ut unde.
         type: string
       id:
         description: Unique user ID
-        example: Magni nam perferendis et quis ut.
+        example: Voluptatibus ut.
         type: string
       name:
         description: Name of user
-        example: Aliquam voluptatibus ut aspernatur iure amet.
+        example: Iure amet.
         type: string
       walletAddress:
         description: Wallet address
@@ -140,6 +164,61 @@ info:
   title: The Coindrop API
   version: ""
 paths:
+  /v1/quiz:
+    get:
+      description: Get quiz
+      operationId: quiz#show
+      parameters:
+      - description: Quiz title
+        in: query
+        name: quizTitle
+        required: false
+        type: string
+      produces:
+      - application/standard_error+json
+      - application/vnd.quiz+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Quiz'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      summary: show quiz
+      tags:
+      - quiz
+  /v1/quiz/results:
+    get:
+      description: Get quiz results
+      operationId: results#show
+      parameters:
+      - description: User ID
+        in: query
+        name: userId
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        required: false
+        type: string
+      produces:
+      - application/standard_error+json
+      - application/vnd.results+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Results'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      summary: show results
+      tags:
+      - results
   /v1/tasks:
     get:
       description: Get user tasks
