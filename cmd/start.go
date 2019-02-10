@@ -70,7 +70,7 @@ func main() {
 	service.Use(middleware.ErrorHandler(service, true))
 	service.Use(middleware.Recover())
 
-	// Mount "user" controller
+	// Mount controllers
 	userCtrlr := controllers.NewUserController(service, dbs)
 	app.MountUserController(service, userCtrlr)
 
@@ -79,6 +79,12 @@ func main() {
 
 	tasksCtrlr := controllers.NewTasksController(service, dbs)
 	app.MountTasksController(service, tasksCtrlr)
+
+	resultsCtrlr := controllers.NewResultsController(service, dbs)
+	app.MountResultsController(service, resultsCtrlr)
+
+	quizCtrlr := controllers.NewQuizController(service, dbs)
+	app.MountQuizController(service, quizCtrlr)
 
 	// goa handler
 	goaHandler := mw.RateLimitHandler(service.Server.Handler)
@@ -90,7 +96,7 @@ func main() {
 		// limit payload sizes
 		r.Body = http.MaxBytesReader(w, r.Body, 1048576)
 
-		goaRoutesRegex := regexp.MustCompile(`v1/(users|wallets|tasks)`)
+		goaRoutesRegex := regexp.MustCompile(`v1/(users|wallets|tasks|quiz|results)`)
 		// Update regex to include any base goa routes in order to properly forward to goa handler
 		isGoaRoute := goaRoutesRegex.Match([]byte(r.URL.Path))
 
