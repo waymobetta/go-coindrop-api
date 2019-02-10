@@ -15,6 +15,16 @@ import (
 	"strings"
 )
 
+// QuizHref returns the resource href.
+func QuizHref() string {
+	return "/v1/quiz"
+}
+
+// ResultsHref returns the resource href.
+func ResultsHref() string {
+	return "/v1/quiz/results"
+}
+
 // TasksHref returns the resource href.
 func TasksHref() string {
 	return "/v1/tasks"

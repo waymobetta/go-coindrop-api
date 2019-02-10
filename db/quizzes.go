@@ -162,3 +162,41 @@ func (db *DB) GetQuizResults(q *QuizResults) (*QuizResults, error) {
 
 	return q, nil
 }
+
+// GetAllQuizResults returns all info for specific quiz
+func (db *DB) GetAllQuizResults(q *QuizResults, a *AllQuizResults) (*AllQuizResults, error) {
+	// create SQL statement for db query
+	sqlStatement := `SELECT id, title, questions_correct, questions_incorrect, has_taken_quiz FROM coindrop_quiz_results WHERE auth_user_id = $1`
+
+	// execute db query by passing in prepared SQL statement
+	rows, err := db.client.Query(sqlStatement, q.AuthUserID)
+	if err != nil {
+		return a, err
+	}
+
+	defer rows.Close()
+
+	// iterate over rows
+	for rows.Next() {
+		// initialize new struct per user in db to hold user info
+		quizResults := QuizResults{}
+		err = rows.Scan(
+			&quizResults.ID,
+			&quizResults.Title,
+			&quizResults.QuestionsCorrect,
+			&quizResults.QuestionsIncorrect,
+			&quizResults.HasTakenQuiz,
+		)
+		if err != nil {
+			return a, err
+		}
+		// append task object to slice of tasks
+		a.QuizResults = append(a.QuizResults, quizResults)
+	}
+	err = rows.Err()
+	if err != nil {
+		return a, err
+	}
+
+	return a, nil
+}

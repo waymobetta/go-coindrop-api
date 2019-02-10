@@ -127,6 +127,11 @@ type QuizResults struct {
 	HasTakenQuiz       bool   `json:"has_taken_quiz"`
 }
 
+// AllQuizResults struct contains a slice of QuizResults structs
+type AllQuizResults struct {
+	QuizResults []QuizResults `json:"quiz_results_list"`
+}
+
 // Badge struct contains info about a badge
 type Badge struct {
 	ID          int    `json:"id"`

@@ -33,6 +33,22 @@ func (mt *StandardError) Validate() (err error) {
 	return
 }
 
+// Quiz (default view)
+//
+// Identifier: application/vnd.quiz+json; view=default
+type Quiz struct {
+	// Quiz object
+	Quiz interface{} `form:"quiz" json:"quiz" yaml:"quiz" xml:"quiz"`
+}
+
+// Quiz results (default view)
+//
+// Identifier: application/vnd.results+json; view=default
+type Results struct {
+	// quiz results list
+	QuizResultsList interface{} `form:"quizResultsList" json:"quizResultsList" yaml:"quizResultsList" xml:"quizResultsList"`
+}
+
 // Tasks (default view)
 //
 // Identifier: application/vnd.tasks+json; view=default

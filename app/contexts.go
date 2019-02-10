@@ -16,6 +16,93 @@ import (
 	"net/http"
 )
 
+// ShowQuizContext provides the quiz show action context.
+type ShowQuizContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	QuizTitle *string
+}
+
+// NewShowQuizContext parses the incoming request URL and body, performs validations and creates the
+// context used by the quiz controller show action.
+func NewShowQuizContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowQuizContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ShowQuizContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramQuizTitle := req.Params["quizTitle"]
+	if len(paramQuizTitle) > 0 {
+		rawQuizTitle := paramQuizTitle[0]
+		rctx.QuizTitle = &rawQuizTitle
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowQuizContext) OK(r *Quiz) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.quiz+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowQuizContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// ShowResultsContext provides the results show action context.
+type ShowResultsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	UserID *string
+}
+
+// NewShowResultsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the results controller show action.
+func NewShowResultsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowResultsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ShowResultsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramUserID := req.Params["userId"]
+	if len(paramUserID) > 0 {
+		rawUserID := paramUserID[0]
+		rctx.UserID = &rawUserID
+		if rctx.UserID != nil {
+			if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *rctx.UserID); !ok {
+				err = goa.MergeErrors(err, goa.InvalidPatternError(`userId`, *rctx.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+			}
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowResultsContext) OK(r *Results) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.results+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowResultsContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
 // ShowTasksContext provides the tasks show action context.
 type ShowTasksContext struct {
 	context.Context

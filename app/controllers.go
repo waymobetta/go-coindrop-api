@@ -31,6 +31,60 @@ func initService(service *goa.Service) {
 	service.Decoder.Register(goa.NewJSONDecoder, "*/*")
 }
 
+// QuizController is the controller interface for the Quiz actions.
+type QuizController interface {
+	goa.Muxer
+	Show(*ShowQuizContext) error
+}
+
+// MountQuizController "mounts" a Quiz resource controller on the given service.
+func MountQuizController(service *goa.Service, ctrl QuizController) {
+	initService(service)
+	var h goa.Handler
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowQuizContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	service.Mux.Handle("GET", "/v1/quiz", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Quiz", "action", "Show", "route", "GET /v1/quiz")
+}
+
+// ResultsController is the controller interface for the Results actions.
+type ResultsController interface {
+	goa.Muxer
+	Show(*ShowResultsContext) error
+}
+
+// MountResultsController "mounts" a Results resource controller on the given service.
+func MountResultsController(service *goa.Service, ctrl ResultsController) {
+	initService(service)
+	var h goa.Handler
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowResultsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	service.Mux.Handle("GET", "/v1/quiz/results", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Results", "action", "Show", "route", "GET /v1/quiz/results")
+}
+
 // TasksController is the controller interface for the Tasks actions.
 type TasksController interface {
 	goa.Muxer

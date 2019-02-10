@@ -41,6 +41,36 @@ func (c *Client) DecodeStandardError(resp *http.Response) (*StandardError, error
 	return &decoded, err
 }
 
+// Quiz (default view)
+//
+// Identifier: application/vnd.quiz+json; view=default
+type Quiz struct {
+	// Quiz object
+	Quiz interface{} `form:"quiz" json:"quiz" yaml:"quiz" xml:"quiz"`
+}
+
+// DecodeQuiz decodes the Quiz instance encoded in resp body.
+func (c *Client) DecodeQuiz(resp *http.Response) (*Quiz, error) {
+	var decoded Quiz
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// Quiz results (default view)
+//
+// Identifier: application/vnd.results+json; view=default
+type Results struct {
+	// quiz results list
+	QuizResultsList interface{} `form:"quizResultsList" json:"quizResultsList" yaml:"quizResultsList" xml:"quizResultsList"`
+}
+
+// DecodeResults decodes the Results instance encoded in resp body.
+func (c *Client) DecodeResults(resp *http.Response) (*Results, error) {
+	var decoded Results
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // Tasks (default view)
 //
 // Identifier: application/vnd.tasks+json; view=default

@@ -28,6 +28,20 @@ import (
 )
 
 type (
+	// ShowQuizCommand is the command line data structure for the show action of quiz
+	ShowQuizCommand struct {
+		// Quiz title
+		QuizTitle   string
+		PrettyPrint bool
+	}
+
+	// ShowResultsCommand is the command line data structure for the show action of results
+	ShowResultsCommand struct {
+		// User ID
+		UserID      string
+		PrettyPrint bool
+	}
+
 	// ShowTasksCommand is the command line data structure for the show action of tasks
 	ShowTasksCommand struct {
 		// User ID
@@ -99,39 +113,57 @@ Payload example:
 		Use:   "show",
 		Short: `show action`,
 	}
-	tmp2 := new(ShowTasksCommand)
+	tmp2 := new(ShowQuizCommand)
 	sub = &cobra.Command{
-		Use:   `tasks ["/v1/tasks"]`,
+		Use:   `quiz ["/v1/quiz"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
 	tmp2.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp2.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp3 := new(ShowUserCommand)
+	tmp3 := new(ShowResultsCommand)
 	sub = &cobra.Command{
-		Use:   `user ["/v1/users/USERID"]`,
+		Use:   `results ["/v1/quiz/results"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
 	}
 	tmp3.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp3.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp4 := new(ShowWalletCommand)
+	tmp4 := new(ShowTasksCommand)
 	sub = &cobra.Command{
-		Use:   `wallet ["/v1/wallets"]`,
+		Use:   `tasks ["/v1/tasks"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
 	}
 	tmp4.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp4.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
+	tmp5 := new(ShowUserCommand)
+	sub = &cobra.Command{
+		Use:   `user ["/v1/users/USERID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
+	}
+	tmp5.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp5.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp6 := new(ShowWalletCommand)
+	sub = &cobra.Command{
+		Use:   `wallet ["/v1/wallets"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp6.Run(c, args) },
+	}
+	tmp6.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp6.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "update",
 		Short: `update action`,
 	}
-	tmp5 := new(UpdateTasksCommand)
+	tmp7 := new(UpdateTasksCommand)
 	sub = &cobra.Command{
 		Use:   `tasks ["/v1/tasks"]`,
 		Short: ``,
@@ -144,12 +176,12 @@ Payload example:
    "taskName": "Omnis labore.",
    "taskState": "Et non."
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp7.Run(c, args) },
 	}
-	tmp5.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp5.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp7.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp7.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp6 := new(UpdateWalletCommand)
+	tmp8 := new(UpdateWalletCommand)
 	sub = &cobra.Command{
 		Use:   `wallet ["/v1/wallets"]`,
 		Short: ``,
@@ -161,10 +193,10 @@ Payload example:
    "cognitoAuthUserId": "Officiis odit vero eum.",
    "walletAddress": "Quo rerum saepe adipisci error itaque velit."
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp6.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp8.Run(c, args) },
 	}
-	tmp6.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp6.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp8.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp8.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 }
@@ -320,6 +352,58 @@ func boolArray(ins []string) ([]bool, error) {
 		vals = append(vals, *val)
 	}
 	return vals, nil
+}
+
+// Run makes the HTTP request corresponding to the ShowQuizCommand command.
+func (cmd *ShowQuizCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/v1/quiz"
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ShowQuiz(ctx, path, stringFlagVal("quizTitle", cmd.QuizTitle))
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ShowQuizCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var quizTitle string
+	cc.Flags().StringVar(&cmd.QuizTitle, "quizTitle", quizTitle, `Quiz title`)
+}
+
+// Run makes the HTTP request corresponding to the ShowResultsCommand command.
+func (cmd *ShowResultsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/v1/quiz/results"
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ShowResults(ctx, path, stringFlagVal("userId", cmd.UserID))
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ShowResultsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var userID string
+	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
 }
 
 // Run makes the HTTP request corresponding to the ShowTasksCommand command.
