@@ -15,10 +15,10 @@ type UserController struct {
 }
 
 // NewUserController creates a user controller.
-func NewUserController(service *goa.Service, db *db.DB) *UserController {
+func NewUserController(service *goa.Service, dbs *db.DB) *UserController {
 	return &UserController{
 		Controller: service.NewController("UserController"),
-		db:         db,
+		db:         dbs,
 	}
 }
 

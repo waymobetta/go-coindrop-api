@@ -4,14 +4,27 @@ consumes:
 - application/gob
 - application/x-gob
 definitions:
+  Healthcheck:
+    description: Health check (default view)
+    example:
+      status: Eaque facere voluptates consequatur nihil odit.
+    properties:
+      status:
+        description: Status
+        example: Eaque facere voluptates consequatur nihil odit.
+        type: string
+    required:
+    - status
+    title: 'Mediatype identifier: application/vnd.healthcheck+json; view=default'
+    type: object
   Quiz:
     description: Quiz (default view)
     example:
-      quizObject: false
+      quizObject: 0.4464660716835586
     properties:
       quizObject:
         description: Quiz object
-        example: false
+        example: 0.4464660716835586
     required:
     - quizObject
     title: 'Mediatype identifier: application/vnd.quiz+json; view=default'
@@ -19,11 +32,11 @@ definitions:
   Results:
     description: Quiz results (default view)
     example:
-      quizResultsList: "1973-10-26T23:57:41Z"
+      quizResultsList: "1978-09-17T05:00:27Z"
     properties:
       quizResultsList:
         description: quiz results list
-        example: "1973-10-26T23:57:41Z"
+        example: "1978-09-17T05:00:27Z"
     required:
     - quizResultsList
     title: 'Mediatype identifier: application/vnd.results+json; view=default'
@@ -51,21 +64,21 @@ definitions:
   TaskPayload:
     description: Task payload
     example:
-      cognitoAuthUserId: Autem est.
-      taskName: Omnis labore.
-      taskState: Et non.
+      cognitoAuthUserId: Omnis labore.
+      taskName: Et non.
+      taskState: Corporis aut ullam.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Autem est.
+        example: Omnis labore.
         type: string
       taskName:
         description: task name
-        example: Omnis labore.
+        example: Et non.
         type: string
       taskState:
         description: task state
-        example: Et non.
+        example: Corporis aut ullam.
         type: string
     required:
     - cognitoAuthUserId
@@ -76,11 +89,11 @@ definitions:
   Tasks:
     description: Tasks (default view)
     example:
-      taskList: 348fa2ce-70ad-46c0-84d8-05b0a35b62b5
+      taskList: d536c7dd-a63a-4a7f-a775-d2ba77202c34
     properties:
       taskList:
         description: list of tasks
-        example: 348fa2ce-70ad-46c0-84d8-05b0a35b62b5
+        example: d536c7dd-a63a-4a7f-a775-d2ba77202c34
     required:
     - taskList
     title: 'Mediatype identifier: application/vnd.tasks+json; view=default'
@@ -88,26 +101,26 @@ definitions:
   User:
     description: A user (default view)
     example:
-      cognitoAuthUserId: Perferendis et quis ut unde.
-      id: Voluptatibus ut.
-      name: Iure amet.
-      walletAddress: Non ut.
+      cognitoAuthUserId: Unde aliquam voluptatibus ut.
+      id: Iure amet.
+      name: Non ut.
+      walletAddress: Corrupti eum fugit eaque.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Perferendis et quis ut unde.
+        example: Unde aliquam voluptatibus ut.
         type: string
       id:
         description: Unique user ID
-        example: Voluptatibus ut.
+        example: Iure amet.
         type: string
       name:
         description: Name of user
-        example: Iure amet.
+        example: Non ut.
         type: string
       walletAddress:
         description: Wallet address
-        example: Non ut.
+        example: Corrupti eum fugit eaque.
         type: string
     required:
     - id
@@ -116,11 +129,11 @@ definitions:
   UserPayload:
     description: User payload
     example:
-      cognitoAuthUserId: Corporis aut ullam.
+      cognitoAuthUserId: Officiis odit vero eum.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Corporis aut ullam.
+        example: Officiis odit vero eum.
         type: string
     required:
     - cognitoAuthUserId
@@ -129,11 +142,11 @@ definitions:
   Wallet:
     description: A wallet (default view)
     example:
-      walletAddress: Corrupti eum fugit eaque.
+      walletAddress: Autem est.
     properties:
       walletAddress:
         description: wallet address
-        example: Corrupti eum fugit eaque.
+        example: Autem est.
         type: string
     required:
     - walletAddress
@@ -142,16 +155,16 @@ definitions:
   WalletPayload:
     description: Wallet payload
     example:
-      cognitoAuthUserId: Officiis odit vero eum.
-      walletAddress: Quo rerum saepe adipisci error itaque velit.
+      cognitoAuthUserId: Quo rerum saepe adipisci error itaque velit.
+      walletAddress: Rerum et natus est.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Officiis odit vero eum.
+        example: Quo rerum saepe adipisci error itaque velit.
         type: string
       walletAddress:
         description: Wallet address
-        example: Quo rerum saepe adipisci error itaque velit.
+        example: Rerum et natus est.
         type: string
     required:
     - cognitoAuthUserId
@@ -164,6 +177,24 @@ info:
   title: The Coindrop API
   version: ""
 paths:
+  /v1/healthcheck:
+    get:
+      description: Returns OK if system is healthy
+      operationId: healthcheck#show
+      produces:
+      - application/vnd.healthcheck+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Healthcheck'
+        "404":
+          description: Not Found
+      schemes:
+      - http
+      summary: show healthcheck
+      tags:
+      - healthcheck
   /v1/quiz:
     get:
       description: Get quiz

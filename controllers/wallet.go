@@ -14,10 +14,10 @@ type WalletController struct {
 }
 
 // NewWalletController creates a wallet controller.
-func NewWalletController(service *goa.Service, db *db.DB) *WalletController {
+func NewWalletController(service *goa.Service, dbs *db.DB) *WalletController {
 	return &WalletController{
 		Controller: service.NewController("WalletController"),
-		db:         db,
+		db:         dbs,
 	}
 }
 

@@ -14,10 +14,10 @@ type ResultsController struct {
 }
 
 // NewResultsController creates a results controller.
-func NewResultsController(service *goa.Service, db *db.DB) *ResultsController {
+func NewResultsController(service *goa.Service, dbs *db.DB) *ResultsController {
 	return &ResultsController{
 		Controller: service.NewController("ResultsController"),
-		db:         db,
+		db:         dbs,
 	}
 }
 

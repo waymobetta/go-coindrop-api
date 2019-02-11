@@ -14,10 +14,10 @@ type QuizController struct {
 }
 
 // NewQuizController creates a quiz controller.
-func NewQuizController(service *goa.Service, db *db.DB) *QuizController {
+func NewQuizController(service *goa.Service, dbs *db.DB) *QuizController {
 	return &QuizController{
 		Controller: service.NewController("QuizController"),
-		db:         db,
+		db:         dbs,
 	}
 }
 
@@ -42,7 +42,7 @@ func (c *QuizController) Show(ctx *app.ShowQuizContext) error {
 	log.Printf("[controller/quiz] returned information for coindrop quiz: %v\n", quiz.Title)
 
 	res := &app.Quiz{
-		Quiz: quiz,
+		QuizObject: quiz,
 	}
 	return ctx.OK(res)
 	// QuizController_Show: end_implement

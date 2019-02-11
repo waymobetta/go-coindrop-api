@@ -1,5 +1,13 @@
 all: deploy
 
+.PHONY: test
+test:
+	go test -v ./...
+
+.PHONY: test/auth
+test/auth:
+	go test -v auth/*.go
+
 .PHONY: start
 start:
 	@go run cmd/start.go
@@ -45,9 +53,12 @@ prep:
 goa:
 	@goagen bootstrap -d github.com/waymobetta/go-coindrop-api/design
 	@rm main.go
-	#@rm user.go
-	#@rm wallet.go
-	#@rm task.go
+	@rm healthcheck.go
+	@rm user.go
+	@rm wallet.go
+	@rm tasks.go
+	@rm quiz.go
+	@rm results.go
 	@MAKE swagger
 
 .PHONY: swagger

@@ -14,6 +14,7 @@ import (
 	"github.com/rs/cors"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
+	auth "github.com/waymobetta/go-coindrop-api/auth"
 	controllers "github.com/waymobetta/go-coindrop-api/controllers"
 	"github.com/waymobetta/go-coindrop-api/db"
 	routehandlers "github.com/waymobetta/go-coindrop-api/handlers"
@@ -36,12 +37,15 @@ func main() {
 		SSLMode: os.Getenv("POSTGRES_SSL_MODE"),
 	})
 
+	cognitoRegion := os.Getenv("AWS_COINDROP_COGNITO_REGION")
+	cognitoUserPoolID := os.Getenv("AWS_COINDROP_COGNITO_USER_POOL_ID")
+
 	hdlrs := routehandlers.NewHandlers(&routehandlers.Config{
 		DB: dbs,
 	})
 	rtr := router.NewRouter(&router.Config{
-		Region:     os.Getenv("AWS_COINDROP_COGNITO_REGION"),
-		UserPoolID: os.Getenv("AWS_COINDROP_COGNITO_USER_POOL_ID"),
+		Region:     cognitoRegion,
+		UserPoolID: cognitoUserPoolID,
 		Handlers:   hdlrs,
 	})
 
@@ -69,8 +73,15 @@ func main() {
 	service.Use(middleware.LogRequest(true))
 	service.Use(middleware.ErrorHandler(service, true))
 	service.Use(middleware.Recover())
+	service.Use(mw.Auth(auth.NewAuth(&auth.Config{
+		CognitoRegion:     cognitoRegion,
+		CognitoUserPoolID: cognitoUserPoolID,
+	})))
 
 	// Mount controllers
+	healthcheckCtrlr := controllers.NewHealthcheckController(service, dbs)
+	app.MountHealthcheckController(service, healthcheckCtrlr)
+
 	userCtrlr := controllers.NewUserController(service, dbs)
 	app.MountUserController(service, userCtrlr)
 
@@ -96,9 +107,9 @@ func main() {
 		// limit payload sizes
 		r.Body = http.MaxBytesReader(w, r.Body, 1048576)
 
-		goaRoutesRegex := regexp.MustCompile(`v1/(users|wallets|tasks|quiz|results)`)
 		// Update regex to include any base goa routes in order to properly forward to goa handler
-		isGoaRoute := goaRoutesRegex.Match([]byte(r.URL.Path))
+		goaRoutesRegex := regexp.MustCompile(`v1/(healthcheck|users|wallets|tasks|quiz|results)`)
+		isGoaRoute := goaRoutesRegex.Match([]byte(strings.ToLower(r.URL.Path)))
 
 		if isGoaRoute {
 			goaHandler.ServeHTTP(w, r)
