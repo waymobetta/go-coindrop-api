@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/goadesign/goa"
+	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
 )
@@ -25,7 +26,15 @@ func (c *HealthcheckController) Show(ctx *app.ShowHealthcheckContext) error {
 	// HealthcheckController_Show: start_implement
 
 	// Put your logic here
-	// TODO: ping database
+	err := c.db.Ping()
+	if err != nil {
+		log.Errorf("[controller/healthcheck] %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could not ping db",
+		})
+	}
+
 	res := &app.Healthcheck{
 		Status: "OK",
 	}

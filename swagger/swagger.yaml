@@ -89,11 +89,11 @@ definitions:
   Tasks:
     description: Tasks (default view)
     example:
-      taskList: d536c7dd-a63a-4a7f-a775-d2ba77202c34
+      taskList: c4dd3370-fd38-444a-af02-8e082bfcf59f
     properties:
       taskList:
         description: list of tasks
-        example: d536c7dd-a63a-4a7f-a775-d2ba77202c34
+        example: c4dd3370-fd38-444a-af02-8e082bfcf59f
     required:
     - taskList
     title: 'Mediatype identifier: application/vnd.tasks+json; view=default'
@@ -177,11 +177,12 @@ info:
   title: The Coindrop API
   version: ""
 paths:
-  /v1/healthcheck:
+  /v1/health:
     get:
       description: Returns OK if system is healthy
       operationId: healthcheck#show
       produces:
+      - application/standard_error+json
       - application/vnd.healthcheck+json
       responses:
         "200":
@@ -190,6 +191,12 @@ paths:
             $ref: '#/definitions/Healthcheck'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
       schemes:
       - http
       summary: show healthcheck

@@ -44,3 +44,8 @@ func NewDB(config *Config) *DB {
 		client: client,
 	}
 }
+
+// Ping ...
+func (db *DB) Ping() error {
+	return db.client.Ping()
+}

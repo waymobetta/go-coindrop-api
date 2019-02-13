@@ -120,7 +120,7 @@ Payload example:
 	}
 	tmp2 := new(ShowHealthcheckCommand)
 	sub = &cobra.Command{
-		Use:   `healthcheck ["/v1/healthcheck"]`,
+		Use:   `healthcheck ["/v1/health"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
@@ -374,7 +374,7 @@ func (cmd *ShowHealthcheckCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = "/v1/healthcheck"
+		path = "/v1/health"
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)

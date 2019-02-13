@@ -44,9 +44,19 @@ func (ctx *ShowHealthcheckContext) OK(r *Healthcheck) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *ShowHealthcheckContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
+func (ctx *ShowHealthcheckContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ShowHealthcheckContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
 // ShowQuizContext provides the quiz show action context.

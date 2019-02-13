@@ -2,12 +2,12 @@ module github.com/waymobetta/go-coindrop-api
 
 require (
 	github.com/ajg/form v0.0.0-20160822230020-523a5da1a92f // indirect
-	github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da // indirect
+	github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da
 	github.com/aws/aws-sdk-go v1.16.31 // indirect
 	github.com/beefsack/go-rate v0.0.0-20180408011153-efa7637bb9b6 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598 // indirect
-	github.com/dimfeld/httptreemux v5.0.1+incompatible // indirect
+	github.com/dimfeld/httptreemux v5.0.1+incompatible
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/go-logfmt/logfmt v0.4.0 // indirect
 	github.com/goadesign/goa v1.4.1

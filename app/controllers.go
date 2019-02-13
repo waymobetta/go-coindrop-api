@@ -54,8 +54,8 @@ func MountHealthcheckController(service *goa.Service, ctrl HealthcheckController
 		}
 		return ctrl.Show(rctx)
 	}
-	service.Mux.Handle("GET", "/v1/healthcheck", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Healthcheck", "action", "Show", "route", "GET /v1/healthcheck")
+	service.Mux.Handle("GET", "/v1/health", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Healthcheck", "action", "Show", "route", "GET /v1/health")
 }
 
 // QuizController is the controller interface for the Quiz actions.

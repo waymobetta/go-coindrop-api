@@ -17,7 +17,7 @@ import (
 
 // HealthcheckHref returns the resource href.
 func HealthcheckHref() string {
-	return "/v1/healthcheck"
+	return "/v1/health"
 }
 
 // QuizHref returns the resource href.

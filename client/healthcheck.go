@@ -20,7 +20,7 @@ import (
 // ShowHealthcheckPath computes a request path to the show action of healthcheck.
 func ShowHealthcheckPath() string {
 
-	return fmt.Sprintf("/v1/healthcheck")
+	return fmt.Sprintf("/v1/health")
 }
 
 // Returns OK if system is healthy
