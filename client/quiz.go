@@ -48,5 +48,10 @@ func (c *Client) NewShowQuizRequest(ctx context.Context, path string, quizTitle 
 	if err != nil {
 		return nil, err
 	}
+	if c.JWTSigner != nil {
+		if err := c.JWTSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
 	return req, nil
 }

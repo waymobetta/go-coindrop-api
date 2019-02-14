@@ -5,11 +5,21 @@ import (
 	. "github.com/goadesign/goa/design/apidsl" // Use . imports to enable the DSL
 )
 
+// JWT defines a security scheme using JWT.  The scheme uses the "Authorization" header to lookup
+// the token.  It also defines then scope "api".
+var JWT = JWTSecurity("jwt", func() {
+	Header("Authorization")
+	//Scope("api:access", "API access") // Define "api:access" scope
+})
+
 var _ = Resource("tasks", func() {
 	BasePath("/v1/tasks")
 
+	Security(JWT)
+
 	Action("show", func() {
 		Description("Get user tasks")
+		Security(JWTAuth)
 		Routing(GET(""))
 		Params(func() {
 			Param("userId", String, "User ID", func() {

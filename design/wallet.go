@@ -8,6 +8,8 @@ import (
 var _ = Resource("wallet", func() {
 	BasePath("/v1/wallets")
 
+	Security(JWT)
+
 	Action("show", func() {
 		Description("Get user wallet")
 		Routing(GET(""))

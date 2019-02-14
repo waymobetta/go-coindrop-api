@@ -49,6 +49,11 @@ func (c *Client) NewShowTasksRequest(ctx context.Context, path string, userID *s
 	if err != nil {
 		return nil, err
 	}
+	if c.JWTAuthSigner != nil {
+		if err := c.JWTAuthSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
 	return req, nil
 }
 
@@ -91,6 +96,11 @@ func (c *Client) NewUpdateTasksRequest(ctx context.Context, path string, payload
 		header.Set("Content-Type", "application/json")
 	} else {
 		header.Set("Content-Type", contentType)
+	}
+	if c.JWTSigner != nil {
+		if err := c.JWTSigner.Sign(req); err != nil {
+			return nil, err
+		}
 	}
 	return req, nil
 }

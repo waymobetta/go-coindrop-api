@@ -3,7 +3,6 @@ package middleware
 import (
 	"context"
 	"net/http"
-	"regexp"
 	"strings"
 
 	"github.com/goadesign/goa"
@@ -27,17 +26,10 @@ func Auth(auth *authpkg.Auth) goa.Middleware {
 			// Example of setting header:
 			// rw.Header().Set("X-Custom", "foo")
 
-			authRoutesRegex := regexp.MustCompile(`v1/(wallets|tasks|quiz|results)`)
-			requiresAuth := authRoutesRegex.Match([]byte(strings.ToLower(req.URL.Path)))
-
-			if !requiresAuth {
-				return h(ctx, rw, req)
-			}
-
 			authHeader := req.Header.Get("Authorization")
 			bearer := strings.Split(authHeader, " ")
 			if len(bearer) < 2 {
-				log.Errorln("[middleware/auth] jwt parse error")
+				log.Errorln("[middleware/auth] Auth token is missing")
 				return ErrAuthFailed("Authentication failed")
 			}
 			jwt := bearer[1]

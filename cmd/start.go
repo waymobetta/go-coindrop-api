@@ -76,7 +76,7 @@ func main() {
 	service.Use(middleware.LogRequest(true))
 	service.Use(middleware.ErrorHandler(service, true))
 	service.Use(middleware.Recover())
-	service.Use(mw.Auth(auth.NewAuth(&auth.Config{
+	app.UseJWTAuthMiddleware(service, mw.Auth(auth.NewAuth(&auth.Config{
 		CognitoRegion:     cognitoRegion,
 		CognitoUserPoolID: cognitoUserPoolID,
 	})))

@@ -90,12 +90,39 @@ window.onload = function() {
         ],
         plugins: [
           SwaggerUIBundle.plugins.DownloadUrl
-        ]
+        ],
+        requestInterceptor: function(req) {
+          req.headers.Authorization = 'Bearer ' + localStorage.getItem('accessToken')
+          return req
+        }
       })
 
       window.ui = ui
+
+      addAuthButton()
     })
   })
+}
+
+function addAuthButton() {
+  var container = document.querySelector('.information-container')
+  var div = document.createElement('div')
+  var button = document.createElement('button')
+  button.appendChild(document.createTextNode('Authorization'))
+  button.style = 'font-size: 14px; font-weight: 700; min-width: 80px; padding: 6px 15px; text-align: center; border-radius: 3px; background: #41cd8e; text-shadow: 0 1px 0 rgba(0,0,0,.1); font-family: Titillium Web,sans-serif; color: #fff; border: none;'
+  button.addEventListener('click', function(event) {
+    event.preventDefault()
+    var token = prompt('Enter JWT access token token. Eg. eyJraW...qJSaxQ')
+    if (!token) {
+      localStorage.removeItem('accessToken')
+      alert('Token cleared')
+    } else {
+      token = token.replace(/[^\d\w_.-]/gi, '')
+      localStorage.setItem('accessToken', token)
+    }
+  })
+
+  container.appendChild(div.appendChild(button))
 }
 </script>
 </body>

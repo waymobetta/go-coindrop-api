@@ -89,11 +89,11 @@ definitions:
   Tasks:
     description: Tasks (default view)
     example:
-      taskList: c4dd3370-fd38-444a-af02-8e082bfcf59f
+      taskList: 1b41208f-08ae-4bb6-9d3d-a61109795d7f
     properties:
       taskList:
         description: list of tasks
-        example: c4dd3370-fd38-444a-af02-8e082bfcf59f
+        example: 1b41208f-08ae-4bb6-9d3d-a61109795d7f
     required:
     - taskList
     title: 'Mediatype identifier: application/vnd.tasks+json; view=default'
@@ -226,6 +226,8 @@ paths:
             $ref: '#/definitions/Standard_error'
       schemes:
       - http
+      security:
+      - jwt: []
       summary: show quiz
       tags:
       - quiz
@@ -254,6 +256,8 @@ paths:
             $ref: '#/definitions/Standard_error'
       schemes:
       - http
+      security:
+      - jwt: []
       summary: show results
       tags:
       - results
@@ -282,6 +286,8 @@ paths:
             $ref: '#/definitions/Standard_error'
       schemes:
       - http
+      security:
+      - JWTAuth: []
       summary: show tasks
       tags:
       - tasks
@@ -317,6 +323,8 @@ paths:
             $ref: '#/definitions/Standard_error'
       schemes:
       - http
+      security:
+      - jwt: []
       summary: update tasks
       tags:
       - tasks
@@ -355,6 +363,8 @@ paths:
             $ref: '#/definitions/Standard_error'
       schemes:
       - http
+      security:
+      - jwt: []
       summary: create user
       tags:
       - user
@@ -408,6 +418,8 @@ paths:
             $ref: '#/definitions/Standard_error'
       schemes:
       - http
+      security:
+      - jwt: []
       summary: show wallet
       tags:
       - wallet
@@ -443,6 +455,8 @@ paths:
             $ref: '#/definitions/Standard_error'
       schemes:
       - http
+      security:
+      - jwt: []
       summary: update wallet
       tags:
       - wallet
@@ -458,4 +472,11 @@ responses:
     description: OK
 schemes:
 - http
+securityDefinitions:
+  JWTAuth:
+    type: basic
+  jwt:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

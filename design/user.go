@@ -6,7 +6,10 @@ import (
 )
 
 var _ = Resource("user", func() { // Resources group related API endpoints
-	BasePath("/v1/users")   // together. They map to REST resources for REST
+	BasePath("/v1/users") // together. They map to REST resources for REST
+
+	Security(JWT)
+
 	DefaultMedia(UserMedia) // services.
 
 	Action("create", func() {
@@ -31,6 +34,7 @@ var _ = Resource("user", func() { // Resources group related API endpoints
 		})
 		Response(OK)       // Responses define the shape and status code
 		Response(NotFound) // of HTTP responses.
+		NoSecurity()
 	})
 })
 

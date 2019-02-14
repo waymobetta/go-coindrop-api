@@ -81,8 +81,9 @@ func MountQuizController(service *goa.Service, ctrl QuizController) {
 		}
 		return ctrl.Show(rctx)
 	}
+	h = handleSecurity("jwt", h)
 	service.Mux.Handle("GET", "/v1/quiz", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Quiz", "action", "Show", "route", "GET /v1/quiz")
+	service.LogInfo("mount", "ctrl", "Quiz", "action", "Show", "route", "GET /v1/quiz", "security", "jwt")
 }
 
 // ResultsController is the controller interface for the Results actions.
@@ -108,8 +109,9 @@ func MountResultsController(service *goa.Service, ctrl ResultsController) {
 		}
 		return ctrl.Show(rctx)
 	}
+	h = handleSecurity("jwt", h)
 	service.Mux.Handle("GET", "/v1/quiz/results", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Results", "action", "Show", "route", "GET /v1/quiz/results")
+	service.LogInfo("mount", "ctrl", "Results", "action", "Show", "route", "GET /v1/quiz/results", "security", "jwt")
 }
 
 // TasksController is the controller interface for the Tasks actions.
@@ -136,8 +138,9 @@ func MountTasksController(service *goa.Service, ctrl TasksController) {
 		}
 		return ctrl.Show(rctx)
 	}
+	h = handleSecurity("JWTAuth", h)
 	service.Mux.Handle("GET", "/v1/tasks", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Tasks", "action", "Show", "route", "GET /v1/tasks")
+	service.LogInfo("mount", "ctrl", "Tasks", "action", "Show", "route", "GET /v1/tasks", "security", "JWTAuth")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -157,8 +160,9 @@ func MountTasksController(service *goa.Service, ctrl TasksController) {
 		}
 		return ctrl.Update(rctx)
 	}
+	h = handleSecurity("jwt", h)
 	service.Mux.Handle("POST", "/v1/tasks", ctrl.MuxHandler("update", h, unmarshalUpdateTasksPayload))
-	service.LogInfo("mount", "ctrl", "Tasks", "action", "Update", "route", "POST /v1/tasks")
+	service.LogInfo("mount", "ctrl", "Tasks", "action", "Update", "route", "POST /v1/tasks", "security", "jwt")
 }
 
 // unmarshalUpdateTasksPayload unmarshals the request body into the context request data Payload field.
@@ -206,8 +210,9 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 		}
 		return ctrl.Create(rctx)
 	}
+	h = handleSecurity("jwt", h)
 	service.Mux.Handle("POST", "/v1/users", ctrl.MuxHandler("create", h, unmarshalCreateUserPayload))
-	service.LogInfo("mount", "ctrl", "User", "action", "Create", "route", "POST /v1/users")
+	service.LogInfo("mount", "ctrl", "User", "action", "Create", "route", "POST /v1/users", "security", "jwt")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -264,8 +269,9 @@ func MountWalletController(service *goa.Service, ctrl WalletController) {
 		}
 		return ctrl.Show(rctx)
 	}
+	h = handleSecurity("jwt", h)
 	service.Mux.Handle("GET", "/v1/wallets", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Wallet", "action", "Show", "route", "GET /v1/wallets")
+	service.LogInfo("mount", "ctrl", "Wallet", "action", "Show", "route", "GET /v1/wallets", "security", "jwt")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -285,8 +291,9 @@ func MountWalletController(service *goa.Service, ctrl WalletController) {
 		}
 		return ctrl.Update(rctx)
 	}
+	h = handleSecurity("jwt", h)
 	service.Mux.Handle("POST", "/v1/wallets", ctrl.MuxHandler("update", h, unmarshalUpdateWalletPayload))
-	service.LogInfo("mount", "ctrl", "Wallet", "action", "Update", "route", "POST /v1/wallets")
+	service.LogInfo("mount", "ctrl", "Wallet", "action", "Update", "route", "POST /v1/wallets", "security", "jwt")
 }
 
 // unmarshalUpdateWalletPayload unmarshals the request body into the context request data Payload field.

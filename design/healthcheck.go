@@ -6,7 +6,10 @@ import (
 )
 
 var _ = Resource("healthcheck", func() { // Resources group related API endpoints
-	BasePath("/v1/health")         // together. They map to REST resources for REST
+	BasePath("/v1/health") // together. They map to REST resources for REST
+
+	NoSecurity()
+
 	DefaultMedia(HealthcheckMedia) // services.
 
 	Action("show", func() { // Actions define a single API endpoint together

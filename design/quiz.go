@@ -8,6 +8,8 @@ import (
 var _ = Resource("quiz", func() {
 	BasePath("/v1/quiz")
 
+	Security(JWT)
+
 	Action("show", func() {
 		Description("Get quiz")
 		Routing(GET(""))

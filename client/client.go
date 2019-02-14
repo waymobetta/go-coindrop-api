@@ -18,8 +18,10 @@ import (
 // Client is the coindrop service client.
 type Client struct {
 	*goaclient.Client
-	Encoder *goa.HTTPEncoder
-	Decoder *goa.HTTPDecoder
+	JWTAuthSigner goaclient.Signer
+	JWTSigner     goaclient.Signer
+	Encoder       *goa.HTTPEncoder
+	Decoder       *goa.HTTPDecoder
 }
 
 // New instantiates the client.
@@ -43,4 +45,14 @@ func New(c goaclient.Doer) *Client {
 	client.Decoder.Register(goa.NewJSONDecoder, "*/*")
 
 	return client
+}
+
+// SetJWTAuthSigner sets the request signer for the JWTAuth security scheme.
+func (c *Client) SetJWTAuthSigner(signer goaclient.Signer) {
+	c.JWTAuthSigner = signer
+}
+
+// SetJWTSigner sets the request signer for the jwt security scheme.
+func (c *Client) SetJWTSigner(signer goaclient.Signer) {
+	c.JWTSigner = signer
 }
