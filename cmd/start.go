@@ -23,6 +23,9 @@ import (
 )
 
 func main() {
+
+	log.SetReportCaller(true)
+
 	dbport, err := strconv.Atoi(os.Getenv("POSTGRES_PORT"))
 	if err != nil {
 		log.Fatal(err)

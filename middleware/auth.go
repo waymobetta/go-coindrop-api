@@ -36,6 +36,10 @@ func Auth(auth *authpkg.Auth) goa.Middleware {
 
 			authHeader := req.Header.Get("Authorization")
 			bearer := strings.Split(authHeader, " ")
+			if len(bearer) < 2 {
+				log.Errorln("[middleware/auth] jwt parse error")
+				return ErrAuthFailed("Authentication failed")
+			}
 			jwt := bearer[1]
 			token, err := auth.ParseJWT(jwt)
 			if err != nil {
