@@ -1,6 +1,8 @@
 package db
 
 import (
+	"database/sql"
+
 	"github.com/lib/pq"
 )
 
@@ -132,6 +134,9 @@ func (db *DB) GetUserTasks(u *UserTask) (*UserTask, error) {
 		pq.Array(&u.ListData.AssignedTasks),
 		pq.Array(&u.ListData.CompletedTasks),
 	)
+	if err == sql.ErrNoRows {
+		return u, nil
+	}
 	if err != nil {
 		return u, err
 	}
