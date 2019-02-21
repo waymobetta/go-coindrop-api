@@ -26,6 +26,8 @@ require (
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d
 	github.com/mattn/go-colorable v0.0.9 // indirect
 	github.com/mattn/go-isatty v0.0.4 // indirect
+	github.com/onsi/ginkgo v1.7.0 // indirect
+	github.com/onsi/gomega v1.4.3 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/rs/cors v1.6.0
 	github.com/sirupsen/logrus v1.3.0
