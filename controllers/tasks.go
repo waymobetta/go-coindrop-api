@@ -147,20 +147,20 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 		})
 	}
 
-	userTasks := new(db.Tasks)
+	var t app.TaskCollection
 
 	// TODO:
 	// refactor to eliminate for loops if possible
-	for task := range tasks.Tasks {
+	for _, task := range tasks.Tasks {
 		for assignedTask := range userTask.ListData.AssignedTasks {
-			if tasks.Tasks[task].Title == userTask.ListData.AssignedTasks[assignedTask] {
-				tasks.Tasks[task].IsAssigned = true
+			if task.Title == userTask.ListData.AssignedTasks[assignedTask] {
+				task.IsAssigned = true
 				for completedTask := range userTask.ListData.CompletedTasks {
-					if tasks.Tasks[task].Title == userTask.ListData.CompletedTasks[completedTask] {
-						tasks.Tasks[task].IsCompleted = true
+					if task.Title == userTask.ListData.CompletedTasks[completedTask] {
+						task.IsCompleted = true
 					}
 				}
-				userTasks.Tasks = append(userTasks.Tasks, tasks.Tasks[task])
+				t = append(t, &app.Task{task.Author, &app.Badge{task.BadgeData.Description, task.BadgeData.ID, task.BadgeData.Name, task.BadgeData.Recipients}, task.Description, task.ID, task.IsAssigned, task.IsCompleted, task.Title, task.Token, task.TokenAllocation, task.Type})
 			}
 		}
 	}
@@ -168,7 +168,7 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 	log.Printf("[controller/tasks] returned tasks for coindrop user: %v\n", userTask.AuthUserID)
 
 	res := &app.Tasks{
-		TaskList: userTasks.Tasks,
+		Tasks: t,
 	}
 	return ctx.OK(res)
 	// TasksController_Show: end_implement

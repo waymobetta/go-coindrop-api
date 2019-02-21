@@ -7,7 +7,12 @@ import (
 // GetTasks returns all available tasks
 func (db *DB) GetTasks(tasks *Tasks) (*Tasks, error) {
 	// create SQL statement for db query
-	sqlStatement := `SELECT * FROM coindrop_tasks`
+	sqlStatement := `
+	SELECT
+		* 
+	FROM
+		coindrop_tasks
+	`
 
 	// execute db query by passing in prepared SQL statement
 	rows, err := db.client.Query(sqlStatement)
@@ -20,7 +25,8 @@ func (db *DB) GetTasks(tasks *Tasks) (*Tasks, error) {
 	// iterate over rows
 	for rows.Next() {
 		// initialize new struct per user in db to hold user info
-		task := Task{}
+		task := Task{BadgeData: new(Badge)}
+
 		err = rows.Scan(
 			&task.ID,
 			&task.Title,
@@ -54,7 +60,12 @@ func (db *DB) AddTask(t *Task) (*Task, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `INSERT INTO coindrop_tasks (title, type, author, description, token_name, token_allocation, badge) VALUES ($1,$2,$3,$4,$5,$6,$7)`
+	sqlStatement := `
+	INSERT INTO coindrop_tasks
+		(title, type, author, description, token_name, token_allocation, badge)
+	VALUES 
+		($1,$2,$3,$4,$5,$6,$7)
+	`
 
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
@@ -94,7 +105,14 @@ func (db *DB) AddTask(t *Task) (*Task, error) {
 // GetUserTasks returns all info for specific quiz
 func (db *DB) GetUserTasks(u *UserTask) (*UserTask, error) {
 	// create SQL statement for db query
-	sqlStatement := `SELECT * FROM coindrop_user_tasks WHERE auth_user_id = $1`
+	sqlStatement := `
+	SELECT 
+		* 
+	FROM 
+		coindrop_user_tasks 
+	WHERE 
+		auth_user_id = $1
+	`
 
 	// execute db query by passing in prepared SQL statement
 	stmt, err := db.client.Prepare(sqlStatement)

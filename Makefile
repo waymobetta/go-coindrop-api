@@ -46,6 +46,7 @@ done:
 
 .PHONY: goa
 goa:
+	@rm -f vendor/github.com/goadesign/goa/
 	@goagen bootstrap -d github.com/waymobetta/go-coindrop-api/design
 	@rm main.go
 	@rm healthcheck.go

@@ -1,16 +1,14 @@
-# sql statements
-# TODO:
-# add Keybase data
+-- psql jr < resources/schema.sql
 
-# AUTH
+-- AUTH
 CREATE TABLE coindrop_auth (
   ID SERIAL NOT NULL UNIQUE,
   auth_user_id TEXT NOT NULL UNIQUE,
   wallet_address TEXT UNIQUE,
   PRIMARY KEY(ID)
-)
+);
 
-# REDDIT
+-- REDDIT
 CREATE TABLE coindrop_reddit (
 	ID SERIAL NOT NULL UNIQUE,
 	auth_user_id TEXT NOT NULL UNIQUE,
@@ -23,9 +21,9 @@ CREATE TABLE coindrop_reddit (
 	stored_verification_code TEXT NOT NULL,
 	is_verified BOOLEAN NOT NULL,
 	PRIMARY KEY(ID)
-)
+);
 
-# STACK OVERFLOW
+-- STACK OVERFLOW
 CREATE TABLE coindrop_stackoverflow (
 	ID SERIAL NOT NULL UNIQUE,
 	auth_user_id TEXT NOT NULL UNIQUE,
@@ -37,9 +35,9 @@ CREATE TABLE coindrop_stackoverflow (
 	stored_verification_code TEXT NOT NULL,
 	is_verified BOOLEAN NOT NULL,
 	PRIMARY KEY(ID)
-)
+);
 
-# TASKS
+-- TASKS
 CREATE TABLE coindrop_tasks (
 	id SERIAL NOT NULL UNIQUE,
 	title TEXT NOT NULL,
@@ -50,9 +48,9 @@ CREATE TABLE coindrop_tasks (
 	token_allocation INTEGER,
 	badge TEXT,
 	PRIMARY KEY(ID)
-)
+);
 
-# QUIZ RESULTS
+-- QUIZ RESULTS
 CREATE TABLE coindrop_quiz_results (
 	id SERIAL NOT NULL UNIQUE,
 	title TEXT NOT NULL,
@@ -60,19 +58,19 @@ CREATE TABLE coindrop_quiz_results (
 	questions_correct INT NOT NULL,
 	questions_incorrect INT NOT NULL,
 	has_taken_quiz BOOLEAN
-)
+);
 
-# TASKS SPECIFIC TO USER
+-- TASKS SPECIFIC TO USER
 CREATE TABLE coindrop_user_tasks (
 	id SERIAL NOT NULL UNIQUE,
 	auth_user_id TEXT NOT NULL UNIQUE,
 	assigned TEXT ARRAY NOT NULL,
 	completed TEXT ARRAY NOT NULL
-)
+);
 
-# QUIZZES
+-- QUIZZES
 CREATE TABLE coindrop_quizzes (
 	id SERIAL NOT NULL UNIQUE,
 	title TEXT NOT NULL,
 	quiz_data TEXT NOT NULL
-)
+);

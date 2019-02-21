@@ -4,14 +4,47 @@ consumes:
 - application/gob
 - application/x-gob
 definitions:
+  Badge:
+    description: Badge (default view)
+    example:
+      description: Eaque facere voluptates consequatur nihil odit.
+      id: 7.547923669139885e+18
+      name: Quae aut cumque consequatur.
+      recipients: 7.255037636476213e+18
+    properties:
+      description:
+        description: badge description
+        example: Eaque facere voluptates consequatur nihil odit.
+        type: string
+      id:
+        description: badge ID
+        example: 7.547923669139885e+18
+        format: int64
+        type: integer
+      name:
+        description: badge name
+        example: Quae aut cumque consequatur.
+        type: string
+      recipients:
+        description: badge recipients
+        example: 7.255037636476213e+18
+        format: int64
+        type: integer
+    required:
+    - id
+    - name
+    - description
+    - recipients
+    title: 'Mediatype identifier: application/vnd.badge+json; view=default'
+    type: object
   Healthcheck:
     description: Health check (default view)
     example:
-      status: Eaque facere voluptates consequatur nihil odit.
+      status: Hic illum veniam magni nam perferendis.
     properties:
       status:
         description: Status
-        example: Eaque facere voluptates consequatur nihil odit.
+        example: Hic illum veniam magni nam perferendis.
         type: string
     required:
     - status
@@ -20,11 +53,11 @@ definitions:
   Quiz:
     description: Quiz (default view)
     example:
-      quizObject: 0.4464660716835586
+      quizObject: 8.107533607602254e+18
     properties:
       quizObject:
         description: Quiz object
-        example: 0.4464660716835586
+        example: 8.107533607602254e+18
     required:
     - quizObject
     title: 'Mediatype identifier: application/vnd.quiz+json; view=default'
@@ -32,11 +65,11 @@ definitions:
   Results:
     description: Quiz results (default view)
     example:
-      quizResultsList: "1978-09-17T05:00:27Z"
+      quizResultsList: "1993-07-29T21:30:40Z"
     properties:
       quizResultsList:
         description: quiz results list
-        example: "1978-09-17T05:00:27Z"
+        example: "1993-07-29T21:30:40Z"
     required:
     - quizResultsList
     title: 'Mediatype identifier: application/vnd.results+json; view=default'
@@ -61,24 +94,116 @@ definitions:
     - message
     title: 'Mediatype identifier: application/standard_error+json; view=default'
     type: object
+  Task:
+    description: Task (default view)
+    example:
+      author: Iure amet.
+      badge:
+        description: Eaque facere voluptates consequatur nihil odit.
+        id: 7.547923669139885e+18
+        name: Quae aut cumque consequatur.
+        recipients: 7.255037636476213e+18
+      description: Non ut.
+      id: 5.87689846597948e+18
+      isAssigned: false
+      isCompleted: true
+      title: Eaque reiciendis autem.
+      token: Corporis omnis labore autem et.
+      tokenAllocation: 7.090453206726834e+18
+      type: Corporis aut ullam.
+    properties:
+      author:
+        description: task author
+        example: Iure amet.
+        type: string
+      badge:
+        $ref: '#/definitions/Badge'
+      description:
+        description: task description
+        example: Non ut.
+        type: string
+      id:
+        description: task ID
+        example: 5.87689846597948e+18
+        format: int64
+        type: integer
+      isAssigned:
+        description: task assigned flag
+        example: false
+        type: boolean
+      isCompleted:
+        description: task completed flag
+        example: true
+        type: boolean
+      title:
+        description: task title
+        example: Eaque reiciendis autem.
+        type: string
+      token:
+        description: task token
+        example: Corporis omnis labore autem et.
+        type: string
+      tokenAllocation:
+        description: token allocation
+        example: 7.090453206726834e+18
+        format: int64
+        type: integer
+      type:
+        description: task type
+        example: Corporis aut ullam.
+        type: string
+    required:
+    - id
+    - title
+    - type
+    - author
+    - description
+    - token
+    - tokenAllocation
+    - badge
+    - isAssigned
+    - isCompleted
+    title: 'Mediatype identifier: application/vnd.task+json; view=default'
+    type: object
+  TaskCollection:
+    description: TaskCollection is the media type for an array of Task (default view)
+    example:
+    - author: Iure amet.
+      badge:
+        description: Eaque facere voluptates consequatur nihil odit.
+        id: 7.547923669139885e+18
+        name: Quae aut cumque consequatur.
+        recipients: 7.255037636476213e+18
+      description: Non ut.
+      id: 5.87689846597948e+18
+      isAssigned: false
+      isCompleted: true
+      title: Eaque reiciendis autem.
+      token: Corporis omnis labore autem et.
+      tokenAllocation: 7.090453206726834e+18
+      type: Corporis aut ullam.
+    items:
+      $ref: '#/definitions/Task'
+    title: 'Mediatype identifier: application/vnd.task+json; type=collection; view=default'
+    type: array
   TaskPayload:
     description: Task payload
     example:
-      cognitoAuthUserId: Omnis labore.
-      taskName: Et non.
-      taskState: Corporis aut ullam.
+      cognitoAuthUserId: Dolore quas et.
+      taskName: Eos quia repellat optio nam voluptatem.
+      taskState: Ut qui dolores expedita est.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Omnis labore.
+        example: Dolore quas et.
         type: string
       taskName:
         description: task name
-        example: Et non.
+        example: Eos quia repellat optio nam voluptatem.
         type: string
       taskState:
         description: task state
-        example: Corporis aut ullam.
+        example: Ut qui dolores expedita est.
         type: string
     required:
     - cognitoAuthUserId
@@ -89,38 +214,79 @@ definitions:
   Tasks:
     description: Tasks (default view)
     example:
-      taskList: 1b41208f-08ae-4bb6-9d3d-a61109795d7f
+      tasks:
+      - author: Iure amet.
+        badge:
+          description: Eaque facere voluptates consequatur nihil odit.
+          id: 7.547923669139885e+18
+          name: Quae aut cumque consequatur.
+          recipients: 7.255037636476213e+18
+        description: Non ut.
+        id: 5.87689846597948e+18
+        isAssigned: false
+        isCompleted: true
+        title: Eaque reiciendis autem.
+        token: Corporis omnis labore autem et.
+        tokenAllocation: 7.090453206726834e+18
+        type: Corporis aut ullam.
+      - author: Iure amet.
+        badge:
+          description: Eaque facere voluptates consequatur nihil odit.
+          id: 7.547923669139885e+18
+          name: Quae aut cumque consequatur.
+          recipients: 7.255037636476213e+18
+        description: Non ut.
+        id: 5.87689846597948e+18
+        isAssigned: false
+        isCompleted: true
+        title: Eaque reiciendis autem.
+        token: Corporis omnis labore autem et.
+        tokenAllocation: 7.090453206726834e+18
+        type: Corporis aut ullam.
+      - author: Iure amet.
+        badge:
+          description: Eaque facere voluptates consequatur nihil odit.
+          id: 7.547923669139885e+18
+          name: Quae aut cumque consequatur.
+          recipients: 7.255037636476213e+18
+        description: Non ut.
+        id: 5.87689846597948e+18
+        isAssigned: false
+        isCompleted: true
+        title: Eaque reiciendis autem.
+        token: Corporis omnis labore autem et.
+        tokenAllocation: 7.090453206726834e+18
+        type: Corporis aut ullam.
     properties:
-      taskList:
-        description: list of tasks
-        example: 1b41208f-08ae-4bb6-9d3d-a61109795d7f
+      tasks:
+        $ref: '#/definitions/TaskCollection'
     required:
-    - taskList
+    - tasks
     title: 'Mediatype identifier: application/vnd.tasks+json; view=default'
     type: object
   User:
     description: A user (default view)
     example:
-      cognitoAuthUserId: Unde aliquam voluptatibus ut.
-      id: Iure amet.
-      name: Non ut.
-      walletAddress: Corrupti eum fugit eaque.
+      cognitoAuthUserId: Saepe adipisci error itaque velit quos.
+      id: Et natus est et harum labore.
+      name: Modi ut.
+      walletAddress: Deleniti qui aut exercitationem omnis illum nesciunt.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Unde aliquam voluptatibus ut.
+        example: Saepe adipisci error itaque velit quos.
         type: string
       id:
         description: Unique user ID
-        example: Iure amet.
+        example: Et natus est et harum labore.
         type: string
       name:
         description: Name of user
-        example: Non ut.
+        example: Modi ut.
         type: string
       walletAddress:
         description: Wallet address
-        example: Corrupti eum fugit eaque.
+        example: Deleniti qui aut exercitationem omnis illum nesciunt.
         type: string
     required:
     - id
@@ -129,11 +295,11 @@ definitions:
   UserPayload:
     description: User payload
     example:
-      cognitoAuthUserId: Officiis odit vero eum.
+      cognitoAuthUserId: Animi ipsum iusto.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Officiis odit vero eum.
+        example: Animi ipsum iusto.
         type: string
     required:
     - cognitoAuthUserId
@@ -142,11 +308,11 @@ definitions:
   Wallet:
     description: A wallet (default view)
     example:
-      walletAddress: Autem est.
+      walletAddress: Quam sit nihil deleniti.
     properties:
       walletAddress:
         description: wallet address
-        example: Autem est.
+        example: Quam sit nihil deleniti.
         type: string
     required:
     - walletAddress
@@ -155,16 +321,16 @@ definitions:
   WalletPayload:
     description: Wallet payload
     example:
-      cognitoAuthUserId: Quo rerum saepe adipisci error itaque velit.
-      walletAddress: Rerum et natus est.
+      cognitoAuthUserId: Quia autem sed et facilis earum deserunt.
+      walletAddress: Modi eos possimus aliquam.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Quo rerum saepe adipisci error itaque velit.
+        example: Quia autem sed et facilis earum deserunt.
         type: string
       walletAddress:
         description: Wallet address
-        example: Rerum et natus est.
+        example: Modi eos possimus aliquam.
         type: string
     required:
     - cognitoAuthUserId

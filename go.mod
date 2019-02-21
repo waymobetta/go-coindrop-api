@@ -20,6 +20,7 @@ require (
 	github.com/hashicorp/go-immutable-radix v1.0.0 // indirect
 	github.com/inconshreveable/log15 v0.0.0-20180818164646-67afb5ed74ec // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/jinzhu/copier v0.0.0-20180308034124-7e38e58719c3 // indirect
 	github.com/joho/godotenv v1.3.0 // indirect
 	github.com/jzelinskie/geddit v0.0.0-20190113234025-a9d9445ed681
 	github.com/lib/pq v1.0.0
