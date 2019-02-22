@@ -1,5 +1,9 @@
 all: deploy
 
+.PHONY: vendor
+vendor:
+	go mod vendor
+
 .PHONY: test
 test:
 	go test -v ./...
@@ -10,16 +14,16 @@ test/auth:
 
 .PHONY: start
 start:
-	@go run cmd/start.go
+	@go run cmd/coindrop/main.go
 
 start/local:
-	@(. .env.local && go run cmd/start.go)
+	@(. .env.local && go run cmd/coindrop/main.go)
 
 start/staging:
-	@(. .env.staging && go run cmd/start.go)
+	@(. .env.staging && go run cmd/coindrop/main.go)
 
 start/prod:
-	@(. .env.prod && go run cmd/start.go)
+	@(. .env.prod && go run cmd/.go)
 
 .PHONY: start/docs
 start/docs:
@@ -50,7 +54,6 @@ done:
 
 .PHONY: goa
 goa:
-	@rm -f vendor/github.com/goadesign/goa/
 	@goagen bootstrap -d github.com/waymobetta/go-coindrop-api/design
 	@rm main.go
 	@rm healthcheck.go
