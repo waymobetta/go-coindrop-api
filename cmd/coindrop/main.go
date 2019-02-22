@@ -23,12 +23,15 @@ import (
 )
 
 func main() {
-
 	log.SetReportCaller(true)
 
-	dbport, err := strconv.Atoi(os.Getenv("POSTGRES_PORT"))
-	if err != nil {
-		log.Fatal(err)
+	dbport := 5000
+	var err error
+	if os.Getenv("POSTGRES_PORT") != "" {
+		dbport, err = strconv.Atoi(os.Getenv("POSTGRES_PORT"))
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	dbs := db.NewDB(&db.Config{

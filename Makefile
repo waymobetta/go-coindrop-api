@@ -34,6 +34,10 @@ build:
 	@echo "building.."
 	@command go build -ldflags "-s -w" -o cmd/go-coindrop-api cmd/start.go
 	# $(MAKE) compress
+	#
+.PHONY: build/docker
+build/docker:
+	@docker build -t coindrop/api:latest .
 
 .PHONY: compress
 compress:
