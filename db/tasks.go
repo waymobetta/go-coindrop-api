@@ -11,7 +11,7 @@ func (db *DB) GetTasks(tasks *Tasks) (*Tasks, error) {
 	// create SQL statement for db query
 	sqlStatement := `
 	SELECT
-		* 
+		 id, title, type, author, description, token_name, token_allocation, badge
 	FROM
 		coindrop_tasks
 	`
@@ -109,7 +109,7 @@ func (db *DB) GetUserTasks(u *UserTask) (*UserTask, error) {
 	// create SQL statement for db query
 	sqlStatement := `
 	SELECT 
-		* 
+		id, auth_user_id, assigned, completed
 	FROM 
 		coindrop_user_tasks 
 	WHERE 
