@@ -9,4 +9,10 @@ var _ = API("coindrop", func() { // API defines the microservice endpoint and
 	Description("A simple goa service") // and exactly one API definition appearing in
 	Scheme("http")                      // the design.
 	Host("localhost:5000")
+
+	// Sets CORS response headers for requests with any Origin header
+	Origin("*", func() {
+		Methods("OPTIONS", "HEAD", "POST", "GET", "UPDATE", "DELETE", "PATCH")
+		Credentials()
+	})
 })

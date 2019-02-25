@@ -8,9 +8,9 @@ definitions:
     description: Badge (default view)
     example:
       description: Eaque facere voluptates consequatur nihil odit.
-      id: 7.547923669139885e+18
+      id: 7547923669139885077
       name: Quae aut cumque consequatur.
-      recipients: 7.255037636476213e+18
+      recipients: 7255037636476213575
     properties:
       description:
         description: badge description
@@ -18,7 +18,7 @@ definitions:
         type: string
       id:
         description: badge ID
-        example: 7.547923669139885e+18
+        example: 7547923669139885077
         format: int64
         type: integer
       name:
@@ -27,7 +27,7 @@ definitions:
         type: string
       recipients:
         description: badge recipients
-        example: 7.255037636476213e+18
+        example: 7255037636476213575
         format: int64
         type: integer
     required:
@@ -53,11 +53,11 @@ definitions:
   Quiz:
     description: Quiz (default view)
     example:
-      quizObject: 8.107533607602254e+18
+      quizObject: 8107533607602253925
     properties:
       quizObject:
         description: Quiz object
-        example: 8.107533607602254e+18
+        example: 8107533607602253925
     required:
     - quizObject
     title: 'Mediatype identifier: application/vnd.quiz+json; view=default'
@@ -100,16 +100,16 @@ definitions:
       author: Iure amet.
       badge:
         description: Eaque facere voluptates consequatur nihil odit.
-        id: 7.547923669139885e+18
+        id: 7547923669139885077
         name: Quae aut cumque consequatur.
-        recipients: 7.255037636476213e+18
+        recipients: 7255037636476213575
       description: Non ut.
-      id: 5.87689846597948e+18
+      id: 5876898465979480182
       isAssigned: false
       isCompleted: true
       title: Eaque reiciendis autem.
       token: Corporis omnis labore autem et.
-      tokenAllocation: 7.090453206726834e+18
+      tokenAllocation: 7090453206726834630
       type: Corporis aut ullam.
     properties:
       author:
@@ -124,7 +124,7 @@ definitions:
         type: string
       id:
         description: task ID
-        example: 5.87689846597948e+18
+        example: 5876898465979480182
         format: int64
         type: integer
       isAssigned:
@@ -145,7 +145,7 @@ definitions:
         type: string
       tokenAllocation:
         description: token allocation
-        example: 7.090453206726834e+18
+        example: 7090453206726834630
         format: int64
         type: integer
       type:
@@ -171,16 +171,16 @@ definitions:
     - author: Iure amet.
       badge:
         description: Eaque facere voluptates consequatur nihil odit.
-        id: 7.547923669139885e+18
+        id: 7547923669139885077
         name: Quae aut cumque consequatur.
-        recipients: 7.255037636476213e+18
+        recipients: 7255037636476213575
       description: Non ut.
-      id: 5.87689846597948e+18
+      id: 5876898465979480182
       isAssigned: false
       isCompleted: true
       title: Eaque reiciendis autem.
       token: Corporis omnis labore autem et.
-      tokenAllocation: 7.090453206726834e+18
+      tokenAllocation: 7090453206726834630
       type: Corporis aut ullam.
     items:
       $ref: '#/definitions/Task'
@@ -218,44 +218,44 @@ definitions:
       - author: Iure amet.
         badge:
           description: Eaque facere voluptates consequatur nihil odit.
-          id: 7.547923669139885e+18
+          id: 7547923669139885077
           name: Quae aut cumque consequatur.
-          recipients: 7.255037636476213e+18
+          recipients: 7255037636476213575
         description: Non ut.
-        id: 5.87689846597948e+18
+        id: 5876898465979480182
         isAssigned: false
         isCompleted: true
         title: Eaque reiciendis autem.
         token: Corporis omnis labore autem et.
-        tokenAllocation: 7.090453206726834e+18
+        tokenAllocation: 7090453206726834630
         type: Corporis aut ullam.
       - author: Iure amet.
         badge:
           description: Eaque facere voluptates consequatur nihil odit.
-          id: 7.547923669139885e+18
+          id: 7547923669139885077
           name: Quae aut cumque consequatur.
-          recipients: 7.255037636476213e+18
+          recipients: 7255037636476213575
         description: Non ut.
-        id: 5.87689846597948e+18
+        id: 5876898465979480182
         isAssigned: false
         isCompleted: true
         title: Eaque reiciendis autem.
         token: Corporis omnis labore autem et.
-        tokenAllocation: 7.090453206726834e+18
+        tokenAllocation: 7090453206726834630
         type: Corporis aut ullam.
       - author: Iure amet.
         badge:
           description: Eaque facere voluptates consequatur nihil odit.
-          id: 7.547923669139885e+18
+          id: 7547923669139885077
           name: Quae aut cumque consequatur.
-          recipients: 7.255037636476213e+18
+          recipients: 7255037636476213575
         description: Non ut.
-        id: 5.87689846597948e+18
+        id: 5876898465979480182
         isAssigned: false
         isCompleted: true
         title: Eaque reiciendis autem.
         token: Corporis omnis labore autem et.
-        tokenAllocation: 7.090453206726834e+18
+        tokenAllocation: 7090453206726834630
         type: Corporis aut ullam.
     properties:
       tasks:

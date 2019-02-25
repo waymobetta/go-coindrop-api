@@ -10,7 +10,6 @@ import (
 
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
-	"github.com/gorilla/handlers"
 	"github.com/rs/cors"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
@@ -55,15 +54,30 @@ func main() {
 		Handlers:   hdlrs,
 	})
 
-	rootHandler := handlers.CORS(
-		handlers.AllowedHeaders(
-			[]string{"X-Requested-With", "Content-Type", "Authorization"},
-		),
-		handlers.AllowedMethods(
-			[]string{"GET", "POST", "OPTIONS"},
-		),
-		handlers.AllowedOrigins([]string{"*"}),
-	)(rtr)
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedHeaders: []string{
+			"Range",
+			"Accept",
+			"Content-Type",
+			"Authorization",
+			"X-CA-Session",
+			"X-Requested-With",
+		},
+		AllowedMethods: []string{
+			"GET",
+			"POST",
+			"UPDATE",
+			"DELETE",
+			"PATCH",
+			"OPTIONS",
+			"HEAD",
+		},
+		AllowCredentials: true,
+		Debug:            true,
+	})
+
+	rootHandler := c.Handler(rtr)
 
 	port := "5000"
 	if os.Getenv("PORT") != "" {
@@ -104,7 +118,7 @@ func main() {
 	app.MountQuizController(service, quizCtrlr)
 
 	// goa handler
-	goaHandler := mw.RateLimitHandler(service.Server.Handler)
+	goaHandler := c.Handler(mw.RateLimitHandler(service.Server.Handler))
 
 	rootMux := http.NewServeMux()
 
@@ -129,5 +143,5 @@ func main() {
 	log.Printf("[cmd] listening on %s\n", host)
 
 	// Start service
-	panic(http.ListenAndServe(host, cors.Default().Handler(rootMux)))
+	panic(http.ListenAndServe(host, rootMux))
 }

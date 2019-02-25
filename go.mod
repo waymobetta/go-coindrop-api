@@ -40,6 +40,7 @@ require (
 	github.com/waymobetta/gognito v0.0.0-20190119050508-7c95da5c18c9
 	github.com/waymobetta/wmb v0.0.0-20180226053614-b7f39fbf8259 // indirect
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea // indirect
+	goa.design/plugins v0.0.0-20190206182554-2f93974dfc1e
 	golang.org/x/net v0.0.0-20190125091013-d26f9f9a57f3 // indirect
 	golang.org/x/oauth2 v0.0.0-20190130055435-99b60b757ec1 // indirect
 	golang.org/x/tools v0.0.0-20190130214255-bb1329dc71a0 // indirect
