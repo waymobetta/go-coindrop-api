@@ -65,8 +65,8 @@ CREATE TABLE IF NOT EXISTS coindrop_quiz_results2 (
 CREATE TABLE IF NOT EXISTS coindrop_user_tasks2 (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	user_id uuid REFERENCES coindrop_auth2(id),
-	assigned uuid REFERENCES coindrop_tasks2(id),
-	completed uuid REFERENCES coindrop_tasks2(id)
+	task_id uuid REFERENCES coindrop_tasks2(id),
+	completed BOOLEAN
 );
 
 -- QUIZZES 2
