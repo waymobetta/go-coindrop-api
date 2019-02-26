@@ -2,15 +2,19 @@ all: deploy
 
 .PHONY: vendor
 vendor:
-	go mod vendor
+	@go mod vendor
 
 .PHONY: test
 test:
-	go test -v ./...
+	@go test -v ./...
 
 .PHONY: test/auth
 test/auth:
-	go test -v auth/*.go
+	@go test -v auth/*.go $(ARGS)
+
+.PHONY: test/controllers
+test/controllers:
+	@go test -v controllers/*.go $(ARGS)
 
 .PHONY: start
 start:

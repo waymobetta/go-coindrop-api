@@ -8,7 +8,7 @@ import (
 var _ = Resource("user", func() { // Resources group related API endpoints
 	BasePath("/v1/users") // together. They map to REST resources for REST
 
-	Security(JWT)
+	Security(JWTAuth)
 
 	DefaultMedia(UserMedia) // services.
 

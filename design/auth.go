@@ -6,3 +6,12 @@ import (
 
 // JWTAuth ...
 var JWTAuth = BasicAuthSecurity("JWTAuth")
+
+// JWT defines a security scheme using JWT.  The scheme uses the "Authorization" header to lookup
+// the token.  It also defines then scope "api".
+/*
+var JWT = JWTSecurity("jwt", func() {
+	Header("Authorization")
+	//Scope("api:access", "API access") // Define "api:access" scope
+})
+*/

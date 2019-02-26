@@ -46,8 +46,31 @@ func createServer() *httptest.Server {
 		SSLMode: os.Getenv("POSTGRES_SSL_MODE"),
 	})
 
-	tasksCtrlr := controllers.NewTasksController(service, dbs)
-	app.MountTasksController(service, tasksCtrlr)
+	// Mount controllers
+	/*
+		healthcheckCtrlr := controllers.NewHealthcheckController(service, dbs)
+		app.MountHealthcheckController(service, healthcheckCtrlr)
+
+		userCtrlr := controllers.NewUserController(service, dbs)
+		app.MountUserController(service, userCtrlr)
+	*/
+
+	walletCtrlr := controllers.NewWalletController(service, dbs)
+	app.MountWalletController(service, walletCtrlr)
+
+	/*
+		tasksCtrlr := controllers.NewTasksController(service, dbs)
+		app.MountTasksController(service, tasksCtrlr)
+	*/
+	/*
+
+		resultsCtrlr := controllers.NewResultsController(service, dbs)
+		app.MountResultsController(service, resultsCtrlr)
+
+		quizCtrlr := controllers.NewQuizController(service, dbs)
+		app.MountQuizController(service, quizCtrlr)
+	*/
+
 	svr := httptest.NewServer(service.Server.Handler)
 	return svr
 }
@@ -58,10 +81,10 @@ func setAuth(req *http.Request) {
 
 // TODO make dynamic
 func getUserID() string {
-	return "3d0a93ec-ae4d-4377-9efe-44f2b3c6a7f3"
+	return "c1718f78-4869-4f2a-a96e-eba0bbdcdd21"
 }
 
 // TODO make dynamic
 func getAuthToken() string {
-	return "eyJraWQiOiJlS3lvdytnb1wvXC9yWmtkbGFhRFNOM25jTTREd0xTdFhibks4TTB5b211aE09IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIzZDBhOTNlYy1hZTRkLTQzNzctOWVmZS00NGYyYjNjNmE3ZjMiLCJldmVudF9pZCI6ImE0Y2U5NDFiLTM1OWQtMTFlOS05YjQ5LTVkMDA1MjcxMTYyYiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE1NTA3Mjg2ODAsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy13ZXN0LTIuYW1hem9uYXdzLmNvbVwvdXMtd2VzdC0yX0wwVldGSEVueSIsImV4cCI6MTU1MDczMjI4MCwiaWF0IjoxNTUwNzI4NjgwLCJqdGkiOiJiMDgxNmRiNy03NWZkLTQzMDQtYTNmNy02M2I1ZmI2M2UyM2YiLCJjbGllbnRfaWQiOiI2ZjFzcGI2MzZwdG4wNzRvbjBwZGpnbms4bCIsInVzZXJuYW1lIjoiM2QwYTkzZWMtYWU0ZC00Mzc3LTllZmUtNDRmMmIzYzZhN2YzIn0.lJOGY91NcR3feVHaKL2SF2qHYNqnwCLyZhKHUmOoBy-H4CaHdgdyu4auiL-htblqU_ycUpRtcL06lnhlXYmyQv7-kPhxd-BzuxV0nzRHh-8JxR-is8JqTBQL9G0r4zOjDPEr0N9rRwZVAnW9ujzc658I_ruphgAMy73RG834prg8F2aNwgjm1xyM8Gvqlcpje5cHlqmvTOGelh4IiJvONWiO43cxm6w4hwY22qQgKJ55ptBwNRw3aoM0qL35ukw5MNhhdIDMQw2suoc5gjUohRJ_qbPvFNpmXRO_njWSjDQiv_LXoQULNks8zyfyJ8Pmgu5W24CELbhH3meG1WJVTg"
+	return "eyJraWQiOiJlS3lvdytnb1wvXC9yWmtkbGFhRFNOM25jTTREd0xTdFhibks4TTB5b211aE09IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJjMTcxOGY3OC00ODY5LTRmMmEtYTk2ZS1lYmEwYmJkY2RkMjEiLCJldmVudF9pZCI6IjA3YzY5ODViLTM5NjAtMTFlOS05ODVjLTI1MmU5YTE3NTE3NiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE1NTExNDIwMjIsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy13ZXN0LTIuYW1hem9uYXdzLmNvbVwvdXMtd2VzdC0yX0wwVldGSEVueSIsImV4cCI6MTU1MTE0NTYyMiwiaWF0IjoxNTUxMTQyMDIyLCJqdGkiOiI3ZDg1OGQwNi1iZjMwLTQ3ODEtYThmNC0yMTE3ZTMyM2E3NzciLCJjbGllbnRfaWQiOiI2ZjFzcGI2MzZwdG4wNzRvbjBwZGpnbms4bCIsInVzZXJuYW1lIjoiYzE3MThmNzgtNDg2OS00ZjJhLWE5NmUtZWJhMGJiZGNkZDIxIn0.DykZC1UKAvky2aPrtmXkk7sL0J7IZOpT2P4nIoTznBr5wGn9HVPFnklg0HArXHozhYmJoL3MScX_NYN5JmibE1Hes1wDnj7xFyDvIt3FzAjMfeWTaURmJTfyuaPUO8XpUBonDB4NsqnY7Q5OwUDQ2ICKlri1sZ2_7NPUREHnTk1hpHkoJUaPtt3F-Skjk1BGb1cfHYw_VvcchfH9zWtD5tmnfebPm4PbMvOtqpBAkdDx1eowbrfL-8q_m2NggwLXlCk2YBWna3n5nCKiVBhx3nQ6Wzy0adpF2P7GeIit9YRxZ4neJbgoQz__1nQJoIUm110RNwA_AvoWUCxQ8QoyYQ"
 }

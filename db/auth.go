@@ -1,5 +1,7 @@
 package db
 
+import "database/sql"
+
 // AddUserID inserts an AWS cognito user ID to the coindrop_auth table
 func (db *DB) AddUserID(u *User) (*User, error) {
 	// for simplicity, update the listing rather than updating single value
@@ -98,6 +100,10 @@ func (db *DB) GetWallet(u *User) (*User, error) {
 	err = row.Scan(
 		&u.WalletAddress,
 	)
+
+	if err == sql.ErrNoRows {
+		return u, nil
+	}
 
 	if err != nil {
 		return u, err

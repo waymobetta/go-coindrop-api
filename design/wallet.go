@@ -8,7 +8,7 @@ import (
 var _ = Resource("wallet", func() {
 	BasePath("/v1/wallets")
 
-	Security(JWT)
+	Security(JWTAuth)
 
 	Action("show", func() {
 		Description("Get user wallet")
@@ -27,7 +27,7 @@ var _ = Resource("wallet", func() {
 		Description("Update user wallet")
 		Routing(POST(""))
 		Payload(WalletPayload)
-		Response(OK)
+		Response(OK, WalletMedia)
 		Response(NotFound)
 		Response(BadRequest, StandardErrorMedia)
 		Response(Gone, StandardErrorMedia)
@@ -55,6 +55,9 @@ var WalletMedia = MediaType("application/vnd.wallet+json", func() {
 var WalletPayload = Type("WalletPayload", func() {
 	Description("Wallet payload")
 	Attribute("cognitoAuthUserId", String, "Cognito auth user ID")
-	Attribute("walletAddress", String, "Wallet address")
+	Attribute("walletAddress", String, "Wallet address", func() {
+		Pattern("^0x[0-9a-fA-F]{40}$")
+		Example("0x845fdD93Cca3aE9e380d5556818e6d0b902B977c")
+	})
 	Required("cognitoAuthUserId", "walletAddress")
 })

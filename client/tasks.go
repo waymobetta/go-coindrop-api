@@ -97,8 +97,8 @@ func (c *Client) NewUpdateTasksRequest(ctx context.Context, path string, payload
 	} else {
 		header.Set("Content-Type", contentType)
 	}
-	if c.JWTSigner != nil {
-		if err := c.JWTSigner.Sign(req); err != nil {
+	if c.JWTAuthSigner != nil {
+		if err := c.JWTAuthSigner.Sign(req); err != nil {
 			return nil, err
 		}
 	}

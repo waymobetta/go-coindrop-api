@@ -40,7 +40,7 @@ func (c *WalletController) Show(ctx *app.ShowWalletContext) error {
 		})
 	}
 
-	log.Printf("[controller/wallet] returned wallet for coindrop user: %v\n", user.AuthUserID)
+	log.Printf("[controller/wallet] returned wallet for coindrop user: %v\n; wallet address: %s", user.AuthUserID, user.WalletAddress)
 
 	res := &app.Wallet{
 		WalletAddress: user.WalletAddress,
@@ -71,6 +71,8 @@ func (c *WalletController) Update(ctx *app.UpdateWalletContext) error {
 
 	log.Printf("[controller/wallet] successfully updated wallet for coindrop user: %v\n", user.AuthUserID)
 
-	return ctx.OK(nil)
+	return ctx.OK(&app.Wallet{
+		WalletAddress: user.WalletAddress,
+	})
 	// WalletController_Update: end_implement
 }

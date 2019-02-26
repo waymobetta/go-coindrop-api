@@ -6,8 +6,8 @@ import (
 	"testing"
 )
 
-func TestShow(t *testing.T) {
-	t.Run("get tasks for a authed user", func(t *testing.T) {
+func TestTasksShow(t *testing.T) {
+	t.Run("get tasks for an authed user", func(t *testing.T) {
 		svr := createServer()
 		defer svr.Close()
 

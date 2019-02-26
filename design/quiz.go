@@ -8,7 +8,7 @@ import (
 var _ = Resource("quiz", func() {
 	BasePath("/v1/quiz")
 
-	Security(JWT)
+	Security(JWTAuth)
 
 	Action("show", func() {
 		Description("Get quiz")

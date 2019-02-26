@@ -182,6 +182,20 @@ definitions:
       token: Corporis omnis labore autem et.
       tokenAllocation: 7090453206726834630
       type: Corporis aut ullam.
+    - author: Iure amet.
+      badge:
+        description: Eaque facere voluptates consequatur nihil odit.
+        id: 7547923669139885077
+        name: Quae aut cumque consequatur.
+        recipients: 7255037636476213575
+      description: Non ut.
+      id: 5876898465979480182
+      isAssigned: false
+      isCompleted: true
+      title: Eaque reiciendis autem.
+      token: Corporis omnis labore autem et.
+      tokenAllocation: 7090453206726834630
+      type: Corporis aut ullam.
     items:
       $ref: '#/definitions/Task'
     title: 'Mediatype identifier: application/vnd.task+json; type=collection; view=default'
@@ -215,20 +229,6 @@ definitions:
     description: Tasks (default view)
     example:
       tasks:
-      - author: Iure amet.
-        badge:
-          description: Eaque facere voluptates consequatur nihil odit.
-          id: 7547923669139885077
-          name: Quae aut cumque consequatur.
-          recipients: 7255037636476213575
-        description: Non ut.
-        id: 5876898465979480182
-        isAssigned: false
-        isCompleted: true
-        title: Eaque reiciendis autem.
-        token: Corporis omnis labore autem et.
-        tokenAllocation: 7090453206726834630
-        type: Corporis aut ullam.
       - author: Iure amet.
         badge:
           description: Eaque facere voluptates consequatur nihil odit.
@@ -322,7 +322,7 @@ definitions:
     description: Wallet payload
     example:
       cognitoAuthUserId: Quia autem sed et facilis earum deserunt.
-      walletAddress: Modi eos possimus aliquam.
+      walletAddress: 0x845fdD93Cca3aE9e380d5556818e6d0b902B977c
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
@@ -330,7 +330,8 @@ definitions:
         type: string
       walletAddress:
         description: Wallet address
-        example: Modi eos possimus aliquam.
+        example: 0x845fdD93Cca3aE9e380d5556818e6d0b902B977c
+        pattern: ^0x[0-9a-fA-F]{40}$
         type: string
     required:
     - cognitoAuthUserId
@@ -393,7 +394,7 @@ paths:
       schemes:
       - http
       security:
-      - jwt: []
+      - JWTAuth: []
       summary: show quiz
       tags:
       - quiz
@@ -423,7 +424,7 @@ paths:
       schemes:
       - http
       security:
-      - jwt: []
+      - JWTAuth: []
       summary: show results
       tags:
       - results
@@ -490,7 +491,7 @@ paths:
       schemes:
       - http
       security:
-      - jwt: []
+      - JWTAuth: []
       summary: update tasks
       tags:
       - tasks
@@ -530,7 +531,7 @@ paths:
       schemes:
       - http
       security:
-      - jwt: []
+      - JWTAuth: []
       summary: create user
       tags:
       - user
@@ -585,7 +586,7 @@ paths:
       schemes:
       - http
       security:
-      - jwt: []
+      - JWTAuth: []
       summary: show wallet
       tags:
       - wallet
@@ -601,10 +602,12 @@ paths:
           $ref: '#/definitions/WalletPayload'
       produces:
       - application/standard_error+json
-      - text/plain
+      - application/vnd.wallet+json
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/Wallet'
         "400":
           description: Bad Request
           schema:
@@ -622,7 +625,7 @@ paths:
       schemes:
       - http
       security:
-      - jwt: []
+      - JWTAuth: []
       summary: update wallet
       tags:
       - wallet
@@ -641,8 +644,4 @@ schemes:
 securityDefinitions:
   JWTAuth:
     type: basic
-  jwt:
-    in: header
-    name: Authorization
-    type: apiKey
 swagger: "2.0"

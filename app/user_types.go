@@ -130,6 +130,11 @@ func (ut *walletPayload) Validate() (err error) {
 	if ut.WalletAddress == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "walletAddress"))
 	}
+	if ut.WalletAddress != nil {
+		if ok := goa.ValidatePattern(`^0x[0-9a-fA-F]{40}$`, *ut.WalletAddress); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`request.walletAddress`, *ut.WalletAddress, `^0x[0-9a-fA-F]{40}$`))
+		}
+	}
 	return
 }
 
@@ -160,6 +165,9 @@ func (ut *WalletPayload) Validate() (err error) {
 	}
 	if ut.WalletAddress == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "walletAddress"))
+	}
+	if ok := goa.ValidatePattern(`^0x[0-9a-fA-F]{40}$`, ut.WalletAddress); !ok {
+		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.walletAddress`, ut.WalletAddress, `^0x[0-9a-fA-F]{40}$`))
 	}
 	return
 }
