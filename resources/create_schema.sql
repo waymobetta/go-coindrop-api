@@ -1,7 +1,7 @@
--- psql jr < resources/schema.sql
+-- psql [db name] < resources/create_schema.sql
 
 -- AUTH
-CREATE TABLE coindrop_auth (
+CREATE TABLE IF NOT EXISTS coindrop_auth (
   ID SERIAL NOT NULL UNIQUE,
   auth_user_id TEXT NOT NULL UNIQUE,
   wallet_address TEXT UNIQUE,
@@ -9,7 +9,7 @@ CREATE TABLE coindrop_auth (
 );
 
 -- REDDIT
-CREATE TABLE coindrop_reddit (
+CREATE TABLE IF NOT EXISTS coindrop_reddit (
 	ID SERIAL NOT NULL UNIQUE,
 	auth_user_id TEXT NOT NULL UNIQUE,
 	username TEXT NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE coindrop_reddit (
 );
 
 -- STACK OVERFLOW
-CREATE TABLE coindrop_stackoverflow (
+CREATE TABLE IF NOT EXISTS IF NOT EXISTS coindrop_stackoverflow (
 	ID SERIAL NOT NULL UNIQUE,
 	auth_user_id TEXT NOT NULL UNIQUE,
 	exchange_account_id INTEGER NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE coindrop_stackoverflow (
 );
 
 -- TASKS
-CREATE TABLE coindrop_tasks (
+CREATE TABLE IF NOT EXISTS coindrop_tasks (
 	id SERIAL NOT NULL UNIQUE,
 	title TEXT NOT NULL,
 	type TEXT NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE coindrop_tasks (
 );
 
 -- QUIZ RESULTS
-CREATE TABLE coindrop_quiz_results (
+CREATE TABLE IF NOT EXISTS coindrop_quiz_results (
 	id SERIAL NOT NULL UNIQUE,
 	title TEXT NOT NULL,
 	auth_user_id TEXT NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE coindrop_quiz_results (
 );
 
 -- TASKS SPECIFIC TO USER
-CREATE TABLE coindrop_user_tasks (
+CREATE TABLE IF NOT EXISTS coindrop_user_tasks (
 	id SERIAL NOT NULL UNIQUE,
 	auth_user_id TEXT NOT NULL UNIQUE,
 	assigned TEXT ARRAY NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE coindrop_user_tasks (
 );
 
 -- QUIZZES
-CREATE TABLE coindrop_quizzes (
+CREATE TABLE IF NOT EXISTS coindrop_quizzes (
 	id SERIAL NOT NULL UNIQUE,
 	title TEXT NOT NULL,
 	quiz_data TEXT NOT NULL
