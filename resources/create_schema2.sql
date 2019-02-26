@@ -49,15 +49,15 @@ CREATE TABLE IF NOT EXISTS coindrop_tasks2 (
 	description TEXT NOT NULL,
 	token_name TEXT,
 	token_allocation INTEGER,
-	badge TEXT
+	badge_id uuid REFERENCES coindrop_badges(id)
 );
 
 -- QUIZ RESULTS 2
 CREATE TABLE IF NOT EXISTS coindrop_quiz_results2 (
 	quiz_id uuid REFERENCES coindroo_quizzes2(id),
 	user_id uuid REFERENCES coindrop_auth2(id),
-	questions_correct INT NOT NULL,
-	questions_incorrect INT NOT NULL,
+	questions_correct INTEGER NOT NULL,
+	questions_incorrect INTEGER NOT NULL,
 	quiz_taken BOOLEAN
 );
 
@@ -74,4 +74,25 @@ CREATE TABLE IF NOT EXISTS coindrop_quizzes2 (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	title TEXT NOT NULL,
 	quiz_url TEXT NOT NULL
+);
+
+-- BADGES
+CREATE TABLE IF NOT EXISTS coindrop_badges (
+	id uuid DEFAULT uuid_generate_v4() UNIQUE,
+	name TEXT NOT NULL,
+	description TEXT
+);
+
+-- NOT USED YET -- 
+
+-- REDDIT COMMUNITIES
+CREATE TABLE IF NOT EXISTS coindrop_reddit_communities (
+	id uuid DEFAULT uuid_generate_v4() UNIQUE,
+	name TEXT NOT NULL
+);
+
+-- STACK OVERFLOW COMMUNITIES
+CREATE TABLE IF NOT EXISTS coindrop_stackoverflow_communities (
+	id uuid DEFAULT uuid_generate_v4() UNIQUE,
+	name TEXT NOT NULL
 );
