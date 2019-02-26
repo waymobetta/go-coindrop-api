@@ -1,4 +1,4 @@
--- psql jr < resources/schema.sql
+-- psql [db name] < resources/create_schema.sql
 
 -- AUTH
 CREATE TABLE IF NOT EXISTS coindrop_auth (
