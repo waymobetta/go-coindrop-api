@@ -11,9 +11,16 @@ func (db *DB) GetTasks(tasks *Tasks) (*Tasks, error) {
 	// create SQL statement for db query
 	sqlStatement := `
 	SELECT
-		 id, title, type, author, description, token_name, token_allocation, badge
+		 id,
+		 title,
+		 type, 
+		 author, 
+		 description, 
+		 token_name, 
+		 token_allocation, 
+		 badge_id
 	FROM
-		coindrop_tasks
+		coindrop_tasks2
 	`
 
 	// execute db query by passing in prepared SQL statement
@@ -37,7 +44,7 @@ func (db *DB) GetTasks(tasks *Tasks) (*Tasks, error) {
 			&task.Description,
 			&task.Token,
 			&task.TokenAllocation,
-			&task.BadgeData.Name,
+			&task.BadgeData.ID,
 		)
 		if err != nil {
 			return tasks, err
@@ -63,10 +70,26 @@ func (db *DB) AddTask(t *Task) (*Task, error) {
 
 	// create SQL statement for db writes
 	sqlStatement := `
-	INSERT INTO coindrop_tasks
-		(title, type, author, description, token_name, token_allocation, badge)
+	INSERT INTO coindrop_tasks2
+		(
+			title, 
+			type, 
+			author, 
+			description, 
+			token_name, 
+			token_allocation, 
+			badge_id
+			)
 	VALUES 
-		($1,$2,$3,$4,$5,$6,$7)
+		(
+			$1,
+			$2,
+			$3,
+			$4,
+			$5,
+			$6,
+			$7
+		)
 	`
 
 	// prepare statement
@@ -85,7 +108,7 @@ func (db *DB) AddTask(t *Task) (*Task, error) {
 		t.Description,
 		t.Token,
 		t.TokenAllocation,
-		t.BadgeData.Name,
+		t.BadgeData.ID,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
@@ -105,15 +128,18 @@ func (db *DB) AddTask(t *Task) (*Task, error) {
 }
 
 // GetUserTasks returns all info for specific quiz
-func (db *DB) GetUserTasks(u *UserTask) (*UserTask, error) {
+func (db *DB) GetUserTasks(u *UserTask2) (*UserTask, error) {
 	// create SQL statement for db query
 	sqlStatement := `
 	SELECT 
-		id, auth_user_id, assigned, completed
-	FROM 
-		coindrop_user_tasks 
-	WHERE 
-		auth_user_id = $1
+		id,
+		user_id,
+		task_id,
+		completed
+	FROM
+		coindrop_user_tasks2
+	WHERE
+		user_id = $1
 	`
 
 	// execute db query by passing in prepared SQL statement
@@ -125,14 +151,14 @@ func (db *DB) GetUserTasks(u *UserTask) (*UserTask, error) {
 	defer stmt.Close()
 
 	// initialize row object
-	row := stmt.QueryRow(u.AuthUserID)
+	row := stmt.QueryRow(u.UserID)
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
 		&u.ID,
-		&u.AuthUserID,
-		pq.Array(&u.ListData.AssignedTasks),
-		pq.Array(&u.ListData.CompletedTasks),
+		&u.UserID,
+		&u.TaskID,
+		&u.Completed,
 	)
 	if err == sql.ErrNoRows {
 		return u, nil
@@ -236,7 +262,11 @@ func (db *DB) MarkUserTaskCompleted(u *UserTask) (*UserTask, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `UPDATE coindrop_user_tasks SET completed = array_append(completed, $1) WHERE auth_user_id = $2`
+	sqlStatement := `
+		UPDATE coindrop_user_tasks
+		SET completed = array_append(completed, $1)
+		WHERE auth_user_id = $2
+	`
 
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)

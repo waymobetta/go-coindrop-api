@@ -86,6 +86,13 @@ type UserTask struct {
 	ListData   ListData `json:"list_data"`
 }
 
+type UserTask2 struct {
+	ID        string `json:"id"`
+	UserID    string `json:"user_id"`
+	TaskID    string `json:"task_id"`
+	Completed bool   `json:"completed"`
+}
+
 // ListData struct contains info about a user's assigned and completed tasks
 type ListData struct {
 	AssignedTasks  []string `json:"assigned_tasks"`
@@ -135,7 +142,7 @@ type AllQuizResults struct {
 // Badge struct contains info about a badge
 type Badge struct {
 	Description string `json:"description"`
-	ID          int    `json:"id"`
+	ID          string `json:"id"`
 	Name        string `json:"name"`
 	Recipients  int    `json:"recipients"`
 }

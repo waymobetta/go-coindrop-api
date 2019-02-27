@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.4.1
+// --version=v1.3.1
 
 package cli
 
@@ -106,7 +106,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 Payload example:
 
 {
-   "cognitoAuthUserId": "Animi ipsum iusto."
+   "cognitoAuthUserId": "Modi eos possimus aliquam."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
@@ -186,9 +186,9 @@ Payload example:
 Payload example:
 
 {
-   "cognitoAuthUserId": "Dolore quas et.",
-   "taskName": "Eos quia repellat optio nam voluptatem.",
-   "taskState": "Ut qui dolores expedita est."
+   "cognitoAuthUserId": "Ut qui dolores expedita est.",
+   "taskName": "Animi ipsum iusto.",
+   "taskState": "Quia autem sed et facilis earum deserunt."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp8.Run(c, args) },
 	}
@@ -204,7 +204,7 @@ Payload example:
 Payload example:
 
 {
-   "cognitoAuthUserId": "Quia autem sed et facilis earum deserunt.",
+   "cognitoAuthUserId": "Magni necessitatibus debitis qui quos atque.",
    "walletAddress": "0x845fdD93Cca3aE9e380d5556818e6d0b902B977c"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp9.Run(c, args) },

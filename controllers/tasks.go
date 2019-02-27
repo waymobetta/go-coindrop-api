@@ -122,8 +122,8 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 
 	// Put your logic here
 
-	userTask := new(db.UserTask)
-	userTask.AuthUserID = ctx.Params.Get("userId")
+	userTask := new(db.UserTask2)
+	userTask.UserID = ctx.Params.Get("userId")
 
 	_, err := c.db.GetUserTasks(userTask)
 	if err != nil {
@@ -134,36 +134,36 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 		})
 	}
 
-	// initialize new variable tasks of Tasks struct
-	tasks := new(db.Tasks)
+	// // initialize new variable tasks of Tasks struct
+	// tasks := new(db.Tasks)
 
-	// get all tasks
-	_, err = c.db.GetTasks(tasks)
-	if err != nil {
-		log.Errorf("[controller/tasks] %v", err)
-		return ctx.NotFound(&app.StandardError{
-			Code:    400,
-			Message: "could not get tasks from db",
-		})
-	}
+	// // get all tasks
+	// _, err = c.db.GetTasks(tasks)
+	// if err != nil {
+	// 	log.Errorf("[controller/tasks] %v", err)
+	// 	return ctx.NotFound(&app.StandardError{
+	// 		Code:    400,
+	// 		Message: "could not get tasks from db",
+	// 	})
+	// }
 
 	var t app.TaskCollection
 
-	// TODO:
-	// refactor to eliminate for loops if possible
-	for _, task := range tasks.Tasks {
-		for assignedTask := range userTask.ListData.AssignedTasks {
-			if task.Title == userTask.ListData.AssignedTasks[assignedTask] {
-				task.IsAssigned = true
-				for completedTask := range userTask.ListData.CompletedTasks {
-					if task.Title == userTask.ListData.CompletedTasks[completedTask] {
-						task.IsCompleted = true
-					}
-				}
-				t = append(t, &app.Task{task.Author, &app.Badge{task.BadgeData.Description, task.BadgeData.ID, task.BadgeData.Name, task.BadgeData.Recipients}, task.Description, task.ID, task.IsAssigned, task.IsCompleted, task.Title, task.Token, task.TokenAllocation, task.Type})
-			}
-		}
-	}
+	// // TODO:
+	// // refactor to eliminate for loops if possible
+	// for _, task := range tasks.Tasks {
+	// 	for assignedTask := range userTask.ListData.AssignedTasks {
+	// 		if task.Title == userTask.ListData.AssignedTasks[assignedTask] {
+	// 			task.IsAssigned = true
+	// 			for completedTask := range userTask.ListData.CompletedTasks {
+	// 				if task.Title == userTask.ListData.CompletedTasks[completedTask] {
+	// 					task.IsCompleted = true
+	// 				}
+	// 			}
+	// 			t = append(t, &app.Task{task.Author, &app.Badge{task.BadgeData.Description, task.BadgeData.ID, task.BadgeData.Name, task.BadgeData.Recipients}, task.Description, task.ID, task.IsAssigned, task.IsCompleted, task.Title, task.Token, task.TokenAllocation, task.Type})
+	// 		}
+	// 	}
+	// }
 
 	log.Printf("[controller/tasks] returned tasks for coindrop user: %v\n", userTask.AuthUserID)
 
