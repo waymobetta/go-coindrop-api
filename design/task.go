@@ -38,7 +38,7 @@ var _ = Resource("tasks", func() {
 var BadgeMedia = MediaType("application/vnd.badge+json", func() {
 	Description("Badge")
 	Attributes(func() {
-		Attribute("id", Integer, "badge ID")
+		Attribute("id", String, "badge ID")
 		Attribute("name", String, "badge name")
 		Attribute("description", String, "badge description")
 		Attribute("recipients", Integer, "badge recipients")

@@ -1,2 +1,8 @@
+# files
+.env.list
 .env.local
 .env.staging
+.DS_Store
+
+# directories
+.git

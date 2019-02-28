@@ -11,9 +11,16 @@ func (db *DB) GetTasks(tasks *Tasks) (*Tasks, error) {
 	// create SQL statement for db query
 	sqlStatement := `
 	SELECT
-		 id, title, type, author, description, token_name, token_allocation, badge
+		 id,
+		 title,
+		 type, 
+		 author, 
+		 description, 
+		 token_name, 
+		 token_allocation, 
+		 badge_id
 	FROM
-		coindrop_tasks
+		coindrop_tasks2
 	`
 
 	// execute db query by passing in prepared SQL statement
@@ -37,7 +44,7 @@ func (db *DB) GetTasks(tasks *Tasks) (*Tasks, error) {
 			&task.Description,
 			&task.Token,
 			&task.TokenAllocation,
-			&task.BadgeData.Name,
+			&task.BadgeData.ID,
 		)
 		if err != nil {
 			return tasks, err
@@ -63,10 +70,26 @@ func (db *DB) AddTask(t *Task) (*Task, error) {
 
 	// create SQL statement for db writes
 	sqlStatement := `
-	INSERT INTO coindrop_tasks
-		(title, type, author, description, token_name, token_allocation, badge)
+	INSERT INTO coindrop_tasks2
+		(
+			title, 
+			type, 
+			author, 
+			description, 
+			token_name, 
+			token_allocation, 
+			badge_id
+			)
 	VALUES 
-		($1,$2,$3,$4,$5,$6,$7)
+		(
+			$1,
+			$2,
+			$3,
+			$4,
+			$5,
+			$6,
+			$7
+		)
 	`
 
 	// prepare statement
@@ -85,7 +108,7 @@ func (db *DB) AddTask(t *Task) (*Task, error) {
 		t.Description,
 		t.Token,
 		t.TokenAllocation,
-		t.BadgeData.Name,
+		t.BadgeData.ID,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
@@ -106,14 +129,18 @@ func (db *DB) AddTask(t *Task) (*Task, error) {
 
 // GetUserTasks returns all info for specific quiz
 func (db *DB) GetUserTasks(u *UserTask) (*UserTask, error) {
+
 	// create SQL statement for db query
 	sqlStatement := `
-	SELECT 
-		id, auth_user_id, assigned, completed
-	FROM 
-		coindrop_user_tasks 
-	WHERE 
-		auth_user_id = $1
+	SELECT
+		id,
+		auth_user_id,
+		assigned,
+		completed
+	FROM
+		coindrop_user_tasks
+	WHERE
+		user_id = $1
 	`
 
 	// execute db query by passing in prepared SQL statement
@@ -142,6 +169,105 @@ func (db *DB) GetUserTasks(u *UserTask) (*UserTask, error) {
 	}
 
 	return u, nil
+}
+
+func (db *DB) GetUserTasks2(t *TaskUser) ([]UserTask2, error) {
+	userTasks := []UserTask2{}
+
+	sqlStatement := `
+	SELECT 
+		coindrop_user_tasks2.id,
+		task_id,
+		completed
+	FROM
+		coindrop_auth2
+	JOIN
+		coindrop_user_tasks2
+	ON 
+		coindrop_auth2.id = coindrop_user_tasks2.user_id
+	WHERE
+		coindrop_auth2.cognito_auth_user_id = $1
+	`
+
+	rows, err := db.client.Query(sqlStatement, t.AuthUserID)
+	if err != nil {
+		return userTasks, err
+	}
+
+	defer rows.Close()
+
+	// iterate over rows
+	for rows.Next() {
+		// initialize new struct per user in db to hold user info
+		// task := Task{BadgeData: new(Badge)}
+		userTask := UserTask2{}
+
+		err = rows.Scan(
+			&userTask.ID,
+			&userTask.TaskID,
+			&userTask.Completed,
+		)
+		if err != nil {
+			return userTasks, err
+		}
+		// append task object to slice of tasks
+		userTasks = append(userTasks, userTask)
+	}
+	err = rows.Err()
+	if err != nil {
+		return userTasks, err
+	}
+	return userTasks, nil
+}
+
+// needs fix
+func (db *DB) GetUserTasks3(t *TaskUser) ([]UserTask2, error) {
+	userTasks := []UserTask2{}
+
+	sqlStatement := `
+	SELECT 
+		coindrop_user_tasks2.id,
+		task_id,
+		completed
+	FROM
+		coindrop_auth2
+	JOIN
+		coindrop_user_tasks2
+	ON 
+		coindrop_auth2.id = coindrop_user_tasks2.user_id
+	WHERE
+		coindrop_auth2.cognito_auth_user_id = $1
+	`
+
+	rows, err := db.client.Query(sqlStatement, t.AuthUserID)
+	if err != nil {
+		return userTasks, err
+	}
+
+	defer rows.Close()
+
+	// iterate over rows
+	for rows.Next() {
+		// initialize new struct per user in db to hold user info
+		// task := Task{BadgeData: new(Badge)}
+		userTask := UserTask2{}
+
+		err = rows.Scan(
+			&userTask.ID,
+			&userTask.TaskID,
+			&userTask.Completed,
+		)
+		if err != nil {
+			return userTasks, err
+		}
+		// append task object to slice of tasks
+		userTasks = append(userTasks, userTask)
+	}
+	err = rows.Err()
+	if err != nil {
+		return userTasks, err
+	}
+	return userTasks, nil
 }
 
 // AddUserTask adds the listing and associated task data of a specific user
@@ -236,7 +362,11 @@ func (db *DB) MarkUserTaskCompleted(u *UserTask) (*UserTask, error) {
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `UPDATE coindrop_user_tasks SET completed = array_append(completed, $1) WHERE auth_user_id = $2`
+	sqlStatement := `
+		UPDATE coindrop_user_tasks
+		SET completed = array_append(completed, $1)
+		WHERE auth_user_id = $2
+	`
 
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)

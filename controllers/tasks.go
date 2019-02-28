@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/goadesign/goa"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
@@ -122,10 +124,10 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 
 	// Put your logic here
 
-	userTask := new(db.UserTask)
-	userTask.AuthUserID = ctx.Params.Get("userId")
+	taskUser := new(db.TaskUser)
+	taskUser.AuthUserID = ctx.Params.Get("userId")
 
-	_, err := c.db.GetUserTasks(userTask)
+	userTasks, err := c.db.GetUserTasks2(taskUser)
 	if err != nil {
 		log.Errorf("[controller/tasks] %v", err)
 		return ctx.NotFound(&app.StandardError{
@@ -134,38 +136,40 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 		})
 	}
 
-	// initialize new variable tasks of Tasks struct
-	tasks := new(db.Tasks)
+	fmt.Println(userTasks)
 
-	// get all tasks
-	_, err = c.db.GetTasks(tasks)
-	if err != nil {
-		log.Errorf("[controller/tasks] %v", err)
-		return ctx.NotFound(&app.StandardError{
-			Code:    400,
-			Message: "could not get tasks from db",
-		})
-	}
+	// // initialize new variable tasks of Tasks struct
+	// tasks := new(db.Tasks)
+
+	// // get all tasks
+	// _, err = c.db.GetTasks(tasks)
+	// if err != nil {
+	// 	log.Errorf("[controller/tasks] %v", err)
+	// 	return ctx.NotFound(&app.StandardError{
+	// 		Code:    400,
+	// 		Message: "could not get tasks from db",
+	// 	})
+	// }
 
 	var t app.TaskCollection
 
-	// TODO:
-	// refactor to eliminate for loops if possible
-	for _, task := range tasks.Tasks {
-		for assignedTask := range userTask.ListData.AssignedTasks {
-			if task.Title == userTask.ListData.AssignedTasks[assignedTask] {
-				task.IsAssigned = true
-				for completedTask := range userTask.ListData.CompletedTasks {
-					if task.Title == userTask.ListData.CompletedTasks[completedTask] {
-						task.IsCompleted = true
-					}
-				}
-				t = append(t, &app.Task{task.Author, &app.Badge{task.BadgeData.Description, task.BadgeData.ID, task.BadgeData.Name, task.BadgeData.Recipients}, task.Description, task.ID, task.IsAssigned, task.IsCompleted, task.Title, task.Token, task.TokenAllocation, task.Type})
-			}
-		}
-	}
+	// // TODO:
+	// // refactor to eliminate for loops if possible
+	// for _, task := range tasks.Tasks {
+	// 	for assignedTask := range userTask.ListData.AssignedTasks {
+	// 		if task.Title == userTask.ListData.AssignedTasks[assignedTask] {
+	// 			task.IsAssigned = true
+	// 			for completedTask := range userTask.ListData.CompletedTasks {
+	// 				if task.Title == userTask.ListData.CompletedTasks[completedTask] {
+	// 					task.IsCompleted = true
+	// 				}
+	// 			}
+	// 			t = append(t, &app.Task{task.Author, &app.Badge{task.BadgeData.Description, task.BadgeData.ID, task.BadgeData.Name, task.BadgeData.Recipients}, task.Description, task.ID, task.IsAssigned, task.IsCompleted, task.Title, task.Token, task.TokenAllocation, task.Type})
+	// 		}
+	// 	}
+	// }
 
-	log.Printf("[controller/tasks] returned tasks for coindrop user: %v\n", userTask.AuthUserID)
+	log.Printf("[controller/tasks] returned tasks for coindrop user: %v\n", taskUser.AuthUserID)
 
 	res := &app.Tasks{
 		Tasks: t,
