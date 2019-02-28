@@ -128,16 +128,17 @@ func (db *DB) AddTask(t *Task) (*Task, error) {
 }
 
 // GetUserTasks returns all info for specific quiz
-func (db *DB) GetUserTasks(u *UserTask2) (*UserTask, error) {
+func (db *DB) GetUserTasks(u *UserTask) (*UserTask, error) {
+
 	// create SQL statement for db query
 	sqlStatement := `
-	SELECT 
+	SELECT
 		id,
-		user_id,
-		task_id,
+		auth_user_id,
+		assigned,
 		completed
 	FROM
-		coindrop_user_tasks2
+		coindrop_user_tasks
 	WHERE
 		user_id = $1
 	`
@@ -151,14 +152,14 @@ func (db *DB) GetUserTasks(u *UserTask2) (*UserTask, error) {
 	defer stmt.Close()
 
 	// initialize row object
-	row := stmt.QueryRow(u.UserID)
+	row := stmt.QueryRow(u.AuthUserID)
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
 		&u.ID,
-		&u.UserID,
-		&u.TaskID,
-		&u.Completed,
+		&u.AuthUserID,
+		pq.Array(&u.ListData.AssignedTasks),
+		pq.Array(&u.ListData.CompletedTasks),
 	)
 	if err == sql.ErrNoRows {
 		return u, nil
@@ -168,6 +169,105 @@ func (db *DB) GetUserTasks(u *UserTask2) (*UserTask, error) {
 	}
 
 	return u, nil
+}
+
+func (db *DB) GetUserTasks2(t *TaskUser) ([]UserTask2, error) {
+	userTasks := []UserTask2{}
+
+	sqlStatement := `
+	SELECT 
+		coindrop_user_tasks2.id,
+		task_id,
+		completed
+	FROM
+		coindrop_auth2
+	JOIN
+		coindrop_user_tasks2
+	ON 
+		coindrop_auth2.id = coindrop_user_tasks2.user_id
+	WHERE
+		coindrop_auth2.cognito_auth_user_id = $1
+	`
+
+	rows, err := db.client.Query(sqlStatement, t.AuthUserID)
+	if err != nil {
+		return userTasks, err
+	}
+
+	defer rows.Close()
+
+	// iterate over rows
+	for rows.Next() {
+		// initialize new struct per user in db to hold user info
+		// task := Task{BadgeData: new(Badge)}
+		userTask := UserTask2{}
+
+		err = rows.Scan(
+			&userTask.ID,
+			&userTask.TaskID,
+			&userTask.Completed,
+		)
+		if err != nil {
+			return userTasks, err
+		}
+		// append task object to slice of tasks
+		userTasks = append(userTasks, userTask)
+	}
+	err = rows.Err()
+	if err != nil {
+		return userTasks, err
+	}
+	return userTasks, nil
+}
+
+// needs fix
+func (db *DB) GetUserTasks3(t *TaskUser) ([]UserTask2, error) {
+	userTasks := []UserTask2{}
+
+	sqlStatement := `
+	SELECT 
+		coindrop_user_tasks2.id,
+		task_id,
+		completed
+	FROM
+		coindrop_auth2
+	JOIN
+		coindrop_user_tasks2
+	ON 
+		coindrop_auth2.id = coindrop_user_tasks2.user_id
+	WHERE
+		coindrop_auth2.cognito_auth_user_id = $1
+	`
+
+	rows, err := db.client.Query(sqlStatement, t.AuthUserID)
+	if err != nil {
+		return userTasks, err
+	}
+
+	defer rows.Close()
+
+	// iterate over rows
+	for rows.Next() {
+		// initialize new struct per user in db to hold user info
+		// task := Task{BadgeData: new(Badge)}
+		userTask := UserTask2{}
+
+		err = rows.Scan(
+			&userTask.ID,
+			&userTask.TaskID,
+			&userTask.Completed,
+		)
+		if err != nil {
+			return userTasks, err
+		}
+		// append task object to slice of tasks
+		userTasks = append(userTasks, userTask)
+	}
+	err = rows.Err()
+	if err != nil {
+		return userTasks, err
+	}
+	return userTasks, nil
 }
 
 // AddUserTask adds the listing and associated task data of a specific user

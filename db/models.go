@@ -77,6 +77,19 @@ type Task struct {
 	Type            string `json:"type"`
 }
 
+type Task2 struct {
+	Author          string `json:"author"`
+	BadgeData       *Badge `json:"badge_id"`
+	Description     string `json:"description"`
+	ID              string `json:"id"`
+	Assigned        bool   `json:"assigned"`
+	Completed       bool   `json:"completed"`
+	Title           string `json:"title"`
+	Token           string `json:"token"`
+	TokenAllocation int    `json:"token_allocation"`
+	Type            string `json:"type"`
+}
+
 // UserTask struct contains info about tasks for a specific user
 type UserTask struct {
 	ID         int      `json:"id"`
