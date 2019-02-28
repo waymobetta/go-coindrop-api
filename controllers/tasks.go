@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/goadesign/goa"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
@@ -122,10 +124,10 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 
 	// Put your logic here
 
-	userTask := new(db.UserTask2)
-	userTask.UserID = ctx.Params.Get("userId")
+	taskUser := new(db.TaskUser)
+	taskUser.AuthUserID = ctx.Params.Get("userId")
 
-	_, err := c.db.GetUserTasks(userTask)
+	userTasks, err := c.db.GetUserTasks2(taskUser)
 	if err != nil {
 		log.Errorf("[controller/tasks] %v", err)
 		return ctx.NotFound(&app.StandardError{
@@ -133,6 +135,8 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 			Message: "could not get user's tasks from db",
 		})
 	}
+
+	fmt.Println(userTasks)
 
 	// // initialize new variable tasks of Tasks struct
 	// tasks := new(db.Tasks)
@@ -165,7 +169,7 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 	// 	}
 	// }
 
-	log.Printf("[controller/tasks] returned tasks for coindrop user: %v\n", userTask.AuthUserID)
+	log.Printf("[controller/tasks] returned tasks for coindrop user: %v\n", taskUser.AuthUserID)
 
 	res := &app.Tasks{
 		Tasks: t,
