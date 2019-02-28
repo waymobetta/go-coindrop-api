@@ -116,17 +116,12 @@ func (ut *UserPayload) Validate() (err error) {
 
 // Wallet payload
 type walletPayload struct {
-	// Cognito auth user ID
-	CognitoAuthUserID *string `form:"cognitoAuthUserId,omitempty" json:"cognitoAuthUserId,omitempty" yaml:"cognitoAuthUserId,omitempty" xml:"cognitoAuthUserId,omitempty"`
 	// Wallet address
 	WalletAddress *string `form:"walletAddress,omitempty" json:"walletAddress,omitempty" yaml:"walletAddress,omitempty" xml:"walletAddress,omitempty"`
 }
 
 // Validate validates the walletPayload type instance.
 func (ut *walletPayload) Validate() (err error) {
-	if ut.CognitoAuthUserID == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "cognitoAuthUserId"))
-	}
 	if ut.WalletAddress == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "walletAddress"))
 	}
@@ -141,9 +136,6 @@ func (ut *walletPayload) Validate() (err error) {
 // Publicize creates WalletPayload from walletPayload
 func (ut *walletPayload) Publicize() *WalletPayload {
 	var pub WalletPayload
-	if ut.CognitoAuthUserID != nil {
-		pub.CognitoAuthUserID = *ut.CognitoAuthUserID
-	}
 	if ut.WalletAddress != nil {
 		pub.WalletAddress = *ut.WalletAddress
 	}
@@ -152,17 +144,12 @@ func (ut *walletPayload) Publicize() *WalletPayload {
 
 // Wallet payload
 type WalletPayload struct {
-	// Cognito auth user ID
-	CognitoAuthUserID string `form:"cognitoAuthUserId" json:"cognitoAuthUserId" yaml:"cognitoAuthUserId" xml:"cognitoAuthUserId"`
 	// Wallet address
 	WalletAddress string `form:"walletAddress" json:"walletAddress" yaml:"walletAddress" xml:"walletAddress"`
 }
 
 // Validate validates the WalletPayload type instance.
 func (ut *WalletPayload) Validate() (err error) {
-	if ut.CognitoAuthUserID == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "cognitoAuthUserId"))
-	}
 	if ut.WalletAddress == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "walletAddress"))
 	}

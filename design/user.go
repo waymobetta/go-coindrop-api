@@ -21,6 +21,7 @@ var _ = Resource("user", func() { // Resources group related API endpoints
 		Response(BadRequest, StandardErrorMedia)
 		Response(Gone, StandardErrorMedia)
 		Response(InternalServerError, StandardErrorMedia)
+		NoSecurity()
 	})
 
 	Action("show", func() { // Actions define a single API endpoint together

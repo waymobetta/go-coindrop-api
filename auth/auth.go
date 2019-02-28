@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/binary"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -96,6 +97,21 @@ func (a *Auth) ParseJWT(tokenString string) (*jwt.Token, error) {
 	}
 
 	return token, nil
+}
+
+// GetClaim ...
+func (a *Auth) GetClaim(token *jwt.Token, claimKey string) (interface{}, error) {
+	claimsMap, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil, errors.New("could not type assert claims map")
+	}
+
+	value, ok := claimsMap[claimKey]
+	if !ok {
+		return nil, errors.New("claims not found")
+	}
+
+	return value, nil
 }
 
 // JWK ...

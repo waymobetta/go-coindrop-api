@@ -318,10 +318,9 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 		}
 		return ctrl.Create(rctx)
 	}
-	h = handleSecurity("JWTAuth", h)
 	h = handleUserOrigin(h)
 	service.Mux.Handle("POST", "/v1/users", ctrl.MuxHandler("create", h, unmarshalCreateUserPayload))
-	service.LogInfo("mount", "ctrl", "User", "action", "Create", "route", "POST /v1/users", "security", "JWTAuth")
+	service.LogInfo("mount", "ctrl", "User", "action", "Create", "route", "POST /v1/users")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request

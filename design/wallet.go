@@ -54,10 +54,9 @@ var WalletMedia = MediaType("application/vnd.wallet+json", func() {
 // WalletPayload is the payload for updating a user's wallet
 var WalletPayload = Type("WalletPayload", func() {
 	Description("Wallet payload")
-	Attribute("cognitoAuthUserId", String, "Cognito auth user ID")
 	Attribute("walletAddress", String, "Wallet address", func() {
 		Pattern("^0x[0-9a-fA-F]{40}$")
 		Example("0x845fdD93Cca3aE9e380d5556818e6d0b902B977c")
 	})
-	Required("cognitoAuthUserId", "walletAddress")
+	Required("walletAddress")
 })

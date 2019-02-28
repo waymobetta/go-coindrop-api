@@ -27,8 +27,9 @@ func (c *WalletController) Show(ctx *app.ShowWalletContext) error {
 
 	// Put your logic here
 
+	cognitoUserID := ctx.Value("cognitoUserID").(string)
 	user := new(db.User)
-	user.AuthUserID = ctx.Params.Get("userId")
+	user.AuthUserID = cognitoUserID
 
 	// return a user's wallet using the AWS cognito user ID as the key
 	_, err := c.db.GetWallet(user)
@@ -56,8 +57,9 @@ func (c *WalletController) Update(ctx *app.UpdateWalletContext) error {
 
 	// Put your logic here
 
+	cognitoUserID := ctx.Value("cognitoUserID").(string)
 	user := new(db.User)
-	user.AuthUserID = ctx.Payload.CognitoAuthUserID
+	user.AuthUserID = cognitoUserID
 	user.WalletAddress = ctx.Payload.WalletAddress
 
 	_, err := c.db.UpdateWallet(user)

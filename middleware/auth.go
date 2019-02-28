@@ -32,8 +32,8 @@ func Auth(auth *authpkg.Auth) goa.Middleware {
 				log.Errorln("[middleware/auth] Auth token is missing")
 				return ErrAuthFailed("Authentication failed")
 			}
-			jwt := bearer[1]
-			token, err := auth.ParseJWT(jwt)
+			jwtToken := bearer[1]
+			token, err := auth.ParseJWT(jwtToken)
 			if err != nil {
 				log.Errorf("[middleware/auth] jwt parse error: %v\n", err)
 				return ErrAuthFailed("Authentication failed")
@@ -43,8 +43,20 @@ func Auth(auth *authpkg.Auth) goa.Middleware {
 				return ErrAuthFailed("Authentication failed")
 			}
 
+			cognitoUserID, err := auth.GetClaim(token, "sub")
+			if err != nil {
+				log.Errorf("[middleware/auth] could not retrieve token claim: %v\n", err)
+				return ErrAuthFailed("Authentication failed")
+			}
+			if cognitoUserID == "" {
+				log.Error("[middleware/auth] could not retrieve user ID\n")
+				return ErrAuthFailed("Authentication failed")
+			}
+
+			newctx := context.WithValue(ctx, "cognitoUserID", cognitoUserID)
+
 			// Then call the next handler:
-			return h(ctx, rw, req)
+			return h(newctx, rw, req)
 		}
 	}
 }

@@ -204,7 +204,6 @@ Payload example:
 Payload example:
 
 {
-   "cognitoAuthUserId": "Quia autem sed et facilis earum deserunt.",
    "walletAddress": "0x845fdD93Cca3aE9e380d5556818e6d0b902B977c"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp9.Run(c, args) },
