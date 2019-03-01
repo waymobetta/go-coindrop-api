@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/goadesign/goa"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
@@ -135,8 +133,6 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 			Message: "could not get user's tasks from db",
 		})
 	}
-
-	fmt.Println("Number of tasks: ", len(tasks))
 
 	var t app.TaskCollection
 
