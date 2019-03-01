@@ -106,7 +106,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 Payload example:
 
 {
-   "cognitoAuthUserId": "Magni necessitatibus debitis qui quos atque."
+   "cognitoAuthUserId": "Modi eos possimus aliquam."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
@@ -186,9 +186,9 @@ Payload example:
 Payload example:
 
 {
-   "cognitoAuthUserId": "Animi ipsum iusto.",
-   "taskName": "Quia autem sed et facilis earum deserunt.",
-   "taskState": "Modi eos possimus aliquam."
+   "cognitoAuthUserId": "Ut qui dolores expedita est.",
+   "taskName": "Animi ipsum iusto.",
+   "taskState": "Quia autem sed et facilis earum deserunt."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp8.Run(c, args) },
 	}

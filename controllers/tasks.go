@@ -127,7 +127,7 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 	taskUser := new(db.TaskUser)
 	taskUser.AuthUserID = ctx.Params.Get("userId")
 
-	userTasks, err := c.db.GetUserTasks(taskUser)
+	tasks, err := c.db.GetUserTasks(taskUser)
 	if err != nil {
 		log.Errorf("[controller/tasks] %v", err)
 		return ctx.NotFound(&app.StandardError{
@@ -136,38 +136,27 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 		})
 	}
 
-	fmt.Println(userTasks)
-
-	// // initialize new variable tasks of Tasks struct
-	// tasks := new(db.Tasks)
-
-	// // get all tasks
-	// _, err = c.db.GetTasks(tasks)
-	// if err != nil {
-	// 	log.Errorf("[controller/tasks] %v", err)
-	// 	return ctx.NotFound(&app.StandardError{
-	// 		Code:    400,
-	// 		Message: "could not get tasks from db",
-	// 	})
-	// }
+	fmt.Println("Number of tasks: ", len(tasks))
 
 	var t app.TaskCollection
 
-	// // TODO:
-	// // refactor to eliminate for loops if possible
-	// for _, task := range tasks.Tasks {
-	// 	for assignedTask := range userTask.ListData.AssignedTasks {
-	// 		if task.Title == userTask.ListData.AssignedTasks[assignedTask] {
-	// 			task.IsAssigned = true
-	// 			for completedTask := range userTask.ListData.CompletedTasks {
-	// 				if task.Title == userTask.ListData.CompletedTasks[completedTask] {
-	// 					task.IsCompleted = true
-	// 				}
-	// 			}
-	// 			t = append(t, &app.Task{task.Author, &app.Badge{task.BadgeData.Description, task.BadgeData.ID, task.BadgeData.Name, task.BadgeData.Recipients}, task.Description, task.ID, task.IsAssigned, task.IsCompleted, task.Title, task.Token, task.TokenAllocation, task.Type})
-	// 		}
-	// 	}
-	// }
+	for _, task := range tasks {
+		t = append(t, &app.Task{
+			ID:              task.ID,
+			Title:           task.Title,
+			Type:            task.Type,
+			Author:          task.Author,
+			Description:     task.Description,
+			Token:           task.Token,
+			TokenAllocation: task.TokenAllocation,
+			Badge: &app.Badge{
+				ID:          task.BadgeData.ID,
+				Name:        task.BadgeData.Name,
+				Description: task.BadgeData.Description,
+				Recipients:  task.BadgeData.Recipients,
+			},
+		})
+	}
 
 	log.Printf("[controller/tasks] returned tasks for coindrop user: %v\n", taskUser.AuthUserID)
 

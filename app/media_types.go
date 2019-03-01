@@ -106,10 +106,6 @@ type Task struct {
 	Description string `form:"description" json:"description" yaml:"description" xml:"description"`
 	// task ID
 	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
-	// task assigned flag
-	IsAssigned bool `form:"isAssigned" json:"isAssigned" yaml:"isAssigned" xml:"isAssigned"`
-	// task completed flag
-	IsCompleted bool `form:"isCompleted" json:"isCompleted" yaml:"isCompleted" xml:"isCompleted"`
 	// task title
 	Title string `form:"title" json:"title" yaml:"title" xml:"title"`
 	// task token
@@ -144,7 +140,6 @@ func (mt *Task) Validate() (err error) {
 	if mt.Badge == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "badge"))
 	}
-
 	if mt.Badge != nil {
 		if err2 := mt.Badge.Validate(); err2 != nil {
 			err = goa.MergeErrors(err, err2)

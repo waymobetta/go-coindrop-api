@@ -104,12 +104,10 @@ definitions:
         recipients: 7796898160710639916
       description: Autem est.
       id: Omnis labore.
-      isAssigned: false
-      isCompleted: false
-      title: Et corporis aut.
-      token: Dolorem officiis odit vero eum fuga quo.
-      tokenAllocation: 7506064565955886677
-      type: Adipisci error itaque velit quos.
+      title: Et non.
+      token: Corporis aut ullam.
+      tokenAllocation: 4218755209323260807
+      type: Odit vero eum fuga quo rerum.
     properties:
       author:
         description: task author
@@ -125,30 +123,22 @@ definitions:
         description: task ID
         example: Omnis labore.
         type: string
-      isAssigned:
-        description: task assigned flag
-        example: false
-        type: boolean
-      isCompleted:
-        description: task completed flag
-        example: false
-        type: boolean
       title:
         description: task title
-        example: Et corporis aut.
+        example: Et non.
         type: string
       token:
         description: task token
-        example: Dolorem officiis odit vero eum fuga quo.
+        example: Corporis aut ullam.
         type: string
       tokenAllocation:
         description: token allocation
-        example: 7506064565955886677
+        example: 4218755209323260807
         format: int64
         type: integer
       type:
         description: task type
-        example: Adipisci error itaque velit quos.
+        example: Odit vero eum fuga quo rerum.
         type: string
     required:
     - id
@@ -159,8 +149,6 @@ definitions:
     - token
     - tokenAllocation
     - badge
-    - isAssigned
-    - isCompleted
     title: 'Mediatype identifier: application/vnd.task+json; view=default'
     type: object
   TaskCollection:
@@ -174,12 +162,10 @@ definitions:
         recipients: 7796898160710639916
       description: Autem est.
       id: Omnis labore.
-      isAssigned: false
-      isCompleted: false
-      title: Et corporis aut.
-      token: Dolorem officiis odit vero eum fuga quo.
-      tokenAllocation: 7506064565955886677
-      type: Adipisci error itaque velit quos.
+      title: Et non.
+      token: Corporis aut ullam.
+      tokenAllocation: 4218755209323260807
+      type: Odit vero eum fuga quo rerum.
     items:
       $ref: '#/definitions/Task'
     title: 'Mediatype identifier: application/vnd.task+json; type=collection; view=default'
@@ -187,21 +173,21 @@ definitions:
   TaskPayload:
     description: Task payload
     example:
-      cognitoAuthUserId: Animi ipsum iusto.
-      taskName: Quia autem sed et facilis earum deserunt.
-      taskState: Modi eos possimus aliquam.
+      cognitoAuthUserId: Ut qui dolores expedita est.
+      taskName: Animi ipsum iusto.
+      taskState: Quia autem sed et facilis earum deserunt.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Animi ipsum iusto.
+        example: Ut qui dolores expedita est.
         type: string
       taskName:
         description: task name
-        example: Quia autem sed et facilis earum deserunt.
+        example: Animi ipsum iusto.
         type: string
       taskState:
         description: task state
-        example: Modi eos possimus aliquam.
+        example: Quia autem sed et facilis earum deserunt.
         type: string
     required:
     - cognitoAuthUserId
@@ -221,12 +207,34 @@ definitions:
           recipients: 7796898160710639916
         description: Autem est.
         id: Omnis labore.
-        isAssigned: false
-        isCompleted: false
-        title: Et corporis aut.
-        token: Dolorem officiis odit vero eum fuga quo.
-        tokenAllocation: 7506064565955886677
-        type: Adipisci error itaque velit quos.
+        title: Et non.
+        token: Corporis aut ullam.
+        tokenAllocation: 4218755209323260807
+        type: Odit vero eum fuga quo rerum.
+      - author: Corrupti eum fugit eaque.
+        badge:
+          description: Eaque facere voluptates consequatur nihil odit.
+          id: Quam quae aut cumque consequatur asperiores.
+          name: Hic illum veniam magni nam perferendis.
+          recipients: 7796898160710639916
+        description: Autem est.
+        id: Omnis labore.
+        title: Et non.
+        token: Corporis aut ullam.
+        tokenAllocation: 4218755209323260807
+        type: Odit vero eum fuga quo rerum.
+      - author: Corrupti eum fugit eaque.
+        badge:
+          description: Eaque facere voluptates consequatur nihil odit.
+          id: Quam quae aut cumque consequatur asperiores.
+          name: Hic illum veniam magni nam perferendis.
+          recipients: 7796898160710639916
+        description: Autem est.
+        id: Omnis labore.
+        title: Et non.
+        token: Corporis aut ullam.
+        tokenAllocation: 4218755209323260807
+        type: Odit vero eum fuga quo rerum.
     properties:
       tasks:
         $ref: '#/definitions/TaskCollection'
@@ -237,26 +245,26 @@ definitions:
   User:
     description: A user (default view)
     example:
-      cognitoAuthUserId: Omnis deleniti qui aut.
-      id: Omnis illum nesciunt itaque quam sit.
-      name: Deleniti voluptates dolore quas et.
-      walletAddress: Eos quia repellat optio nam voluptatem.
+      cognitoAuthUserId: Natus est et harum labore id.
+      id: Ut omnis deleniti qui aut exercitationem.
+      name: Illum nesciunt itaque quam sit nihil.
+      walletAddress: Voluptates dolore quas et.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Omnis deleniti qui aut.
+        example: Natus est et harum labore id.
         type: string
       id:
         description: Unique user ID
-        example: Omnis illum nesciunt itaque quam sit.
+        example: Ut omnis deleniti qui aut exercitationem.
         type: string
       name:
         description: Name of user
-        example: Deleniti voluptates dolore quas et.
+        example: Illum nesciunt itaque quam sit nihil.
         type: string
       walletAddress:
         description: Wallet address
-        example: Eos quia repellat optio nam voluptatem.
+        example: Voluptates dolore quas et.
         type: string
     required:
     - id
@@ -265,11 +273,11 @@ definitions:
   UserPayload:
     description: User payload
     example:
-      cognitoAuthUserId: Magni necessitatibus debitis qui quos atque.
+      cognitoAuthUserId: Modi eos possimus aliquam.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Magni necessitatibus debitis qui quos atque.
+        example: Modi eos possimus aliquam.
         type: string
     required:
     - cognitoAuthUserId
@@ -278,11 +286,11 @@ definitions:
   Wallet:
     description: A wallet (default view)
     example:
-      walletAddress: Ut qui dolores expedita est.
+      walletAddress: Eos quia repellat optio nam voluptatem.
     properties:
       walletAddress:
         description: wallet address
-        example: Ut qui dolores expedita est.
+        example: Eos quia repellat optio nam voluptatem.
         type: string
     required:
     - walletAddress

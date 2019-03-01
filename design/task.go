@@ -69,8 +69,6 @@ var TaskMedia = MediaType("application/vnd.task+json", func() {
 		Attribute("token", String, "task token")
 		Attribute("tokenAllocation", Integer, "token allocation")
 		Attribute("badge", BadgeMedia, "task badge")
-		Attribute("isAssigned", Boolean, "task assigned flag")
-		Attribute("isCompleted", Boolean, "task completed flag")
 		Required(
 			"id",
 			"title",
@@ -80,8 +78,6 @@ var TaskMedia = MediaType("application/vnd.task+json", func() {
 			"token",
 			"tokenAllocation",
 			"badge",
-			"isAssigned",
-			"isCompleted",
 		)
 	})
 	View("default", func() {
@@ -93,8 +89,6 @@ var TaskMedia = MediaType("application/vnd.task+json", func() {
 		Attribute("token")
 		Attribute("tokenAllocation")
 		Attribute("badge")
-		Attribute("isAssigned")
-		Attribute("isCompleted")
 	})
 })
 

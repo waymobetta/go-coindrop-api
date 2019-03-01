@@ -132,42 +132,6 @@ func NewRouter(config *Config) *mux.Router {
 			hdlrs.ValidateStackVerificationCode,
 		},
 		{
-			"TasksGet",
-			"GET",
-			"/api/v1/gettasks",
-			hdlrs.TasksGet,
-		},
-		{
-			"TaskAdd",
-			"POST",
-			"/api/v1/addtask",
-			hdlrs.TaskAdd,
-		},
-		{
-			"UserTasksGet",
-			"POST",
-			"/api/v1/getusertasks",
-			hdlrs.UserTasksGet,
-		},
-		{
-			"UserTaskAdd",
-			"POST",
-			"/api/v1/addusertask",
-			hdlrs.UserTaskAdd,
-		},
-		{
-			"UserTaskComplete",
-			"POST",
-			"/api/v1/completeusertask",
-			hdlrs.UserTaskComplete,
-		},
-		{
-			"UserTaskAssign",
-			"POST",
-			"/api/v1/assignusertask",
-			hdlrs.UserTaskAssign,
-		},
-		{
 			"ResultsPost",
 			"POST",
 			"/api/v1/postresults",

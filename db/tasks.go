@@ -126,8 +126,8 @@ func (db *DB) AddTask(t *Task) (*Task, error) {
 }
 
 // GetUserTasks returns all info for specific quiz
-func (db *DB) GetUserTasks(t *TaskUser) ([]UserTask2, error) {
-	userTasks := []UserTask2{}
+func (db *DB) GetUserTasks(t *TaskUser) ([]Task, error) {
+	tasks := []Task{}
 
 	sqlStatement := `
 	SELECT 
@@ -155,33 +155,37 @@ func (db *DB) GetUserTasks(t *TaskUser) ([]UserTask2, error) {
 
 	rows, err := db.client.Query(sqlStatement, t.AuthUserID)
 	if err != nil {
-		return userTasks, err
+		return tasks, err
 	}
 
 	defer rows.Close()
 
 	// iterate over rows
 	for rows.Next() {
-		// initialize new struct per user in db to hold user info
-		// task := Task{BadgeData: new(Badge)}
-		userTask := UserTask2{}
+		// initialize new struct per task in db to hold task info
+		task := Task{BadgeData: new(Badge)}
 
 		err = rows.Scan(
-			&userTask.ID,
-			&userTask.TaskID,
-			&userTask.Completed,
+			&task.ID,
+			&task.Title,
+			&task.Type,
+			&task.Author,
+			&task.Description,
+			&task.Token,
+			&task.TokenAllocation,
+			&task.BadgeData.ID,
 		)
 		if err != nil {
-			return userTasks, err
+			return tasks, err
 		}
 		// append task object to slice of tasks
-		userTasks = append(userTasks, userTask)
+		tasks = append(tasks, task)
 	}
 	err = rows.Err()
 	if err != nil {
-		return userTasks, err
+		return tasks, err
 	}
-	return userTasks, nil
+	return tasks, nil
 }
 
 // AddUserTask adds the listing and associated task data of a specific user
