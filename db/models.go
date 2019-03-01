@@ -66,19 +66,6 @@ type Tasks struct {
 // Task struct contains info about a task
 type Task struct {
 	Author          string `json:"author"`
-	BadgeData       *Badge `json:"badge_data"`
-	Description     string `json:"description"`
-	ID              int    `json:"id"`
-	IsAssigned      bool   `json:"is_assigned"`
-	IsCompleted     bool   `json:"is_completed"`
-	Title           string `json:"title"`
-	Token           string `json:"token"`
-	TokenAllocation int    `json:"token_allocation"`
-	Type            string `json:"type"`
-}
-
-type Task2 struct {
-	Author          string `json:"author"`
 	BadgeData       *Badge `json:"badge_id"`
 	Description     string `json:"description"`
 	ID              string `json:"id"`

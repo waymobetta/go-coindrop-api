@@ -127,7 +127,7 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 	taskUser := new(db.TaskUser)
 	taskUser.AuthUserID = ctx.Params.Get("userId")
 
-	userTasks, err := c.db.GetUserTasks2(taskUser)
+	userTasks, err := c.db.GetUserTasks(taskUser)
 	if err != nil {
 		log.Errorf("[controller/tasks] %v", err)
 		return ctx.NotFound(&app.StandardError{

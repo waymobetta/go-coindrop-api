@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.4.1
+// --version=v1.3.1
 
 package client
 
@@ -141,7 +141,7 @@ type Task struct {
 	// task description
 	Description string `form:"description" json:"description" yaml:"description" xml:"description"`
 	// task ID
-	ID int `form:"id" json:"id" yaml:"id" xml:"id"`
+	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
 	// task assigned flag
 	IsAssigned bool `form:"isAssigned" json:"isAssigned" yaml:"isAssigned" xml:"isAssigned"`
 	// task completed flag
@@ -158,7 +158,9 @@ type Task struct {
 
 // Validate validates the Task media type instance.
 func (mt *Task) Validate() (err error) {
-
+	if mt.ID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "id"))
+	}
 	if mt.Title == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "title"))
 	}

@@ -61,7 +61,7 @@ var BadgeMedia = MediaType("application/vnd.badge+json", func() {
 var TaskMedia = MediaType("application/vnd.task+json", func() {
 	Description("Task")
 	Attributes(func() {
-		Attribute("id", Integer, "task ID")
+		Attribute("id", String, "task ID")
 		Attribute("title", String, "task title")
 		Attribute("type", String, "task type")
 		Attribute("author", String, "task author")
