@@ -1,7 +1,7 @@
 package keybase
 
 // KeybaseData profile info
-type KeybaseData struct {
+type Keybase struct {
 	Bio                string `json:"bio"`
 	Location           string `json:"location"`
 	FullName           string `json:"full_name"`

@@ -18,7 +18,7 @@ func (db *DB) UpdateWallet(u *User) (*User, error) {
 	// create SQL statement for db update
 
 	// TODO:
-	// INSERT (IF NOT EXISTS) + JOIN
+	// INSERT (IF NOT EXISTS
 	sqlStatement := `
 		UPDATE
 			coindrop_wallets
@@ -27,6 +27,7 @@ func (db *DB) UpdateWallet(u *User) (*User, error) {
 		FROM
 			coindrop_auth2
 		WHERE
+			coindrop_auth2.wallet_id = coindrop_wallets.id AND
 			coindrop_auth2.cognito_auth_user_id = $2
 	`
 

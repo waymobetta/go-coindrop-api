@@ -26,13 +26,13 @@ func (db *DB) AddStackUser(u *User) (*User, error) {
 	// execute db write using unique seller info hash to access data
 	_, err = stmt.Exec(
 		&u.AuthUserID,
-		&u.StackOverflowData.ExchangeAccountID,
-		&u.StackOverflowData.UserID,
-		&u.StackOverflowData.DisplayName,
-		pq.Array(&u.StackOverflowData.Accounts),
-		&u.StackOverflowData.VerificationData.PostedVerificationCode,
-		&u.StackOverflowData.VerificationData.StoredVerificationCode,
-		&u.StackOverflowData.VerificationData.IsVerified,
+		&u.StackOverflow.ExchangeAccountID,
+		&u.StackOverflow.UserID,
+		&u.StackOverflow.DisplayName,
+		pq.Array(&u.StackOverflow.Accounts),
+		&u.StackOverflow.Verification.PostedVerificationCode,
+		&u.StackOverflow.Verification.ConfirmedVerificationCode,
+		&u.StackOverflow.Verification.Verified,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
@@ -71,13 +71,13 @@ func (db *DB) GetStackUser(u *User) (*User, error) {
 	err = row.Scan(
 		&u.ID,
 		&u.AuthUserID,
-		&u.StackOverflowData.ExchangeAccountID,
-		&u.StackOverflowData.UserID,
-		&u.StackOverflowData.DisplayName,
-		pq.Array(&u.StackOverflowData.Accounts),
-		&u.StackOverflowData.VerificationData.PostedVerificationCode,
-		&u.StackOverflowData.VerificationData.StoredVerificationCode,
-		&u.StackOverflowData.VerificationData.IsVerified,
+		&u.StackOverflow.ExchangeAccountID,
+		&u.StackOverflow.UserID,
+		&u.StackOverflow.DisplayName,
+		pq.Array(&u.StackOverflow.Accounts),
+		&u.StackOverflow.Verification.PostedVerificationCode,
+		&u.StackOverflow.Verification.ConfirmedVerificationCode,
+		&u.StackOverflow.Verification.Verified,
 	)
 	if err != nil {
 		return u, err
@@ -106,7 +106,7 @@ func (db *DB) UpdateStackAboutInfo(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique reddit username as the identifier
-	_, err = stmt.Exec(u.StackOverflowData.ExchangeAccountID, u.StackOverflowData.DisplayName, pq.Array(u.StackOverflowData.Accounts), u.AuthUserID)
+	_, err = stmt.Exec(u.StackOverflow.ExchangeAccountID, u.StackOverflow.DisplayName, pq.Array(u.StackOverflow.Accounts), u.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
@@ -144,7 +144,7 @@ func (db *DB) UpdateStackVerificationCode(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique reddit username as the identifier
-	_, err = stmt.Exec(u.StackOverflowData.UserID, u.StackOverflowData.VerificationData.StoredVerificationCode, u.StackOverflowData.VerificationData.PostedVerificationCode, u.StackOverflowData.VerificationData.IsVerified, u.AuthUserID)
+	_, err = stmt.Exec(u.StackOverflow.UserID, u.StackOverflow.Verification.ConfirmedVerificationCode, u.StackOverflow.Verification.PostedVerificationCode, u.StackOverflow.Verification.Verified, u.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()

@@ -25,6 +25,11 @@ func QuizHref() string {
 	return "/v1/quiz"
 }
 
+// RedditHref returns the resource href.
+func RedditHref() string {
+	return "/v1/social/reddit"
+}
+
 // ResultsHref returns the resource href.
 func ResultsHref() string {
 	return "/v1/quiz/results"

@@ -14,6 +14,51 @@ import (
 	"github.com/goadesign/goa"
 )
 
+// Reddit User payload
+type redditUserPayload struct {
+	// User ID
+	ID *string `form:"id,omitempty" json:"id,omitempty" yaml:"id,omitempty" xml:"id,omitempty"`
+}
+
+// Validate validates the redditUserPayload type instance.
+func (ut *redditUserPayload) Validate() (err error) {
+	if ut.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "id"))
+	}
+	if ut.ID != nil {
+		if ok := goa.ValidatePattern(`^0x[0-9a-fA-F]{40}$`, *ut.ID); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`request.id`, *ut.ID, `^0x[0-9a-fA-F]{40}$`))
+		}
+	}
+	return
+}
+
+// Publicize creates RedditUserPayload from redditUserPayload
+func (ut *redditUserPayload) Publicize() *RedditUserPayload {
+	var pub RedditUserPayload
+	if ut.ID != nil {
+		pub.ID = *ut.ID
+	}
+	return &pub
+}
+
+// Reddit User payload
+type RedditUserPayload struct {
+	// User ID
+	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
+}
+
+// Validate validates the RedditUserPayload type instance.
+func (ut *RedditUserPayload) Validate() (err error) {
+	if ut.ID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "id"))
+	}
+	if ok := goa.ValidatePattern(`^0x[0-9a-fA-F]{40}$`, ut.ID); !ok {
+		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.id`, ut.ID, `^0x[0-9a-fA-F]{40}$`))
+	}
+	return
+}
+
 // Task payload
 type taskPayload struct {
 	// Cognito auth user ID

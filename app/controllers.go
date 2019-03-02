@@ -139,6 +139,99 @@ func handleQuizOrigin(h goa.Handler) goa.Handler {
 	}
 }
 
+// RedditController is the controller interface for the Reddit actions.
+type RedditController interface {
+	goa.Muxer
+	Show(*ShowRedditContext) error
+	Update(*UpdateRedditContext) error
+}
+
+// MountRedditController "mounts" a Reddit resource controller on the given service.
+func MountRedditController(service *goa.Service, ctrl RedditController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/v1/social/reddit", ctrl.MuxHandler("preflight", handleRedditOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowRedditContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleRedditOrigin(h)
+	service.Mux.Handle("GET", "/v1/social/reddit", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Reddit", "action", "Show", "route", "GET /v1/social/reddit", "security", "JWTAuth")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateRedditContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*RedditUserPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleRedditOrigin(h)
+	service.Mux.Handle("POST", "/v1/social/reddit", ctrl.MuxHandler("update", h, unmarshalUpdateRedditPayload))
+	service.LogInfo("mount", "ctrl", "Reddit", "action", "Update", "route", "POST /v1/social/reddit", "security", "JWTAuth")
+}
+
+// handleRedditOrigin applies the CORS response headers corresponding to the origin.
+func handleRedditOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "*") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "OPTIONS, HEAD, POST, GET, UPDATE, DELETE, PATCH")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalUpdateRedditPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateRedditPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &redditUserPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
 // ResultsController is the controller interface for the Results actions.
 type ResultsController interface {
 	goa.Muxer

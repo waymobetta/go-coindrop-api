@@ -117,6 +117,9 @@ func main() {
 	quizCtrlr := controllers.NewQuizController(service, dbs)
 	app.MountQuizController(service, quizCtrlr)
 
+	redditCtrlr := controllers.NewRedditController(service, dbs)
+	app.MountRedditController(service, redditCtrlr)
+
 	// goa handler
 	goaHandler := c.Handler(mw.RateLimitHandler(service.Server.Handler))
 
@@ -128,7 +131,7 @@ func main() {
 		r.Body = http.MaxBytesReader(w, r.Body, 1048576)
 
 		// Update regex to include any base goa routes in order to properly forward to goa handler
-		goaRoutesRegex := regexp.MustCompile(`v1/(health|users|wallets|tasks|quiz|results)`)
+		goaRoutesRegex := regexp.MustCompile(`v1/(health|users|wallets|tasks|quiz|results|social)`)
 		isGoaRoute := goaRoutesRegex.Match([]byte(strings.ToLower(r.URL.Path)))
 
 		if isGoaRoute {

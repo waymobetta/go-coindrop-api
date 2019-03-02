@@ -115,6 +115,69 @@ func (c *Client) DecodeQuiz(resp *http.Response) (*Quiz, error) {
 	return &decoded, err
 }
 
+// A Reddit User (default view)
+//
+// Identifier: application/vnd.reddituser+json; view=default
+type Reddituser struct {
+	// Account Created Timestamp
+	AccountCreatedUTC float64 `form:"accountCreatedUTC" json:"accountCreatedUTC" yaml:"accountCreatedUTC" xml:"accountCreatedUTC"`
+	// Comment Karma
+	CommentKarma int `form:"commentKarma" json:"commentKarma" yaml:"commentKarma" xml:"commentKarma"`
+	// ID
+	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
+	// Link Karma
+	LinkKarma int `form:"linkKarma" json:"linkKarma" yaml:"linkKarma" xml:"linkKarma"`
+	// User subreddits
+	Subreddits []string `form:"subreddits" json:"subreddits" yaml:"subreddits" xml:"subreddits"`
+	// User trophies
+	Trophies []string `form:"trophies" json:"trophies" yaml:"trophies" xml:"trophies"`
+	// User ID
+	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+	// Username
+	Username string `form:"username" json:"username" yaml:"username" xml:"username"`
+	// Social Account Verification
+	Verification *Verification `form:"verification" json:"verification" yaml:"verification" xml:"verification"`
+}
+
+// Validate validates the Reddituser media type instance.
+func (mt *Reddituser) Validate() (err error) {
+	if mt.ID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "id"))
+	}
+	if mt.UserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "userId"))
+	}
+	if mt.Username == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "username"))
+	}
+
+	if mt.Trophies == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "trophies"))
+	}
+	if mt.Subreddits == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "subreddits"))
+	}
+	if mt.Verification == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "verification"))
+	}
+	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, mt.ID); !ok {
+		err = goa.MergeErrors(err, goa.InvalidPatternError(`response.id`, mt.ID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+	}
+	if mt.Verification != nil {
+		if err2 := mt.Verification.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	return
+}
+
+// DecodeReddituser decodes the Reddituser instance encoded in resp body.
+func (c *Client) DecodeReddituser(resp *http.Response) (*Reddituser, error) {
+	var decoded Reddituser
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // Quiz results (default view)
 //
 // Identifier: application/vnd.results+json; view=default
@@ -266,6 +329,37 @@ func (mt *User) Validate() (err error) {
 // DecodeUser decodes the User instance encoded in resp body.
 func (c *Client) DecodeUser(resp *http.Response) (*User, error) {
 	var decoded User
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// Account Verification (default view)
+//
+// Identifier: application/vnd.verification+json; view=default
+type Verification struct {
+	// Confirmed Verification Code
+	ConfirmedVerificationCode string `form:"confirmedVerificationCode" json:"confirmedVerificationCode" yaml:"confirmedVerificationCode" xml:"confirmedVerificationCode"`
+	// Posted Verification Code
+	PostedVerificationCode string `form:"postedVerificationCode" json:"postedVerificationCode" yaml:"postedVerificationCode" xml:"postedVerificationCode"`
+	// Account Verified Flag
+	Verified bool `form:"verified" json:"verified" yaml:"verified" xml:"verified"`
+}
+
+// Validate validates the Verification media type instance.
+func (mt *Verification) Validate() (err error) {
+	if mt.PostedVerificationCode == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "postedVerificationCode"))
+	}
+	if mt.ConfirmedVerificationCode == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "confirmedVerificationCode"))
+	}
+
+	return
+}
+
+// DecodeVerification decodes the Verification instance encoded in resp body.
+func (c *Client) DecodeVerification(resp *http.Response) (*Verification, error) {
+	var decoded Verification
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
 }

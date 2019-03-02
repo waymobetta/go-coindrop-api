@@ -1,21 +1,6 @@
 package handlers
 
-import (
-	"encoding/json"
-	"fmt"
-	"io"
-	"io/ioutil"
-	"net/http"
-	"strings"
-
-	log "github.com/sirupsen/logrus"
-
-	"github.com/waymobetta/go-coindrop-api/db"
-	"github.com/waymobetta/go-coindrop-api/services/stackoverflow"
-	"github.com/waymobetta/go-coindrop-api/utils"
-	"github.com/waymobetta/go-coindrop-api/verify"
-)
-
+/*
 // StackUserAdd adds a single user listing to db
 func (h *Handlers) StackUserAdd(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
@@ -327,3 +312,4 @@ func (h *Handlers) StackUserUpdate(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("[handler] successfully updated Stack Overflow info for user: %v\n", user.AuthUserID)
 }
+*/

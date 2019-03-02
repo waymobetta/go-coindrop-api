@@ -28,9 +28,9 @@ var (
 
 // GetProfileByUserID fetches basic user profile info by unique user ID
 func GetProfileByUserID(u *db.User) (*db.User, error) {
-	log.Printf("[stackoverflow] collecting profile information for user ID: %v\n", u.StackOverflowData.UserID)
+	log.Printf("[stackoverflow] collecting profile information for user ID: %v\n", u.StackOverflow.UserID)
 
-	profileEndpoint := fmt.Sprintf("/users/%v?order=desc&sort=reputation&site=stackoverflow&filter=!-*jbN*IioeFP", u.StackOverflowData.UserID)
+	profileEndpoint := fmt.Sprintf("/users/%v?order=desc&sort=reputation&site=stackoverflow&filter=!-*jbN*IioeFP", u.StackOverflow.UserID)
 
 	// concatenate endpoint with base URL of db
 	profileURL := fmt.Sprintf("%s%s", baseAPI, profileEndpoint)
@@ -75,7 +75,7 @@ func GetProfileByUserID(u *db.User) (*db.User, error) {
 	// iterate over number of items in the response
 	// NOTE: there should only be a single item
 	for index := range aboutProfResStruct.Items {
-		u.StackOverflowData = db.StackOverflowData{
+		u.StackOverflow = db.StackOverflow{
 			DisplayName:       aboutProfResStruct.Items[0].DisplayName,
 			ExchangeAccountID: aboutProfResStruct.Items[index].AccountID,
 			UserID:            aboutProfResStruct.Items[index].UserID,
@@ -93,10 +93,10 @@ func GetProfileByUserID(u *db.User) (*db.User, error) {
 					},
 				},
 			},
-			VerificationData: verify.VerificationData{
-				PostedVerificationCode: aboutProfResStruct.Items[index].AboutMe,
-				StoredVerificationCode: u.StackOverflowData.VerificationData.StoredVerificationCode,
-				IsVerified:             false,
+			Verification: &verify.Verification2{
+				PostedVerificationCode:    aboutProfResStruct.Items[index].AboutMe,
+				ConfirmedVerificationCode: u.StackOverflow.Verification.ConfirmedVerificationCode,
+				Verified:                  false,
 			},
 		}
 		return u, nil
@@ -106,9 +106,9 @@ func GetProfileByUserID(u *db.User) (*db.User, error) {
 
 // GetAssociatedAccounts method fetches associated communities of user
 func GetAssociatedAccounts(u *db.User) (*db.User, error) {
-	log.Printf("[stackoverflow] collecting associated account information for user: %s\n", u.StackOverflowData.DisplayName)
+	log.Printf("[stackoverflow] collecting associated account information for user: %s\n", u.StackOverflow.DisplayName)
 
-	associatedAccountsEndpoint := fmt.Sprintf("/users/%v/associated", u.StackOverflowData.ExchangeAccountID)
+	associatedAccountsEndpoint := fmt.Sprintf("/users/%v/associated", u.StackOverflow.ExchangeAccountID)
 
 	// concatenate endpoint with base URL of db
 	associatedAccountsURL := fmt.Sprintf("%s%s", baseAPI, associatedAccountsEndpoint)
@@ -150,7 +150,7 @@ func GetAssociatedAccounts(u *db.User) (*db.User, error) {
 		return u, err
 	}
 
-	log.Printf("[stackoverflow] Found associated account info for user: %s!\n", u.StackOverflowData.DisplayName)
+	log.Printf("[stackoverflow] Found associated account info for user: %s!\n", u.StackOverflow.DisplayName)
 
 	// initialize new struct object to hold Community data
 	communityObj := db.Community{}
@@ -172,10 +172,10 @@ func GetAssociatedAccounts(u *db.User) (*db.User, error) {
 		}
 
 		// append community name to account slice
-		u.StackOverflowData.Accounts = append(u.StackOverflowData.Accounts, associatedCommunitiesStruct.Items[index].SiteName)
+		u.StackOverflow.Accounts = append(u.StackOverflow.Accounts, associatedCommunitiesStruct.Items[index].SiteName)
 
 		// append updated struct data to slice of objects
-		u.StackOverflowData.Communities = append(u.StackOverflowData.Communities, communityObj)
+		u.StackOverflow.Communities = append(u.StackOverflow.Communities, communityObj)
 	}
 
 	return u, nil

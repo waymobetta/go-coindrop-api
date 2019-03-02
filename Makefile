@@ -66,6 +66,7 @@ goa:
 	@rm tasks.go
 	@rm quiz.go
 	@rm results.go
+	@rm reddit.go
 	@MAKE swagger
 
 .PHONY: swagger
