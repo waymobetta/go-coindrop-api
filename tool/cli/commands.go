@@ -40,17 +40,17 @@ type (
 		PrettyPrint bool
 	}
 
+	// CreateRedditCommand is the command line data structure for the create action of reddit
+	CreateRedditCommand struct {
+		Payload     string
+		ContentType string
+		PrettyPrint bool
+	}
+
 	// ShowRedditCommand is the command line data structure for the show action of reddit
 	ShowRedditCommand struct {
 		// User ID
 		UserID      string
-		PrettyPrint bool
-	}
-
-	// UpdateRedditCommand is the command line data structure for the update action of reddit
-	UpdateRedditCommand struct {
-		Payload     string
-		ContentType string
 		PrettyPrint bool
 	}
 
@@ -89,6 +89,20 @@ type (
 		PrettyPrint bool
 	}
 
+	// ShowVerifyredditCommand is the command line data structure for the show action of verifyreddit
+	ShowVerifyredditCommand struct {
+		// User ID
+		UserID      string
+		PrettyPrint bool
+	}
+
+	// UpdateVerifyredditCommand is the command line data structure for the update action of verifyreddit
+	UpdateVerifyredditCommand struct {
+		Payload     string
+		ContentType string
+		PrettyPrint bool
+	}
+
 	// ShowWalletCommand is the command line data structure for the show action of wallet
 	ShowWalletCommand struct {
 		// User ID
@@ -109,9 +123,26 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	var command, sub *cobra.Command
 	command = &cobra.Command{
 		Use:   "create",
-		Short: `Create a new user`,
+		Short: `create action`,
 	}
-	tmp1 := new(CreateUserCommand)
+	tmp1 := new(CreateRedditCommand)
+	sub = &cobra.Command{
+		Use:   `reddit ["/v1/social/reddit/userid"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
+   "username": "Et non enim."
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
+	}
+	tmp1.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp1.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp2 := new(CreateUserCommand)
 	sub = &cobra.Command{
 		Use:   `user ["/v1/users"]`,
 		Short: ``,
@@ -120,103 +151,96 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 Payload example:
 
 {
-   "cognitoAuthUserId": "Porro sunt facilis alias blanditiis qui."
+   "cognitoAuthUserId": "Eligendi sit sed nobis."
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
-	tmp1.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp1.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp2.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp2.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "show",
 		Short: `show action`,
 	}
-	tmp2 := new(ShowHealthcheckCommand)
+	tmp3 := new(ShowHealthcheckCommand)
 	sub = &cobra.Command{
 		Use:   `healthcheck ["/v1/health"]`,
-		Short: ``,
-		RunE:  func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
-	}
-	tmp2.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp2.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp3 := new(ShowQuizCommand)
-	sub = &cobra.Command{
-		Use:   `quiz ["/v1/quiz"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
 	}
 	tmp3.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp3.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp4 := new(ShowRedditCommand)
+	tmp4 := new(ShowQuizCommand)
 	sub = &cobra.Command{
-		Use:   `reddit ["/v1/social/reddit"]`,
+		Use:   `quiz ["/v1/quiz"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
 	}
 	tmp4.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp4.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp5 := new(ShowResultsCommand)
+	tmp5 := new(ShowRedditCommand)
 	sub = &cobra.Command{
-		Use:   `results ["/v1/quiz/results"]`,
+		Use:   `reddit ["/v1/social/reddit/userid"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
 	}
 	tmp5.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp5.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp6 := new(ShowTasksCommand)
+	tmp6 := new(ShowResultsCommand)
 	sub = &cobra.Command{
-		Use:   `tasks ["/v1/tasks"]`,
+		Use:   `results ["/v1/quiz/results"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp6.Run(c, args) },
 	}
 	tmp6.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp6.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp7 := new(ShowUserCommand)
+	tmp7 := new(ShowTasksCommand)
 	sub = &cobra.Command{
-		Use:   `user ["/v1/users/USERID"]`,
+		Use:   `tasks ["/v1/tasks"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp7.Run(c, args) },
 	}
 	tmp7.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp7.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp8 := new(ShowWalletCommand)
+	tmp8 := new(ShowUserCommand)
 	sub = &cobra.Command{
-		Use:   `wallet ["/v1/wallets"]`,
+		Use:   `user ["/v1/users/USERID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp8.Run(c, args) },
 	}
 	tmp8.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp8.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
+	tmp9 := new(ShowVerifyredditCommand)
+	sub = &cobra.Command{
+		Use:   `verifyreddit ["/v1/social/reddit/userid/verify"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp9.Run(c, args) },
+	}
+	tmp9.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp9.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp10 := new(ShowWalletCommand)
+	sub = &cobra.Command{
+		Use:   `wallet ["/v1/wallets"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp10.Run(c, args) },
+	}
+	tmp10.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp10.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "update",
 		Short: `update action`,
 	}
-	tmp9 := new(UpdateRedditCommand)
-	sub = &cobra.Command{
-		Use:   `reddit ["/v1/social/reddit"]`,
-		Short: ``,
-		Long: `
-
-Payload example:
-
-{
-   "id": "0x845fdD93Cca3aE9e380d5556818e6d0b902B977c"
-}`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp9.Run(c, args) },
-	}
-	tmp9.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp9.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp10 := new(UpdateTasksCommand)
+	tmp11 := new(UpdateTasksCommand)
 	sub = &cobra.Command{
 		Use:   `tasks ["/v1/tasks"]`,
 		Short: ``,
@@ -225,16 +249,44 @@ Payload example:
 Payload example:
 
 {
-   "cognitoAuthUserId": "At eligendi sit sed nobis.",
-   "taskName": "Non suscipit error ea incidunt aut qui.",
-   "taskState": "Dolore ipsa et."
+   "cognitoAuthUserId": "Officiis ad quis.",
+   "taskName": "Exercitationem dignissimos est dolores sequi cumque.",
+   "taskState": "Dolorum accusantium eos accusantium molestias."
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp10.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp11.Run(c, args) },
 	}
-	tmp10.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp10.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp11.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp11.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp11 := new(UpdateWalletCommand)
+	tmp12 := new(UpdateVerifyredditCommand)
+	sub = &cobra.Command{
+		Use:   `verifyreddit ["/v1/social/reddit/userid/verify"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "commentKarma": 3786236844148253728,
+   "linkKarma": 4384639294267444192,
+   "subreddits": [
+      "Ea incidunt aut qui.",
+      "Ea incidunt aut qui."
+   ],
+   "trophies": [
+      "Ipsa et ea porro sunt facilis.",
+      "Ipsa et ea porro sunt facilis.",
+      "Ipsa et ea porro sunt facilis."
+   ],
+   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
+   "username": "Blanditiis qui."
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp12.Run(c, args) },
+	}
+	tmp12.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp12.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp13 := new(UpdateWalletCommand)
 	sub = &cobra.Command{
 		Use:   `wallet ["/v1/wallets"]`,
 		Short: ``,
@@ -245,10 +297,10 @@ Payload example:
 {
    "walletAddress": "0x845fdD93Cca3aE9e380d5556818e6d0b902B977c"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp11.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp13.Run(c, args) },
 	}
-	tmp11.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp11.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp13.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp13.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 }
@@ -456,13 +508,46 @@ func (cmd *ShowQuizCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.QuizTitle, "quizTitle", quizTitle, `Quiz title`)
 }
 
+// Run makes the HTTP request corresponding to the CreateRedditCommand command.
+func (cmd *CreateRedditCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/v1/social/reddit/userid"
+	}
+	var payload client.CreateUserPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.CreateReddit(ctx, path, &payload, cmd.ContentType)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *CreateRedditCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+}
+
 // Run makes the HTTP request corresponding to the ShowRedditCommand command.
 func (cmd *ShowRedditCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = "/v1/social/reddit"
+		path = "/v1/social/reddit/userid"
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -480,39 +565,6 @@ func (cmd *ShowRedditCommand) Run(c *client.Client, args []string) error {
 func (cmd *ShowRedditCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var userID string
 	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
-}
-
-// Run makes the HTTP request corresponding to the UpdateRedditCommand command.
-func (cmd *UpdateRedditCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = "/v1/social/reddit"
-	}
-	var payload client.RedditUserPayload
-	if cmd.Payload != "" {
-		err := json.Unmarshal([]byte(cmd.Payload), &payload)
-		if err != nil {
-			return fmt.Errorf("failed to deserialize payload: %s", err)
-		}
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.UpdateReddit(ctx, path, &payload, cmd.ContentType)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *UpdateRedditCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
-	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 }
 
 // Run makes the HTTP request corresponding to the ShowResultsCommand command.
@@ -657,6 +709,65 @@ func (cmd *ShowUserCommand) Run(c *client.Client, args []string) error {
 func (cmd *ShowUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var userID string
 	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
+}
+
+// Run makes the HTTP request corresponding to the ShowVerifyredditCommand command.
+func (cmd *ShowVerifyredditCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/v1/social/reddit/userid/verify"
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ShowVerifyreddit(ctx, path, stringFlagVal("userId", cmd.UserID))
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ShowVerifyredditCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var userID string
+	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
+}
+
+// Run makes the HTTP request corresponding to the UpdateVerifyredditCommand command.
+func (cmd *UpdateVerifyredditCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/v1/social/reddit/userid/verify"
+	}
+	var payload client.UpdateUserPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.UpdateVerifyreddit(ctx, path, &payload, cmd.ContentType)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *UpdateVerifyredditCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 }
 
 // Run makes the HTTP request corresponding to the ShowWalletCommand command.

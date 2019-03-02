@@ -2,7 +2,6 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 )
 
 // WALLET
@@ -40,16 +39,11 @@ func (db *DB) UpdateWallet(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique ID as the identifier
-	res, err := stmt.Exec(u.WalletAddress, u.AuthUserID)
+	_, err = stmt.Exec(u.WalletAddress, u.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
-		id, err := res.RowsAffected()
 		if err != nil {
 			return u, err
-		}
-
-		if id != 1 {
-			fmt.Println("ERROR")
 		}
 
 		return u, tx.Rollback()
@@ -70,11 +64,16 @@ func (db *DB) GetWallet(u *User) (*User, error) {
 	// create SQL statement for db update
 
 	sqlStatement := `
-		SELECT address 
-		FROM coindrop_auth2 
-		JOIN coindrop_wallets 
-		ON coindrop_auth2.wallet_id = coindrop_wallets.id
-		WHERE cognito_auth_user_id = $1
+		SELECT 
+			address 
+		FROM
+			coindrop_auth2 
+		JOIN 
+			coindrop_wallets 
+		ON 
+			coindrop_auth2.wallet_id = coindrop_wallets.id
+		WHERE 
+			cognito_auth_user_id = $1
 	`
 
 	// prepare statement

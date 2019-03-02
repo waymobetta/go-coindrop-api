@@ -18,10 +18,58 @@ import (
 	"net/url"
 )
 
+// CreateRedditPath computes a request path to the create action of reddit.
+func CreateRedditPath() string {
+
+	return fmt.Sprintf("/v1/social/reddit/userid")
+}
+
+// Create Reddit User
+func (c *Client) CreateReddit(ctx context.Context, path string, payload *CreateUserPayload, contentType string) (*http.Response, error) {
+	req, err := c.NewCreateRedditRequest(ctx, path, payload, contentType)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewCreateRedditRequest create the request corresponding to the create action endpoint of the reddit resource.
+func (c *Client) NewCreateRedditRequest(ctx context.Context, path string, payload *CreateUserPayload, contentType string) (*http.Request, error) {
+	var body bytes.Buffer
+	if contentType == "" {
+		contentType = "*/*" // Use default encoder
+	}
+	err := c.Encoder.Encode(payload, &body, contentType)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode body: %s", err)
+	}
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("POST", u.String(), &body)
+	if err != nil {
+		return nil, err
+	}
+	header := req.Header
+	if contentType == "*/*" {
+		header.Set("Content-Type", "application/json")
+	} else {
+		header.Set("Content-Type", contentType)
+	}
+	if c.JWTAuthSigner != nil {
+		if err := c.JWTAuthSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
+
 // ShowRedditPath computes a request path to the show action of reddit.
 func ShowRedditPath() string {
 
-	return fmt.Sprintf("/v1/social/reddit")
+	return fmt.Sprintf("/v1/social/reddit/userid")
 }
 
 // Get
@@ -48,54 +96,6 @@ func (c *Client) NewShowRedditRequest(ctx context.Context, path string, userID *
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, err
-	}
-	if c.JWTAuthSigner != nil {
-		if err := c.JWTAuthSigner.Sign(req); err != nil {
-			return nil, err
-		}
-	}
-	return req, nil
-}
-
-// UpdateRedditPath computes a request path to the update action of reddit.
-func UpdateRedditPath() string {
-
-	return fmt.Sprintf("/v1/social/reddit")
-}
-
-// Update Reddit User
-func (c *Client) UpdateReddit(ctx context.Context, path string, payload *RedditUserPayload, contentType string) (*http.Response, error) {
-	req, err := c.NewUpdateRedditRequest(ctx, path, payload, contentType)
-	if err != nil {
-		return nil, err
-	}
-	return c.Client.Do(ctx, req)
-}
-
-// NewUpdateRedditRequest create the request corresponding to the update action endpoint of the reddit resource.
-func (c *Client) NewUpdateRedditRequest(ctx context.Context, path string, payload *RedditUserPayload, contentType string) (*http.Request, error) {
-	var body bytes.Buffer
-	if contentType == "" {
-		contentType = "*/*" // Use default encoder
-	}
-	err := c.Encoder.Encode(payload, &body, contentType)
-	if err != nil {
-		return nil, fmt.Errorf("failed to encode body: %s", err)
-	}
-	scheme := c.Scheme
-	if scheme == "" {
-		scheme = "http"
-	}
-	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
-	req, err := http.NewRequest("POST", u.String(), &body)
-	if err != nil {
-		return nil, err
-	}
-	header := req.Header
-	if contentType == "*/*" {
-		header.Set("Content-Type", "application/json")
-	} else {
-		header.Set("Content-Type", contentType)
 	}
 	if c.JWTAuthSigner != nil {
 		if err := c.JWTAuthSigner.Sign(req); err != nil {

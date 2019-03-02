@@ -119,8 +119,6 @@ func (c *Client) DecodeQuiz(resp *http.Response) (*Quiz, error) {
 //
 // Identifier: application/vnd.reddituser+json; view=default
 type Reddituser struct {
-	// Account Created Timestamp
-	AccountCreatedUTC float64 `form:"accountCreatedUTC" json:"accountCreatedUTC" yaml:"accountCreatedUTC" xml:"accountCreatedUTC"`
 	// Comment Karma
 	CommentKarma int `form:"commentKarma" json:"commentKarma" yaml:"commentKarma" xml:"commentKarma"`
 	// ID
@@ -162,6 +160,9 @@ func (mt *Reddituser) Validate() (err error) {
 	}
 	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, mt.ID); !ok {
 		err = goa.MergeErrors(err, goa.InvalidPatternError(`response.id`, mt.ID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+	}
+	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, mt.UserID); !ok {
+		err = goa.MergeErrors(err, goa.InvalidPatternError(`response.userId`, mt.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
 	}
 	if mt.Verification != nil {
 		if err2 := mt.Verification.Validate(); err2 != nil {

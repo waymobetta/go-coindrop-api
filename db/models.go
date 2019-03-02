@@ -24,6 +24,7 @@ type User struct {
 
 type User2 struct {
 	ID            string  `json:"id"`
+	UserID        string  `json:"user_id"`
 	AuthUserID    string  `json:"auth_user_id"`
 	WalletAddress string  `json:"wallet_address"`
 	Social        *Social `json:"social"`
@@ -40,14 +41,13 @@ type Social struct {
 
 // Reddit info
 type Reddit struct {
-	ID                string                `json:"id"`
-	Username          string                `json:"username"`
-	LinkKarma         int                   `json:"link_karma"`
-	CommentKarma      int                   `json:"comment_karma"`
-	AccountCreatedUTC float64               `json:"account_created_utc"`
-	Trophies          []string              `json:"trophies"`
-	Subreddits        []string              `json:"subreddits"`
-	Verification      *verify.Verification2 `json:"verification"`
+	ID           string                `json:"id"`
+	Username     string                `json:"username"`
+	LinkKarma    int                   `json:"link_karma"`
+	CommentKarma int                   `json:"comment_karma"`
+	Trophies     []string              `json:"trophies"`
+	Subreddits   []string              `json:"subreddits"`
+	Verification *verify.Verification2 `json:"verification"`
 }
 
 /// STACK OVERFLOW
