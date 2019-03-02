@@ -14,39 +14,53 @@ type Users struct {
 
 // User info
 type User struct {
-	ID                int                 `json:"id"`
-	AuthUserID        string              `json:"auth_user_id"`
-	WalletAddress     string              `json:"wallet_address"`
-	RedditData        RedditData          `json:"reddit_data"`
-	KeybaseData       keybase.KeybaseData `json:"keybase_data"`
-	StackOverflowData StackOverflowData   `json:"stackoverflow_data"`
+	ID            int             `json:"id"`
+	AuthUserID    string          `json:"auth_user_id"`
+	WalletAddress string          `json:"wallet_address"`
+	Reddit        Reddit          `json:"reddit"`
+	Keybase       keybase.Keybase `json:"keybase"`
+	StackOverflow StackOverflow   `json:"stackoverflow"`
+}
+
+type User2 struct {
+	ID            string  `json:"id"`
+	AuthUserID    string  `json:"auth_user_id"`
+	WalletAddress string  `json:"wallet_address"`
+	Social        *Social `json:"social"`
+}
+
+/// SOCIAL
+type Social struct {
+	Reddit        *Reddit          `json:"reddit"`
+	Keybase       *keybase.Keybase `json:"keybase"`
+	StackOverflow *StackOverflow   `json:"stackoverflow"`
 }
 
 /// REDDIT
 
-// RedditData info
-type RedditData struct {
-	ID                int                     `json:"id"`
-	Username          string                  `json:"username"`
-	LinkKarma         int                     `json:"link_karma"`
-	CommentKarma      int                     `json:"comment_karma"`
-	AccountCreatedUTC float64                 `json:"account_created_utc"`
-	Trophies          []string                `json:"trophies"`
-	Subreddits        []string                `json:"subreddits"`
-	VerificationData  verify.VerificationData `json:"verification_data"`
+// Reddit info
+type Reddit struct {
+	ID                string                `json:"id"`
+	Username          string                `json:"username"`
+	LinkKarma         int                   `json:"link_karma"`
+	CommentKarma      int                   `json:"comment_karma"`
+	AccountCreatedUTC float64               `json:"account_created_utc"`
+	Trophies          []string              `json:"trophies"`
+	Subreddits        []string              `json:"subreddits"`
+	Verification      *verify.Verification2 `json:"verification"`
 }
 
 /// STACK OVERFLOW
 
 // StackOverflowData struct contains all essential info for Stack User
-type StackOverflowData struct {
-	ID                int                     `json:"id"`
-	ExchangeAccountID int                     `json:"exchange_account_id"`
-	UserID            int                     `json:"user_id"`
-	DisplayName       string                  `json:"display_name"`
-	Accounts          []string                `json:"accounts"`
-	Communities       []Community             `json:"communities"`
-	VerificationData  verify.VerificationData `json:"verification_data"`
+type StackOverflow struct {
+	ID                string                `json:"id"`
+	ExchangeAccountID int                   `json:"exchange_account_id"`
+	UserID            int                   `json:"user_id"`
+	DisplayName       string                `json:"display_name"`
+	Accounts          []string              `json:"accounts"`
+	Communities       []Community           `json:"communities"`
+	Verification      *verify.Verification2 `json:"verification"`
 }
 
 // Community struct contains info about the communities
@@ -107,10 +121,10 @@ type TaskUser struct {
 
 // Quiz struct contains info about a quiz
 type Quiz struct {
-	ID         int      `json:"id"`
-	Title      string   `json:"title"`
-	AuthUserID string   `json:"auth_user_id"`
-	QuizInfo   QuizInfo `json:"quiz_info"`
+	ID         int       `json:"id"`
+	Title      string    `json:"title"`
+	AuthUserID string    `json:"auth_user_id"`
+	QuizInfo   *QuizInfo `json:"quiz_info"`
 }
 
 // QuizInfo struct contains the list of QuizData objects
