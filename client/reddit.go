@@ -72,7 +72,7 @@ func ShowRedditPath() string {
 	return fmt.Sprintf("/v1/social/reddit/userid")
 }
 
-// Get
+// Get Reddit User
 func (c *Client) ShowReddit(ctx context.Context, path string, userID *string) (*http.Response, error) {
 	req, err := c.NewShowRedditRequest(ctx, path, userID)
 	if err != nil {

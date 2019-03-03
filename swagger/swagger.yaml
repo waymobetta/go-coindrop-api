@@ -37,7 +37,7 @@ definitions:
     title: 'Mediatype identifier: application/vnd.badge+json; view=default'
     type: object
   CreateUserPayload:
-    description: Reddit User payload
+    description: Create Reddit User payload
     example:
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
       username: Et non enim.
@@ -293,21 +293,21 @@ definitions:
   TaskPayload:
     description: Task payload
     example:
-      cognitoAuthUserId: Officiis ad quis.
-      taskName: Exercitationem dignissimos est dolores sequi cumque.
-      taskState: Dolorum accusantium eos accusantium molestias.
+      cognitoAuthUserId: Exercitationem dignissimos est dolores sequi cumque.
+      taskName: Dolorum accusantium eos accusantium molestias.
+      taskState: Eligendi sit sed nobis.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Officiis ad quis.
+        example: Exercitationem dignissimos est dolores sequi cumque.
         type: string
       taskName:
         description: task name
-        example: Exercitationem dignissimos est dolores sequi cumque.
+        example: Dolorum accusantium eos accusantium molestias.
         type: string
       taskState:
         description: task state
-        example: Dolorum accusantium eos accusantium molestias.
+        example: Eligendi sit sed nobis.
         type: string
     required:
     - cognitoAuthUserId
@@ -363,65 +363,23 @@ definitions:
     title: 'Mediatype identifier: application/vnd.tasks+json; view=default'
     type: object
   UpdateUserPayload:
-    description: Reddit User payload
+    description: Update Reddit User payload
     example:
-      commentKarma: 3786236844148253728
-      linkKarma: 4384639294267444192
-      subreddits:
-      - Ea incidunt aut qui.
-      - Ea incidunt aut qui.
-      trophies:
-      - Ipsa et ea porro sunt facilis.
-      - Ipsa et ea porro sunt facilis.
-      - Ipsa et ea porro sunt facilis.
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      username: Blanditiis qui.
+      username: Officiis ad quis.
     properties:
-      commentKarma:
-        description: Comment Karma
-        example: 3786236844148253728
-        format: int64
-        type: integer
-      linkKarma:
-        description: Link Karma
-        example: 4384639294267444192
-        format: int64
-        type: integer
-      subreddits:
-        description: User subreddits
-        example:
-        - Ea incidunt aut qui.
-        - Ea incidunt aut qui.
-        items:
-          example: Ea incidunt aut qui.
-          type: string
-        type: array
-      trophies:
-        description: User trophies
-        example:
-        - Ipsa et ea porro sunt facilis.
-        - Ipsa et ea porro sunt facilis.
-        - Ipsa et ea porro sunt facilis.
-        items:
-          example: Ipsa et ea porro sunt facilis.
-          type: string
-        type: array
       userId:
         description: User ID
         example: 9302608f-f6a4-4004-b088-63e5fb43cc26
         pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
         type: string
       username:
-        description: Username
-        example: Blanditiis qui.
+        description: Reddit Username
+        example: Officiis ad quis.
         type: string
     required:
     - userId
     - username
-    - linkKarma
-    - commentKarma
-    - trophies
-    - subreddits
     title: UpdateUserPayload
     type: object
   User:
@@ -455,11 +413,11 @@ definitions:
   UserPayload:
     description: User payload
     example:
-      cognitoAuthUserId: Eligendi sit sed nobis.
+      cognitoAuthUserId: Non suscipit error ea incidunt aut qui.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Eligendi sit sed nobis.
+        example: Non suscipit error ea incidunt aut qui.
         type: string
     required:
     - cognitoAuthUserId
@@ -607,9 +565,51 @@ paths:
       summary: show results
       tags:
       - results
+  /v1/social/reddit/harvest:
+    post:
+      description: Update Reddit User Info
+      operationId: redditharvest#update
+      parameters:
+      - description: Update Reddit User payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateUserPayload'
+      produces:
+      - application/standard_error+json
+      - application/vnd.reddituser+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Reddituser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: update redditharvest
+      tags:
+      - redditharvest
   /v1/social/reddit/userid:
     get:
-      description: 'Get '
+      description: Get Reddit User
       operationId: reddit#show
       parameters:
       - description: User ID
@@ -641,7 +641,7 @@ paths:
       description: Create Reddit User
       operationId: reddit#create
       parameters:
-      - description: Reddit User payload
+      - description: Create Reddit User payload
         in: body
         name: payload
         required: true
@@ -712,7 +712,7 @@ paths:
       description: Update Reddit Verification Code
       operationId: verifyreddit#update
       parameters:
-      - description: Reddit User payload
+      - description: Update Reddit User payload
         in: body
         name: payload
         required: true

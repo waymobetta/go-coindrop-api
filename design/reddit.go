@@ -11,7 +11,7 @@ var _ = Resource("reddit", func() {
 	Security(JWTAuth)
 
 	Action("show", func() {
-		Description("Get ")
+		Description("Get Reddit User")
 		Routing(GET(""))
 		Params(func() {
 			Param("userId", String, "User ID", func() {
@@ -78,7 +78,7 @@ var RedditUserMedia = MediaType("application/vnd.reddituser+json", func() {
 
 // CreateUserPayload is the payload for creating a listing for a user's reddit info
 var CreateUserPayload = Type("CreateUserPayload", func() {
-	Description("Reddit User payload")
+	Description("Create Reddit User payload")
 	Attribute("userId", String, "User ID", func() {
 		Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
 		Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
@@ -87,27 +87,5 @@ var CreateUserPayload = Type("CreateUserPayload", func() {
 	Required(
 		"userId",
 		"username",
-	)
-})
-
-// UpdateUserPayload is the payload for updating a user's reddit info
-var UpdateUserPayload = Type("UpdateUserPayload", func() {
-	Description("Reddit User payload")
-	Attribute("userId", String, "User ID", func() {
-		Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
-		Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
-	})
-	Attribute("username", String, "Username")
-	Attribute("linkKarma", Integer, "Link Karma")
-	Attribute("commentKarma", Integer, "Comment Karma")
-	Attribute("trophies", ArrayOf(String), "User trophies")
-	Attribute("subreddits", ArrayOf(String), "User subreddits")
-	Required(
-		"userId",
-		"username",
-		"linkKarma",
-		"commentKarma",
-		"trophies",
-		"subreddits",
 	)
 })

@@ -123,6 +123,9 @@ func main() {
 	verifyRedditCtrlr := controllers.NewVerifyredditController(service, dbs)
 	app.MountVerifyredditController(service, verifyRedditCtrlr)
 
+	redditHarvestCtrlr := controllers.NewRedditharvestController(service, dbs)
+	app.MountRedditharvestController(service, redditHarvestCtrlr)
+
 	// goa handler
 	goaHandler := c.Handler(mw.RateLimitHandler(service.Server.Handler))
 
@@ -134,7 +137,7 @@ func main() {
 		r.Body = http.MaxBytesReader(w, r.Body, 1048576)
 
 		// Update regex to include any base goa routes in order to properly forward to goa handler
-		goaRoutesRegex := regexp.MustCompile(`v1/(health|users|wallets|tasks|quiz|results|social|verify)`)
+		goaRoutesRegex := regexp.MustCompile(`v1/(health|users|wallets|tasks|quiz|results|social|verify|harvest)`)
 		isGoaRoute := goaRoutesRegex.Match([]byte(strings.ToLower(r.URL.Path)))
 
 		if isGoaRoute {

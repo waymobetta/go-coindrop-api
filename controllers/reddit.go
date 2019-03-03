@@ -65,7 +65,7 @@ func (c *RedditController) Show(ctx *app.ShowRedditContext) error {
 
 // Update runs the update action.
 func (c *RedditController) Create(ctx *app.CreateRedditContext) error {
-	// RedditController_Update: start_implement
+	// RedditController_Create: start_implement
 
 	// Put your logic here
 

@@ -232,6 +232,81 @@ func unmarshalCreateRedditPayload(ctx context.Context, service *goa.Service, req
 	return nil
 }
 
+// RedditharvestController is the controller interface for the Redditharvest actions.
+type RedditharvestController interface {
+	goa.Muxer
+	Update(*UpdateRedditharvestContext) error
+}
+
+// MountRedditharvestController "mounts" a Redditharvest resource controller on the given service.
+func MountRedditharvestController(service *goa.Service, ctrl RedditharvestController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/v1/social/reddit/harvest", ctrl.MuxHandler("preflight", handleRedditharvestOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateRedditharvestContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UpdateUserPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleRedditharvestOrigin(h)
+	service.Mux.Handle("POST", "/v1/social/reddit/harvest", ctrl.MuxHandler("update", h, unmarshalUpdateRedditharvestPayload))
+	service.LogInfo("mount", "ctrl", "Redditharvest", "action", "Update", "route", "POST /v1/social/reddit/harvest", "security", "JWTAuth")
+}
+
+// handleRedditharvestOrigin applies the CORS response headers corresponding to the origin.
+func handleRedditharvestOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "*") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "OPTIONS, HEAD, POST, GET, UPDATE, DELETE, PATCH")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalUpdateRedditharvestPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateRedditharvestPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &updateUserPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
 // ResultsController is the controller interface for the Results actions.
 type ResultsController interface {
 	goa.Muxer

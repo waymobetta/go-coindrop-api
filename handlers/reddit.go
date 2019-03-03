@@ -1,49 +1,5 @@
 package handlers
 
-// // RedditUserAdd adds a single user listing to db
-// func (h *Handlers) RedditUserAdd(w http.ResponseWriter, r *http.Request) {
-// 	response := make(map[string]interface{})
-// 	// initialize new variable user of User struct
-// 	user := new(db.User)
-
-// 	// add limit for large payload protection
-// 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
-// 	defer r.Body.Close()
-
-// 	// unmarshal bytes into user struct
-// 	err = json.Unmarshal(body, user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
-
-// 	// add user listing to db
-// 	_, err = h.db.AddRedditUser(user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
-
-// 	response = utils.Message(true, "success")
-// 	w.WriteHeader(http.StatusCreated)
-// 	utils.Respond(w, response)
-
-// 	log.Printf("[handler] successfully added reddit user: %v\n\n", user.AuthUserID)
-// }
-
 // // UsersGet handles queries to return all stored users
 // func (h *Handlers) UsersGet(w http.ResponseWriter, r *http.Request) {
 // 	response := make(map[string]interface{})
@@ -75,50 +31,6 @@ package handlers
 // 	utils.Respond(w, response)
 
 // 	log.Printf("[handler] successfully returned information for %d users\n", len(users.Users))
-// }
-
-// // RedditUserGet returns information about a single user
-// func (h *Handlers) RedditUserGet(w http.ResponseWriter, r *http.Request) {
-// 	response := make(map[string]interface{})
-// 	// initialize new variable user of User struct
-// 	user := new(db.User)
-
-// 	// add limit for large payload protection
-// 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
-// 	defer r.Body.Close()
-
-// 	// unmarshal bytes into user struct
-// 	err = json.Unmarshal(body, &user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
-
-// 	// get user listing by name
-// 	userData, err := h.db.GetRedditUser(user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
-
-// 	response = utils.Message(true, &userData)
-// 	w.WriteHeader(http.StatusOK)
-// 	utils.Respond(w, response)
-
-// 	log.Printf("[handler] successfully returned information for user: %v\n", user.AuthUserID)
 // }
 
 // // RedditUserRemove removes a single user listing from db

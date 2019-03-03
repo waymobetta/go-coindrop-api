@@ -14,7 +14,7 @@ import (
 	"github.com/goadesign/goa"
 )
 
-// Reddit User payload
+// Create Reddit User payload
 type createUserPayload struct {
 	// User ID
 	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
@@ -50,7 +50,7 @@ func (ut *createUserPayload) Publicize() *CreateUserPayload {
 	return &pub
 }
 
-// Reddit User payload
+// Create Reddit User payload
 type CreateUserPayload struct {
 	// User ID
 	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
@@ -135,19 +135,11 @@ func (ut *TaskPayload) Validate() (err error) {
 	return
 }
 
-// Reddit User payload
+// Update Reddit User payload
 type updateUserPayload struct {
-	// Comment Karma
-	CommentKarma *int `form:"commentKarma,omitempty" json:"commentKarma,omitempty" yaml:"commentKarma,omitempty" xml:"commentKarma,omitempty"`
-	// Link Karma
-	LinkKarma *int `form:"linkKarma,omitempty" json:"linkKarma,omitempty" yaml:"linkKarma,omitempty" xml:"linkKarma,omitempty"`
-	// User subreddits
-	Subreddits []string `form:"subreddits,omitempty" json:"subreddits,omitempty" yaml:"subreddits,omitempty" xml:"subreddits,omitempty"`
-	// User trophies
-	Trophies []string `form:"trophies,omitempty" json:"trophies,omitempty" yaml:"trophies,omitempty" xml:"trophies,omitempty"`
 	// User ID
 	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
-	// Username
+	// Reddit Username
 	Username *string `form:"username,omitempty" json:"username,omitempty" yaml:"username,omitempty" xml:"username,omitempty"`
 }
 
@@ -158,18 +150,6 @@ func (ut *updateUserPayload) Validate() (err error) {
 	}
 	if ut.Username == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "username"))
-	}
-	if ut.LinkKarma == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "linkKarma"))
-	}
-	if ut.CommentKarma == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "commentKarma"))
-	}
-	if ut.Trophies == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "trophies"))
-	}
-	if ut.Subreddits == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "subreddits"))
 	}
 	if ut.UserID != nil {
 		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *ut.UserID); !ok {
@@ -182,18 +162,6 @@ func (ut *updateUserPayload) Validate() (err error) {
 // Publicize creates UpdateUserPayload from updateUserPayload
 func (ut *updateUserPayload) Publicize() *UpdateUserPayload {
 	var pub UpdateUserPayload
-	if ut.CommentKarma != nil {
-		pub.CommentKarma = *ut.CommentKarma
-	}
-	if ut.LinkKarma != nil {
-		pub.LinkKarma = *ut.LinkKarma
-	}
-	if ut.Subreddits != nil {
-		pub.Subreddits = ut.Subreddits
-	}
-	if ut.Trophies != nil {
-		pub.Trophies = ut.Trophies
-	}
 	if ut.UserID != nil {
 		pub.UserID = *ut.UserID
 	}
@@ -203,19 +171,11 @@ func (ut *updateUserPayload) Publicize() *UpdateUserPayload {
 	return &pub
 }
 
-// Reddit User payload
+// Update Reddit User payload
 type UpdateUserPayload struct {
-	// Comment Karma
-	CommentKarma int `form:"commentKarma" json:"commentKarma" yaml:"commentKarma" xml:"commentKarma"`
-	// Link Karma
-	LinkKarma int `form:"linkKarma" json:"linkKarma" yaml:"linkKarma" xml:"linkKarma"`
-	// User subreddits
-	Subreddits []string `form:"subreddits" json:"subreddits" yaml:"subreddits" xml:"subreddits"`
-	// User trophies
-	Trophies []string `form:"trophies" json:"trophies" yaml:"trophies" xml:"trophies"`
 	// User ID
 	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
-	// Username
+	// Reddit Username
 	Username string `form:"username" json:"username" yaml:"username" xml:"username"`
 }
 
@@ -226,13 +186,6 @@ func (ut *UpdateUserPayload) Validate() (err error) {
 	}
 	if ut.Username == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "username"))
-	}
-
-	if ut.Trophies == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "trophies"))
-	}
-	if ut.Subreddits == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "subreddits"))
 	}
 	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, ut.UserID); !ok {
 		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.userId`, ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))

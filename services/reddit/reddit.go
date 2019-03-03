@@ -16,8 +16,8 @@ var (
 	ErrVerificationNotMatch = errors.New("Verification code does not match")
 )
 
-// InitRedditAuth initializes reddit OAuth session
-func (a *AuthSessions) InitRedditAuth() (*AuthSessions, error) {
+// NewRedditAuth initializes reddit OAuth session
+func (a *AuthSessions) NewRedditAuth() (*AuthSessions, error) {
 	// initialize OAuth session with credentials as environment variables
 	oAuthSession, err := geddit.NewOAuthSession(
 		os.Getenv("REDDIT_CLIENT_ID"),
@@ -45,9 +45,9 @@ func (a *AuthSessions) InitRedditAuth() (*AuthSessions, error) {
 }
 
 // GetRedditUserTrophies method to retrieve slice of user trophies
-func (a *AuthSessions) GetRedditUserTrophies(user *db.User) error {
+func (a *AuthSessions) GetRedditUserTrophies(user *db.User2) error {
 	// get trophies of reddit user
-	trophies, err := a.OAuthSession.UserTrophies(user.Reddit.Username)
+	trophies, err := a.OAuthSession.UserTrophies(user.Social.Reddit.Username)
 	if err != nil {
 		return err
 	}
@@ -64,13 +64,13 @@ func (a *AuthSessions) GetRedditUserTrophies(user *db.User) error {
 	}
 
 	// assign trophySlice to User struct
-	user.Reddit.Trophies = trophySlice
+	user.Social.Reddit.Trophies = trophySlice
 
 	return nil
 }
 
 // GetRecentPostsFromSubreddit method to watch and pull last 5 posts from subreddit to match verification code
-func (a *AuthSessions) GetRecentPostsFromSubreddit(user *db.User) (*db.User, error) {
+func (a *AuthSessions) GetRecentPostsFromSubreddit(user *db.User2) (*db.User2, error) {
 	// get 5 newest submissions from the subreddit
 	submissions, err := a.OAuthSession.SubredditSubmissions(VerificationSubredditName, "new", geddit.ListingOptions{Count: 1})
 	if err != nil {
@@ -80,13 +80,13 @@ func (a *AuthSessions) GetRecentPostsFromSubreddit(user *db.User) (*db.User, err
 	// iterate over the submissions
 	for _, submission := range submissions {
 		// check to ensure both author and verification code match
-		if submission.Author == user.Reddit.Username &&
-			submission.Title == user.Reddit.Verification.ConfirmedVerificationCode {
+		if submission.Author == user.Social.Reddit.Username &&
+			submission.Title == user.Social.Reddit.Verification.ConfirmedVerificationCode {
 			// assign submission title (posted verification code) to user struct
-			user.Reddit.Verification.PostedVerificationCode = submission.Title
-			if user.Reddit.Verification.ConfirmedVerificationCode == user.Reddit.Verification.PostedVerificationCode {
+			user.Social.Reddit.Verification.PostedVerificationCode = submission.Title
+			if user.Social.Reddit.Verification.ConfirmedVerificationCode == user.Social.Reddit.Verification.PostedVerificationCode {
 				// flip bool flag once verification code validated
-				user.Reddit.Verification.Verified = true
+				user.Social.Reddit.Verification.Verified = true
 				return user, nil
 			}
 		}
@@ -97,27 +97,26 @@ func (a *AuthSessions) GetRecentPostsFromSubreddit(user *db.User) (*db.User, err
 }
 
 // GetAboutInfo method to retrieve general information about user
-func (a *AuthSessions) GetAboutInfo(user *db.User) (*db.User, error) {
+func (a *AuthSessions) GetAboutInfo(user *db.User2) error {
 	// get about information of reddit user
-	redditProfile, err := a.OAuthSession.AboutRedditor(user.Reddit.Username)
+	redditProfile, err := a.OAuthSession.AboutRedditor(user.Social.Reddit.Username)
 	if err != nil {
-		return user, err
+		return err
 	}
 
 	// store select reddit profile info in user struct
-	user.Reddit.CommentKarma = redditProfile.CommentKarma
-	user.Reddit.LinkKarma = redditProfile.LinkKarma
-	user.Reddit.AccountCreatedUTC = redditProfile.Created
+	user.Social.Reddit.CommentKarma = redditProfile.CommentKarma
+	user.Social.Reddit.LinkKarma = redditProfile.LinkKarma
 
-	return user, nil
+	return nil
 }
 
 // GetSubmittedInfo method to retrieve slice of user's submitted posts
-func (a *AuthSessions) GetSubmittedInfo(user *db.User) (*db.User, error) {
+func (a *AuthSessions) GetSubmittedInfo(user *db.User2) error {
 	// get submissions of reddit user
-	submissions, err := a.NoAuthSession.RedditorSubmissions(user.Reddit.Username, geddit.ListingOptions{Count: 25})
+	submissions, err := a.NoAuthSession.RedditorSubmissions(user.Social.Reddit.Username, geddit.ListingOptions{Count: 25})
 	if err != nil {
-		return user, err
+		return err
 	}
 
 	// TODO:
@@ -136,9 +135,9 @@ func (a *AuthSessions) GetSubmittedInfo(user *db.User) (*db.User, error) {
 	uniqueSubredditSlice := removeDuplicates(subredditSlice)
 
 	// assign uniqueSubredditSlice to user struct
-	user.Reddit.Subreddits = uniqueSubredditSlice
+	user.Social.Reddit.Subreddits = uniqueSubredditSlice
 
-	return user, nil
+	return nil
 }
 
 // GetOverview method to retrieve overview of user account

@@ -227,7 +227,7 @@ func (db *DB) RemoveRedditUser(u *User) (*User, error) {
 /// REDDIT
 
 // UpdateRedditInfo updates the listing and associated Reddit data of a single user
-func (db *DB) UpdateRedditInfo(u *User) (*User, error) {
+func (db *DB) UpdateRedditInfo(u *User2) (*User2, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -235,7 +235,20 @@ func (db *DB) UpdateRedditInfo(u *User) (*User, error) {
 	}
 
 	// create SQL statement for db update
-	sqlStatement := `UPDATE coindrop_reddit SET comment_karma = $1, link_karma = $2, subreddits = $3, trophies = $4 WHERE auth_user_id = $5`
+	sqlStatement := `
+		UPDATE 
+			coindrop_reddit2
+		SET
+			comment_karma = $1,
+			link_karma = $2,
+			subreddits = $3,
+			trophies = $4
+		FROM
+			coindrop_auth2
+		WHERE
+			coindrop_auth2.id = coindrop_reddit2.user_id AND
+			coindrop_auth2.cognito_auth_user_id = $5
+	`
 
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
@@ -246,7 +259,13 @@ func (db *DB) UpdateRedditInfo(u *User) (*User, error) {
 	defer stmt.Close()
 
 	// execute db write using unique ID as the identifier
-	_, err = stmt.Exec(u.Reddit.CommentKarma, u.Reddit.LinkKarma, pq.Array(u.Reddit.Subreddits), pq.Array(u.Reddit.Trophies), u.AuthUserID)
+	_, err = stmt.Exec(
+		u.Social.Reddit.CommentKarma,
+		u.Social.Reddit.LinkKarma,
+		pq.Array(u.Social.Reddit.Subreddits),
+		pq.Array(u.Social.Reddit.Trophies),
+		u.AuthUserID,
+	)
 	if err != nil {
 		// rollback transaction if error thrown
 		return u, tx.Rollback()
@@ -276,15 +295,14 @@ func (db *DB) UpdateRedditVerificationCode(u *User2) (*User2, error) {
 		UPDATE
 			coindrop_reddit2
 		SET
-			username = $1,
-			confirmed_verification_code = $2,
-			posted_verification_code = $3,
-			verified = $4
+			confirmed_verification_code = $1,
+			posted_verification_code = $2,
+			verified = $3
 		FROM
 			coindrop_auth2
 		WHERE
 			coindrop_auth2.id = coindrop_reddit2.user_id AND
-			coindrop_auth2.cognito_auth_user_id = $5
+			coindrop_auth2.cognito_auth_user_id = $4
 	`
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
@@ -296,7 +314,6 @@ func (db *DB) UpdateRedditVerificationCode(u *User2) (*User2, error) {
 
 	// execute db write using unique reddit username as the identifier
 	_, err = stmt.Exec(
-		u.Social.Reddit.Username,
 		u.Social.Reddit.Verification.ConfirmedVerificationCode,
 		u.Social.Reddit.Verification.PostedVerificationCode,
 		u.Social.Reddit.Verification.Verified,
