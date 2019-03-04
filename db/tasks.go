@@ -1,9 +1,5 @@
 package db
 
-import (
-	"github.com/lib/pq"
-)
-
 // GetTasks returns all available tasks
 func (db *DB) GetTasks(tasks *Tasks) (*Tasks, error) {
 	// create SQL statement for db query
@@ -11,11 +7,11 @@ func (db *DB) GetTasks(tasks *Tasks) (*Tasks, error) {
 	SELECT
 		 id,
 		 title,
-		 type, 
-		 author, 
-		 description, 
-		 token_name, 
-		 token_allocation, 
+		 type,
+		 author,
+		 description,
+		 token_name,
+		 token_allocation,
 		 badge_id
 	FROM
 		coindrop_tasks2
@@ -70,15 +66,15 @@ func (db *DB) AddTask(t *Task) (*Task, error) {
 	sqlStatement := `
 	INSERT INTO coindrop_tasks2
 		(
-			title, 
-			type, 
-			author, 
-			description, 
-			token_name, 
-			token_allocation, 
+			title,
+			type,
+			author,
+			description,
+			token_name,
+			token_allocation,
 			badge_id
 			)
-	VALUES 
+	VALUES
 		(
 			$1,
 			$2,
@@ -130,7 +126,7 @@ func (db *DB) GetUserTasks(t *TaskUser) ([]Task, error) {
 	tasks := []Task{}
 
 	sqlStatement := `
-	SELECT 
+	SELECT
 		coindrop_tasks2.id,
 		coindrop_tasks2.title,
 		coindrop_tasks2.type,
@@ -143,7 +139,7 @@ func (db *DB) GetUserTasks(t *TaskUser) ([]Task, error) {
 		coindrop_auth2
 	JOIN
 		coindrop_user_tasks2
-	ON 
+	ON
 		coindrop_auth2.id = coindrop_user_tasks2.user_id
 	JOIN
 		coindrop_tasks2
@@ -189,90 +185,7 @@ func (db *DB) GetUserTasks(t *TaskUser) ([]Task, error) {
 }
 
 // AddUserTask adds the listing and associated task data of a specific user
-func (db *DB) AddUserTask(u *UserTask) (*UserTask, error) {
-	// initialize statement write to database
-	tx, err := db.client.Begin()
-	if err != nil {
-		return u, err
-	}
-
-	// create SQL statement for db writes
-	sqlStatement := `INSERT INTO coindrop_user_tasks (auth_user_id, assigned, completed) VALUES ($1,$2,$3)`
-
-	// prepare statement
-	stmt, err := db.client.Prepare(sqlStatement)
-	if err != nil {
-		return u, err
-	}
-
-	defer stmt.Close()
-
-	// execute db write using unique user ID + associated data
-	_, err = stmt.Exec(
-		u.AuthUserID,
-		pq.Array(u.Assigned),
-		pq.Array(u.Completed),
-	)
-	if err != nil {
-		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
-	}
-
-	// commit db write
-	err = tx.Commit()
-	if err != nil {
-		// rollback transaciton if error thrown
-		tx.Rollback()
-		return u, err
-	}
-
-	return u, err
-}
-
-// MarkUserTaskAssigned adds a task to the user's list of assigned tasks
-func (db *DB) MarkUserTaskAssigned(u *UserTask) (*UserTask, error) {
-	// initialize statement write to database
-	tx, err := db.client.Begin()
-	if err != nil {
-		return u, err
-	}
-
-	// create SQL statement for db writes
-	sqlStatement := `UPDATE coindrop_user_tasks SET assigned = array_append(assigned, $1) WHERE auth_user_id = $2`
-
-	// prepare statement
-	stmt, err := db.client.Prepare(sqlStatement)
-	if err != nil {
-		return u, err
-	}
-
-	defer stmt.Close()
-
-	// execute db write using unique user ID + associated data
-	_, err = stmt.Exec(
-		u.Assigned,
-		u.AuthUserID,
-	)
-	if err != nil {
-		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
-	}
-
-	// commit db write
-	err = tx.Commit()
-	if err != nil {
-		// rollback transaciton if error thrown
-		tx.Rollback()
-		return u, err
-	}
-
-	return u, err
-}
-
-// MarkUserTaskCompleted adds a task to the user's list of completed tasks
-func (db *DB) MarkUserTaskCompleted(u *UserTask) (*UserTask, error) {
+func (db *DB) AddUserTask(u *UserTask2) (*UserTask2, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -281,9 +194,61 @@ func (db *DB) MarkUserTaskCompleted(u *UserTask) (*UserTask, error) {
 
 	// create SQL statement for db writes
 	sqlStatement := `
-		UPDATE coindrop_user_tasks
-		SET completed = array_append(completed, $1)
-		WHERE auth_user_id = $2
+		INSERT INTO
+			coindrop_user_tasks2(
+				user_id,
+				task_id,
+				completed
+			)
+			VALUES ($1,$2,$3)`
+
+	// prepare statement
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return u, err
+	}
+
+	defer stmt.Close()
+
+	// execute db write using unique user ID + associated data
+	_, err = stmt.Exec(
+		u.UserID,
+		u.TaskID,
+		u.Completed,
+	)
+	if err != nil {
+		// rollback transaction if error thrown
+		return u, tx.Rollback()
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaciton if error thrown
+		return u, tx.Rollback()
+	}
+
+	return u, err
+}
+
+// MarkUserTaskCompleted adds a task to the user's list of completed tasks
+func (db *DB) MarkUserTaskCompleted(u *UserTask2) (*UserTask2, error) {
+	// initialize statement write to database
+	tx, err := db.client.Begin()
+	if err != nil {
+		return u, err
+	}
+
+	// create SQL statement for db writes
+	sqlStatement := `
+		UPDATE
+			coindrop_user_tasks2
+		SET
+			completed = $1
+		WHERE
+			task_id = $2
+		AND
+			user_id = $3
 	`
 
 	// prepare statement
@@ -297,20 +262,19 @@ func (db *DB) MarkUserTaskCompleted(u *UserTask) (*UserTask, error) {
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
 		u.Completed,
-		u.AuthUserID,
+		u.TaskID,
+		u.UserID,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
+		return u, tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaciton if error thrown
-		tx.Rollback()
-		return u, err
+		return u, tx.Rollback()
 	}
 
 	return u, err

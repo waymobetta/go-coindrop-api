@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.3.1
+// --version=v1.4.1
 
 package client
 
@@ -17,6 +17,54 @@ import (
 	"net/http"
 	"net/url"
 )
+
+// CreateTasksPath computes a request path to the create action of tasks.
+func CreateTasksPath() string {
+
+	return fmt.Sprintf("/v1/tasks")
+}
+
+// Create a user task
+func (c *Client) CreateTasks(ctx context.Context, path string, payload *CreateTaskPayload, contentType string) (*http.Response, error) {
+	req, err := c.NewCreateTasksRequest(ctx, path, payload, contentType)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewCreateTasksRequest create the request corresponding to the create action endpoint of the tasks resource.
+func (c *Client) NewCreateTasksRequest(ctx context.Context, path string, payload *CreateTaskPayload, contentType string) (*http.Request, error) {
+	var body bytes.Buffer
+	if contentType == "" {
+		contentType = "*/*" // Use default encoder
+	}
+	err := c.Encoder.Encode(payload, &body, contentType)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode body: %s", err)
+	}
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("POST", u.String(), &body)
+	if err != nil {
+		return nil, err
+	}
+	header := req.Header
+	if contentType == "*/*" {
+		header.Set("Content-Type", "application/json")
+	} else {
+		header.Set("Content-Type", contentType)
+	}
+	if c.JWTAuthSigner != nil {
+		if err := c.JWTAuthSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
 
 // ShowTasksPath computes a request path to the show action of tasks.
 func ShowTasksPath() string {
@@ -58,9 +106,10 @@ func (c *Client) NewShowTasksRequest(ctx context.Context, path string, userID *s
 }
 
 // UpdateTasksPath computes a request path to the update action of tasks.
-func UpdateTasksPath() string {
+func UpdateTasksPath(taskID string) string {
+	param0 := taskID
 
-	return fmt.Sprintf("/v1/tasks")
+	return fmt.Sprintf("/v1/tasks/%s", param0)
 }
 
 // Update user task state

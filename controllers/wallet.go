@@ -26,7 +26,6 @@ func (c *WalletController) Show(ctx *app.ShowWalletContext) error {
 	// WalletController_Show: start_implement
 
 	// Put your logic here
-
 	cognitoUserID := ctx.Value("cognitoUserID").(string)
 	user := new(db.User)
 	user.AuthUserID = cognitoUserID
@@ -56,7 +55,6 @@ func (c *WalletController) Update(ctx *app.UpdateWalletContext) error {
 	// WalletController_Update: start_implement
 
 	// Put your logic here
-
 	cognitoUserID := ctx.Value("cognitoUserID").(string)
 	user := new(db.User)
 	user.AuthUserID = cognitoUserID

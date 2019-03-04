@@ -67,6 +67,8 @@ goa:
 	@rm quiz.go
 	@rm results.go
 	@rm reddit.go
+	@rm verifyreddit.go
+	@rm redditharvest.go
 	@MAKE swagger
 
 .PHONY: swagger

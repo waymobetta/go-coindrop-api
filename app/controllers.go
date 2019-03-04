@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.3.1
+// --version=v1.4.1
 
 package app
 
@@ -364,6 +364,7 @@ func handleResultsOrigin(h goa.Handler) goa.Handler {
 // TasksController is the controller interface for the Tasks actions.
 type TasksController interface {
 	goa.Muxer
+	Create(*CreateTasksContext) error
 	Show(*ShowTasksContext) error
 	Update(*UpdateTasksContext) error
 }
@@ -373,6 +374,30 @@ func MountTasksController(service *goa.Service, ctrl TasksController) {
 	initService(service)
 	var h goa.Handler
 	service.Mux.Handle("OPTIONS", "/v1/tasks", ctrl.MuxHandler("preflight", handleTasksOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/tasks/:taskId", ctrl.MuxHandler("preflight", handleTasksOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateTasksContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*CreateTaskPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleTasksOrigin(h)
+	service.Mux.Handle("POST", "/v1/tasks", ctrl.MuxHandler("create", h, unmarshalCreateTasksPayload))
+	service.LogInfo("mount", "ctrl", "Tasks", "action", "Create", "route", "POST /v1/tasks", "security", "JWTAuth")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -411,8 +436,8 @@ func MountTasksController(service *goa.Service, ctrl TasksController) {
 	}
 	h = handleSecurity("JWTAuth", h)
 	h = handleTasksOrigin(h)
-	service.Mux.Handle("POST", "/v1/tasks", ctrl.MuxHandler("update", h, unmarshalUpdateTasksPayload))
-	service.LogInfo("mount", "ctrl", "Tasks", "action", "Update", "route", "POST /v1/tasks", "security", "JWTAuth")
+	service.Mux.Handle("POST", "/v1/tasks/:taskId", ctrl.MuxHandler("update", h, unmarshalUpdateTasksPayload))
+	service.LogInfo("mount", "ctrl", "Tasks", "action", "Update", "route", "POST /v1/tasks/:taskId", "security", "JWTAuth")
 }
 
 // handleTasksOrigin applies the CORS response headers corresponding to the origin.
@@ -437,6 +462,21 @@ func handleTasksOrigin(h goa.Handler) goa.Handler {
 
 		return h(ctx, rw, req)
 	}
+}
+
+// unmarshalCreateTasksPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateTasksPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &createTaskPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
 }
 
 // unmarshalUpdateTasksPayload unmarshals the request body into the context request data Payload field.

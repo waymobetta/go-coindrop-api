@@ -22,6 +22,7 @@ type User struct {
 	StackOverflow StackOverflow   `json:"stackoverflow"`
 }
 
+// User2 ...
 type User2 struct {
 	ID            string  `json:"id"`
 	UserID        string  `json:"user_id"`
@@ -30,7 +31,7 @@ type User2 struct {
 	Social        *Social `json:"social"`
 }
 
-/// SOCIAL
+// Social ...
 type Social struct {
 	Reddit        *Reddit          `json:"reddit"`
 	Keybase       *keybase.Keybase `json:"keybase"`
@@ -52,7 +53,7 @@ type Reddit struct {
 
 /// STACK OVERFLOW
 
-// StackOverflowData struct contains all essential info for Stack User
+// StackOverflow struct contains all essential info for Stack User
 type StackOverflow struct {
 	ID                string                `json:"id"`
 	ExchangeAccountID int                   `json:"exchange_account_id"`
@@ -100,6 +101,7 @@ type UserTask struct {
 	ListData   ListData `json:"list_data"`
 }
 
+// UserTask2 ...
 type UserTask2 struct {
 	ID        string `json:"id"`
 	UserID    string `json:"user_id"`
@@ -115,8 +117,18 @@ type ListData struct {
 
 // TaskUser struct contains necessary info for helping manage user's task assignment/completions
 type TaskUser struct {
+	ID         string `json:"id"`
+	TaskID     string `json:"task_id"`
 	AuthUserID string `json:"auth_user_id"`
 	Title      string `json:"title"`
+}
+
+// TaskUser2 ...
+type TaskUser2 struct {
+	ID     string `json:"id"`
+	TaskID string `json:"task_id"`
+	UserID string `json:"user_id"`
+	Title  string `json:"title"`
 }
 
 // Quiz struct contains info about a quiz

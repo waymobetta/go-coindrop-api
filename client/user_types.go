@@ -6,13 +6,63 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.3.1
+// --version=v1.4.1
 
 package client
 
 import (
 	"github.com/goadesign/goa"
 )
+
+// Create Task payload
+type createTaskPayload struct {
+	// Task ID
+	TaskID *string `form:"taskId,omitempty" json:"taskId,omitempty" yaml:"taskId,omitempty" xml:"taskId,omitempty"`
+	// User ID
+	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
+}
+
+// Validate validates the createTaskPayload type instance.
+func (ut *createTaskPayload) Validate() (err error) {
+	if ut.UserID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "userId"))
+	}
+	if ut.TaskID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "taskId"))
+	}
+	return
+}
+
+// Publicize creates CreateTaskPayload from createTaskPayload
+func (ut *createTaskPayload) Publicize() *CreateTaskPayload {
+	var pub CreateTaskPayload
+	if ut.TaskID != nil {
+		pub.TaskID = *ut.TaskID
+	}
+	if ut.UserID != nil {
+		pub.UserID = *ut.UserID
+	}
+	return &pub
+}
+
+// Create Task payload
+type CreateTaskPayload struct {
+	// Task ID
+	TaskID string `form:"taskId" json:"taskId" yaml:"taskId" xml:"taskId"`
+	// User ID
+	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+}
+
+// Validate validates the CreateTaskPayload type instance.
+func (ut *CreateTaskPayload) Validate() (err error) {
+	if ut.UserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "userId"))
+	}
+	if ut.TaskID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "taskId"))
+	}
+	return
+}
 
 // Create Reddit User payload
 type createUserPayload struct {
@@ -74,24 +124,14 @@ func (ut *CreateUserPayload) Validate() (err error) {
 
 // Task payload
 type taskPayload struct {
-	// Cognito auth user ID
-	CognitoAuthUserID *string `form:"cognitoAuthUserId,omitempty" json:"cognitoAuthUserId,omitempty" yaml:"cognitoAuthUserId,omitempty" xml:"cognitoAuthUserId,omitempty"`
-	// task name
-	TaskName *string `form:"taskName,omitempty" json:"taskName,omitempty" yaml:"taskName,omitempty" xml:"taskName,omitempty"`
-	// task state
-	TaskState *string `form:"taskState,omitempty" json:"taskState,omitempty" yaml:"taskState,omitempty" xml:"taskState,omitempty"`
+	// Task completed
+	Completed *bool `form:"completed,omitempty" json:"completed,omitempty" yaml:"completed,omitempty" xml:"completed,omitempty"`
 }
 
 // Validate validates the taskPayload type instance.
 func (ut *taskPayload) Validate() (err error) {
-	if ut.CognitoAuthUserID == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "cognitoAuthUserId"))
-	}
-	if ut.TaskName == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "taskName"))
-	}
-	if ut.TaskState == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "taskState"))
+	if ut.Completed == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "completed"))
 	}
 	return
 }
@@ -99,40 +139,16 @@ func (ut *taskPayload) Validate() (err error) {
 // Publicize creates TaskPayload from taskPayload
 func (ut *taskPayload) Publicize() *TaskPayload {
 	var pub TaskPayload
-	if ut.CognitoAuthUserID != nil {
-		pub.CognitoAuthUserID = *ut.CognitoAuthUserID
-	}
-	if ut.TaskName != nil {
-		pub.TaskName = *ut.TaskName
-	}
-	if ut.TaskState != nil {
-		pub.TaskState = *ut.TaskState
+	if ut.Completed != nil {
+		pub.Completed = *ut.Completed
 	}
 	return &pub
 }
 
 // Task payload
 type TaskPayload struct {
-	// Cognito auth user ID
-	CognitoAuthUserID string `form:"cognitoAuthUserId" json:"cognitoAuthUserId" yaml:"cognitoAuthUserId" xml:"cognitoAuthUserId"`
-	// task name
-	TaskName string `form:"taskName" json:"taskName" yaml:"taskName" xml:"taskName"`
-	// task state
-	TaskState string `form:"taskState" json:"taskState" yaml:"taskState" xml:"taskState"`
-}
-
-// Validate validates the TaskPayload type instance.
-func (ut *TaskPayload) Validate() (err error) {
-	if ut.CognitoAuthUserID == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "cognitoAuthUserId"))
-	}
-	if ut.TaskName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "taskName"))
-	}
-	if ut.TaskState == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "taskState"))
-	}
-	return
+	// Task completed
+	Completed bool `form:"completed" json:"completed" yaml:"completed" xml:"completed"`
 }
 
 // Update Reddit User payload

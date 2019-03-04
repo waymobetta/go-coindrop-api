@@ -1,5 +1,7 @@
 -- psql [db name] < resources/create_schema2.sql
 
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- AUTH 2
 CREATE TABLE IF NOT EXISTS coindrop_auth2 (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
@@ -54,7 +56,7 @@ CREATE TABLE IF NOT EXISTS coindrop_tasks2 (
 
 -- QUIZ RESULTS 2
 CREATE TABLE IF NOT EXISTS coindrop_quiz_results2 (
-	quiz_id uuid REFERENCES coindroo_quizzes2(id),
+	quiz_id uuid REFERENCES coindrop_quizzes2(id),
 	user_id uuid REFERENCES coindrop_auth2(id),
 	questions_correct INTEGER NOT NULL,
 	questions_incorrect INTEGER NOT NULL,
@@ -83,7 +85,7 @@ CREATE TABLE IF NOT EXISTS coindrop_badges (
 	description TEXT
 );
 
--- NOT USED YET -- 
+-- NOT USED YET --
 
 -- REDDIT COMMUNITIES
 CREATE TABLE IF NOT EXISTS coindrop_reddit_communities (

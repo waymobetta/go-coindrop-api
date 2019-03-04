@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.3.1
+// --version=v1.4.1
 
 package app
 
@@ -312,6 +312,66 @@ func (ctx *ShowResultsContext) NotFound(r *StandardError) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
 }
 
+// CreateTasksContext provides the tasks create action context.
+type CreateTasksContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Payload *CreateTaskPayload
+}
+
+// NewCreateTasksContext parses the incoming request URL and body, performs validations and creates the
+// context used by the tasks controller create action.
+func NewCreateTasksContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateTasksContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := CreateTasksContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *CreateTasksContext) OK(resp []byte) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "text/plain")
+	}
+	ctx.ResponseData.WriteHeader(200)
+	_, err := ctx.ResponseData.Write(resp)
+	return err
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *CreateTasksContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *CreateTasksContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *CreateTasksContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *CreateTasksContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
 // ShowTasksContext provides the tasks show action context.
 type ShowTasksContext struct {
 	context.Context
@@ -363,6 +423,7 @@ type UpdateTasksContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
+	TaskID  string
 	Payload *TaskPayload
 }
 
@@ -375,6 +436,14 @@ func NewUpdateTasksContext(ctx context.Context, r *http.Request, service *goa.Se
 	req := goa.ContextRequest(ctx)
 	req.Request = r
 	rctx := UpdateTasksContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramTaskID := req.Params["taskId"]
+	if len(paramTaskID) > 0 {
+		rawTaskID := paramTaskID[0]
+		rctx.TaskID = rawTaskID
+		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, rctx.TaskID); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`taskId`, rctx.TaskID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+		}
+	}
 	return &rctx, err
 }
 

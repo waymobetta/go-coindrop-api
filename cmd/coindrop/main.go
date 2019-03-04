@@ -96,7 +96,7 @@ func main() {
 	app.UseJWTAuthMiddleware(service, mw.Auth(auth.NewAuth(&auth.Config{
 		CognitoRegion:     cognitoRegion,
 		CognitoUserPoolID: cognitoUserPoolID,
-	})))
+	}), dbs))
 
 	// Mount controllers
 	healthcheckCtrlr := controllers.NewHealthcheckController(service, dbs)

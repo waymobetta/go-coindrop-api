@@ -23,15 +23,6 @@ func createServer() *httptest.Server {
 	cognitoRegion := os.Getenv("AWS_COINDROP_COGNITO_REGION")
 	cognitoUserPoolID := os.Getenv("AWS_COINDROP_COGNITO_USER_POOL_ID")
 
-	service.Use(middleware.RequestID())
-	service.Use(middleware.LogRequest(true))
-	service.Use(middleware.ErrorHandler(service, true))
-	service.Use(middleware.Recover())
-	app.UseJWTAuthMiddleware(service, mw.Auth(auth.NewAuth(&auth.Config{
-		CognitoRegion:     cognitoRegion,
-		CognitoUserPoolID: cognitoUserPoolID,
-	})))
-
 	dbport, err := strconv.Atoi(os.Getenv("POSTGRES_PORT"))
 	if err != nil {
 		log.Fatal(err)
@@ -46,6 +37,15 @@ func createServer() *httptest.Server {
 		SSLMode: os.Getenv("POSTGRES_SSL_MODE"),
 	})
 
+	service.Use(middleware.RequestID())
+	service.Use(middleware.LogRequest(true))
+	service.Use(middleware.ErrorHandler(service, true))
+	service.Use(middleware.Recover())
+	app.UseJWTAuthMiddleware(service, mw.Auth(auth.NewAuth(&auth.Config{
+		CognitoRegion:     cognitoRegion,
+		CognitoUserPoolID: cognitoUserPoolID,
+	}), dbs))
+
 	// Mount controllers
 	/*
 		healthcheckCtrlr := controllers.NewHealthcheckController(service, dbs)
@@ -58,10 +58,8 @@ func createServer() *httptest.Server {
 	walletCtrlr := controllers.NewWalletController(service, dbs)
 	app.MountWalletController(service, walletCtrlr)
 
-	/*
-		tasksCtrlr := controllers.NewTasksController(service, dbs)
-		app.MountTasksController(service, tasksCtrlr)
-	*/
+	tasksCtrlr := controllers.NewTasksController(service, dbs)
+	app.MountTasksController(service, tasksCtrlr)
 	/*
 
 		resultsCtrlr := controllers.NewResultsController(service, dbs)
@@ -81,10 +79,11 @@ func setAuth(req *http.Request) {
 
 // TODO make dynamic
 func getUserID() string {
-	return "c1718f78-4869-4f2a-a96e-eba0bbdcdd21"
+	//return "c1718f78-4869-4f2a-a96e-eba0bbdcdd21"
+	return "8ea11ea0-567a-46be-a6c6-6c19adab372c"
 }
 
 // TODO make dynamic
 func getAuthToken() string {
-	return "eyJraWQiOiJlS3lvdytnb1wvXC9yWmtkbGFhRFNOM25jTTREd0xTdFhibks4TTB5b211aE09IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJjMTcxOGY3OC00ODY5LTRmMmEtYTk2ZS1lYmEwYmJkY2RkMjEiLCJldmVudF9pZCI6IjA3YzY5ODViLTM5NjAtMTFlOS05ODVjLTI1MmU5YTE3NTE3NiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE1NTExNDIwMjIsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy13ZXN0LTIuYW1hem9uYXdzLmNvbVwvdXMtd2VzdC0yX0wwVldGSEVueSIsImV4cCI6MTU1MTE0NTYyMiwiaWF0IjoxNTUxMTQyMDIyLCJqdGkiOiI3ZDg1OGQwNi1iZjMwLTQ3ODEtYThmNC0yMTE3ZTMyM2E3NzciLCJjbGllbnRfaWQiOiI2ZjFzcGI2MzZwdG4wNzRvbjBwZGpnbms4bCIsInVzZXJuYW1lIjoiYzE3MThmNzgtNDg2OS00ZjJhLWE5NmUtZWJhMGJiZGNkZDIxIn0.DykZC1UKAvky2aPrtmXkk7sL0J7IZOpT2P4nIoTznBr5wGn9HVPFnklg0HArXHozhYmJoL3MScX_NYN5JmibE1Hes1wDnj7xFyDvIt3FzAjMfeWTaURmJTfyuaPUO8XpUBonDB4NsqnY7Q5OwUDQ2ICKlri1sZ2_7NPUREHnTk1hpHkoJUaPtt3F-Skjk1BGb1cfHYw_VvcchfH9zWtD5tmnfebPm4PbMvOtqpBAkdDx1eowbrfL-8q_m2NggwLXlCk2YBWna3n5nCKiVBhx3nQ6Wzy0adpF2P7GeIit9YRxZ4neJbgoQz__1nQJoIUm110RNwA_AvoWUCxQ8QoyYQ"
+	return "eyJraWQiOiJlS3lvdytnb1wvXC9yWmtkbGFhRFNOM25jTTREd0xTdFhibks4TTB5b211aE09IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI4ZWExMWVhMC01NjdhLTQ2YmUtYTZjNi02YzE5YWRhYjM3MmMiLCJldmVudF9pZCI6ImU0YTI4NDRlLTNlMTItMTFlOS05YWU3LTQzNjE3Y2Q0YzVkYSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE1NTE2NTg2NDcsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy13ZXN0LTIuYW1hem9uYXdzLmNvbVwvdXMtd2VzdC0yX0wwVldGSEVueSIsImV4cCI6MTU1MTY2MjI0NywiaWF0IjoxNTUxNjU4NjQ3LCJqdGkiOiI4ZGU5MTMzMS1kODE5LTRmN2ItODc4Ni1lNTVlMTYyOWJhMjIiLCJjbGllbnRfaWQiOiI2ZjFzcGI2MzZwdG4wNzRvbjBwZGpnbms4bCIsInVzZXJuYW1lIjoiOGVhMTFlYTAtNTY3YS00NmJlLWE2YzYtNmMxOWFkYWIzNzJjIn0.VxhPCsAzcwq3_ojvIyVpgJQV2C2mz-3Tj1BBr-h2fwrxWeNje-NC95YM5RTNctlGGYJR-YEvkxfSwpNPWp2oWLtsrYIUKSjm5c7OfhxhW_nMlS4ECvdXY88rC-pPVRWUouI0JHytLqFJBRJO--QcZDHBdpKKsJCvQ4Fb8W_N5idkKkGvMjx7dmsdRNT7jAtzJDSKkilSRiJgDHirUtmQ2nqjNLRlkSo5Qq6FK8unbUghMTb_k8dNaP8nX2hVezANhSoQY-PmsADH4O9Ejsp-5Wp5ByFP7S915E2kMiVgA9x5lODevMjWJPwf6DA-vQ0q-ni7DBuedkIHibt8Wotjqg"
 }

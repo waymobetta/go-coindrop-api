@@ -36,6 +36,25 @@ definitions:
     - recipients
     title: 'Mediatype identifier: application/vnd.badge+json; view=default'
     type: object
+  CreateTaskPayload:
+    description: Create Task payload
+    example:
+      taskId: Exercitationem dignissimos est dolores sequi cumque.
+      userId: Dolorum accusantium eos accusantium molestias.
+    properties:
+      taskId:
+        description: Task ID
+        example: Exercitationem dignissimos est dolores sequi cumque.
+        type: string
+      userId:
+        description: User ID
+        example: Dolorum accusantium eos accusantium molestias.
+        type: string
+    required:
+    - userId
+    - taskId
+    title: CreateTaskPayload
+    type: object
   CreateUserPayload:
     description: Create Reddit User payload
     example:
@@ -274,18 +293,6 @@ definitions:
       token: Voluptates dolore quas et.
       tokenAllocation: 1806156862575268490
       type: Quia repellat optio nam voluptatem quibusdam.
-    - author: Error itaque velit quos rerum.
-      badge:
-        description: Eaque facere voluptates consequatur nihil odit.
-        id: Quam quae aut cumque consequatur asperiores.
-        name: Hic illum veniam magni nam perferendis.
-        recipients: 7796898160710639916
-      description: Natus est et harum labore id.
-      id: Ut omnis deleniti qui aut exercitationem.
-      title: Illum nesciunt itaque quam sit nihil.
-      token: Voluptates dolore quas et.
-      tokenAllocation: 1806156862575268490
-      type: Quia repellat optio nam voluptatem quibusdam.
     items:
       $ref: '#/definitions/Task'
     title: 'Mediatype identifier: application/vnd.task+json; type=collection; view=default'
@@ -293,44 +300,20 @@ definitions:
   TaskPayload:
     description: Task payload
     example:
-      cognitoAuthUserId: Exercitationem dignissimos est dolores sequi cumque.
-      taskName: Dolorum accusantium eos accusantium molestias.
-      taskState: Eligendi sit sed nobis.
+      completed: false
     properties:
-      cognitoAuthUserId:
-        description: Cognito auth user ID
-        example: Exercitationem dignissimos est dolores sequi cumque.
-        type: string
-      taskName:
-        description: task name
-        example: Dolorum accusantium eos accusantium molestias.
-        type: string
-      taskState:
-        description: task state
-        example: Eligendi sit sed nobis.
-        type: string
+      completed:
+        description: Task completed
+        example: false
+        type: boolean
     required:
-    - cognitoAuthUserId
-    - taskName
-    - taskState
+    - completed
     title: TaskPayload
     type: object
   Tasks:
     description: Tasks (default view)
     example:
       tasks:
-      - author: Error itaque velit quos rerum.
-        badge:
-          description: Eaque facere voluptates consequatur nihil odit.
-          id: Quam quae aut cumque consequatur asperiores.
-          name: Hic illum veniam magni nam perferendis.
-          recipients: 7796898160710639916
-        description: Natus est et harum labore id.
-        id: Ut omnis deleniti qui aut exercitationem.
-        title: Illum nesciunt itaque quam sit nihil.
-        token: Voluptates dolore quas et.
-        tokenAllocation: 1806156862575268490
-        type: Quia repellat optio nam voluptatem quibusdam.
       - author: Error itaque velit quos rerum.
         badge:
           description: Eaque facere voluptates consequatur nihil odit.
@@ -413,11 +396,11 @@ definitions:
   UserPayload:
     description: User payload
     example:
-      cognitoAuthUserId: Non suscipit error ea incidunt aut qui.
+      cognitoAuthUserId: Sit sed nobis.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Non suscipit error ea incidunt aut qui.
+        example: Sit sed nobis.
         type: string
     required:
     - cognitoAuthUserId
@@ -778,9 +761,53 @@ paths:
       tags:
       - tasks
     post:
+      description: Create a user task
+      operationId: tasks#create
+      parameters:
+      - description: Create Task payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateTaskPayload'
+      produces:
+      - application/standard_error+json
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: create tasks
+      tags:
+      - tasks
+  /v1/tasks/{taskId}:
+    post:
       description: Update user task state
       operationId: tasks#update
       parameters:
+      - description: Task ID
+        in: path
+        name: taskId
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        required: true
+        type: string
       - description: Task payload
         in: body
         name: payload
