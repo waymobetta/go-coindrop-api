@@ -97,29 +97,10 @@ func (c *TasksController) Update(ctx *app.UpdateTasksContext) error {
 
 	// Put your logic here
 
-	err := markCompleted(c, ctx)
-	if err != nil {
-		log.Errorf("[controller/tasks] failed to update task; %v", err)
-		return ctx.BadRequest(&app.StandardError{
-			Code:    400,
-			Message: "error updating task",
-		})
-	}
-
-	return ctx.OK(nil)
-	// TasksController_Update: end_implement
-}
-
-// markComplete marks a user's task as complete
-func markCompleted(c *TasksController, ctx *app.UpdateTasksContext) error {
-	// TasksController_Complete: start_implement
-
-	// Put your logic here
-
 	// initialize new copy of TaskUser struct in variable taskUser
-	cognitoUserID := ctx.Value("cognitoUserID").(string)
+	userID := ctx.Value("authUserID").(string)
 	taskUser := new(db.TaskUser2)
-	taskUser.UserID = cognitoUserID
+	taskUser.UserID = userID
 	taskUser.TaskID = ctx.TaskID
 
 	// initialize new copy of UserTask struct in variable userTask
@@ -128,10 +109,11 @@ func markCompleted(c *TasksController, ctx *app.UpdateTasksContext) error {
 	// mark task complete and pass AuthUserID to userTask struct
 	userTask.Completed = ctx.Payload.Completed
 	userTask.UserID = taskUser.UserID
+	userTask.TaskID = taskUser.TaskID
 
 	_, err := c.db.MarkUserTaskCompleted(userTask)
 	if err != nil {
-		log.Errorf("[controller/tasks] %v", err)
+		log.Errorf("[controller/tasks] error updating task, %v", err)
 		return ctx.BadRequest(&app.StandardError{
 			Code:    400,
 			Message: "could not mark task complete in db",
@@ -140,6 +122,6 @@ func markCompleted(c *TasksController, ctx *app.UpdateTasksContext) error {
 
 	log.Printf("[controller/tasks] marked task complete for coindrop user: %v\n", userTask.UserID)
 
-	return nil
-	// TasksController_Complete: end_implement
+	return ctx.OK(nil)
+	// TasksController_Update: end_implement
 }

@@ -68,7 +68,9 @@ func Auth(auth *authpkg.Auth, dbs *db.DB) goa.Middleware {
 				usersMap[cognitoUserID] = userID
 			}
 
-			ctx = context.WithValue(ctx, "cognitoUserID", cognitoUserID)
+			log.Printf("[middleware/auth] cognito auth ID: %s, user ID: %s\n", cognitoUserID, userID)
+
+			ctx = context.WithValue(ctx, "authCognitoUserID", cognitoUserID)
 			ctx = context.WithValue(ctx, "authUserID", userID)
 
 			// Then call the next handler:

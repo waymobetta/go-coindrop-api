@@ -1,5 +1,9 @@
 package db
 
+import (
+	"fmt"
+)
+
 // GetTasks returns all available tasks
 func (db *DB) GetTasks(tasks *Tasks) (*Tasks, error) {
 	// create SQL statement for db query
@@ -205,6 +209,7 @@ func (db *DB) AddUserTask(u *UserTask2) (*UserTask2, error) {
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
+		fmt.Println("HII")
 		return u, err
 	}
 
@@ -218,14 +223,16 @@ func (db *DB) AddUserTask(u *UserTask2) (*UserTask2, error) {
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		tx.Rollback()
+		return u, err
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaciton if error thrown
-		return u, tx.Rollback()
+		tx.Rollback()
+		return u, err
 	}
 
 	return u, err
@@ -267,14 +274,16 @@ func (db *DB) MarkUserTaskCompleted(u *UserTask2) (*UserTask2, error) {
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		tx.Rollback()
+		return u, err
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaciton if error thrown
-		return u, tx.Rollback()
+		tx.Rollback()
+		return u, err
 	}
 
 	return u, err

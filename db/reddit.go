@@ -14,20 +14,20 @@ func (db *DB) AddRedditUser(u *User2) (*User2, error) {
 
 	// create SQL statement for db writes
 	sqlStatement := `
-	INSERT INTO 
+	INSERT INTO
 		coindrop_reddit2
 		(
 			user_id,
-			username, 
-			comment_karma, 
-			link_karma, 
-			subreddits, 
-			trophies, 
-			posted_verification_code, 
-			confirmed_verification_code, 
+			username,
+			comment_karma,
+			link_karma,
+			subreddits,
+			trophies,
+			posted_verification_code,
+			confirmed_verification_code,
 			verified
-		) 
-	VALUES 
+		)
+	VALUES
 		(
 			$1,
 			$2,
@@ -63,14 +63,16 @@ func (db *DB) AddRedditUser(u *User2) (*User2, error) {
 	)
 	if err != nil {
 		// rollback transaction if error throw
-		return u, tx.Rollback()
+		tx.Rollback()
+		return u, err
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaciton if error thrown
-		return u, tx.Rollback()
+		tx.Rollback()
+		return u, err
 	}
 
 	return u, err
@@ -80,9 +82,9 @@ func (db *DB) AddRedditUser(u *User2) (*User2, error) {
 func (db *DB) GetUsers(users *Users) (*Users, error) {
 	// create SQL statement for db query
 	sqlStatement := `
-		SELECT 
+		SELECT
 			*
-		FROM 
+		FROM
 			coindrop_reddit,
 			coindrop_stackoverflow
 	`
@@ -137,6 +139,7 @@ func (db *DB) GetUsers(users *Users) (*Users, error) {
 	return users, nil
 }
 
+// GetRedditUser ...
 func (db *DB) GetRedditUser(u *User2) (*User2, error) {
 	// create SQL statement for db writes
 	sqlStatement := `
@@ -155,7 +158,7 @@ func (db *DB) GetRedditUser(u *User2) (*User2, error) {
 			coindrop_reddit2
 		ON
 			coindrop_auth2.id = coindrop_reddit2.user_id
-		WHERE 
+		WHERE
 			cognito_auth_user_id = $1
 	`
 
@@ -211,14 +214,16 @@ func (db *DB) RemoveRedditUser(u *User) (*User, error) {
 	_, err = stmt.Exec(u.AuthUserID)
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		tx.Rollback()
+		return u, err
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaciton if error thrown
-		return u, tx.Rollback()
+		tx.Rollback()
+		return u, err
 	}
 
 	return u, nil
@@ -236,7 +241,7 @@ func (db *DB) UpdateRedditInfo(u *User2) (*User2, error) {
 
 	// create SQL statement for db update
 	sqlStatement := `
-		UPDATE 
+		UPDATE
 			coindrop_reddit2
 		SET
 			comment_karma = $1,
@@ -268,14 +273,16 @@ func (db *DB) UpdateRedditInfo(u *User2) (*User2, error) {
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		tx.Rollback()
+		return u, err
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		tx.Rollback()
+		return u, err
 	}
 
 	return u, nil
@@ -283,6 +290,7 @@ func (db *DB) UpdateRedditInfo(u *User2) (*User2, error) {
 
 /// VERIFICATION
 
+// UpdateRedditVerificationCode ...
 func (db *DB) UpdateRedditVerificationCode(u *User2) (*User2, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := db.client.Begin()
@@ -321,14 +329,16 @@ func (db *DB) UpdateRedditVerificationCode(u *User2) (*User2, error) {
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		tx.Rollback()
+		return u, err
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		tx.Rollback()
+		return u, err
 	}
 
 	return u, nil

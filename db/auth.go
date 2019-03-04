@@ -53,7 +53,7 @@ func (db *DB) GetUserIDByCognitoUserID(cognitoUserID string) (string, error) {
 		FROM
 			coindrop_auth2
 		WHERE
-			cognito_auth_user_id = $1
+			cognito_auth_user_id = $1;
 	`
 
 	// prepare statement
