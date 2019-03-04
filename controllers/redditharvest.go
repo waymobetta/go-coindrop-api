@@ -38,11 +38,15 @@ func (c *RedditharvestController) Update(ctx *app.UpdateRedditharvestContext) er
 		},
 	}
 
-	// initialize struct for reddit auth sessions
-	authSession := new(reddit.AuthSessions)
-
 	// initializes reddit OAuth sessions
-	authSession.NewRedditAuth()
+	authSession, err := reddit.NewRedditAuth()
+	if err != nil {
+		log.Errorf("[controller/reddit] error: %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could not start reddit auth session",
+		})
+	}
 
 	log.Println("[controllers/reddit] retrieving Reddit About info")
 	// get general about info for user
@@ -91,7 +95,7 @@ func (c *RedditharvestController) Update(ctx *app.UpdateRedditharvestContext) er
 		},
 	}
 
-	_, err := c.db.UpdateRedditInfo(user)
+	_, err = c.db.UpdateRedditInfo(user)
 	if err != nil {
 		log.Errorf("[controller/reddit] %v", err)
 		return ctx.NotFound(&app.StandardError{

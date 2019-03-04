@@ -17,7 +17,7 @@ var (
 )
 
 // NewRedditAuth initializes reddit OAuth session
-func (a *AuthSessions) NewRedditAuth() (*AuthSessions, error) {
+func NewRedditAuth() (*AuthSessions, error) {
 	// initialize OAuth session with credentials as environment variables
 	oAuthSession, err := geddit.NewOAuthSession(
 		os.Getenv("REDDIT_CLIENT_ID"),
@@ -26,22 +26,22 @@ func (a *AuthSessions) NewRedditAuth() (*AuthSessions, error) {
 		"http://metax.io",
 	)
 	if err != nil {
-		return a, err
+		return nil, err
 	}
 
 	// create new auth token for confidential clients (personal scripts/apps).
 	err = oAuthSession.LoginAuth(os.Getenv("REDDIT_USERNAME"), os.Getenv("REDDIT_PASSWORD"))
 	if err != nil {
-		return a, err
+		return nil, err
 	}
 	// create new unauthenticated session
 	session := geddit.NewSession(os.Getenv("REDDIT_USER_AGENT"))
 
 	// assign OAuth and NoAuth sessions to User struct
-	a.OAuthSession = oAuthSession
-	a.NoAuthSession = session
-
-	return a, nil
+	return &AuthSessions{
+		OAuthSession:  oAuthSession,
+		NoAuthSession: session,
+	}, nil
 }
 
 // GetRedditUserTrophies method to retrieve slice of user trophies

@@ -49,27 +49,23 @@ func createServer() *httptest.Server {
 	}), dbs))
 
 	// Mount controllers
-	/*
-		healthcheckCtrlr := controllers.NewHealthcheckController(service, dbs)
-		app.MountHealthcheckController(service, healthcheckCtrlr)
+	healthcheckCtrlr := controllers.NewHealthcheckController(service, dbs)
+	app.MountHealthcheckController(service, healthcheckCtrlr)
 
-		userCtrlr := controllers.NewUserController(service, dbs)
-		app.MountUserController(service, userCtrlr)
-	*/
+	userCtrlr := controllers.NewUserController(service, dbs)
+	app.MountUserController(service, userCtrlr)
 
 	walletCtrlr := controllers.NewWalletController(service, dbs)
 	app.MountWalletController(service, walletCtrlr)
 
 	tasksCtrlr := controllers.NewTasksController(service, dbs)
 	app.MountTasksController(service, tasksCtrlr)
-	/*
 
-		resultsCtrlr := controllers.NewResultsController(service, dbs)
-		app.MountResultsController(service, resultsCtrlr)
+	resultsCtrlr := controllers.NewResultsController(service, dbs)
+	app.MountResultsController(service, resultsCtrlr)
 
-		quizCtrlr := controllers.NewQuizController(service, dbs)
-		app.MountQuizController(service, quizCtrlr)
-	*/
+	quizCtrlr := controllers.NewQuizController(service, dbs)
+	app.MountQuizController(service, quizCtrlr)
 
 	svr := httptest.NewServer(service.Server.Handler)
 	return svr
