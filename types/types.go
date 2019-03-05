@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/waymobetta/go-coindrop-api/services/keybase"
-	"github.com/waymobetta/go-coindrop-api/verify"
 )
 
 // Users info
@@ -39,26 +38,33 @@ type Social struct {
 
 // Reddit info
 type Reddit struct {
-	ID           string                `json:"id"`
-	Username     string                `json:"username"`
-	LinkKarma    int                   `json:"link_karma"`
-	CommentKarma int                   `json:"comment_karma"`
-	Trophies     []string              `json:"trophies"`
-	Subreddits   []string              `json:"subreddits"`
-	Verification *verify.Verification2 `json:"verification"`
+	ID           string        `json:"id"`
+	Username     string        `json:"username"`
+	LinkKarma    int           `json:"link_karma"`
+	CommentKarma int           `json:"comment_karma"`
+	Trophies     []string      `json:"trophies"`
+	Subreddits   []string      `json:"subreddits"`
+	Verification *Verification `json:"verification"`
 }
 
 /// STACK OVERFLOW
 
 // StackOverflow struct contains all essential info for Stack User
 type StackOverflow struct {
-	ID                string                `json:"id"`
-	ExchangeAccountID int                   `json:"exchange_account_id"`
-	UserID            int                   `json:"user_id"`
-	DisplayName       string                `json:"display_name"`
-	Accounts          []string              `json:"accounts"`
-	Communities       []Community           `json:"communities"`
-	Verification      *verify.Verification2 `json:"verification"`
+	ID                string        `json:"id"`
+	ExchangeAccountID int           `json:"exchange_account_id"`
+	UserID            int           `json:"user_id"`
+	DisplayName       string        `json:"display_name"`
+	Accounts          []string      `json:"accounts"`
+	Communities       []Community   `json:"communities"`
+	Verification      *Verification `json:"verification"`
+}
+
+// Verification struct contains all info for validation of account
+type Verification struct {
+	PostedVerificationCode    string `json:"posted_verification_code"`
+	ConfirmedVerificationCode string `json:"confirmed_verification_code"`
+	Verified                  bool   `json:"verified"`
 }
 
 // Community struct contains info about the communities
