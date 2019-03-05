@@ -7,23 +7,23 @@ import (
 	"github.com/waymobetta/go-coindrop-api/db"
 )
 
-// WalletController implements the wallet resource.
-type WalletController struct {
+// WalletsController implements the wallet resource.
+type WalletsController struct {
 	*goa.Controller
 	db *db.DB
 }
 
-// NewWalletController creates a wallet controller.
-func NewWalletController(service *goa.Service, dbs *db.DB) *WalletController {
-	return &WalletController{
-		Controller: service.NewController("WalletController"),
+// NewWalletsController creates a wallet controller.
+func NewWalletsController(service *goa.Service, dbs *db.DB) *WalletsController {
+	return &WalletsController{
+		Controller: service.NewController("WalletsController"),
 		db:         dbs,
 	}
 }
 
 // Show runs the show action.
-func (c *WalletController) Show(ctx *app.ShowWalletContext) error {
-	// WalletController_Show: start_implement
+func (c *WalletsController) Show(ctx *app.ShowWalletsContext) error {
+	// WalletsController_Show: start_implement
 
 	// Put your logic here
 	userID := ctx.Value("authUserID").(string)
@@ -45,12 +45,12 @@ func (c *WalletController) Show(ctx *app.ShowWalletContext) error {
 	}
 
 	return ctx.OK(res)
-	// WalletController_Show: end_implement
+	// WalletsController_Show: end_implement
 }
 
 // Update runs the update action.
-func (c *WalletController) Update(ctx *app.UpdateWalletContext) error {
-	// WalletController_Update: start_implement
+func (c *WalletsController) Update(ctx *app.UpdateWalletsContext) error {
+	// WalletsController_Update: start_implement
 
 	// Put your logic here
 	userID := ctx.Value("authUserID").(string)
@@ -70,5 +70,5 @@ func (c *WalletController) Update(ctx *app.UpdateWalletContext) error {
 	return ctx.OK(&app.Wallet{
 		Address: wallet.Address,
 	})
-	// WalletController_Update: end_implement
+	// WalletsController_Update: end_implement
 }

@@ -75,23 +75,23 @@ func (ctx *ShowHealthcheckContext) InternalServerError(r *StandardError) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
-// ShowQuizContext provides the quiz show action context.
-type ShowQuizContext struct {
+// ShowQuizzesContext provides the quizzes show action context.
+type ShowQuizzesContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
 	QuizTitle *string
 }
 
-// NewShowQuizContext parses the incoming request URL and body, performs validations and creates the
-// context used by the quiz controller show action.
-func NewShowQuizContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowQuizContext, error) {
+// NewShowQuizzesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the quizzes controller show action.
+func NewShowQuizzesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowQuizzesContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := ShowQuizContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := ShowQuizzesContext{Context: ctx, ResponseData: resp, RequestData: req}
 	paramQuizTitle := req.Params["quizTitle"]
 	if len(paramQuizTitle) > 0 {
 		rawQuizTitle := paramQuizTitle[0]
@@ -101,7 +101,7 @@ func NewShowQuizContext(ctx context.Context, r *http.Request, service *goa.Servi
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowQuizContext) OK(r *Quiz) error {
+func (ctx *ShowQuizzesContext) OK(r *Quiz) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.quiz+json")
 	}
@@ -109,7 +109,7 @@ func (ctx *ShowQuizContext) OK(r *Quiz) error {
 }
 
 // BadRequest sends a HTTP response with status code 400.
-func (ctx *ShowQuizContext) BadRequest(r *StandardError) error {
+func (ctx *ShowQuizzesContext) BadRequest(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -117,7 +117,7 @@ func (ctx *ShowQuizContext) BadRequest(r *StandardError) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *ShowQuizContext) NotFound(r *StandardError) error {
+func (ctx *ShowQuizzesContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -125,7 +125,7 @@ func (ctx *ShowQuizContext) NotFound(r *StandardError) error {
 }
 
 // Gone sends a HTTP response with status code 410.
-func (ctx *ShowQuizContext) Gone(r *StandardError) error {
+func (ctx *ShowQuizzesContext) Gone(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -133,7 +133,7 @@ func (ctx *ShowQuizContext) Gone(r *StandardError) error {
 }
 
 // InternalServerError sends a HTTP response with status code 500.
-func (ctx *ShowQuizContext) InternalServerError(r *StandardError) error {
+func (ctx *ShowQuizzesContext) InternalServerError(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -671,28 +671,28 @@ func (ctx *UpdateTasksContext) InternalServerError(r *StandardError) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
-// CreateUserContext provides the user create action context.
-type CreateUserContext struct {
+// CreateUsersContext provides the users create action context.
+type CreateUsersContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
 	Payload *UserPayload
 }
 
-// NewCreateUserContext parses the incoming request URL and body, performs validations and creates the
-// context used by the user controller create action.
-func NewCreateUserContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateUserContext, error) {
+// NewCreateUsersContext parses the incoming request URL and body, performs validations and creates the
+// context used by the users controller create action.
+func NewCreateUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateUsersContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := CreateUserContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := CreateUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
 	return &rctx, err
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *CreateUserContext) OK(r *User) error {
+func (ctx *CreateUsersContext) OK(r *User) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
 	}
@@ -700,7 +700,7 @@ func (ctx *CreateUserContext) OK(r *User) error {
 }
 
 // BadRequest sends a HTTP response with status code 400.
-func (ctx *CreateUserContext) BadRequest(r *StandardError) error {
+func (ctx *CreateUsersContext) BadRequest(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -708,7 +708,7 @@ func (ctx *CreateUserContext) BadRequest(r *StandardError) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *CreateUserContext) NotFound(r *StandardError) error {
+func (ctx *CreateUsersContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -716,7 +716,7 @@ func (ctx *CreateUserContext) NotFound(r *StandardError) error {
 }
 
 // Gone sends a HTTP response with status code 410.
-func (ctx *CreateUserContext) Gone(r *StandardError) error {
+func (ctx *CreateUsersContext) Gone(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -724,30 +724,30 @@ func (ctx *CreateUserContext) Gone(r *StandardError) error {
 }
 
 // InternalServerError sends a HTTP response with status code 500.
-func (ctx *CreateUserContext) InternalServerError(r *StandardError) error {
+func (ctx *CreateUsersContext) InternalServerError(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
-// ListUserContext provides the user list action context.
-type ListUserContext struct {
+// ListUsersContext provides the users list action context.
+type ListUsersContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
 	CognitoAuthUserID *string
 }
 
-// NewListUserContext parses the incoming request URL and body, performs validations and creates the
-// context used by the user controller list action.
-func NewListUserContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListUserContext, error) {
+// NewListUsersContext parses the incoming request URL and body, performs validations and creates the
+// context used by the users controller list action.
+func NewListUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListUsersContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := ListUserContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := ListUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
 	paramCognitoAuthUserID := req.Params["cognitoAuthUserId"]
 	if len(paramCognitoAuthUserID) > 0 {
 		rawCognitoAuthUserID := paramCognitoAuthUserID[0]
@@ -762,7 +762,7 @@ func NewListUserContext(ctx context.Context, r *http.Request, service *goa.Servi
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListUserContext) OK(r *User) error {
+func (ctx *ListUsersContext) OK(r *User) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
 	}
@@ -770,7 +770,7 @@ func (ctx *ListUserContext) OK(r *User) error {
 }
 
 // BadRequest sends a HTTP response with status code 400.
-func (ctx *ListUserContext) BadRequest(r *StandardError) error {
+func (ctx *ListUsersContext) BadRequest(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -778,7 +778,7 @@ func (ctx *ListUserContext) BadRequest(r *StandardError) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *ListUserContext) NotFound(r *StandardError) error {
+func (ctx *ListUsersContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -786,7 +786,7 @@ func (ctx *ListUserContext) NotFound(r *StandardError) error {
 }
 
 // Gone sends a HTTP response with status code 410.
-func (ctx *ListUserContext) Gone(r *StandardError) error {
+func (ctx *ListUsersContext) Gone(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -794,30 +794,30 @@ func (ctx *ListUserContext) Gone(r *StandardError) error {
 }
 
 // InternalServerError sends a HTTP response with status code 500.
-func (ctx *ListUserContext) InternalServerError(r *StandardError) error {
+func (ctx *ListUsersContext) InternalServerError(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
-// ShowUserContext provides the user show action context.
-type ShowUserContext struct {
+// ShowUsersContext provides the users show action context.
+type ShowUsersContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
 	UserID string
 }
 
-// NewShowUserContext parses the incoming request URL and body, performs validations and creates the
-// context used by the user controller show action.
-func NewShowUserContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowUserContext, error) {
+// NewShowUsersContext parses the incoming request URL and body, performs validations and creates the
+// context used by the users controller show action.
+func NewShowUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowUsersContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := ShowUserContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := ShowUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
 	paramUserID := req.Params["userId"]
 	if len(paramUserID) > 0 {
 		rawUserID := paramUserID[0]
@@ -830,7 +830,7 @@ func NewShowUserContext(ctx context.Context, r *http.Request, service *goa.Servi
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowUserContext) OK(r *User) error {
+func (ctx *ShowUsersContext) OK(r *User) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
 	}
@@ -838,7 +838,7 @@ func (ctx *ShowUserContext) OK(r *User) error {
 }
 
 // BadRequest sends a HTTP response with status code 400.
-func (ctx *ShowUserContext) BadRequest(r *StandardError) error {
+func (ctx *ShowUsersContext) BadRequest(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -846,7 +846,7 @@ func (ctx *ShowUserContext) BadRequest(r *StandardError) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *ShowUserContext) NotFound(r *StandardError) error {
+func (ctx *ShowUsersContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -854,7 +854,7 @@ func (ctx *ShowUserContext) NotFound(r *StandardError) error {
 }
 
 // Gone sends a HTTP response with status code 410.
-func (ctx *ShowUserContext) Gone(r *StandardError) error {
+func (ctx *ShowUsersContext) Gone(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -862,7 +862,7 @@ func (ctx *ShowUserContext) Gone(r *StandardError) error {
 }
 
 // InternalServerError sends a HTTP response with status code 500.
-func (ctx *ShowUserContext) InternalServerError(r *StandardError) error {
+func (ctx *ShowUsersContext) InternalServerError(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -999,23 +999,23 @@ func (ctx *UpdateVerifyredditContext) InternalServerError(r *StandardError) erro
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
-// ShowWalletContext provides the wallet show action context.
-type ShowWalletContext struct {
+// ShowWalletsContext provides the wallets show action context.
+type ShowWalletsContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
 	UserID *string
 }
 
-// NewShowWalletContext parses the incoming request URL and body, performs validations and creates the
-// context used by the wallet controller show action.
-func NewShowWalletContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowWalletContext, error) {
+// NewShowWalletsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the wallets controller show action.
+func NewShowWalletsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowWalletsContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := ShowWalletContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := ShowWalletsContext{Context: ctx, ResponseData: resp, RequestData: req}
 	paramUserID := req.Params["userId"]
 	if len(paramUserID) > 0 {
 		rawUserID := paramUserID[0]
@@ -1030,7 +1030,7 @@ func NewShowWalletContext(ctx context.Context, r *http.Request, service *goa.Ser
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowWalletContext) OK(r *Wallet) error {
+func (ctx *ShowWalletsContext) OK(r *Wallet) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.wallet+json")
 	}
@@ -1038,7 +1038,7 @@ func (ctx *ShowWalletContext) OK(r *Wallet) error {
 }
 
 // BadRequest sends a HTTP response with status code 400.
-func (ctx *ShowWalletContext) BadRequest(r *StandardError) error {
+func (ctx *ShowWalletsContext) BadRequest(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -1046,7 +1046,7 @@ func (ctx *ShowWalletContext) BadRequest(r *StandardError) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *ShowWalletContext) NotFound(r *StandardError) error {
+func (ctx *ShowWalletsContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -1054,7 +1054,7 @@ func (ctx *ShowWalletContext) NotFound(r *StandardError) error {
 }
 
 // Gone sends a HTTP response with status code 410.
-func (ctx *ShowWalletContext) Gone(r *StandardError) error {
+func (ctx *ShowWalletsContext) Gone(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -1062,35 +1062,35 @@ func (ctx *ShowWalletContext) Gone(r *StandardError) error {
 }
 
 // InternalServerError sends a HTTP response with status code 500.
-func (ctx *ShowWalletContext) InternalServerError(r *StandardError) error {
+func (ctx *ShowWalletsContext) InternalServerError(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
-// UpdateWalletContext provides the wallet update action context.
-type UpdateWalletContext struct {
+// UpdateWalletsContext provides the wallets update action context.
+type UpdateWalletsContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
 	Payload *WalletPayload
 }
 
-// NewUpdateWalletContext parses the incoming request URL and body, performs validations and creates the
-// context used by the wallet controller update action.
-func NewUpdateWalletContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateWalletContext, error) {
+// NewUpdateWalletsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the wallets controller update action.
+func NewUpdateWalletsContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateWalletsContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := UpdateWalletContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := UpdateWalletsContext{Context: ctx, ResponseData: resp, RequestData: req}
 	return &rctx, err
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *UpdateWalletContext) OK(r *Wallet) error {
+func (ctx *UpdateWalletsContext) OK(r *Wallet) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.wallet+json")
 	}
@@ -1098,7 +1098,7 @@ func (ctx *UpdateWalletContext) OK(r *Wallet) error {
 }
 
 // BadRequest sends a HTTP response with status code 400.
-func (ctx *UpdateWalletContext) BadRequest(r *StandardError) error {
+func (ctx *UpdateWalletsContext) BadRequest(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -1106,7 +1106,7 @@ func (ctx *UpdateWalletContext) BadRequest(r *StandardError) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *UpdateWalletContext) NotFound(r *StandardError) error {
+func (ctx *UpdateWalletsContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -1114,7 +1114,7 @@ func (ctx *UpdateWalletContext) NotFound(r *StandardError) error {
 }
 
 // Gone sends a HTTP response with status code 410.
-func (ctx *UpdateWalletContext) Gone(r *StandardError) error {
+func (ctx *UpdateWalletsContext) Gone(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -1122,7 +1122,7 @@ func (ctx *UpdateWalletContext) Gone(r *StandardError) error {
 }
 
 // InternalServerError sends a HTTP response with status code 500.
-func (ctx *UpdateWalletContext) InternalServerError(r *StandardError) error {
+func (ctx *UpdateWalletsContext) InternalServerError(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}

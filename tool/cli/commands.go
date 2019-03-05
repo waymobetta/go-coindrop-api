@@ -33,8 +33,8 @@ type (
 		PrettyPrint bool
 	}
 
-	// ShowQuizCommand is the command line data structure for the show action of quiz
-	ShowQuizCommand struct {
+	// ShowQuizzesCommand is the command line data structure for the show action of quizzes
+	ShowQuizzesCommand struct {
 		// Quiz title
 		QuizTitle   string
 		PrettyPrint bool
@@ -98,22 +98,22 @@ type (
 		PrettyPrint bool
 	}
 
-	// CreateUserCommand is the command line data structure for the create action of user
-	CreateUserCommand struct {
+	// CreateUsersCommand is the command line data structure for the create action of users
+	CreateUsersCommand struct {
 		Payload     string
 		ContentType string
 		PrettyPrint bool
 	}
 
-	// ListUserCommand is the command line data structure for the list action of user
-	ListUserCommand struct {
+	// ListUsersCommand is the command line data structure for the list action of users
+	ListUsersCommand struct {
 		// Cognito Auth User ID
 		CognitoAuthUserID string
 		PrettyPrint       bool
 	}
 
-	// ShowUserCommand is the command line data structure for the show action of user
-	ShowUserCommand struct {
+	// ShowUsersCommand is the command line data structure for the show action of users
+	ShowUsersCommand struct {
 		// User ID
 		UserID      string
 		PrettyPrint bool
@@ -133,15 +133,15 @@ type (
 		PrettyPrint bool
 	}
 
-	// ShowWalletCommand is the command line data structure for the show action of wallet
-	ShowWalletCommand struct {
+	// ShowWalletsCommand is the command line data structure for the show action of wallets
+	ShowWalletsCommand struct {
 		// User ID
 		UserID      string
 		PrettyPrint bool
 	}
 
-	// UpdateWalletCommand is the command line data structure for the update action of wallet
-	UpdateWalletCommand struct {
+	// UpdateWalletsCommand is the command line data structure for the update action of wallets
+	UpdateWalletsCommand struct {
 		Payload     string
 		ContentType string
 		PrettyPrint bool
@@ -189,9 +189,9 @@ Payload example:
 	tmp2.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp2.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp3 := new(CreateUserCommand)
+	tmp3 := new(CreateUsersCommand)
 	sub = &cobra.Command{
-		Use:   `user ["/v1/users"]`,
+		Use:   `users ["/v1/users"]`,
 		Short: ``,
 		Long: `
 
@@ -219,9 +219,9 @@ Payload example:
 	tmp4.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp4.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp5 := new(ListUserCommand)
+	tmp5 := new(ListUsersCommand)
 	sub = &cobra.Command{
-		Use:   `user ["/v1/users"]`,
+		Use:   `users ["/v1/users"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
 	}
@@ -242,9 +242,9 @@ Payload example:
 	tmp6.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp6.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp7 := new(ShowQuizCommand)
+	tmp7 := new(ShowQuizzesCommand)
 	sub = &cobra.Command{
-		Use:   `quiz ["/v1/quiz"]`,
+		Use:   `quizzes ["/v1/quizzes"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp7.Run(c, args) },
 	}
@@ -278,9 +278,9 @@ Payload example:
 	tmp10.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp10.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp11 := new(ShowUserCommand)
+	tmp11 := new(ShowUsersCommand)
 	sub = &cobra.Command{
-		Use:   `user ["/v1/users/USERID"]`,
+		Use:   `users ["/v1/users/USERID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp11.Run(c, args) },
 	}
@@ -296,9 +296,9 @@ Payload example:
 	tmp12.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp12.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp13 := new(ShowWalletCommand)
+	tmp13 := new(ShowWalletsCommand)
 	sub = &cobra.Command{
-		Use:   `wallet ["/v1/wallets"]`,
+		Use:   `wallets ["/v1/wallets"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp13.Run(c, args) },
 	}
@@ -360,9 +360,9 @@ Payload example:
 	tmp16.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp16.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp17 := new(UpdateWalletCommand)
+	tmp17 := new(UpdateWalletsCommand)
 	sub = &cobra.Command{
-		Use:   `wallet ["/v1/wallets"]`,
+		Use:   `wallets ["/v1/wallets"]`,
 		Short: ``,
 		Long: `
 
@@ -556,17 +556,17 @@ func (cmd *ShowHealthcheckCommand) Run(c *client.Client, args []string) error {
 func (cmd *ShowHealthcheckCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 }
 
-// Run makes the HTTP request corresponding to the ShowQuizCommand command.
-func (cmd *ShowQuizCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the ShowQuizzesCommand command.
+func (cmd *ShowQuizzesCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = "/v1/quiz"
+		path = "/v1/quizzes"
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ShowQuiz(ctx, path, stringFlagVal("quizTitle", cmd.QuizTitle))
+	resp, err := c.ShowQuizzes(ctx, path, stringFlagVal("quizTitle", cmd.QuizTitle))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -577,7 +577,7 @@ func (cmd *ShowQuizCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ShowQuizCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+func (cmd *ShowQuizzesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var quizTitle string
 	cc.Flags().StringVar(&cmd.QuizTitle, "quizTitle", quizTitle, `Quiz title`)
 }
@@ -820,8 +820,8 @@ func (cmd *UpdateTasksCommand) RegisterFlags(cc *cobra.Command, c *client.Client
 	cc.Flags().StringVar(&cmd.TaskID, "taskId", taskID, `Task ID`)
 }
 
-// Run makes the HTTP request corresponding to the CreateUserCommand command.
-func (cmd *CreateUserCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the CreateUsersCommand command.
+func (cmd *CreateUsersCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
@@ -837,7 +837,7 @@ func (cmd *CreateUserCommand) Run(c *client.Client, args []string) error {
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.CreateUser(ctx, path, &payload, cmd.ContentType)
+	resp, err := c.CreateUsers(ctx, path, &payload, cmd.ContentType)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -848,13 +848,13 @@ func (cmd *CreateUserCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *CreateUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+func (cmd *CreateUsersCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
 	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 }
 
-// Run makes the HTTP request corresponding to the ListUserCommand command.
-func (cmd *ListUserCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the ListUsersCommand command.
+func (cmd *ListUsersCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
@@ -863,7 +863,7 @@ func (cmd *ListUserCommand) Run(c *client.Client, args []string) error {
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ListUser(ctx, path, stringFlagVal("cognitoAuthUserId", cmd.CognitoAuthUserID))
+	resp, err := c.ListUsers(ctx, path, stringFlagVal("cognitoAuthUserId", cmd.CognitoAuthUserID))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -874,13 +874,13 @@ func (cmd *ListUserCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ListUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+func (cmd *ListUsersCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var cognitoAuthUserID string
 	cc.Flags().StringVar(&cmd.CognitoAuthUserID, "cognitoAuthUserId", cognitoAuthUserID, `Cognito Auth User ID`)
 }
 
-// Run makes the HTTP request corresponding to the ShowUserCommand command.
-func (cmd *ShowUserCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the ShowUsersCommand command.
+func (cmd *ShowUsersCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
@@ -889,7 +889,7 @@ func (cmd *ShowUserCommand) Run(c *client.Client, args []string) error {
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ShowUser(ctx, path)
+	resp, err := c.ShowUsers(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -900,7 +900,7 @@ func (cmd *ShowUserCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ShowUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+func (cmd *ShowUsersCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var userID string
 	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
 }
@@ -964,8 +964,8 @@ func (cmd *UpdateVerifyredditCommand) RegisterFlags(cc *cobra.Command, c *client
 	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 }
 
-// Run makes the HTTP request corresponding to the ShowWalletCommand command.
-func (cmd *ShowWalletCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the ShowWalletsCommand command.
+func (cmd *ShowWalletsCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
@@ -974,7 +974,7 @@ func (cmd *ShowWalletCommand) Run(c *client.Client, args []string) error {
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ShowWallet(ctx, path, stringFlagVal("userId", cmd.UserID))
+	resp, err := c.ShowWallets(ctx, path, stringFlagVal("userId", cmd.UserID))
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -985,13 +985,13 @@ func (cmd *ShowWalletCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ShowWalletCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+func (cmd *ShowWalletsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var userID string
 	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
 }
 
-// Run makes the HTTP request corresponding to the UpdateWalletCommand command.
-func (cmd *UpdateWalletCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the UpdateWalletsCommand command.
+func (cmd *UpdateWalletsCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
@@ -1007,7 +1007,7 @@ func (cmd *UpdateWalletCommand) Run(c *client.Client, args []string) error {
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.UpdateWallet(ctx, path, &payload, cmd.ContentType)
+	resp, err := c.UpdateWallets(ctx, path, &payload, cmd.ContentType)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -1018,7 +1018,7 @@ func (cmd *UpdateWalletCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *UpdateWalletCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+func (cmd *UpdateWalletsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
 	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 }
