@@ -31,7 +31,7 @@ func (c *RedditController) Show(ctx *app.ShowRedditContext) error {
 
 	// Put your logic here
 
-	user := &types.User2{
+	user := &types.User{
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Verification: &verify.Verification2{},
@@ -74,7 +74,7 @@ func (c *RedditController) Create(ctx *app.CreateRedditContext) error {
 	// 1. fix to prevent creating duplicates
 	// 2. fix SQL statement to join auth table for user ID
 
-	user := &types.User2{
+	user := &types.User{
 		CognitoAuthUserID: ctx.Payload.UserID,
 		Social: &types.Social{
 			Reddit: &types.Reddit{
