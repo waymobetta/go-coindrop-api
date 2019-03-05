@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS coindrop_reddit2 (
 	subreddits TEXT ARRAY NOT NULL,
 	trophies TEXT ARRAY NOT NULL,
 	posted_verification_code TEXT NOT NULL,
-	confirmed_verification_code TEXT NOT NULL,
+	confirmed_verification_code text DEFAULT gen_verif_code() UNIQUE,
 	verified BOOLEAN NOT NULL
 );
 
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS coindrop_stackoverflow2 (
 	display_name TEXT NOT NULL,
 	accounts TEXT ARRAY NOT NULL,
 	posted_verification_code TEXT NOT NULL,
-	confirmed_verification_code TEXT NOT NULL,
+	confirmed_verification_code text DEFAULT gen_verif_code() UNIQUE,
 	verified BOOLEAN NOT NULL
 );
 
