@@ -3,10 +3,12 @@ package db
 import (
 	"database/sql"
 	"fmt"
+
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // GetTasks returns all available tasks
-func (db *DB) GetTasks(tasks *Tasks) (*Tasks, error) {
+func (db *DB) GetTasks(tasks *types.Tasks) (*types.Tasks, error) {
 	// create SQL statement for db query
 	sqlStatement := `
 	SELECT
@@ -33,7 +35,7 @@ func (db *DB) GetTasks(tasks *Tasks) (*Tasks, error) {
 	// iterate over rows
 	for rows.Next() {
 		// initialize new struct per user in db to hold user info
-		task := Task{BadgeData: new(Badge)}
+		task := types.Task{BadgeData: new(types.Badge)}
 
 		err = rows.Scan(
 			&task.ID,
@@ -60,7 +62,7 @@ func (db *DB) GetTasks(tasks *Tasks) (*Tasks, error) {
 }
 
 // AddTask adds the listing and associated data of a single task
-func (db *DB) AddTask(t *Task) (*Task, error) {
+func (db *DB) AddTask(t *types.Task) (*types.Task, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -127,8 +129,8 @@ func (db *DB) AddTask(t *Task) (*Task, error) {
 }
 
 // GetUserTasks returns all info for specific quiz
-func (db *DB) GetUserTasks(t *TaskUser) ([]Task, error) {
-	tasks := []Task{}
+func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
+	tasks := []types.Task{}
 
 	sqlStatement := `
 	SELECT
@@ -160,7 +162,7 @@ func (db *DB) GetUserTasks(t *TaskUser) ([]Task, error) {
 	// iterate over rows
 	for rows.Next() {
 		// initialize new struct per task in db to hold task info
-		task := Task{BadgeData: new(Badge)}
+		task := types.Task{BadgeData: new(types.Badge)}
 
 		var (
 			tokenName       sql.NullString
@@ -201,7 +203,7 @@ func (db *DB) GetUserTasks(t *TaskUser) ([]Task, error) {
 }
 
 // GetUserTask returns all info for specific quiz
-func (db *DB) GetUserTask(t *TaskUser) (*Task, error) {
+func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 	sqlStatement := `
 	SELECT
 		coindrop_tasks2.id,
@@ -234,7 +236,7 @@ func (db *DB) GetUserTask(t *TaskUser) (*Task, error) {
 	defer rows.Close()
 
 	// initialize new struct per task in db to hold task info
-	task := &Task{BadgeData: new(Badge)}
+	task := &types.Task{BadgeData: new(types.Badge)}
 
 	// iterate over rows
 	for rows.Next() {
@@ -274,7 +276,7 @@ func (db *DB) GetUserTask(t *TaskUser) (*Task, error) {
 }
 
 // AddUserTask adds the listing and associated task data of a specific user
-func (db *DB) AddUserTask(u *UserTask2) (*UserTask2, error) {
+func (db *DB) AddUserTask(u *types.UserTask2) (*types.UserTask2, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -324,7 +326,7 @@ func (db *DB) AddUserTask(u *UserTask2) (*UserTask2, error) {
 }
 
 // MarkUserTaskCompleted adds a task to the user's list of completed tasks
-func (db *DB) MarkUserTaskCompleted(u *UserTask2) (*UserTask2, error) {
+func (db *DB) MarkUserTaskCompleted(u *types.UserTask2) (*types.UserTask2, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {

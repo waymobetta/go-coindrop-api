@@ -1,9 +1,13 @@
 package db
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/waymobetta/go-coindrop-api/types"
+)
 
 // GetAction returns all info for specific quiz
-func (db *DB) GetAction(q *Quiz) (*Quiz, error) {
+func (db *DB) GetAction(q *types.Quiz) (*types.Quiz, error) {
 	// create SQL statement for db query
 	sqlStatement := `SELECT * FROM coindrop_quizzes WHERE title = $1`
 
@@ -41,7 +45,7 @@ func (db *DB) GetAction(q *Quiz) (*Quiz, error) {
 }
 
 // AddAction adds the listing and associated data of a single quiz
-func (db *DB) AddAction(q *Quiz) (*Quiz, error) {
+func (db *DB) AddAction(q *types.Quiz) (*types.Quiz, error) {
 	// marshal JSON for ease of storage
 	byteArr, err := json.Marshal(&q.QuizInfo.QuizData)
 	if err != nil {

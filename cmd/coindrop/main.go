@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -16,9 +15,7 @@ import (
 	auth "github.com/waymobetta/go-coindrop-api/auth"
 	controllers "github.com/waymobetta/go-coindrop-api/controllers"
 	"github.com/waymobetta/go-coindrop-api/db"
-	routehandlers "github.com/waymobetta/go-coindrop-api/handlers"
 	mw "github.com/waymobetta/go-coindrop-api/middleware"
-	"github.com/waymobetta/go-coindrop-api/router"
 )
 
 func main() {
@@ -45,15 +42,6 @@ func main() {
 	cognitoRegion := os.Getenv("AWS_COINDROP_COGNITO_REGION")
 	cognitoUserPoolID := os.Getenv("AWS_COINDROP_COGNITO_USER_POOL_ID")
 
-	hdlrs := routehandlers.NewHandlers(&routehandlers.Config{
-		DB: dbs,
-	})
-	rtr := router.NewRouter(&router.Config{
-		Region:     cognitoRegion,
-		UserPoolID: cognitoUserPoolID,
-		Handlers:   hdlrs,
-	})
-
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
 		AllowedHeaders: []string{
@@ -76,8 +64,6 @@ func main() {
 		AllowCredentials: true,
 		Debug:            true,
 	})
-
-	rootHandler := c.Handler(rtr)
 
 	port := "5000"
 	if os.Getenv("PORT") != "" {
@@ -131,21 +117,14 @@ func main() {
 
 	rootMux := http.NewServeMux()
 
-	// NOTE: merging current routes with goa routes
 	rootMux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// limit payload sizes
 		r.Body = http.MaxBytesReader(w, r.Body, 1048576)
 
-		// Update regex to include any base goa routes in order to properly forward to goa handler
-		goaRoutesRegex := regexp.MustCompile(`v1/(health|users|wallets|tasks|quiz|results|social|verify|harvest)`)
-		isGoaRoute := goaRoutesRegex.Match([]byte(strings.ToLower(r.URL.Path)))
-
-		if isGoaRoute {
-			goaHandler.ServeHTTP(w, r)
-		} else if strings.HasPrefix(r.URL.Path, "/documentation") {
+		if strings.HasPrefix(r.URL.Path, "/documentation") {
 			http.FileServer(http.Dir("./web")).ServeHTTP(w, r)
 		} else {
-			rootHandler.ServeHTTP(w, r)
+			goaHandler.ServeHTTP(w, r)
 		}
 	})
 

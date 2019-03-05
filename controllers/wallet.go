@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // WalletController implements the wallet resource.
@@ -27,7 +28,7 @@ func (c *WalletController) Show(ctx *app.ShowWalletContext) error {
 
 	// Put your logic here
 	cognitoUserID := ctx.Value("authCognitoUserID").(string)
-	user := new(db.User)
+	user := new(types.User)
 	user.AuthUserID = cognitoUserID
 
 	// return a user's wallet using the AWS cognito user ID as the key
@@ -56,7 +57,7 @@ func (c *WalletController) Update(ctx *app.UpdateWalletContext) error {
 
 	// Put your logic here
 	cognitoUserID := ctx.Value("authCognitoUserID").(string)
-	user := new(db.User)
+	user := new(types.User)
 	user.AuthUserID = cognitoUserID
 	user.WalletAddress = ctx.Payload.WalletAddress
 

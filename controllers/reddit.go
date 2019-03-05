@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
+	"github.com/waymobetta/go-coindrop-api/types"
 	"github.com/waymobetta/go-coindrop-api/verify"
 )
 
@@ -30,9 +31,9 @@ func (c *RedditController) Show(ctx *app.ShowRedditContext) error {
 
 	// Put your logic here
 
-	user := &db.User2{
-		Social: &db.Social{
-			Reddit: &db.Reddit{
+	user := &types.User2{
+		Social: &types.Social{
+			Reddit: &types.Reddit{
 				Verification: &verify.Verification2{},
 			},
 		}}
@@ -73,10 +74,10 @@ func (c *RedditController) Create(ctx *app.CreateRedditContext) error {
 	// 1. fix to prevent creating duplicates
 	// 2. fix SQL statement to join auth table for user ID
 
-	user := &db.User2{
+	user := &types.User2{
 		CognitoAuthUserID: ctx.Payload.UserID,
-		Social: &db.Social{
-			Reddit: &db.Reddit{
+		Social: &types.Social{
+			Reddit: &types.Reddit{
 				Username:     ctx.Payload.Username,
 				LinkKarma:    0,
 				CommentKarma: 0,

@@ -6,6 +6,7 @@ import (
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
 	"github.com/waymobetta/go-coindrop-api/services/reddit"
+	"github.com/waymobetta/go-coindrop-api/types"
 	"github.com/waymobetta/go-coindrop-api/verify"
 )
 
@@ -29,9 +30,9 @@ func (c *RedditharvestController) Update(ctx *app.UpdateRedditharvestContext) er
 
 	// Put your logic here
 
-	user := &db.User2{
-		Social: &db.Social{
-			Reddit: &db.Reddit{
+	user := &types.User2{
+		Social: &types.Social{
+			Reddit: &types.Reddit{
 				Username:     ctx.Payload.Username,
 				Verification: &verify.Verification2{},
 			},
@@ -78,10 +79,10 @@ func (c *RedditharvestController) Update(ctx *app.UpdateRedditharvestContext) er
 		})
 	}
 
-	user = &db.User2{
+	user = &types.User2{
 		CognitoAuthUserID: ctx.Payload.UserID,
-		Social: &db.Social{
-			Reddit: &db.Reddit{
+		Social: &types.Social{
+			Reddit: &types.Reddit{
 				LinkKarma:    user.Social.Reddit.LinkKarma,
 				CommentKarma: user.Social.Reddit.CommentKarma,
 				Trophies:     user.Social.Reddit.Trophies,

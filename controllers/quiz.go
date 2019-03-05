@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // QuizController implements the quiz resource.
@@ -27,7 +28,7 @@ func (c *QuizController) Show(ctx *app.ShowQuizContext) error {
 
 	// Put your logic here
 
-	quiz := new(db.Quiz)
+	quiz := new(types.Quiz)
 	quiz.Title = ctx.Params.Get("quizTitle")
 
 	_, err := c.db.GetQuiz(quiz)

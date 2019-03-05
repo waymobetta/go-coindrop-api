@@ -6,6 +6,7 @@ import (
 	"github.com/goadesign/goa"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // UserController implements the user resource.
@@ -28,7 +29,7 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 
 	// Put your logic here
 	// initialize new user struct object
-	user := new(db.User2)
+	user := new(types.User2)
 	user.CognitoAuthUserID = ctx.Payload.CognitoAuthUserID
 
 	// insert the AWS cognito user ID into the coindrop_auth table

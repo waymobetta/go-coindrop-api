@@ -2,10 +2,12 @@ package db
 
 import (
 	"encoding/json"
+
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // GetQuiz returns all info for specific quiz
-func (db *DB) GetQuiz(q *Quiz) (*Quiz, error) {
+func (db *DB) GetQuiz(q *types.Quiz) (*types.Quiz, error) {
 	// create SQL statement for db query
 	sqlStatement := `SELECT * FROM coindrop_quizzes WHERE title = $1`
 
@@ -43,7 +45,7 @@ func (db *DB) GetQuiz(q *Quiz) (*Quiz, error) {
 }
 
 // AddQuiz adds the listing and associated data of a single quiz
-func (db *DB) AddQuiz(q *Quiz) (*Quiz, error) {
+func (db *DB) AddQuiz(q *types.Quiz) (*types.Quiz, error) {
 	// marshal JSON for ease of storage
 	byteArr, err := json.Marshal(&q.QuizInfo.QuizData)
 	if err != nil {
@@ -91,7 +93,7 @@ func (db *DB) AddQuiz(q *Quiz) (*Quiz, error) {
 }
 
 // StoreQuizResults adds the quiz title and associated user results of a single quiz
-func (db *DB) StoreQuizResults(q *QuizResults) (*QuizResults, error) {
+func (db *DB) StoreQuizResults(q *types.QuizResults) (*types.QuizResults, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -135,7 +137,7 @@ func (db *DB) StoreQuizResults(q *QuizResults) (*QuizResults, error) {
 }
 
 // GetQuizResults returns all info for specific quiz
-func (db *DB) GetQuizResults(q *QuizResults) (*QuizResults, error) {
+func (db *DB) GetQuizResults(q *types.QuizResults) (*types.QuizResults, error) {
 	// create SQL statement for db query
 	sqlStatement := `SELECT questions_correct, questions_incorrect, has_taken_quiz FROM coindrop_quiz_results WHERE title = $1 AND auth_user_id = $2`
 
@@ -164,7 +166,7 @@ func (db *DB) GetQuizResults(q *QuizResults) (*QuizResults, error) {
 }
 
 // GetAllQuizResults returns all info for specific quiz
-func (db *DB) GetAllQuizResults(q *QuizResults, a *AllQuizResults) (*AllQuizResults, error) {
+func (db *DB) GetAllQuizResults(q *types.QuizResults, a *types.AllQuizResults) (*types.AllQuizResults, error) {
 	// create SQL statement for db query
 	sqlStatement := `SELECT id, title, questions_correct, questions_incorrect, has_taken_quiz FROM coindrop_quiz_results WHERE auth_user_id = $1`
 
@@ -179,7 +181,7 @@ func (db *DB) GetAllQuizResults(q *QuizResults, a *AllQuizResults) (*AllQuizResu
 	// iterate over rows
 	for rows.Next() {
 		// initialize new struct per user in db to hold user info
-		quizResults := QuizResults{}
+		quizResults := types.QuizResults{}
 		err = rows.Scan(
 			&quizResults.ID,
 			&quizResults.Title,

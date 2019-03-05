@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // ResultsController implements the results resource.
@@ -27,10 +28,10 @@ func (c *ResultsController) Show(ctx *app.ShowResultsContext) error {
 
 	// Put your logic here
 
-	quizResults := new(db.QuizResults)
+	quizResults := new(types.QuizResults)
 	quizResults.AuthUserID = ctx.Params.Get("userId")
 
-	allQuizResults := new(db.AllQuizResults)
+	allQuizResults := new(types.AllQuizResults)
 
 	_, err := c.db.GetAllQuizResults(quizResults, allQuizResults)
 	if err != nil {

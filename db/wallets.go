@@ -2,12 +2,14 @@ package db
 
 import (
 	"database/sql"
+
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // WALLET
 
 // UpdateWallet updates the wallet address of a single user
-func (db *DB) UpdateWallet(u *User) (*User, error) {
+func (db *DB) UpdateWallet(u *types.User) (*types.User, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -21,7 +23,7 @@ func (db *DB) UpdateWallet(u *User) (*User, error) {
 	sqlStatement := `
 		UPDATE
 			coindrop_wallets
-		SET 
+		SET
 			address = $1
 		FROM
 			coindrop_auth2
@@ -60,19 +62,19 @@ func (db *DB) UpdateWallet(u *User) (*User, error) {
 }
 
 // GetWallet updates the wallet address of a single user
-func (db *DB) GetWallet(u *User) (*User, error) {
+func (db *DB) GetWallet(u *types.User) (*types.User, error) {
 	// create SQL statement for db update
 
 	sqlStatement := `
-		SELECT 
-			address 
+		SELECT
+			address
 		FROM
-			coindrop_auth2 
-		JOIN 
-			coindrop_wallets 
-		ON 
+			coindrop_auth2
+		JOIN
+			coindrop_wallets
+		ON
 			coindrop_auth2.wallet_id = coindrop_wallets.id
-		WHERE 
+		WHERE
 			cognito_auth_user_id = $1
 	`
 

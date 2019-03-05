@@ -2,10 +2,12 @@ package db
 
 import (
 	"database/sql"
+
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // AddUserID inserts an AWS cognito user ID to the coindrop_auth table
-func (db *DB) AddUserID(u *User2) (*User2, error) {
+func (db *DB) AddUserID(u *types.User2) (*types.User2, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -46,7 +48,7 @@ func (db *DB) AddUserID(u *User2) (*User2, error) {
 }
 
 // GetUser gets user by ID
-func (db *DB) GetUser(userID string) (*User2, error) {
+func (db *DB) GetUser(userID string) (*types.User2, error) {
 	sqlStatement := `
 	SELECT
 		coindrop_auth2.id,
@@ -74,8 +76,8 @@ func (db *DB) GetUser(userID string) (*User2, error) {
 	// initialize row object
 	row := stmt.QueryRow(userID)
 
-	user := new(User2)
-	user.Wallet = new(Wallet)
+	user := new(types.User2)
+	user.Wallet = new(types.Wallet)
 	var cognitoAuthUserID sql.NullString
 	var walletID sql.NullString
 	var walletAddress sql.NullString

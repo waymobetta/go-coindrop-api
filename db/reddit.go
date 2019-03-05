@@ -2,10 +2,11 @@ package db
 
 import (
 	"github.com/lib/pq"
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // AddRedditUser adds the listing and associated data of a single user
-func (db *DB) AddRedditUser(u *User2) (*User2, error) {
+func (db *DB) AddRedditUser(u *types.User2) (*types.User2, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -79,7 +80,7 @@ func (db *DB) AddRedditUser(u *User2) (*User2, error) {
 }
 
 // GetUsers returns info for all users
-func (db *DB) GetUsers(users *Users) (*Users, error) {
+func (db *DB) GetUsers(users *types.Users) (*types.Users, error) {
 	// create SQL statement for db query
 	sqlStatement := `
 		SELECT
@@ -100,7 +101,7 @@ func (db *DB) GetUsers(users *Users) (*Users, error) {
 	// iterate over rows
 	for rows.Next() {
 		// initialize new struct per user in db to hold user info
-		user := User{}
+		user := types.User{}
 		err = rows.Scan(
 			// reddit
 			&user.ID,
@@ -140,7 +141,7 @@ func (db *DB) GetUsers(users *Users) (*Users, error) {
 }
 
 // GetRedditUser ...
-func (db *DB) GetRedditUser(u *User2) (*User2, error) {
+func (db *DB) GetRedditUser(u *types.User2) (*types.User2, error) {
 	// create SQL statement for db writes
 	sqlStatement := `
 		SELECT
@@ -192,7 +193,7 @@ func (db *DB) GetRedditUser(u *User2) (*User2, error) {
 }
 
 // RemoveRedditUser removes the listing and associated data of a single user
-func (db *DB) RemoveRedditUser(u *User) (*User, error) {
+func (db *DB) RemoveRedditUser(u *types.User) (*types.User, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -232,7 +233,7 @@ func (db *DB) RemoveRedditUser(u *User) (*User, error) {
 /// REDDIT
 
 // UpdateRedditInfo updates the listing and associated Reddit data of a single user
-func (db *DB) UpdateRedditInfo(u *User2) (*User2, error) {
+func (db *DB) UpdateRedditInfo(u *types.User2) (*types.User2, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -291,7 +292,7 @@ func (db *DB) UpdateRedditInfo(u *User2) (*User2, error) {
 /// VERIFICATION
 
 // UpdateRedditVerificationCode ...
-func (db *DB) UpdateRedditVerificationCode(u *User2) (*User2, error) {
+func (db *DB) UpdateRedditVerificationCode(u *types.User2) (*types.User2, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := db.client.Begin()
 	if err != nil {

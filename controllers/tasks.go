@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // TasksController implements the tasks resource.
@@ -27,7 +28,7 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 
 	// Put your logic here
 
-	taskUser := new(db.TaskUser)
+	taskUser := new(types.TaskUser)
 	taskUser.UserID = ctx.Params.Get("userId")
 	taskUser.TaskID = ctx.TaskID
 
@@ -66,7 +67,7 @@ func (c *TasksController) List(ctx *app.ListTasksContext) error {
 
 	// Put your logic here
 
-	taskUser := new(db.TaskUser)
+	taskUser := new(types.TaskUser)
 	taskUser.UserID = ctx.Params.Get("userId")
 
 	tasks, err := c.db.GetUserTasks(taskUser)
@@ -113,7 +114,7 @@ func (c *TasksController) Create(ctx *app.CreateTasksContext) error {
 
 	// Put your logic here
 
-	userTask := &db.UserTask2{
+	userTask := &types.UserTask2{
 		UserID: ctx.Payload.UserID,
 		TaskID: ctx.Payload.TaskID,
 	}
@@ -138,12 +139,12 @@ func (c *TasksController) Update(ctx *app.UpdateTasksContext) error {
 
 	// initialize new copy of TaskUser struct in variable taskUser
 	userID := ctx.Value("authUserID").(string)
-	taskUser := new(db.TaskUser2)
+	taskUser := new(types.TaskUser2)
 	taskUser.UserID = userID
 	taskUser.TaskID = ctx.TaskID
 
 	// initialize new copy of UserTask struct in variable userTask
-	userTask := new(db.UserTask2)
+	userTask := new(types.UserTask2)
 
 	// mark task complete and pass UserID to userTask struct
 	userTask.Completed = ctx.Payload.Completed

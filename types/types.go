@@ -1,4 +1,4 @@
-package db
+package types
 
 import (
 	"time"
@@ -34,6 +34,7 @@ type User2 struct {
 // Wallet ...
 type Wallet struct {
 	ID      string `json:"id"`
+	UserID  string `json:"user_id"`
 	Address string `json:"address"`
 }
 

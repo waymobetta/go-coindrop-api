@@ -6,7 +6,7 @@ import (
 
 	"github.com/jzelinskie/geddit"
 	log "github.com/sirupsen/logrus"
-	"github.com/waymobetta/go-coindrop-api/db"
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 var (
@@ -45,7 +45,7 @@ func NewRedditAuth() (*AuthSessions, error) {
 }
 
 // GetRedditUserTrophies method to retrieve slice of user trophies
-func (a *AuthSessions) GetRedditUserTrophies(user *db.User2) error {
+func (a *AuthSessions) GetRedditUserTrophies(user *types.User2) error {
 	// get trophies of reddit user
 	trophies, err := a.OAuthSession.UserTrophies(user.Social.Reddit.Username)
 	if err != nil {
@@ -70,7 +70,7 @@ func (a *AuthSessions) GetRedditUserTrophies(user *db.User2) error {
 }
 
 // GetRecentPostsFromSubreddit method to watch and pull last 5 posts from subreddit to match verification code
-func (a *AuthSessions) GetRecentPostsFromSubreddit(user *db.User2) (*db.User2, error) {
+func (a *AuthSessions) GetRecentPostsFromSubreddit(user *types.User2) (*types.User2, error) {
 	// get 5 newest submissions from the subreddit
 	submissions, err := a.OAuthSession.SubredditSubmissions(VerificationSubredditName, "new", geddit.ListingOptions{Count: 1})
 	if err != nil {
@@ -97,7 +97,7 @@ func (a *AuthSessions) GetRecentPostsFromSubreddit(user *db.User2) (*db.User2, e
 }
 
 // GetAboutInfo method to retrieve general information about user
-func (a *AuthSessions) GetAboutInfo(user *db.User2) error {
+func (a *AuthSessions) GetAboutInfo(user *types.User2) error {
 	// get about information of reddit user
 	redditProfile, err := a.OAuthSession.AboutRedditor(user.Social.Reddit.Username)
 	if err != nil {
@@ -112,7 +112,7 @@ func (a *AuthSessions) GetAboutInfo(user *db.User2) error {
 }
 
 // GetSubmittedInfo method to retrieve slice of user's submitted posts
-func (a *AuthSessions) GetSubmittedInfo(user *db.User2) error {
+func (a *AuthSessions) GetSubmittedInfo(user *types.User2) error {
 	// get submissions of reddit user
 	submissions, err := a.NoAuthSession.RedditorSubmissions(user.Social.Reddit.Username, geddit.ListingOptions{Count: 25})
 	if err != nil {

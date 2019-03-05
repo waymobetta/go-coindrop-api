@@ -2,10 +2,11 @@ package db
 
 import (
 	"github.com/lib/pq"
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // AddStackUser adds the listing and associated data of a single user
-func (db *DB) AddStackUser(u *User) (*User, error) {
+func (db *DB) AddStackUser(u *types.User) (*types.User, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -52,7 +53,7 @@ func (db *DB) AddStackUser(u *User) (*User, error) {
 }
 
 // GetStackUser returns info for a single user
-func (db *DB) GetStackUser(u *User) (*User, error) {
+func (db *DB) GetStackUser(u *types.User) (*types.User, error) {
 	// create SQL statement for db writes
 	sqlStatement := `SELECT * FROM coindrop_stackoverflow WHERE auth_user_id = $1`
 
@@ -87,7 +88,7 @@ func (db *DB) GetStackUser(u *User) (*User, error) {
 }
 
 // UpdateStackAboutInfo updates the listing and associated Reddit data of a single user
-func (db *DB) UpdateStackAboutInfo(u *User) (*User, error) {
+func (db *DB) UpdateStackAboutInfo(u *types.User) (*types.User, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -125,7 +126,7 @@ func (db *DB) UpdateStackAboutInfo(u *User) (*User, error) {
 }
 
 // UpdateStackVerificationCode updates the verification code of a single user
-func (db *DB) UpdateStackVerificationCode(u *User) (*User, error) {
+func (db *DB) UpdateStackVerificationCode(u *types.User) (*types.User, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := db.client.Begin()
 	if err != nil {
