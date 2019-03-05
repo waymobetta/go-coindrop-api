@@ -25,7 +25,6 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 			subreddits,
 			trophies,
 			posted_verification_code,
-			confirmed_verification_code,
 			verified
 		)
 	VALUES
@@ -38,7 +37,6 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 			$6,
 			$7,
 			$8,
-			$9
 		)
 	`
 
@@ -59,7 +57,6 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 		pq.Array(u.Social.Reddit.Subreddits),
 		pq.Array(u.Social.Reddit.Trophies),
 		u.Social.Reddit.Verification.PostedVerificationCode,
-		u.Social.Reddit.Verification.ConfirmedVerificationCode,
 		u.Social.Reddit.Verification.Verified,
 	)
 	if err != nil {
@@ -84,7 +81,19 @@ func (db *DB) GetUsers(users *types.Users) (*types.Users, error) {
 	// create SQL statement for db query
 	sqlStatement := `
 		SELECT
-			*
+			coindrop_reddit.user_id,
+			coindrop_reddit.username,
+			coindrop_reddit.comment_karma,
+			coindrop_reddit.link_karma,
+			coindrop_reddit.subreddits,
+			coindrop_reddit.trophies,
+			coindrop_reddit.verified,
+			coindrop_stackoverflow.user_id,
+			coindrop_stackoverflow.exchange_account_id,
+			coindrop_stackoverflow.stack_user_id,
+			coindrop_stackoverflow.display_name,
+			coindrop_stackoverflow.accounts,
+			coindrop_stackoverflow.verified
 		FROM
 			coindrop_reddit,
 			coindrop_stackoverflow
@@ -104,25 +113,17 @@ func (db *DB) GetUsers(users *types.Users) (*types.Users, error) {
 		user := types.User{}
 		err = rows.Scan(
 			// reddit
-			&user.ID,
-			&user.CognitoAuthUserID,
 			&user.Social.Reddit.Username,
 			&user.Social.Reddit.CommentKarma,
 			&user.Social.Reddit.LinkKarma,
 			pq.Array(&user.Social.Reddit.Subreddits),
 			pq.Array(&user.Social.Reddit.Trophies),
-			&user.Social.Reddit.Verification.PostedVerificationCode,
-			&user.Social.Reddit.Verification.ConfirmedVerificationCode,
 			&user.Social.Reddit.Verification.Verified,
 			// stack overflow
-			&user.ID,
-			&user.CognitoAuthUserID,
-			&user.Social.StackOverflow.ExchangeAccountID,
 			&user.Social.StackOverflow.UserID,
+			&user.Social.StackOverflow.ExchangeAccountID,
 			&user.Social.StackOverflow.DisplayName,
 			pq.Array(&user.Social.StackOverflow.Accounts),
-			&user.Social.StackOverflow.Verification.PostedVerificationCode,
-			&user.Social.StackOverflow.Verification.ConfirmedVerificationCode,
 			&user.Social.StackOverflow.Verification.Verified,
 		)
 		if err != nil {
@@ -234,8 +235,6 @@ func (db *DB) RemoveRedditUser(u *types.User) (*types.User, error) {
 
 	return u, nil
 }
-
-/// REDDIT
 
 // UpdateRedditInfo updates the listing and associated Reddit data of a single user
 func (db *DB) UpdateRedditInfo(u *types.User) (*types.User, error) {

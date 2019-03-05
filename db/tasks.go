@@ -80,7 +80,7 @@ func (db *DB) AddTask(t *types.Task) (*types.Task, error) {
 			token_name,
 			token_allocation,
 			badge_id
-			)
+		)
 	VALUES
 		(
 			$1,
@@ -236,7 +236,9 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 	defer rows.Close()
 
 	// initialize new struct per task in db to hold task info
-	task := &types.Task{BadgeData: new(types.Badge)}
+	task := &types.Task{
+		BadgeData: new(types.Badge),
+	}
 
 	// iterate over rows
 	for rows.Next() {
@@ -276,7 +278,7 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 }
 
 // AddUserTask adds the listing and associated task data of a specific user
-func (db *DB) AddUserTask(u *types.UserTask2) (*types.UserTask2, error) {
+func (db *DB) AddUserTask(u *types.UserTask) (*types.UserTask, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -291,7 +293,13 @@ func (db *DB) AddUserTask(u *types.UserTask2) (*types.UserTask2, error) {
 				task_id,
 				completed
 			)
-			VALUES ($1,$2,$3)`
+		VALUES
+			(
+				$1,
+				$2,
+				$3
+			)
+	`
 
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
@@ -326,7 +334,7 @@ func (db *DB) AddUserTask(u *types.UserTask2) (*types.UserTask2, error) {
 }
 
 // MarkUserTaskCompleted adds a task to the user's list of completed tasks
-func (db *DB) MarkUserTaskCompleted(u *types.UserTask2) (*types.UserTask2, error) {
+func (db *DB) MarkUserTaskCompleted(u *types.UserTask) (*types.UserTask, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
