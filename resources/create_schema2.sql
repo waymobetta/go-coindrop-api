@@ -1,6 +1,15 @@
 -- psql [db name] < resources/create_schema2.sql
 
+-- create uuid_generate_v4 function
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- generate verification code function 
+CREATE FUNCTION gen_verif_code()
+RETURNS TEXT AS $$
+BEGIN
+	RETURN CONCAT('[coindrop.io]-', uuid_generate_v4());
+END; $$
+LANGUAGE plpgsql;
 
 -- AUTH 2
 CREATE TABLE IF NOT EXISTS coindrop_auth2 (
