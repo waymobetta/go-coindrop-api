@@ -16,7 +16,7 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 	// create SQL statement for db writes
 	sqlStatement := `
 	INSERT INTO
-		coindrop_reddit2
+		coindrop_reddit
 		(
 			user_id,
 			username,
@@ -25,7 +25,6 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 			subreddits,
 			trophies,
 			posted_verification_code,
-			confirmed_verification_code,
 			verified
 		)
 	VALUES
@@ -38,7 +37,6 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 			$6,
 			$7,
 			$8,
-			$9
 		)
 	`
 
@@ -59,7 +57,6 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 		pq.Array(u.Social.Reddit.Subreddits),
 		pq.Array(u.Social.Reddit.Trophies),
 		u.Social.Reddit.Verification.PostedVerificationCode,
-		u.Social.Reddit.Verification.ConfirmedVerificationCode,
 		u.Social.Reddit.Verification.Verified,
 	)
 	if err != nil {
@@ -145,20 +142,20 @@ func (db *DB) GetRedditUser(u *types.User) (*types.User, error) {
 	// create SQL statement for db writes
 	sqlStatement := `
 		SELECT
-			coindrop_reddit2.username,
-			coindrop_reddit2.comment_karma,
-			coindrop_reddit2.link_karma,
-			coindrop_reddit2.subreddits,
-			coindrop_reddit2.trophies,
-			coindrop_reddit2.posted_verification_code,
-			coindrop_reddit2.confirmed_verification_code,
-			coindrop_reddit2.verified
+			coindrop_reddit.username,
+			coindrop_reddit.comment_karma,
+			coindrop_reddit.link_karma,
+			coindrop_reddit.subreddits,
+			coindrop_reddit.trophies,
+			coindrop_reddit.posted_verification_code,
+			coindrop_reddit.confirmed_verification_code,
+			coindrop_reddit.verified
 		FROM
-			coindrop_auth2
+			coindrop_auth
 		JOIN
-			coindrop_reddit2
+			coindrop_reddit
 		ON
-			coindrop_auth2.id = coindrop_reddit2.user_id
+			coindrop_auth.id = coindrop_reddit.user_id
 		WHERE
 			cognito_auth_user_id = $1
 	`
@@ -248,17 +245,17 @@ func (db *DB) UpdateRedditInfo(u *types.User) (*types.User, error) {
 	// create SQL statement for db update
 	sqlStatement := `
 		UPDATE
-			coindrop_reddit2
+			coindrop_reddit
 		SET
 			comment_karma = $1,
 			link_karma = $2,
 			subreddits = $3,
 			trophies = $4
 		FROM
-			coindrop_auth2
+			coindrop_auth
 		WHERE
-			coindrop_auth2.id = coindrop_reddit2.user_id AND
-			coindrop_auth2.cognito_auth_user_id = $5
+			coindrop_auth.id = coindrop_reddit.user_id AND
+			coindrop_auth.cognito_auth_user_id = $5
 	`
 
 	// prepare statement
@@ -307,15 +304,15 @@ func (db *DB) UpdateRedditVerificationCode(u *types.User) (*types.User, error) {
 	// create SQL statement for db update
 	sqlStatement := `
 		UPDATE
-			coindrop_reddit2
+			coindrop_reddit
 		SET
 			posted_verification_code = $1,
 			verified = $2
 		FROM
-			coindrop_auth2
+			coindrop_auth
 		WHERE
-			coindrop_auth2.id = coindrop_reddit2.user_id AND
-			coindrop_auth2.cognito_auth_user_id = $3
+			coindrop_auth.id = coindrop_reddit.user_id AND
+			coindrop_auth.cognito_auth_user_id = $3
 	`
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
