@@ -131,19 +131,14 @@ type TaskUser2 struct {
 
 // Quiz struct contains info about a quiz
 type Quiz struct {
-	ID         int       `json:"id"`
-	Title      string    `json:"title"`
-	AuthUserID string    `json:"auth_user_id"`
-	QuizInfo   *QuizInfo `json:"quiz_info"`
+	ID     string        `json:"id"`
+	Title  string        `json:"title"`
+	UserID string        `json:"user_id"`
+	Fields []*QuizFields `json:"fields"`
 }
 
-// QuizInfo struct contains the list of QuizData objects
-type QuizInfo struct {
-	QuizData []QuizData `json:"quiz_data"`
-}
-
-// QuizData struct contains question and answer info about a quiz
-type QuizData struct {
+// QuizFields struct contains question and answer info about a quiz
+type QuizFields struct {
 	Question string `json:"question"`
 	Answer   string `json:"answer"`
 }

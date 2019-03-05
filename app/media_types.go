@@ -82,8 +82,89 @@ func (mt *Healthcheck) Validate() (err error) {
 //
 // Identifier: application/vnd.quiz+json; view=default
 type Quiz struct {
-	// Quiz object
-	QuizObject interface{} `form:"quizObject" json:"quizObject" yaml:"quizObject" xml:"quizObject"`
+	// Quiz fields
+	Fields QuizFieldsCollection `form:"fields" json:"fields" yaml:"fields" xml:"fields"`
+	// Quiz ID
+	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
+	// Quiz title
+	Title string `form:"title" json:"title" yaml:"title" xml:"title"`
+	// Quiz user ID
+	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+}
+
+// Validate validates the Quiz media type instance.
+func (mt *Quiz) Validate() (err error) {
+	if mt.ID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "id"))
+	}
+	if mt.Title == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "title"))
+	}
+	if mt.UserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "userId"))
+	}
+	if mt.Fields == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "fields"))
+	}
+	if err2 := mt.Fields.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
+	}
+	return
+}
+
+// Quiz fields (default view)
+//
+// Identifier: application/vnd.quiz-fields+json; view=default
+type QuizFields struct {
+	// Answer
+	Answer string `form:"answer" json:"answer" yaml:"answer" xml:"answer"`
+	// Question
+	Question string `form:"question" json:"question" yaml:"question" xml:"question"`
+}
+
+// Validate validates the QuizFields media type instance.
+func (mt *QuizFields) Validate() (err error) {
+	if mt.Question == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "question"))
+	}
+	if mt.Answer == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "answer"))
+	}
+	return
+}
+
+// Quiz-FieldsCollection is the media type for an array of Quiz-Fields (default view)
+//
+// Identifier: application/vnd.quiz-fields+json; type=collection; view=default
+type QuizFieldsCollection []*QuizFields
+
+// Validate validates the QuizFieldsCollection media type instance.
+func (mt QuizFieldsCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// QuizCollection is the media type for an array of Quiz (default view)
+//
+// Identifier: application/vnd.quiz+json; type=collection; view=default
+type QuizCollection []*Quiz
+
+// Validate validates the QuizCollection media type instance.
+func (mt QuizCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
 }
 
 // A Reddit User (default view)

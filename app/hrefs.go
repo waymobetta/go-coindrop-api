@@ -21,8 +21,9 @@ func HealthcheckHref() string {
 }
 
 // QuizzesHref returns the resource href.
-func QuizzesHref() string {
-	return "/v1/quizzes"
+func QuizzesHref(quizID interface{}) string {
+	paramquizID := strings.TrimLeftFunc(fmt.Sprintf("%v", quizID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/v1/quizzes/%v", paramquizID)
 }
 
 // RedditHref returns the resource href.

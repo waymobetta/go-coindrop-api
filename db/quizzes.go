@@ -1,84 +1,139 @@
 package db
 
 import (
-	"encoding/json"
+	"database/sql"
 
 	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // GetQuiz returns all info for specific quiz
-func (db *DB) GetQuiz(q *types.Quiz) (*types.Quiz, error) {
+func (db *DB) GetQuiz(quizID string) (*types.Quiz, error) {
 	// create SQL statement for db query
-	sqlStatement := `SELECT * FROM coindrop_quizzes WHERE title = $1`
+	sqlStatement := `
+		SELECT
+			title,
+			quiz_url
+		FROM
+			coindrop_quizzes
+		WHERE
+			id = $1
+		`
 
 	// execute db query by passing in prepared SQL statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return q, err
+		return nil, err
 	}
 
 	defer stmt.Close()
 
 	// initialize row object
-	row := stmt.QueryRow(q.Title)
+	row := stmt.QueryRow(quizID)
 
-	// create temp string variable to store marshaled JSON
-	var tempStr string
+	var title sql.NullString
+	var quizURL sql.NullString
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
-		&q.ID,
-		&q.Title,
-		&tempStr,
+		&title,
+		&quizURL,
 	)
 	if err != nil {
-		return q, err
+		return nil, err
 	}
 
-	// Unmarshal JSON from temp string variable back into struct
-	err = json.Unmarshal([]byte(tempStr), &q.QuizInfo.QuizData)
+	return &types.Quiz{
+		ID:    quizID,
+		Title: title.String,
+		//QuizURL: quizURL.String,
+	}, nil
+}
+
+// GetQuizzes returns all info for specific quiz
+func (db *DB) GetQuizzes() ([]*types.Quiz, error) {
+	// create SQL statement for db query
+	sqlStatement := `
+		SELECT
+			id,
+			title,
+			quiz_url
+		FROM
+			coindrop_quizzes
+		`
+
+	// execute db query by passing in prepared SQL statement
+	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return q, err
+		return nil, err
 	}
 
-	return q, nil
+	defer stmt.Close()
+
+	rows, err := db.client.Query(sqlStatement)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var quizzes []*types.Quiz
+
+	for rows.Next() {
+		var quizID sql.NullString
+		var title sql.NullString
+		var quizURL sql.NullString
+
+		// iterate over row object to retrieve queried value
+		err = rows.Scan(
+			&quizID,
+			&title,
+			&quizURL,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		quizzes = append(quizzes, &types.Quiz{
+			ID:    quizID.String,
+			Title: title.String,
+			//QuizURL: quizURL.String,
+		})
+	}
+
+	return quizzes, nil
 }
 
 // AddQuiz adds the listing and associated data of a single quiz
-func (db *DB) AddQuiz(q *types.Quiz) (*types.Quiz, error) {
-	// marshal JSON for ease of storage
-	byteArr, err := json.Marshal(&q.QuizInfo.QuizData)
-	if err != nil {
-		return q, err
-	}
-
+func (db *DB) AddQuiz(quiz *types.Quiz) (*types.Quiz, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
-		return q, err
+		return nil, err
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `INSERT INTO coindrop_quizzes (title, quiz_data) VALUES ($1,$2)`
+	sqlStatement := `
+		INSERT INTO
+			coindrop_quizzes(title, quiz_url)
+		VALUES ($1, $2)`
 
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return q, err
+		return nil, err
 	}
 
 	defer stmt.Close()
 
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
-		&q.Title,
-		// store marshaled JSON in db
-		string(byteArr),
+		quiz.Title,
+		"",
 	)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
-		return q, err
+		return nil, err
 	}
 
 	// commit db write
@@ -86,10 +141,10 @@ func (db *DB) AddQuiz(q *types.Quiz) (*types.Quiz, error) {
 	if err != nil {
 		// rollback transaciton if error thrown
 		tx.Rollback()
-		return q, err
+		return nil, err
 	}
 
-	return q, err
+	return quiz, nil
 }
 
 // StoreQuizResults adds the quiz title and associated user results of a single quiz

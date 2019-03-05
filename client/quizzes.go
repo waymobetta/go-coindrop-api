@@ -11,21 +11,105 @@
 package client
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"net/http"
 	"net/url"
 )
 
-// ShowQuizzesPath computes a request path to the show action of quizzes.
-func ShowQuizzesPath() string {
+// CreateQuizzesPath computes a request path to the create action of quizzes.
+func CreateQuizzesPath() string {
+
+	return fmt.Sprintf("/v1/quizzes")
+}
+
+// Create quiz
+func (c *Client) CreateQuizzes(ctx context.Context, path string, payload *QuizPayload, contentType string) (*http.Response, error) {
+	req, err := c.NewCreateQuizzesRequest(ctx, path, payload, contentType)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewCreateQuizzesRequest create the request corresponding to the create action endpoint of the quizzes resource.
+func (c *Client) NewCreateQuizzesRequest(ctx context.Context, path string, payload *QuizPayload, contentType string) (*http.Request, error) {
+	var body bytes.Buffer
+	if contentType == "" {
+		contentType = "*/*" // Use default encoder
+	}
+	err := c.Encoder.Encode(payload, &body, contentType)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode body: %s", err)
+	}
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("POST", u.String(), &body)
+	if err != nil {
+		return nil, err
+	}
+	header := req.Header
+	if contentType == "*/*" {
+		header.Set("Content-Type", "application/json")
+	} else {
+		header.Set("Content-Type", contentType)
+	}
+	if c.JWTAuthSigner != nil {
+		if err := c.JWTAuthSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
+
+// ListQuizzesPath computes a request path to the list action of quizzes.
+func ListQuizzesPath() string {
 
 	return fmt.Sprintf("/v1/quizzes")
 }
 
 // Get quizzes
-func (c *Client) ShowQuizzes(ctx context.Context, path string, quizTitle *string) (*http.Response, error) {
-	req, err := c.NewShowQuizzesRequest(ctx, path, quizTitle)
+func (c *Client) ListQuizzes(ctx context.Context, path string) (*http.Response, error) {
+	req, err := c.NewListQuizzesRequest(ctx, path)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewListQuizzesRequest create the request corresponding to the list action endpoint of the quizzes resource.
+func (c *Client) NewListQuizzesRequest(ctx context.Context, path string) (*http.Request, error) {
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+	if c.JWTAuthSigner != nil {
+		if err := c.JWTAuthSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
+
+// ShowQuizzesPath computes a request path to the show action of quizzes.
+func ShowQuizzesPath(quizID string) string {
+	param0 := quizID
+
+	return fmt.Sprintf("/v1/quizzes/%s", param0)
+}
+
+// Get quizzes
+func (c *Client) ShowQuizzes(ctx context.Context, path string) (*http.Response, error) {
+	req, err := c.NewShowQuizzesRequest(ctx, path)
 	if err != nil {
 		return nil, err
 	}
@@ -33,17 +117,12 @@ func (c *Client) ShowQuizzes(ctx context.Context, path string, quizTitle *string
 }
 
 // NewShowQuizzesRequest create the request corresponding to the show action endpoint of the quizzes resource.
-func (c *Client) NewShowQuizzesRequest(ctx context.Context, path string, quizTitle *string) (*http.Request, error) {
+func (c *Client) NewShowQuizzesRequest(ctx context.Context, path string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "http"
 	}
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
-	values := u.Query()
-	if quizTitle != nil {
-		values.Set("quizTitle", *quizTitle)
-	}
-	u.RawQuery = values.Encode()
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, err

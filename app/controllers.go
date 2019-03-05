@@ -88,6 +88,8 @@ func handleHealthcheckOrigin(h goa.Handler) goa.Handler {
 // QuizzesController is the controller interface for the Quizzes actions.
 type QuizzesController interface {
 	goa.Muxer
+	Create(*CreateQuizzesContext) error
+	List(*ListQuizzesContext) error
 	Show(*ShowQuizzesContext) error
 }
 
@@ -96,6 +98,47 @@ func MountQuizzesController(service *goa.Service, ctrl QuizzesController) {
 	initService(service)
 	var h goa.Handler
 	service.Mux.Handle("OPTIONS", "/v1/quizzes", ctrl.MuxHandler("preflight", handleQuizzesOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/quizzes/:quizId", ctrl.MuxHandler("preflight", handleQuizzesOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateQuizzesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*QuizPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleQuizzesOrigin(h)
+	service.Mux.Handle("POST", "/v1/quizzes", ctrl.MuxHandler("create", h, unmarshalCreateQuizzesPayload))
+	service.LogInfo("mount", "ctrl", "Quizzes", "action", "Create", "route", "POST /v1/quizzes", "security", "JWTAuth")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListQuizzesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleQuizzesOrigin(h)
+	service.Mux.Handle("GET", "/v1/quizzes", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Quizzes", "action", "List", "route", "GET /v1/quizzes", "security", "JWTAuth")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -111,8 +154,8 @@ func MountQuizzesController(service *goa.Service, ctrl QuizzesController) {
 	}
 	h = handleSecurity("JWTAuth", h)
 	h = handleQuizzesOrigin(h)
-	service.Mux.Handle("GET", "/v1/quizzes", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Quizzes", "action", "Show", "route", "GET /v1/quizzes", "security", "JWTAuth")
+	service.Mux.Handle("GET", "/v1/quizzes/:quizId", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Quizzes", "action", "Show", "route", "GET /v1/quizzes/:quizId", "security", "JWTAuth")
 }
 
 // handleQuizzesOrigin applies the CORS response headers corresponding to the origin.
@@ -137,6 +180,21 @@ func handleQuizzesOrigin(h goa.Handler) goa.Handler {
 
 		return h(ctx, rw, req)
 	}
+}
+
+// unmarshalCreateQuizzesPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateQuizzesPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &quizPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
 }
 
 // RedditController is the controller interface for the Reddit actions.

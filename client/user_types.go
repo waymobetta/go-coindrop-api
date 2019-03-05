@@ -122,6 +122,43 @@ func (ut *CreateUserPayload) Validate() (err error) {
 	return
 }
 
+// Quiz payload
+type quizPayload struct {
+	// Title
+	Title *string `form:"title,omitempty" json:"title,omitempty" yaml:"title,omitempty" xml:"title,omitempty"`
+}
+
+// Validate validates the quizPayload type instance.
+func (ut *quizPayload) Validate() (err error) {
+	if ut.Title == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "title"))
+	}
+	return
+}
+
+// Publicize creates QuizPayload from quizPayload
+func (ut *quizPayload) Publicize() *QuizPayload {
+	var pub QuizPayload
+	if ut.Title != nil {
+		pub.Title = *ut.Title
+	}
+	return &pub
+}
+
+// Quiz payload
+type QuizPayload struct {
+	// Title
+	Title string `form:"title" json:"title" yaml:"title" xml:"title"`
+}
+
+// Validate validates the QuizPayload type instance.
+func (ut *QuizPayload) Validate() (err error) {
+	if ut.Title == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "title"))
+	}
+	return
+}
+
 // Task payload
 type taskPayload struct {
 	// Task completed

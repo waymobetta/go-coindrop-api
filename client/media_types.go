@@ -104,8 +104,34 @@ func (c *Client) DecodeHealthcheck(resp *http.Response) (*Healthcheck, error) {
 //
 // Identifier: application/vnd.quiz+json; view=default
 type Quiz struct {
-	// Quiz object
-	QuizObject interface{} `form:"quizObject" json:"quizObject" yaml:"quizObject" xml:"quizObject"`
+	// Quiz fields
+	Fields QuizFieldsCollection `form:"fields" json:"fields" yaml:"fields" xml:"fields"`
+	// Quiz ID
+	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
+	// Quiz title
+	Title string `form:"title" json:"title" yaml:"title" xml:"title"`
+	// Quiz user ID
+	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+}
+
+// Validate validates the Quiz media type instance.
+func (mt *Quiz) Validate() (err error) {
+	if mt.ID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "id"))
+	}
+	if mt.Title == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "title"))
+	}
+	if mt.UserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "userId"))
+	}
+	if mt.Fields == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "fields"))
+	}
+	if err2 := mt.Fields.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
+	}
+	return
 }
 
 // DecodeQuiz decodes the Quiz instance encoded in resp body.
@@ -113,6 +139,82 @@ func (c *Client) DecodeQuiz(resp *http.Response) (*Quiz, error) {
 	var decoded Quiz
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
+}
+
+// Quiz fields (default view)
+//
+// Identifier: application/vnd.quiz-fields+json; view=default
+type QuizFields struct {
+	// Answer
+	Answer string `form:"answer" json:"answer" yaml:"answer" xml:"answer"`
+	// Question
+	Question string `form:"question" json:"question" yaml:"question" xml:"question"`
+}
+
+// Validate validates the QuizFields media type instance.
+func (mt *QuizFields) Validate() (err error) {
+	if mt.Question == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "question"))
+	}
+	if mt.Answer == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "answer"))
+	}
+	return
+}
+
+// DecodeQuizFields decodes the QuizFields instance encoded in resp body.
+func (c *Client) DecodeQuizFields(resp *http.Response) (*QuizFields, error) {
+	var decoded QuizFields
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// Quiz-FieldsCollection is the media type for an array of Quiz-Fields (default view)
+//
+// Identifier: application/vnd.quiz-fields+json; type=collection; view=default
+type QuizFieldsCollection []*QuizFields
+
+// Validate validates the QuizFieldsCollection media type instance.
+func (mt QuizFieldsCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// DecodeQuizFieldsCollection decodes the QuizFieldsCollection instance encoded in resp body.
+func (c *Client) DecodeQuizFieldsCollection(resp *http.Response) (QuizFieldsCollection, error) {
+	var decoded QuizFieldsCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
+}
+
+// QuizCollection is the media type for an array of Quiz (default view)
+//
+// Identifier: application/vnd.quiz+json; type=collection; view=default
+type QuizCollection []*Quiz
+
+// Validate validates the QuizCollection media type instance.
+func (mt QuizCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// DecodeQuizCollection decodes the QuizCollection instance encoded in resp body.
+func (c *Client) DecodeQuizCollection(resp *http.Response) (QuizCollection, error) {
+	var decoded QuizCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
 }
 
 // A Reddit User (default view)

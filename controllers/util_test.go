@@ -53,7 +53,7 @@ func createServer() *httptest.Server {
 	app.MountHealthcheckController(service, healthcheckCtrlr)
 
 	usersCtrlr := controllers.NewUsersController(service, dbs)
-	app.MountUserController(service, usersCtrlr)
+	app.MountUsersController(service, usersCtrlr)
 
 	walletsCtrlr := controllers.NewWalletsController(service, dbs)
 	app.MountWalletsController(service, walletsCtrlr)
