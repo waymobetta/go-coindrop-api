@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.4.1
+// --version=v1.3.1
 
 package client
 
@@ -286,7 +286,7 @@ func (ut *UserPayload) Validate() (err error) {
 // Social Account Verification Payload
 type verificationPayload struct {
 	// Verification Code Posted In Social Forum
-	ConfirmedVerificationCode *string `form:"confirmedVerificationCode,omitempty" json:"confirmedVerificationCode,omitempty" yaml:"confirmedVerificationCode,omitempty" xml:"confirmedVerificationCode,omitempty"`
+	PostedVerificationCode *string `form:"postedVerificationCode,omitempty" json:"postedVerificationCode,omitempty" yaml:"postedVerificationCode,omitempty" xml:"postedVerificationCode,omitempty"`
 	// User ID
 	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
 }
@@ -296,8 +296,8 @@ func (ut *verificationPayload) Validate() (err error) {
 	if ut.UserID == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "userId"))
 	}
-	if ut.ConfirmedVerificationCode == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "confirmedVerificationCode"))
+	if ut.PostedVerificationCode == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "postedVerificationCode"))
 	}
 	if ut.UserID != nil {
 		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *ut.UserID); !ok {
@@ -310,8 +310,8 @@ func (ut *verificationPayload) Validate() (err error) {
 // Publicize creates VerificationPayload from verificationPayload
 func (ut *verificationPayload) Publicize() *VerificationPayload {
 	var pub VerificationPayload
-	if ut.ConfirmedVerificationCode != nil {
-		pub.ConfirmedVerificationCode = *ut.ConfirmedVerificationCode
+	if ut.PostedVerificationCode != nil {
+		pub.PostedVerificationCode = *ut.PostedVerificationCode
 	}
 	if ut.UserID != nil {
 		pub.UserID = *ut.UserID
@@ -322,7 +322,7 @@ func (ut *verificationPayload) Publicize() *VerificationPayload {
 // Social Account Verification Payload
 type VerificationPayload struct {
 	// Verification Code Posted In Social Forum
-	ConfirmedVerificationCode string `form:"confirmedVerificationCode" json:"confirmedVerificationCode" yaml:"confirmedVerificationCode" xml:"confirmedVerificationCode"`
+	PostedVerificationCode string `form:"postedVerificationCode" json:"postedVerificationCode" yaml:"postedVerificationCode" xml:"postedVerificationCode"`
 	// User ID
 	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
 }
@@ -332,8 +332,8 @@ func (ut *VerificationPayload) Validate() (err error) {
 	if ut.UserID == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "userId"))
 	}
-	if ut.ConfirmedVerificationCode == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "confirmedVerificationCode"))
+	if ut.PostedVerificationCode == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "postedVerificationCode"))
 	}
 	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, ut.UserID); !ok {
 		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.userId`, ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))

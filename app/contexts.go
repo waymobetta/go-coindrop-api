@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.4.1
+// --version=v1.3.1
 
 package app
 
@@ -1069,7 +1069,7 @@ type UpdateVerifyredditContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	Payload *UpdateUserPayload
+	Payload *VerificationPayload
 }
 
 // NewUpdateVerifyredditContext parses the incoming request URL and body, performs validations and creates the

@@ -146,8 +146,6 @@ definitions:
       question: Non ut.
     - answer: Iure amet.
       question: Non ut.
-    - answer: Iure amet.
-      question: Non ut.
     items:
       $ref: '#/definitions/Quiz-Fields'
     title: 'Mediatype identifier: application/vnd.quiz-fields+json; type=collection;
@@ -156,6 +154,18 @@ definitions:
   QuizCollection:
     description: QuizCollection is the media type for an array of Quiz (default view)
     example:
+    - fields:
+      - answer: Iure amet.
+        question: Non ut.
+      id: Corrupti eum fugit eaque.
+      title: Autem est.
+      userId: Omnis labore.
+    - fields:
+      - answer: Iure amet.
+        question: Non ut.
+      id: Corrupti eum fugit eaque.
+      title: Autem est.
+      userId: Omnis labore.
     - fields:
       - answer: Iure amet.
         question: Non ut.
@@ -427,6 +437,18 @@ definitions:
         token: Modi eos possimus aliquam.
         tokenAllocation: 6357675523170031584
         type: Necessitatibus debitis qui quos.
+      - author: Repellat optio nam.
+        badge:
+          description: Eaque facere voluptates consequatur nihil odit.
+          id: Quam quae aut cumque consequatur asperiores.
+          name: Hic illum veniam magni nam perferendis.
+          recipients: 7796898160710639916
+        description: Quibusdam ut qui dolores expedita est.
+        id: Animi ipsum iusto.
+        title: Quia autem sed et facilis earum deserunt.
+        token: Modi eos possimus aliquam.
+        tokenAllocation: 6357675523170031584
+        type: Necessitatibus debitis qui quos.
     properties:
       tasks:
         $ref: '#/definitions/TaskCollection'
@@ -519,6 +541,26 @@ definitions:
     - confirmedVerificationCode
     - verified
     title: 'Mediatype identifier: application/vnd.verification+json; view=default'
+    type: object
+  VerificationPayload:
+    description: Social Account Verification Payload
+    example:
+      postedVerificationCode: Non quia aliquam voluptatem quibusdam ut.
+      userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
+    properties:
+      postedVerificationCode:
+        description: Verification Code Posted In Social Forum
+        example: Non quia aliquam voluptatem quibusdam ut.
+        type: string
+      userId:
+        description: User ID
+        example: 9302608f-f6a4-4004-b088-63e5fb43cc26
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        type: string
+    required:
+    - userId
+    - postedVerificationCode
+    title: VerificationPayload
     type: object
   Wallet:
     description: A wallet (default view)
@@ -917,12 +959,12 @@ paths:
       description: Update Reddit Verification Code
       operationId: verifyreddit#update
       parameters:
-      - description: Update Reddit User payload
+      - description: Social Account Verification Payload
         in: body
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/UpdateUserPayload'
+          $ref: '#/definitions/VerificationPayload'
       produces:
       - application/standard_error+json
       - application/vnd.reddituser+json

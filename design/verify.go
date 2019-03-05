@@ -30,7 +30,7 @@ var _ = Resource("verifyreddit", func() {
 	Action("update", func() {
 		Description("Update Reddit Verification Code")
 		Routing(POST(""))
-		Payload(UpdateUserPayload)
+		Payload(VerificationPayload)
 		Response(OK, RedditUserMedia)
 	})
 })

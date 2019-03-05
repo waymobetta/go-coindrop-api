@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.4.1
+// --version=v1.3.1
 
 package test
 
@@ -443,7 +443,7 @@ func ShowVerifyredditOK(t goatest.TInterface, ctx context.Context, service *goa.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateVerifyredditBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, payload *app.UpdateUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateVerifyredditBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, payload *app.VerificationPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -528,7 +528,7 @@ func UpdateVerifyredditBadRequest(t goatest.TInterface, ctx context.Context, ser
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateVerifyredditGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, payload *app.UpdateUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateVerifyredditGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, payload *app.VerificationPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -613,7 +613,7 @@ func UpdateVerifyredditGone(t goatest.TInterface, ctx context.Context, service *
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateVerifyredditInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, payload *app.UpdateUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateVerifyredditInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, payload *app.VerificationPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -698,7 +698,7 @@ func UpdateVerifyredditInternalServerError(t goatest.TInterface, ctx context.Con
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateVerifyredditNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, payload *app.UpdateUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateVerifyredditNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, payload *app.VerificationPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -783,7 +783,7 @@ func UpdateVerifyredditNotFound(t goatest.TInterface, ctx context.Context, servi
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateVerifyredditOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, payload *app.UpdateUserPayload) (http.ResponseWriter, *app.Reddituser) {
+func UpdateVerifyredditOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, payload *app.VerificationPayload) (http.ResponseWriter, *app.Reddituser) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
