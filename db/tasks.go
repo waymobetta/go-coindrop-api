@@ -21,7 +21,7 @@ func (db *DB) GetTasks(tasks *types.Tasks) (*types.Tasks, error) {
 		 token_allocation,
 		 badge_id
 	FROM
-		coindrop_tasks2
+		coindrop_tasks
 	`
 
 	// execute db query by passing in prepared SQL statement
@@ -71,7 +71,8 @@ func (db *DB) AddTask(t *types.Task) (*types.Task, error) {
 
 	// create SQL statement for db writes
 	sqlStatement := `
-	INSERT INTO coindrop_tasks2
+	INSERT INTO 
+		coindrop_tasks
 		(
 			title,
 			type,
@@ -80,7 +81,7 @@ func (db *DB) AddTask(t *types.Task) (*types.Task, error) {
 			token_name,
 			token_allocation,
 			badge_id
-			)
+		)
 	VALUES
 		(
 			$1,
@@ -134,22 +135,22 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 
 	sqlStatement := `
 	SELECT
-		coindrop_tasks2.id,
-		coindrop_tasks2.title,
-		coindrop_tasks2.type,
-		coindrop_tasks2.author,
-		coindrop_tasks2.description,
-		coindrop_tasks2.token_name,
-		coindrop_tasks2.token_allocation,
-		coindrop_tasks2.badge_id
+		coindrop_tasks.id,
+		coindrop_tasks.title,
+		coindrop_tasks.type,
+		coindrop_tasks.author,
+		coindrop_tasks.description,
+		coindrop_tasks.token_name,
+		coindrop_tasks.token_allocation,
+		coindrop_tasks.badge_id
 	FROM
-		coindrop_tasks2
+		coindrop_tasks
 	JOIN
-		coindrop_user_tasks2
+		coindrop_user_tasks
 	ON
-		coindrop_tasks2.id = coindrop_user_tasks2.task_id
+		coindrop_tasks.id = coindrop_user_tasks.task_id
 	WHERE
-		coindrop_user_tasks2.user_id = $1
+		coindrop_user_tasks.user_id = $1
 	`
 
 	rows, err := db.client.Query(sqlStatement, t.UserID)
@@ -206,24 +207,24 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 	sqlStatement := `
 	SELECT
-		coindrop_tasks2.id,
-		coindrop_tasks2.title,
-		coindrop_tasks2.type,
-		coindrop_tasks2.author,
-		coindrop_tasks2.description,
-		coindrop_tasks2.token_name,
-		coindrop_tasks2.token_allocation,
-		coindrop_tasks2.badge_id
+		coindrop_tasks.id,
+		coindrop_tasks.title,
+		coindrop_tasks.type,
+		coindrop_tasks.author,
+		coindrop_tasks.description,
+		coindrop_tasks.token_name,
+		coindrop_tasks.token_allocation,
+		coindrop_tasks.badge_id
 	FROM
-		coindrop_tasks2
+		coindrop_tasks
 	JOIN
-		coindrop_user_tasks2
+		coindrop_user_tasks
 	ON
-		coindrop_tasks2.id = coindrop_user_tasks2.task_id
+		coindrop_tasks.id = coindrop_user_tasks.task_id
 	WHERE
-		coindrop_user_tasks2.user_id = $1
+		coindrop_user_tasks.user_id = $1
 	AND
-		coindrop_user_tasks2.task_id = $2
+		coindrop_user_tasks.task_id = $2
 	LIMIT
 		1
 	`
@@ -236,7 +237,9 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 	defer rows.Close()
 
 	// initialize new struct per task in db to hold task info
-	task := &types.Task{BadgeData: new(types.Badge)}
+	task := &types.Task{
+		BadgeData: new(types.Badge),
+	}
 
 	// iterate over rows
 	for rows.Next() {
@@ -286,12 +289,19 @@ func (db *DB) AddUserTask(u *types.UserTask2) (*types.UserTask2, error) {
 	// create SQL statement for db writes
 	sqlStatement := `
 		INSERT INTO
-			coindrop_user_tasks2(
+			coindrop_user_tasks
+			(
 				user_id,
 				task_id,
 				completed
 			)
-			VALUES ($1,$2,$3)`
+		VALUES
+			(
+				$1,
+				$2,
+				$3
+			)
+	`
 
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
@@ -336,7 +346,7 @@ func (db *DB) MarkUserTaskCompleted(u *types.UserTask2) (*types.UserTask2, error
 	// create SQL statement for db writes
 	sqlStatement := `
 		UPDATE
-			coindrop_user_tasks2
+			coindrop_user_tasks
 		SET
 			completed = $1
 		WHERE
