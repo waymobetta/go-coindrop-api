@@ -14,16 +14,6 @@ type Users struct {
 
 // User info
 type User struct {
-	ID            int             `json:"id"`
-	AuthUserID    string          `json:"auth_user_id"`
-	WalletAddress string          `json:"wallet_address"`
-	Reddit        Reddit          `json:"reddit"`
-	Keybase       keybase.Keybase `json:"keybase"`
-	StackOverflow StackOverflow   `json:"stackoverflow"`
-}
-
-// User2 ...
-type User2 struct {
 	ID                string  `json:"id"`
 	UserID            string  `json:"user_id"`
 	CognitoAuthUserID string  `json:"cognito_auth_user_id"`
@@ -190,7 +180,14 @@ type TypeformWebHookResponse struct {
 		Token       string    `json:"token"`
 		LandedAt    time.Time `json:"landed_at"`
 		SubmittedAt time.Time `json:"submitted_at"`
-		Definition  struct {
+		Hidden      struct {
+			Name          string `json:"name"`
+			Walletaddress string `json:"walletaddress"`
+		} `json:"hidden"`
+		Calculated struct {
+			Score int `json:"score"`
+		} `json:"calculated"`
+		Definition struct {
 			ID     string `json:"id"`
 			Title  string `json:"title"`
 			Fields []struct {
@@ -204,22 +201,18 @@ type TypeformWebHookResponse struct {
 					ID    string `json:"id"`
 					Label string `json:"label"`
 				} `json:"choices"`
-				AllowMultipleSelections bool `json:"allow_multiple_selections,omitempty"`
 			} `json:"fields"`
 		} `json:"definition"`
 		Answers []struct {
 			Type   string `json:"type"`
 			Choice struct {
 				Label string `json:"label"`
-			} `json:"choice,omitempty"`
+			} `json:"choice"`
 			Field struct {
 				ID   string `json:"id"`
 				Type string `json:"type"`
 				Ref  string `json:"ref"`
 			} `json:"field"`
-			Choices struct {
-				Labels []string `json:"labels"`
-			} `json:"choices,omitempty"`
 		} `json:"answers"`
 	} `json:"form_response"`
 }
