@@ -114,7 +114,7 @@ func (c *TasksController) Create(ctx *app.CreateTasksContext) error {
 
 	// Put your logic here
 
-	userTask := &types.UserTask2{
+	userTask := &types.UserTask{
 		UserID: ctx.Payload.UserID,
 		TaskID: ctx.Payload.TaskID,
 	}
@@ -144,7 +144,7 @@ func (c *TasksController) Update(ctx *app.UpdateTasksContext) error {
 	taskUser.TaskID = ctx.TaskID
 
 	// initialize new copy of UserTask struct in variable userTask
-	userTask := new(types.UserTask2)
+	userTask := new(types.UserTask)
 
 	// mark task complete and pass UserID to userTask struct
 	userTask.Completed = ctx.Payload.Completed
