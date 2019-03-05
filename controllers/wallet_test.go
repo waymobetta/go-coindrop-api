@@ -50,12 +50,12 @@ func TestWalletUpdate(t *testing.T) {
 		svr := createServer()
 		defer svr.Close()
 
-		userID := getUserID()
+		newWalletAddress := "0x4bb283712e6793D99fD4E30370C14443D834BeBf"
 		url := fmt.Sprintf("%s/v1/wallets", svr.URL)
 
 		t.Logf("URL: %s", url)
 
-		payload := []byte(fmt.Sprintf(`{"walletAddress":"0xabc","cognitoAuthUserID": %q}`, userID))
+		payload := []byte(fmt.Sprintf(`{"walletAddress":%q}`, newWalletAddress))
 
 		client := &http.Client{}
 		req, err := http.NewRequest("POST", url, bytes.NewBuffer(payload))

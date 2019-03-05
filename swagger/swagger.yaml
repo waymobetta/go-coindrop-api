@@ -434,14 +434,14 @@ definitions:
   Wallet:
     description: A wallet (default view)
     example:
-      walletAddress: Sint sunt voluptatum recusandae facilis perferendis consectetur.
+      address: Sint sunt voluptatum recusandae facilis perferendis consectetur.
     properties:
-      walletAddress:
+      address:
         description: wallet address
         example: Sint sunt voluptatum recusandae facilis perferendis consectetur.
         type: string
     required:
-    - walletAddress
+    - address
     title: 'Mediatype identifier: application/vnd.wallet+json; view=default'
     type: object
   WalletPayload:

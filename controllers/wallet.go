@@ -5,7 +5,6 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
-	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // WalletController implements the wallet resource.
@@ -27,12 +26,10 @@ func (c *WalletController) Show(ctx *app.ShowWalletContext) error {
 	// WalletController_Show: start_implement
 
 	// Put your logic here
-	cognitoUserID := ctx.Value("authCognitoUserID").(string)
-	user := new(types.User)
-	user.AuthUserID = cognitoUserID
+	userID := ctx.Value("authUserID").(string)
 
 	// return a user's wallet using the AWS cognito user ID as the key
-	_, err := c.db.GetWallet(user)
+	wallet, err := c.db.GetWallet(userID)
 	if err != nil {
 		log.Errorf("[controller/wallet] %v", err)
 		return ctx.NotFound(&app.StandardError{
@@ -41,10 +38,10 @@ func (c *WalletController) Show(ctx *app.ShowWalletContext) error {
 		})
 	}
 
-	log.Printf("[controller/wallet] returned wallet for coindrop user: %v\n; wallet address: %s", user.AuthUserID, user.WalletAddress)
+	log.Printf("[controller/wallet] returned wallet for coindrop user: %v\n; wallet address: %s", userID, wallet.Address)
 
 	res := &app.Wallet{
-		WalletAddress: user.WalletAddress,
+		Address: wallet.Address,
 	}
 
 	return ctx.OK(res)
@@ -56,12 +53,10 @@ func (c *WalletController) Update(ctx *app.UpdateWalletContext) error {
 	// WalletController_Update: start_implement
 
 	// Put your logic here
-	cognitoUserID := ctx.Value("authCognitoUserID").(string)
-	user := new(types.User)
-	user.AuthUserID = cognitoUserID
-	user.WalletAddress = ctx.Payload.WalletAddress
+	userID := ctx.Value("authUserID").(string)
+	newWalletAddress := ctx.Payload.WalletAddress
 
-	_, err := c.db.UpdateWallet(user)
+	wallet, err := c.db.UpdateWallet(userID, newWalletAddress)
 	if err != nil {
 		log.Errorf("[controller/wallet] %v", err)
 		return ctx.BadRequest(&app.StandardError{
@@ -70,10 +65,10 @@ func (c *WalletController) Update(ctx *app.UpdateWalletContext) error {
 		})
 	}
 
-	log.Printf("[controller/wallet] successfully updated wallet for coindrop user: %v\n", user.AuthUserID)
+	log.Printf("[controller/wallet] successfully updated wallet for coindrop user: %v\n", userID)
 
 	return ctx.OK(&app.Wallet{
-		WalletAddress: user.WalletAddress,
+		Address: wallet.Address,
 	})
 	// WalletController_Update: end_implement
 }

@@ -39,15 +39,19 @@ var _ = Resource("wallet", func() {
 var WalletMedia = MediaType("application/vnd.wallet+json", func() {
 	Description("A wallet")
 	Attributes(func() {
+		Attribute("id", String, "Wallet ID", func() {
+			Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
+			Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
+		})
 		Attribute("userId", String, "User ID", func() {
 			Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
 			Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
 		})
-		Attribute("walletAddress", String, "wallet address")
-		Required("walletAddress")
+		Attribute("address", String, "wallet address")
+		Required("id", "address")
 	})
 	View("default", func() {
-		Attribute("walletAddress")
+		Attribute("address")
 	})
 })
 

@@ -8,6 +8,10 @@ vendor:
 test:
 	@go test -v ./...
 
+.PHONY: test/local
+test/local:
+	(. .env.local && go test -v controllers/* $(ARGS))
+
 .PHONY: test/auth
 test/auth:
 	@go test -v auth/*.go $(ARGS)

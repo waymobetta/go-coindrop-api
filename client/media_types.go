@@ -370,13 +370,13 @@ func (c *Client) DecodeVerification(resp *http.Response) (*Verification, error) 
 // Identifier: application/vnd.wallet+json; view=default
 type Wallet struct {
 	// wallet address
-	WalletAddress string `form:"walletAddress" json:"walletAddress" yaml:"walletAddress" xml:"walletAddress"`
+	Address string `form:"address" json:"address" yaml:"address" xml:"address"`
 }
 
 // Validate validates the Wallet media type instance.
 func (mt *Wallet) Validate() (err error) {
-	if mt.WalletAddress == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "walletAddress"))
+	if mt.Address == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "address"))
 	}
 	return
 }

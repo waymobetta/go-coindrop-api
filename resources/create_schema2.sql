@@ -24,6 +24,10 @@ CREATE TABLE IF NOT EXISTS coindrop_wallets (
 	user_id uuid REFERENCES coindrop_auth2(id)
 );
 
+CREATE UNIQUE INDEX "coindrop_wallets_address_user_id_uniq_idx" ON "public"."coindrop_wallets"("address","user_id");
+
+CREATE UNIQUE INDEX "coindrop_wallets_user_id_uniq_idx" ON "public"."coindrop_wallets"("user_id");
+
 -- REDDIT 2
 CREATE TABLE IF NOT EXISTS coindrop_reddit2 (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
