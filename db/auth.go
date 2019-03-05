@@ -7,7 +7,7 @@ import (
 )
 
 // AddUserID inserts an AWS cognito user ID to the coindrop_auth table
-func (db *DB) AddUserID(u *types.User2) (*types.User2, error) {
+func (db *DB) AddUserID(u *types.User) (*types.User, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -16,8 +16,15 @@ func (db *DB) AddUserID(u *types.User2) (*types.User2, error) {
 
 	// create SQL statement for db update
 	sqlStatement := `
-		INSERT INTO coindrop_auth (auth_user_id)
-		VALUES ($1)
+		INSERT INTO 
+			coindrop_auth
+			(
+				cognito_auth_user_id
+			)
+		VALUES 
+			(
+				$1
+			)
 	`
 
 	// prepare statement
@@ -48,21 +55,21 @@ func (db *DB) AddUserID(u *types.User2) (*types.User2, error) {
 }
 
 // GetUser gets user by ID
-func (db *DB) GetUser(userID string) (*types.User2, error) {
+func (db *DB) GetUser(userID string) (*types.User, error) {
 	sqlStatement := `
-	SELECT
-		coindrop_auth2.id,
-		coindrop_auth2.cognito_auth_user_id,
-		coindrop_wallets.id as wallet_id,
-		coindrop_wallets.address
-	FROM
-		coindrop_auth2
-	FULL OUTER JOIN
-		coindrop_wallets
-	ON
-		coindrop_wallets.user_id = coindrop_auth2.id
-	WHERE
-		coindrop_auth2.id = $1;
+		SELECT
+			coindrop_auth.id,
+			coindrop_auth.cognito_auth_user_id,
+			coindrop_wallets.id as wallet_id,
+			coindrop_wallets.address
+		FROM
+			coindrop_auth
+		FULL OUTER JOIN
+			coindrop_wallets
+		ON
+			coindrop_wallets.user_id = coindrop_auth.id
+		WHERE
+			coindrop_auth.id = $1;
 	`
 
 	// prepare statement
@@ -76,7 +83,7 @@ func (db *DB) GetUser(userID string) (*types.User2, error) {
 	// initialize row object
 	row := stmt.QueryRow(userID)
 
-	user := new(types.User2)
+	user := new(types.User)
 	user.Wallet = new(types.Wallet)
 	var cognitoAuthUserID sql.NullString
 	var walletID sql.NullString
@@ -111,7 +118,7 @@ func (db *DB) GetUserIDByCognitoUserID(cognitoUserID string) (string, error) {
 		SELECT
 			id
 		FROM
-			coindrop_auth2
+			coindrop_auth
 		WHERE
 			cognito_auth_user_id = $1;
 	`
