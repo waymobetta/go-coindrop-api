@@ -279,7 +279,7 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 }
 
 // AddUserTask adds the listing and associated task data of a specific user
-func (db *DB) AddUserTask(u *types.UserTask2) (*types.UserTask2, error) {
+func (db *DB) AddUserTask(u *types.UserTask) (*types.UserTask, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -336,7 +336,7 @@ func (db *DB) AddUserTask(u *types.UserTask2) (*types.UserTask2, error) {
 }
 
 // MarkUserTaskCompleted adds a task to the user's list of completed tasks
-func (db *DB) MarkUserTaskCompleted(u *types.UserTask2) (*types.UserTask2, error) {
+func (db *DB) MarkUserTaskCompleted(u *types.UserTask) (*types.UserTask, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
