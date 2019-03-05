@@ -29,7 +29,7 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 
 	// Put your logic here
 	// initialize new user struct object
-	user := new(types.User2)
+	user := new(types.User)
 	user.CognitoAuthUserID = ctx.Payload.CognitoAuthUserID
 
 	// insert the AWS cognito user ID into the coindrop_auth table
