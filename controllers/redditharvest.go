@@ -30,7 +30,7 @@ func (c *RedditharvestController) Update(ctx *app.UpdateRedditharvestContext) er
 
 	// Put your logic here
 
-	user := &types.User2{
+	user := &types.User{
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Username:     ctx.Payload.Username,
@@ -79,7 +79,7 @@ func (c *RedditharvestController) Update(ctx *app.UpdateRedditharvestContext) er
 		})
 	}
 
-	user = &types.User2{
+	user = &types.User{
 		CognitoAuthUserID: ctx.Payload.UserID,
 		Social: &types.Social{
 			Reddit: &types.Reddit{
