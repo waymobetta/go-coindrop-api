@@ -45,7 +45,7 @@ func NewRedditAuth() (*AuthSessions, error) {
 }
 
 // GetRedditUserTrophies method to retrieve slice of user trophies
-func (a *AuthSessions) GetRedditUserTrophies(user *types.User2) error {
+func (a *AuthSessions) GetRedditUserTrophies(user *types.User) error {
 	// get trophies of reddit user
 	trophies, err := a.OAuthSession.UserTrophies(user.Social.Reddit.Username)
 	if err != nil {
@@ -70,11 +70,11 @@ func (a *AuthSessions) GetRedditUserTrophies(user *types.User2) error {
 }
 
 // GetRecentPostsFromSubreddit method to watch and pull last 5 posts from subreddit to match verification code
-func (a *AuthSessions) GetRecentPostsFromSubreddit(user *types.User2) (*types.User2, error) {
+func (a *AuthSessions) GetRecentPostsFromSubreddit(user *types.User) error {
 	// get 5 newest submissions from the subreddit
 	submissions, err := a.OAuthSession.SubredditSubmissions(VerificationSubredditName, "new", geddit.ListingOptions{Count: 1})
 	if err != nil {
-		return user, err
+		return err
 	}
 
 	// iterate over the submissions
@@ -87,17 +87,17 @@ func (a *AuthSessions) GetRecentPostsFromSubreddit(user *types.User2) (*types.Us
 			if user.Social.Reddit.Verification.ConfirmedVerificationCode == user.Social.Reddit.Verification.PostedVerificationCode {
 				// flip bool flag once verification code validated
 				user.Social.Reddit.Verification.Verified = true
-				return user, nil
+				return nil
 			}
 		}
 	}
 	// if no verification match return error message
 	log.Errorln("[reddit] Verification code not matched")
-	return user, ErrVerificationNotMatch
+	return ErrVerificationNotMatch
 }
 
 // GetAboutInfo method to retrieve general information about user
-func (a *AuthSessions) GetAboutInfo(user *types.User2) error {
+func (a *AuthSessions) GetAboutInfo(user *types.User) error {
 	// get about information of reddit user
 	redditProfile, err := a.OAuthSession.AboutRedditor(user.Social.Reddit.Username)
 	if err != nil {
@@ -112,7 +112,7 @@ func (a *AuthSessions) GetAboutInfo(user *types.User2) error {
 }
 
 // GetSubmittedInfo method to retrieve slice of user's submitted posts
-func (a *AuthSessions) GetSubmittedInfo(user *types.User2) error {
+func (a *AuthSessions) GetSubmittedInfo(user *types.User) error {
 	// get submissions of reddit user
 	submissions, err := a.NoAuthSession.RedditorSubmissions(user.Social.Reddit.Username, geddit.ListingOptions{Count: 25})
 	if err != nil {
