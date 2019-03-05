@@ -346,3 +346,45 @@ func (db *DB) UpdateRedditVerificationCode(u *types.User) (*types.User, error) {
 
 	return u, nil
 }
+
+// GetUserRedditVerification ...
+func (db *DB) GetUserRedditVerification(u *types.User) (*types.User, error) {
+	// create SQL statement for db writes
+	sqlStatement := `
+		SELECT
+			coindrop_reddit.posted_verification_code,
+			coindrop_reddit.confirmed_verification_code,
+			coindrop_reddit.verified
+		FROM
+			coindrop_auth
+		JOIN
+			coindrop_reddit
+		ON
+			coindrop_auth.id = coindrop_reddit.user_id
+		WHERE
+			cognito_auth_user_id = $1
+	`
+
+	// prepare statement
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return u, err
+	}
+
+	defer stmt.Close()
+
+	// initialize row object
+	row := stmt.QueryRow(u.CognitoAuthUserID)
+
+	// iterate over row object to retrieve queried value
+	err = row.Scan(
+		&u.Social.Reddit.Verification.PostedVerificationCode,
+		&u.Social.Reddit.Verification.ConfirmedVerificationCode,
+		&u.Social.Reddit.Verification.Verified,
+	)
+	if err != nil {
+		return u, err
+	}
+
+	return u, nil
+}
