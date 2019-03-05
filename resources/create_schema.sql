@@ -1,4 +1,4 @@
--- psql [db name] < resources/create_schema2.sql
+-- psql [db name] < resources/create_schema.sql
 
 -- create uuid_generate_v4 function
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -11,13 +11,13 @@ BEGIN
 END; $$
 LANGUAGE plpgsql;
 
--- AUTH 2
+-- AUTH
 CREATE TABLE IF NOT EXISTS coindrop_auth (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	cognito_auth_user_id TEXT NOT NULL UNIQUE,
 );
 
--- WALLETS 2
+-- WALLETS
 CREATE TABLE IF NOT EXISTS coindrop_wallets (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	address TEXT,
@@ -28,7 +28,7 @@ CREATE UNIQUE INDEX "coindrop_wallets_address_user_id_uniq_idx" ON "public"."coi
 
 CREATE UNIQUE INDEX "coindrop_wallets_user_id_uniq_idx" ON "public"."coindrop_wallets"("user_id");
 
--- REDDIT 2
+-- REDDIT
 CREATE TABLE IF NOT EXISTS coindrop_reddit (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	user_id uuid REFERENCES coindrop_auth2(id),
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS coindrop_reddit (
 	verified BOOLEAN NOT NULL
 );
 
--- STACK OVERFLOW 2
+-- STACK OVERFLOW
 CREATE TABLE IF NOT EXISTS coindrop_stackoverflow (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	user_id uuid REFERENCES coindrop_auth2(id),
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS coindrop_stackoverflow (
 	verified BOOLEAN NOT NULL
 );
 
--- TASKS 2
+-- TASKS
 CREATE TABLE IF NOT EXISTS coindrop_tasks (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	title TEXT NOT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS coindrop_tasks (
 	badge_id uuid REFERENCES coindrop_badges(id)
 );
 
--- QUIZ RESULTS 2
+-- QUIZ RESULTS
 CREATE TABLE IF NOT EXISTS coindrop_quiz_results (
 	quiz_id uuid REFERENCES coindrop_quizzes2(id),
 	user_id uuid REFERENCES coindrop_auth2(id),
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS coindrop_quiz_results (
 	quiz_taken BOOLEAN
 );
 
--- TASKS SPECIFIC TO USER 2
+-- TASKS SPECIFIC TO USER
 CREATE TABLE IF NOT EXISTS coindrop_user_tasks (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	user_id uuid REFERENCES coindrop_auth2(id),
@@ -84,14 +84,15 @@ CREATE TABLE IF NOT EXISTS coindrop_user_tasks (
 	completed BOOLEAN DEFAULT false;
 );
 
--- QUIZZES 2
+-- QUIZZES
 CREATE TABLE IF NOT EXISTS coindrop_quizzes (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	title TEXT NOT NULL,
-	quiz_url TEXT NOT NULL
+	quiz_url TEXT NOT NULL,
+	quiz_id TEXT NOT NULL
 );
 
--- BADGES
+-- BADGE
 CREATE TABLE IF NOT EXISTS coindrop_badges (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	name TEXT NOT NULL,
