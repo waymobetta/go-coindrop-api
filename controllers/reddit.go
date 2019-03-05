@@ -35,7 +35,9 @@ func (c *RedditController) Show(ctx *app.ShowRedditContext) error {
 			Reddit: &types.Reddit{
 				Verification: &types.Verification{},
 			},
-		}}
+		},
+	}
+
 	user.CognitoAuthUserID = ctx.Params.Get("userId")
 
 	_, err := c.db.GetRedditUser(user)
@@ -74,7 +76,7 @@ func (c *RedditController) Create(ctx *app.CreateRedditContext) error {
 	// 2. fix SQL statement to join auth table for user ID
 
 	user := &types.User{
-		CognitoAuthUserID: ctx.Payload.UserID,
+		CognitoAuthUserID: ctx.Value("authUserID").(string),
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Username:     ctx.Payload.Username,
