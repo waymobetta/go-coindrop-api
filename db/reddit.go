@@ -232,8 +232,6 @@ func (db *DB) RemoveRedditUser(u *types.User) (*types.User, error) {
 	return u, nil
 }
 
-/// REDDIT
-
 // UpdateRedditInfo updates the listing and associated Reddit data of a single user
 func (db *DB) UpdateRedditInfo(u *types.User) (*types.User, error) {
 	// for simplicity, update the listing rather than updating single value
