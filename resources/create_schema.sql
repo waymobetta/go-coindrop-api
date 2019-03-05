@@ -12,7 +12,7 @@ END; $$
 LANGUAGE plpgsql;
 
 -- AUTH 2
-CREATE TABLE IF NOT EXISTS coindrop_auth2 (
+CREATE TABLE IF NOT EXISTS coindrop_auth (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	cognito_auth_user_id TEXT NOT NULL UNIQUE,
 );
@@ -29,7 +29,7 @@ CREATE UNIQUE INDEX "coindrop_wallets_address_user_id_uniq_idx" ON "public"."coi
 CREATE UNIQUE INDEX "coindrop_wallets_user_id_uniq_idx" ON "public"."coindrop_wallets"("user_id");
 
 -- REDDIT 2
-CREATE TABLE IF NOT EXISTS coindrop_reddit2 (
+CREATE TABLE IF NOT EXISTS coindrop_reddit (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	user_id uuid REFERENCES coindrop_auth2(id),
 	username TEXT NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS coindrop_reddit2 (
 );
 
 -- STACK OVERFLOW 2
-CREATE TABLE IF NOT EXISTS coindrop_stackoverflow2 (
+CREATE TABLE IF NOT EXISTS coindrop_stackoverflow (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	user_id uuid REFERENCES coindrop_auth2(id),
 	exchange_account_id INTEGER NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS coindrop_stackoverflow2 (
 );
 
 -- TASKS 2
-CREATE TABLE IF NOT EXISTS coindrop_tasks2 (
+CREATE TABLE IF NOT EXISTS coindrop_tasks (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	title TEXT NOT NULL,
 	type TEXT NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS coindrop_tasks2 (
 );
 
 -- QUIZ RESULTS 2
-CREATE TABLE IF NOT EXISTS coindrop_quiz_results2 (
+CREATE TABLE IF NOT EXISTS coindrop_quiz_results (
 	quiz_id uuid REFERENCES coindrop_quizzes2(id),
 	user_id uuid REFERENCES coindrop_auth2(id),
 	questions_correct INTEGER NOT NULL,
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS coindrop_quiz_results2 (
 );
 
 -- TASKS SPECIFIC TO USER 2
-CREATE TABLE IF NOT EXISTS coindrop_user_tasks2 (
+CREATE TABLE IF NOT EXISTS coindrop_user_tasks (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	user_id uuid REFERENCES coindrop_auth2(id),
 	task_id uuid REFERENCES coindrop_tasks2(id),
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS coindrop_user_tasks2 (
 );
 
 -- QUIZZES 2
-CREATE TABLE IF NOT EXISTS coindrop_quizzes2 (
+CREATE TABLE IF NOT EXISTS coindrop_quizzes (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	title TEXT NOT NULL,
 	quiz_url TEXT NOT NULL
