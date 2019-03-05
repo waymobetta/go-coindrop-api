@@ -5,8 +5,8 @@ import (
 	. "github.com/goadesign/goa/design/apidsl" // Use . imports to enable the DSL
 )
 
-var _ = Resource("quiz", func() {
-	BasePath("/v1/quiz")
+var _ = Resource("quizzes", func() {
+	BasePath("/v1/quizzes")
 
 	Security(JWTAuth)
 
@@ -16,7 +16,7 @@ var _ = Resource("quiz", func() {
 	Response(InternalServerError, StandardErrorMedia)
 
 	Action("show", func() {
-		Description("Get quiz")
+		Description("Get quizzes")
 		Routing(GET(""))
 		Params(func() {
 			Param("quizTitle", String, "Quiz title")

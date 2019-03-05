@@ -8,22 +8,22 @@ import (
 	"github.com/waymobetta/go-coindrop-api/types"
 )
 
-// QuizController implements the quiz resource.
-type QuizController struct {
+// QuizzesController implements the quiz resource.
+type QuizzesController struct {
 	*goa.Controller
 	db *db.DB
 }
 
-// NewQuizController creates a quiz controller.
-func NewQuizController(service *goa.Service, dbs *db.DB) *QuizController {
-	return &QuizController{
-		Controller: service.NewController("QuizController"),
+// NewQuizzesController creates a quiz controller.
+func NewQuizzesController(service *goa.Service, dbs *db.DB) *QuizzesController {
+	return &QuizzesController{
+		Controller: service.NewController("QuizzesController"),
 		db:         dbs,
 	}
 }
 
 // Show runs the show action.
-func (c *QuizController) Show(ctx *app.ShowQuizContext) error {
+func (c *QuizzesController) Show(ctx *app.ShowQuizzesContext) error {
 	// QuizController_Show: start_implement
 
 	// Put your logic here

@@ -5,7 +5,7 @@ import (
 	. "github.com/goadesign/goa/design/apidsl" // Use . imports to enable the DSL
 )
 
-var _ = Resource("wallet", func() {
+var _ = Resource("wallets", func() {
 	BasePath("/v1/wallets")
 
 	Security(JWTAuth)

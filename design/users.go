@@ -5,7 +5,7 @@ import (
 	. "github.com/goadesign/goa/design/apidsl" // Use . imports to enable the DSL
 )
 
-var _ = Resource("user", func() { // Resources group related API endpoints
+var _ = Resource("users", func() { // Resources group related API endpoints
 	BasePath("/v1/users") // together. They map to REST resources for REST
 
 	Security(JWTAuth)

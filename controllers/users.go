@@ -9,23 +9,23 @@ import (
 	"github.com/waymobetta/go-coindrop-api/types"
 )
 
-// UserController implements the user resource.
-type UserController struct {
+// UsersController implements the user resource.
+type UsersController struct {
 	*goa.Controller
 	db *db.DB
 }
 
-// NewUserController creates a user controller.
-func NewUserController(service *goa.Service, dbs *db.DB) *UserController {
-	return &UserController{
-		Controller: service.NewController("UserController"),
+// NewUsersController creates a user controller.
+func NewUsersController(service *goa.Service, dbs *db.DB) *UsersController {
+	return &UsersController{
+		Controller: service.NewController("UsersController"),
 		db:         dbs,
 	}
 }
 
 // Create runs the create action.
-func (c *UserController) Create(ctx *app.CreateUserContext) error {
-	// UserController_Create: start_implement
+func (c *UsersController) Create(ctx *app.CreateUsersContext) error {
+	// UsersController_Create: start_implement
 
 	// Put your logic here
 	// initialize new user struct object
@@ -51,12 +51,12 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 	}
 
 	return ctx.OK(res)
-	// UserController_Create: end_implement
+	// UsersController_Create: end_implement
 }
 
 // Show runs the show action.
-func (c *UserController) Show(ctx *app.ShowUserContext) error {
-	// UserController_Show: start_implement
+func (c *UsersController) Show(ctx *app.ShowUsersContext) error {
+	// UsersController_Show: start_implement
 
 	// Put your logic here
 	userID := ctx.UserID
@@ -84,12 +84,12 @@ func (c *UserController) Show(ctx *app.ShowUserContext) error {
 		WalletAddress:     &user.Wallet.Address,
 	}
 	return ctx.OK(res)
-	// UserController_Show: end_implement
+	// UsersController_Show: end_implement
 }
 
 // List runs the List action.
-func (c *UserController) List(ctx *app.ListUserContext) error {
-	// UserController_List: start_implement
+func (c *UsersController) List(ctx *app.ListUsersContext) error {
+	// UsersController_List: start_implement
 
 	// Put your logic here
 	cognitoUserID := ctx.Params.Get("cognitoAuthUserId")
@@ -125,5 +125,5 @@ func (c *UserController) List(ctx *app.ListUserContext) error {
 		WalletAddress:     &user.Wallet.Address,
 	}
 	return ctx.OK(res)
-	// UserController_List: end_implement
+	// UsersController_List: end_implement
 }

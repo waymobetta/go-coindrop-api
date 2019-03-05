@@ -85,17 +85,17 @@ func handleHealthcheckOrigin(h goa.Handler) goa.Handler {
 	}
 }
 
-// QuizController is the controller interface for the Quiz actions.
-type QuizController interface {
+// QuizzesController is the controller interface for the Quizzes actions.
+type QuizzesController interface {
 	goa.Muxer
-	Show(*ShowQuizContext) error
+	Show(*ShowQuizzesContext) error
 }
 
-// MountQuizController "mounts" a Quiz resource controller on the given service.
-func MountQuizController(service *goa.Service, ctrl QuizController) {
+// MountQuizzesController "mounts" a Quizzes resource controller on the given service.
+func MountQuizzesController(service *goa.Service, ctrl QuizzesController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/v1/quiz", ctrl.MuxHandler("preflight", handleQuizOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/quizzes", ctrl.MuxHandler("preflight", handleQuizzesOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -103,20 +103,20 @@ func MountQuizController(service *goa.Service, ctrl QuizController) {
 			return err
 		}
 		// Build the context
-		rctx, err := NewShowQuizContext(ctx, req, service)
+		rctx, err := NewShowQuizzesContext(ctx, req, service)
 		if err != nil {
 			return err
 		}
 		return ctrl.Show(rctx)
 	}
 	h = handleSecurity("JWTAuth", h)
-	h = handleQuizOrigin(h)
-	service.Mux.Handle("GET", "/v1/quiz", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Quiz", "action", "Show", "route", "GET /v1/quiz", "security", "JWTAuth")
+	h = handleQuizzesOrigin(h)
+	service.Mux.Handle("GET", "/v1/quizzes", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Quizzes", "action", "Show", "route", "GET /v1/quizzes", "security", "JWTAuth")
 }
 
-// handleQuizOrigin applies the CORS response headers corresponding to the origin.
-func handleQuizOrigin(h goa.Handler) goa.Handler {
+// handleQuizzesOrigin applies the CORS response headers corresponding to the origin.
+func handleQuizzesOrigin(h goa.Handler) goa.Handler {
 
 	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		origin := req.Header.Get("Origin")
@@ -512,20 +512,20 @@ func unmarshalUpdateTasksPayload(ctx context.Context, service *goa.Service, req 
 	return nil
 }
 
-// UserController is the controller interface for the User actions.
-type UserController interface {
+// UsersController is the controller interface for the Users actions.
+type UsersController interface {
 	goa.Muxer
-	Create(*CreateUserContext) error
-	List(*ListUserContext) error
-	Show(*ShowUserContext) error
+	Create(*CreateUsersContext) error
+	List(*ListUsersContext) error
+	Show(*ShowUsersContext) error
 }
 
-// MountUserController "mounts" a User resource controller on the given service.
-func MountUserController(service *goa.Service, ctrl UserController) {
+// MountUsersController "mounts" a Users resource controller on the given service.
+func MountUsersController(service *goa.Service, ctrl UsersController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/v1/users", ctrl.MuxHandler("preflight", handleUserOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/v1/users/:userId", ctrl.MuxHandler("preflight", handleUserOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/users", ctrl.MuxHandler("preflight", handleUsersOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/users/:userId", ctrl.MuxHandler("preflight", handleUsersOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -533,7 +533,7 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 			return err
 		}
 		// Build the context
-		rctx, err := NewCreateUserContext(ctx, req, service)
+		rctx, err := NewCreateUsersContext(ctx, req, service)
 		if err != nil {
 			return err
 		}
@@ -545,9 +545,9 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 		}
 		return ctrl.Create(rctx)
 	}
-	h = handleUserOrigin(h)
-	service.Mux.Handle("POST", "/v1/users", ctrl.MuxHandler("create", h, unmarshalCreateUserPayload))
-	service.LogInfo("mount", "ctrl", "User", "action", "Create", "route", "POST /v1/users")
+	h = handleUsersOrigin(h)
+	service.Mux.Handle("POST", "/v1/users", ctrl.MuxHandler("create", h, unmarshalCreateUsersPayload))
+	service.LogInfo("mount", "ctrl", "Users", "action", "Create", "route", "POST /v1/users")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -555,15 +555,15 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 			return err
 		}
 		// Build the context
-		rctx, err := NewListUserContext(ctx, req, service)
+		rctx, err := NewListUsersContext(ctx, req, service)
 		if err != nil {
 			return err
 		}
 		return ctrl.List(rctx)
 	}
-	h = handleUserOrigin(h)
+	h = handleUsersOrigin(h)
 	service.Mux.Handle("GET", "/v1/users", ctrl.MuxHandler("list", h, nil))
-	service.LogInfo("mount", "ctrl", "User", "action", "List", "route", "GET /v1/users")
+	service.LogInfo("mount", "ctrl", "Users", "action", "List", "route", "GET /v1/users")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -571,19 +571,19 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 			return err
 		}
 		// Build the context
-		rctx, err := NewShowUserContext(ctx, req, service)
+		rctx, err := NewShowUsersContext(ctx, req, service)
 		if err != nil {
 			return err
 		}
 		return ctrl.Show(rctx)
 	}
-	h = handleUserOrigin(h)
+	h = handleUsersOrigin(h)
 	service.Mux.Handle("GET", "/v1/users/:userId", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "User", "action", "Show", "route", "GET /v1/users/:userId")
+	service.LogInfo("mount", "ctrl", "Users", "action", "Show", "route", "GET /v1/users/:userId")
 }
 
-// handleUserOrigin applies the CORS response headers corresponding to the origin.
-func handleUserOrigin(h goa.Handler) goa.Handler {
+// handleUsersOrigin applies the CORS response headers corresponding to the origin.
+func handleUsersOrigin(h goa.Handler) goa.Handler {
 
 	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		origin := req.Header.Get("Origin")
@@ -606,8 +606,8 @@ func handleUserOrigin(h goa.Handler) goa.Handler {
 	}
 }
 
-// unmarshalCreateUserPayload unmarshals the request body into the context request data Payload field.
-func unmarshalCreateUserPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+// unmarshalCreateUsersPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateUsersPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
 	payload := &userPayload{}
 	if err := service.DecodeRequest(req, payload); err != nil {
 		return err
@@ -714,18 +714,18 @@ func unmarshalUpdateVerifyredditPayload(ctx context.Context, service *goa.Servic
 	return nil
 }
 
-// WalletController is the controller interface for the Wallet actions.
-type WalletController interface {
+// WalletsController is the controller interface for the Wallets actions.
+type WalletsController interface {
 	goa.Muxer
-	Show(*ShowWalletContext) error
-	Update(*UpdateWalletContext) error
+	Show(*ShowWalletsContext) error
+	Update(*UpdateWalletsContext) error
 }
 
-// MountWalletController "mounts" a Wallet resource controller on the given service.
-func MountWalletController(service *goa.Service, ctrl WalletController) {
+// MountWalletsController "mounts" a Wallets resource controller on the given service.
+func MountWalletsController(service *goa.Service, ctrl WalletsController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/v1/wallets", ctrl.MuxHandler("preflight", handleWalletOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/wallets", ctrl.MuxHandler("preflight", handleWalletsOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -733,16 +733,16 @@ func MountWalletController(service *goa.Service, ctrl WalletController) {
 			return err
 		}
 		// Build the context
-		rctx, err := NewShowWalletContext(ctx, req, service)
+		rctx, err := NewShowWalletsContext(ctx, req, service)
 		if err != nil {
 			return err
 		}
 		return ctrl.Show(rctx)
 	}
 	h = handleSecurity("JWTAuth", h)
-	h = handleWalletOrigin(h)
+	h = handleWalletsOrigin(h)
 	service.Mux.Handle("GET", "/v1/wallets", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Wallet", "action", "Show", "route", "GET /v1/wallets", "security", "JWTAuth")
+	service.LogInfo("mount", "ctrl", "Wallets", "action", "Show", "route", "GET /v1/wallets", "security", "JWTAuth")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -750,7 +750,7 @@ func MountWalletController(service *goa.Service, ctrl WalletController) {
 			return err
 		}
 		// Build the context
-		rctx, err := NewUpdateWalletContext(ctx, req, service)
+		rctx, err := NewUpdateWalletsContext(ctx, req, service)
 		if err != nil {
 			return err
 		}
@@ -763,13 +763,13 @@ func MountWalletController(service *goa.Service, ctrl WalletController) {
 		return ctrl.Update(rctx)
 	}
 	h = handleSecurity("JWTAuth", h)
-	h = handleWalletOrigin(h)
-	service.Mux.Handle("POST", "/v1/wallets", ctrl.MuxHandler("update", h, unmarshalUpdateWalletPayload))
-	service.LogInfo("mount", "ctrl", "Wallet", "action", "Update", "route", "POST /v1/wallets", "security", "JWTAuth")
+	h = handleWalletsOrigin(h)
+	service.Mux.Handle("POST", "/v1/wallets", ctrl.MuxHandler("update", h, unmarshalUpdateWalletsPayload))
+	service.LogInfo("mount", "ctrl", "Wallets", "action", "Update", "route", "POST /v1/wallets", "security", "JWTAuth")
 }
 
-// handleWalletOrigin applies the CORS response headers corresponding to the origin.
-func handleWalletOrigin(h goa.Handler) goa.Handler {
+// handleWalletsOrigin applies the CORS response headers corresponding to the origin.
+func handleWalletsOrigin(h goa.Handler) goa.Handler {
 
 	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		origin := req.Header.Get("Origin")
@@ -792,8 +792,8 @@ func handleWalletOrigin(h goa.Handler) goa.Handler {
 	}
 }
 
-// unmarshalUpdateWalletPayload unmarshals the request body into the context request data Payload field.
-func unmarshalUpdateWalletPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+// unmarshalUpdateWalletsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateWalletsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
 	payload := &walletPayload{}
 	if err := service.DecodeRequest(req, payload); err != nil {
 		return err

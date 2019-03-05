@@ -88,11 +88,11 @@ func main() {
 	healthcheckCtrlr := controllers.NewHealthcheckController(service, dbs)
 	app.MountHealthcheckController(service, healthcheckCtrlr)
 
-	userCtrlr := controllers.NewUserController(service, dbs)
-	app.MountUserController(service, userCtrlr)
+	usersCtrlr := controllers.NewUsersController(service, dbs)
+	app.MountUsersController(service, usersCtrlr)
 
-	walletCtrlr := controllers.NewWalletController(service, dbs)
-	app.MountWalletController(service, walletCtrlr)
+	walletsCtrlr := controllers.NewWalletsController(service, dbs)
+	app.MountWalletsController(service, walletsCtrlr)
 
 	tasksCtrlr := controllers.NewTasksController(service, dbs)
 	app.MountTasksController(service, tasksCtrlr)
@@ -100,8 +100,8 @@ func main() {
 	resultsCtrlr := controllers.NewResultsController(service, dbs)
 	app.MountResultsController(service, resultsCtrlr)
 
-	quizCtrlr := controllers.NewQuizController(service, dbs)
-	app.MountQuizController(service, quizCtrlr)
+	quizzesCtrlr := controllers.NewQuizzesController(service, dbs)
+	app.MountQuizzesController(service, quizzesCtrlr)
 
 	redditCtrlr := controllers.NewRedditController(service, dbs)
 	app.MountRedditController(service, redditCtrlr)

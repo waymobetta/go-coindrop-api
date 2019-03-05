@@ -497,47 +497,6 @@ paths:
       summary: show healthcheck
       tags:
       - healthcheck
-  /v1/quiz:
-    get:
-      description: Get quiz
-      operationId: quiz#show
-      parameters:
-      - description: Quiz title
-        in: query
-        name: quizTitle
-        required: false
-        type: string
-      produces:
-      - application/standard_error+json
-      - application/vnd.quiz+json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/Quiz'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "410":
-          description: Gone
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/Standard_error'
-      schemes:
-      - http
-      security:
-      - JWTAuth: []
-      summary: show quiz
-      tags:
-      - quiz
   /v1/quiz/results:
     get:
       description: Get quiz results
@@ -580,6 +539,47 @@ paths:
       summary: show results
       tags:
       - results
+  /v1/quizzes:
+    get:
+      description: Get quizzes
+      operationId: quizzes#show
+      parameters:
+      - description: Quiz title
+        in: query
+        name: quizTitle
+        required: false
+        type: string
+      produces:
+      - application/standard_error+json
+      - application/vnd.quiz+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Quiz'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: show quizzes
+      tags:
+      - quizzes
   /v1/social/reddit/harvest:
     post:
       description: Update Reddit User Info
@@ -959,7 +959,7 @@ paths:
   /v1/users:
     get:
       description: Get user ID mapped to Cognito auth user ID
-      operationId: user#list
+      operationId: users#list
       parameters:
       - description: Cognito Auth User ID
         in: query
@@ -993,12 +993,12 @@ paths:
             $ref: '#/definitions/Standard_error'
       schemes:
       - http
-      summary: list user
+      summary: list users
       tags:
-      - user
+      - users
     post:
       description: Create a new user
-      operationId: user#create
+      operationId: users#create
       parameters:
       - description: User payload
         in: body
@@ -1032,13 +1032,13 @@ paths:
             $ref: '#/definitions/Standard_error'
       schemes:
       - http
-      summary: create user
+      summary: create users
       tags:
-      - user
+      - users
   /v1/users/{userId}:
     get:
       description: Get user by id
-      operationId: user#show
+      operationId: users#show
       parameters:
       - description: User ID
         in: path
@@ -1072,13 +1072,13 @@ paths:
             $ref: '#/definitions/Standard_error'
       schemes:
       - http
-      summary: show user
+      summary: show users
       tags:
-      - user
+      - users
   /v1/wallets:
     get:
       description: Get user wallet
-      operationId: wallet#show
+      operationId: wallets#show
       parameters:
       - description: User ID
         in: query
@@ -1114,12 +1114,12 @@ paths:
       - http
       security:
       - JWTAuth: []
-      summary: show wallet
+      summary: show wallets
       tags:
-      - wallet
+      - wallets
     post:
       description: Update user wallet
-      operationId: wallet#update
+      operationId: wallets#update
       parameters:
       - description: Wallet payload
         in: body
@@ -1155,9 +1155,9 @@ paths:
       - http
       security:
       - JWTAuth: []
-      summary: update wallet
+      summary: update wallets
       tags:
-      - wallet
+      - wallets
 produces:
 - application/json
 - application/xml

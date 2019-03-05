@@ -65,10 +65,10 @@ goa:
 	@goagen bootstrap -d github.com/waymobetta/go-coindrop-api/design
 	@rm main.go
 	@rm healthcheck.go
-	@rm user.go
-	@rm wallet.go
+	@rm users.go
+	@rm wallets.go
 	@rm tasks.go
-	@rm quiz.go
+	@rm quizzes.go
 	@rm results.go
 	@rm reddit.go
 	@rm verifyreddit.go
