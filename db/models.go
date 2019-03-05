@@ -24,11 +24,17 @@ type User struct {
 
 // User2 ...
 type User2 struct {
-	ID            string  `json:"id"`
-	UserID        string  `json:"user_id"`
-	AuthUserID    string  `json:"auth_user_id"`
-	WalletAddress string  `json:"wallet_address"`
-	Social        *Social `json:"social"`
+	ID                string  `json:"id"`
+	UserID            string  `json:"user_id"`
+	CognitoAuthUserID string  `json:"cognito_auth_user_id"`
+	Wallet            *Wallet `json:"wallet"`
+	Social            *Social `json:"social"`
+}
+
+// Wallet ...
+type Wallet struct {
+	ID      string `json:"id"`
+	Address string `json:"address"`
 }
 
 // Social ...

@@ -3,7 +3,7 @@
 -- create uuid_generate_v4 function
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- generate verification code function 
+-- generate verification code function
 CREATE FUNCTION gen_verif_code()
 RETURNS TEXT AS $$
 BEGIN
@@ -15,13 +15,13 @@ LANGUAGE plpgsql;
 CREATE TABLE IF NOT EXISTS coindrop_auth2 (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	cognito_auth_user_id TEXT NOT NULL UNIQUE,
-	wallet_id uuid REFERENCES coindrop_wallets(id)
 );
 
 -- WALLETS 2
 CREATE TABLE IF NOT EXISTS coindrop_wallets (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
-	address TEXT
+	address TEXT,
+	user_id uuid REFERENCES coindrop_auth2(id)
 );
 
 -- REDDIT 2

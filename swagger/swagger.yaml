@@ -957,6 +957,45 @@ paths:
       tags:
       - tasks
   /v1/users:
+    get:
+      description: Get user ID mapped to Cognito auth user ID
+      operationId: user#list
+      parameters:
+      - description: Cognito Auth User ID
+        in: query
+        name: cognitoAuthUserId
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        required: false
+        type: string
+      produces:
+      - application/standard_error+json
+      - application/vnd.user+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      summary: list user
+      tags:
+      - user
     post:
       description: Create a new user
       operationId: user#create

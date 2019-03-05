@@ -79,7 +79,7 @@ func (c *RedditharvestController) Update(ctx *app.UpdateRedditharvestContext) er
 	}
 
 	user = &db.User2{
-		AuthUserID: ctx.Payload.UserID,
+		CognitoAuthUserID: ctx.Payload.UserID,
 		Social: &db.Social{
 			Reddit: &db.Reddit{
 				LinkKarma:    user.Social.Reddit.LinkKarma,

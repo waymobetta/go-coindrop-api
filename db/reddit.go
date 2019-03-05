@@ -171,7 +171,7 @@ func (db *DB) GetRedditUser(u *User2) (*User2, error) {
 	defer stmt.Close()
 
 	// initialize row object
-	row := stmt.QueryRow(u.AuthUserID)
+	row := stmt.QueryRow(u.CognitoAuthUserID)
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
@@ -269,7 +269,7 @@ func (db *DB) UpdateRedditInfo(u *User2) (*User2, error) {
 		u.Social.Reddit.LinkKarma,
 		pq.Array(u.Social.Reddit.Subreddits),
 		pq.Array(u.Social.Reddit.Trophies),
-		u.AuthUserID,
+		u.CognitoAuthUserID,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
@@ -325,7 +325,7 @@ func (db *DB) UpdateRedditVerificationCode(u *User2) (*User2, error) {
 		u.Social.Reddit.Verification.ConfirmedVerificationCode,
 		u.Social.Reddit.Verification.PostedVerificationCode,
 		u.Social.Reddit.Verification.Verified,
-		u.AuthUserID,
+		u.CognitoAuthUserID,
 	)
 	if err != nil {
 		// rollback transaction if error thrown

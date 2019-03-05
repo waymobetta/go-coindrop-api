@@ -28,11 +28,11 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 
 	// Put your logic here
 	// initialize new user struct object
-	user := new(db.User)
-	user.AuthUserID = ctx.Payload.CognitoAuthUserID
+	user := new(db.User2)
+	user.CognitoAuthUserID = ctx.Payload.CognitoAuthUserID
 
 	// insert the AWS cognito user ID into the coindrop_auth table
-	_, err := c.db.AddUserID(user)
+	newUser, err := c.db.AddUserID(user)
 	if err != nil {
 		log.Errorf("[controller/user] %v", err)
 		return ctx.BadRequest(&app.StandardError{
@@ -41,12 +41,12 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 		})
 	}
 
-	log.Printf("[controller/user] successfully added coindrop user: %v\n", user.AuthUserID)
+	log.Printf("[controller/user] successfully added coindrop user: %v\n", user.CognitoAuthUserID)
 
 	res := &app.User{
 		ID:                "",
-		CognitoAuthUserID: &user.AuthUserID,
-		WalletAddress:     &user.WalletAddress,
+		CognitoAuthUserID: &newUser.CognitoAuthUserID,
+		WalletAddress:     &newUser.Wallet.Address,
 	}
 
 	return ctx.OK(res)
@@ -58,8 +58,71 @@ func (c *UserController) Show(ctx *app.ShowUserContext) error {
 	// UserController_Show: start_implement
 
 	// Put your logic here
+	userID := ctx.UserID
 
-	res := &app.User{}
+	user, err := c.db.GetUser(userID)
+	if err != nil {
+		log.Errorf("[controller/user] failed to get user: %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could not retrieve user data",
+		})
+	}
+
+	if user == nil {
+		log.Errorf("[controller/user] user not found: %v", userID)
+		return ctx.NotFound(&app.StandardError{
+			Code:    400,
+			Message: "user not found",
+		})
+	}
+
+	res := &app.User{
+		ID:                user.ID,
+		CognitoAuthUserID: &user.CognitoAuthUserID,
+		WalletAddress:     &user.Wallet.Address,
+	}
 	return ctx.OK(res)
 	// UserController_Show: end_implement
+}
+
+// List runs the List action.
+func (c *UserController) List(ctx *app.ListUserContext) error {
+	// UserController_List: start_implement
+
+	// Put your logic here
+	cognitoUserID := ctx.Params.Get("cognitoAuthUserId")
+	userID, err := c.db.GetUserIDByCognitoUserID(cognitoUserID)
+	if err != nil {
+		log.Errorf("[controller/user] failed to get user id: %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could not retrieve user data",
+		})
+	}
+
+	user, err := c.db.GetUser(userID)
+	if err != nil {
+		log.Errorf("[controller/user] failed to get user: %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could not retrieve user data",
+		})
+	}
+
+	if user == nil {
+		log.Errorf("[controller/user] user not found: %v", userID)
+		return ctx.NotFound(&app.StandardError{
+			Code:    400,
+			Message: "user not found",
+		})
+	}
+
+	res := &app.User{
+		ID:                user.ID,
+		CognitoAuthUserID: &user.CognitoAuthUserID,
+		WalletAddress:     &user.Wallet.Address,
+	}
+	return ctx.OK(res)
+	// UserController_List: end_implement
 }

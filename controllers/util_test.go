@@ -83,6 +83,11 @@ func getUserID() string {
 }
 
 // TODO make dynamic
+func getCognitoAuthUserID() string {
+	return "8ea11ea0-567a-46be-a6c6-6c19adab372c"
+}
+
+// TODO make dynamic
 func getAuthToken() string {
 	if _, err := os.Stat(".access_token"); os.IsNotExist(err) {
 		return ""

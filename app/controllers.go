@@ -516,6 +516,7 @@ func unmarshalUpdateTasksPayload(ctx context.Context, service *goa.Service, req 
 type UserController interface {
 	goa.Muxer
 	Create(*CreateUserContext) error
+	List(*ListUserContext) error
 	Show(*ShowUserContext) error
 }
 
@@ -547,6 +548,22 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 	h = handleUserOrigin(h)
 	service.Mux.Handle("POST", "/v1/users", ctrl.MuxHandler("create", h, unmarshalCreateUserPayload))
 	service.LogInfo("mount", "ctrl", "User", "action", "Create", "route", "POST /v1/users")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListUserContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleUserOrigin(h)
+	service.Mux.Handle("GET", "/v1/users", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "User", "action", "List", "route", "GET /v1/users")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request

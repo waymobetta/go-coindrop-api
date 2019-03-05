@@ -731,6 +731,76 @@ func (ctx *CreateUserContext) InternalServerError(r *StandardError) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
+// ListUserContext provides the user list action context.
+type ListUserContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CognitoAuthUserID *string
+}
+
+// NewListUserContext parses the incoming request URL and body, performs validations and creates the
+// context used by the user controller list action.
+func NewListUserContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListUserContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListUserContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCognitoAuthUserID := req.Params["cognitoAuthUserId"]
+	if len(paramCognitoAuthUserID) > 0 {
+		rawCognitoAuthUserID := paramCognitoAuthUserID[0]
+		rctx.CognitoAuthUserID = &rawCognitoAuthUserID
+		if rctx.CognitoAuthUserID != nil {
+			if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *rctx.CognitoAuthUserID); !ok {
+				err = goa.MergeErrors(err, goa.InvalidPatternError(`cognitoAuthUserId`, *rctx.CognitoAuthUserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+			}
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListUserContext) OK(r *User) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ListUserContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListUserContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *ListUserContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListUserContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
 // ShowUserContext provides the user show action context.
 type ShowUserContext struct {
 	context.Context

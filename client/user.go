@@ -61,6 +61,40 @@ func (c *Client) NewCreateUserRequest(ctx context.Context, path string, payload 
 	return req, nil
 }
 
+// ListUserPath computes a request path to the list action of user.
+func ListUserPath() string {
+
+	return fmt.Sprintf("/v1/users")
+}
+
+// Get user ID mapped to Cognito auth user ID
+func (c *Client) ListUser(ctx context.Context, path string, cognitoAuthUserID *string) (*http.Response, error) {
+	req, err := c.NewListUserRequest(ctx, path, cognitoAuthUserID)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewListUserRequest create the request corresponding to the list action endpoint of the user resource.
+func (c *Client) NewListUserRequest(ctx context.Context, path string, cognitoAuthUserID *string) (*http.Request, error) {
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	values := u.Query()
+	if cognitoAuthUserID != nil {
+		values.Set("cognitoAuthUserId", *cognitoAuthUserID)
+	}
+	u.RawQuery = values.Encode()
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // ShowUserPath computes a request path to the show action of user.
 func ShowUserPath(userID string) string {
 	param0 := userID
