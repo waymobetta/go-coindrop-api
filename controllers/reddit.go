@@ -8,7 +8,6 @@ import (
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
 	"github.com/waymobetta/go-coindrop-api/types"
-	"github.com/waymobetta/go-coindrop-api/verify"
 )
 
 // RedditController implements the reddit resource.
@@ -34,7 +33,7 @@ func (c *RedditController) Show(ctx *app.ShowRedditContext) error {
 	user := &types.User{
 		Social: &types.Social{
 			Reddit: &types.Reddit{
-				Verification: &verify.Verification2{},
+				Verification: &types.Verification{},
 			},
 		}}
 	user.CognitoAuthUserID = ctx.Params.Get("userId")
@@ -83,7 +82,7 @@ func (c *RedditController) Create(ctx *app.CreateRedditContext) error {
 				CommentKarma: 0,
 				Subreddits:   []string{},
 				Trophies:     []string{},
-				Verification: &verify.Verification2{
+				Verification: &types.Verification{
 					PostedVerificationCode:    "",
 					ConfirmedVerificationCode: "",
 					Verified:                  false,
