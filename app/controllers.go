@@ -365,6 +365,7 @@ func handleResultsOrigin(h goa.Handler) goa.Handler {
 type TasksController interface {
 	goa.Muxer
 	Create(*CreateTasksContext) error
+	List(*ListTasksContext) error
 	Show(*ShowTasksContext) error
 	Update(*UpdateTasksContext) error
 }
@@ -405,6 +406,23 @@ func MountTasksController(service *goa.Service, ctrl TasksController) {
 			return err
 		}
 		// Build the context
+		rctx, err := NewListTasksContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleTasksOrigin(h)
+	service.Mux.Handle("GET", "/v1/tasks", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Tasks", "action", "List", "route", "GET /v1/tasks", "security", "JWTAuth")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
 		rctx, err := NewShowTasksContext(ctx, req, service)
 		if err != nil {
 			return err
@@ -413,8 +431,8 @@ func MountTasksController(service *goa.Service, ctrl TasksController) {
 	}
 	h = handleSecurity("JWTAuth", h)
 	h = handleTasksOrigin(h)
-	service.Mux.Handle("GET", "/v1/tasks", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Tasks", "action", "Show", "route", "GET /v1/tasks", "security", "JWTAuth")
+	service.Mux.Handle("GET", "/v1/tasks/:taskId", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Tasks", "action", "Show", "route", "GET /v1/tasks/:taskId", "security", "JWTAuth")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request

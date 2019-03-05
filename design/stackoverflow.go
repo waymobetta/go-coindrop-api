@@ -12,6 +12,11 @@ var _ = Resource("stackoverflow", func() {
 
 	Security(JWTAuth)
 
+	Response(NotFound, StandardErrorMedia)
+	Response(BadRequest, StandardErrorMedia)
+	Response(Gone, StandardErrorMedia)
+	Response(InternalServerError, StandardErrorMedia)
+
 	Action("show", func() {
 		Description("Get stack overflow user info")
 		Routing(GET(""))
@@ -22,7 +27,6 @@ var _ = Resource("stackoverflow", func() {
 			})
 		})
 		Response(OK, StackOverflowUserMedia)
-		Response(NotFound, StandardErrorMedia)
 	})
 
 	// Action("update", func() {
@@ -30,10 +34,6 @@ var _ = Resource("stackoverflow", func() {
 	// 	Routing(POST(""))
 	// 	Payload(WalletPayload)
 	// 	Response(OK)
-	// 	Response(NotFound)
-	// 	Response(BadRequest, StandardErrorMedia)
-	// 	Response(Gone, StandardErrorMedia)
-	// 	Response(InternalServerError, StandardErrorMedia)
 	// })
 })
 

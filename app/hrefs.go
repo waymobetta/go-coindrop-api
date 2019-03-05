@@ -36,8 +36,9 @@ func ResultsHref() string {
 }
 
 // TasksHref returns the resource href.
-func TasksHref() string {
-	return "/v1/tasks"
+func TasksHref(taskID interface{}) string {
+	paramtaskID := strings.TrimLeftFunc(fmt.Sprintf("%v", taskID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/v1/tasks/%v", paramtaskID)
 }
 
 // UserHref returns the resource href.

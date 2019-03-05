@@ -119,6 +119,7 @@ type ListData struct {
 type TaskUser struct {
 	ID         string `json:"id"`
 	TaskID     string `json:"task_id"`
+	UserID     string `json:"user_id"`
 	AuthUserID string `json:"auth_user_id"`
 	Title      string `json:"title"`
 }

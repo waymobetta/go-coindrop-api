@@ -476,8 +476,16 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Healthcheck'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
           schema:
             $ref: '#/definitions/Standard_error'
         "500":
@@ -507,8 +515,20 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Quiz'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/Standard_error'
       schemes:
@@ -537,8 +557,20 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Results'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/Standard_error'
       schemes:
@@ -609,8 +641,20 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Reddituser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/Standard_error'
       schemes:
@@ -680,8 +724,20 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Reddituser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/Standard_error'
       schemes:
@@ -715,6 +771,8 @@ paths:
             $ref: '#/definitions/Standard_error'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
         "410":
           description: Gone
           schema:
@@ -732,8 +790,8 @@ paths:
       - verifyreddit
   /v1/tasks:
     get:
-      description: Get user tasks
-      operationId: tasks#show
+      description: Get list of user tasks
+      operationId: tasks#list
       parameters:
       - description: User ID
         in: query
@@ -749,15 +807,27 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Tasks'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/Standard_error'
       schemes:
       - http
       security:
       - JWTAuth: []
-      summary: show tasks
+      summary: list tasks
       tags:
       - tasks
     post:
@@ -782,6 +852,8 @@ paths:
             $ref: '#/definitions/Standard_error'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
         "410":
           description: Gone
           schema:
@@ -798,6 +870,47 @@ paths:
       tags:
       - tasks
   /v1/tasks/{taskId}:
+    get:
+      description: Get single task
+      operationId: tasks#show
+      parameters:
+      - description: Task ID
+        in: path
+        name: taskId
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        required: true
+        type: string
+      produces:
+      - application/standard_error+json
+      - application/vnd.task+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Task'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: show tasks
+      tags:
+      - tasks
     post:
       description: Update user task state
       operationId: tasks#update
@@ -826,6 +939,8 @@ paths:
             $ref: '#/definitions/Standard_error'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
         "410":
           description: Gone
           schema:
@@ -866,6 +981,8 @@ paths:
             $ref: '#/definitions/Standard_error'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
         "410":
           description: Gone
           schema:
@@ -891,14 +1008,29 @@ paths:
         required: true
         type: string
       produces:
+      - application/standard_error+json
       - application/vnd.user+json
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
       schemes:
       - http
       summary: show user
@@ -923,8 +1055,20 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Wallet'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/Standard_error'
       schemes:
@@ -958,6 +1102,8 @@ paths:
             $ref: '#/definitions/Standard_error'
         "404":
           description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
         "410":
           description: Gone
           schema:
@@ -979,8 +1125,6 @@ produces:
 - application/gob
 - application/x-gob
 responses:
-  NotFound:
-    description: Not Found
   OK:
     description: OK
 schemes:

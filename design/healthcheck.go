@@ -10,14 +10,17 @@ var _ = Resource("healthcheck", func() { // Resources group related API endpoint
 
 	NoSecurity()
 
+	Response(NotFound, StandardErrorMedia)
+	Response(BadRequest, StandardErrorMedia)
+	Response(Gone, StandardErrorMedia)
+	Response(InternalServerError, StandardErrorMedia)
+
 	DefaultMedia(HealthcheckMedia) // services.
 
 	Action("show", func() { // Actions define a single API endpoint together
 		Description("Returns OK if system is healthy")
 		Routing(GET(""))
 		Response(OK, HealthcheckMedia)
-		Response(InternalServerError, StandardErrorMedia)
-		Response(NotFound, StandardErrorMedia)
 	})
 })
 

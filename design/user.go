@@ -10,6 +10,11 @@ var _ = Resource("user", func() { // Resources group related API endpoints
 
 	Security(JWTAuth)
 
+	Response(NotFound, StandardErrorMedia)
+	Response(BadRequest, StandardErrorMedia)
+	Response(Gone, StandardErrorMedia)
+	Response(InternalServerError, StandardErrorMedia)
+
 	DefaultMedia(UserMedia) // services.
 
 	Action("create", func() {
@@ -17,10 +22,6 @@ var _ = Resource("user", func() { // Resources group related API endpoints
 		Routing(POST(""))
 		Payload(UserPayload)
 		Response(OK)
-		Response(NotFound)
-		Response(BadRequest, StandardErrorMedia)
-		Response(Gone, StandardErrorMedia)
-		Response(InternalServerError, StandardErrorMedia)
 		NoSecurity()
 	})
 
@@ -33,8 +34,7 @@ var _ = Resource("user", func() { // Resources group related API endpoints
 				Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
 			})
 		})
-		Response(OK)       // Responses define the shape and status code
-		Response(NotFound) // of HTTP responses.
+		Response(OK) // Responses define the shape and status code
 		NoSecurity()
 	})
 })

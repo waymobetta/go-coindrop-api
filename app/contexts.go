@@ -43,12 +43,28 @@ func (ctx *ShowHealthcheckContext) OK(r *Healthcheck) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowHealthcheckContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ShowHealthcheckContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *ShowHealthcheckContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
 }
 
 // InternalServerError sends a HTTP response with status code 500.
@@ -92,12 +108,36 @@ func (ctx *ShowQuizContext) OK(r *Quiz) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowQuizContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ShowQuizContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *ShowQuizContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ShowQuizContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
 // CreateRedditContext provides the reddit create action context.
@@ -198,12 +238,36 @@ func (ctx *ShowRedditContext) OK(r *Reddituser) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowRedditContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ShowRedditContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *ShowRedditContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ShowRedditContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
 // UpdateRedditharvestContext provides the redditharvest update action context.
@@ -304,12 +368,36 @@ func (ctx *ShowResultsContext) OK(r *Results) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowResultsContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ShowResultsContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *ShowResultsContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ShowResultsContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
 // CreateTasksContext provides the tasks create action context.
@@ -351,9 +439,11 @@ func (ctx *CreateTasksContext) BadRequest(r *StandardError) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *CreateTasksContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
+func (ctx *CreateTasksContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
 }
 
 // Gone sends a HTTP response with status code 410.
@@ -372,23 +462,23 @@ func (ctx *CreateTasksContext) InternalServerError(r *StandardError) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
-// ShowTasksContext provides the tasks show action context.
-type ShowTasksContext struct {
+// ListTasksContext provides the tasks list action context.
+type ListTasksContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
 	UserID *string
 }
 
-// NewShowTasksContext parses the incoming request URL and body, performs validations and creates the
-// context used by the tasks controller show action.
-func NewShowTasksContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowTasksContext, error) {
+// NewListTasksContext parses the incoming request URL and body, performs validations and creates the
+// context used by the tasks controller list action.
+func NewListTasksContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListTasksContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := ShowTasksContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := ListTasksContext{Context: ctx, ResponseData: resp, RequestData: req}
 	paramUserID := req.Params["userId"]
 	if len(paramUserID) > 0 {
 		rawUserID := paramUserID[0]
@@ -403,11 +493,87 @@ func NewShowTasksContext(ctx context.Context, r *http.Request, service *goa.Serv
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowTasksContext) OK(r *Tasks) error {
+func (ctx *ListTasksContext) OK(r *Tasks) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.tasks+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ListTasksContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListTasksContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *ListTasksContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListTasksContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
+// ShowTasksContext provides the tasks show action context.
+type ShowTasksContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	TaskID string
+}
+
+// NewShowTasksContext parses the incoming request URL and body, performs validations and creates the
+// context used by the tasks controller show action.
+func NewShowTasksContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowTasksContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ShowTasksContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramTaskID := req.Params["taskId"]
+	if len(paramTaskID) > 0 {
+		rawTaskID := paramTaskID[0]
+		rctx.TaskID = rawTaskID
+		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, rctx.TaskID); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`taskId`, rctx.TaskID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowTasksContext) OK(r *Task) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.task+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowTasksContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
 }
 
 // NotFound sends a HTTP response with status code 404.
@@ -416,6 +582,22 @@ func (ctx *ShowTasksContext) NotFound(r *StandardError) error {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *ShowTasksContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ShowTasksContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
 // UpdateTasksContext provides the tasks update action context.
@@ -466,9 +648,11 @@ func (ctx *UpdateTasksContext) BadRequest(r *StandardError) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *UpdateTasksContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
+func (ctx *UpdateTasksContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
 }
 
 // Gone sends a HTTP response with status code 410.
@@ -524,9 +708,11 @@ func (ctx *CreateUserContext) BadRequest(r *StandardError) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *CreateUserContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
+func (ctx *CreateUserContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
 }
 
 // Gone sends a HTTP response with status code 410.
@@ -581,10 +767,36 @@ func (ctx *ShowUserContext) OK(r *User) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowUserContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
 // NotFound sends a HTTP response with status code 404.
-func (ctx *ShowUserContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
+func (ctx *ShowUserContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *ShowUserContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ShowUserContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
 // ShowVerifyredditContext provides the verifyreddit show action context.
@@ -625,12 +837,36 @@ func (ctx *ShowVerifyredditContext) OK(r *Reddituser) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowVerifyredditContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ShowVerifyredditContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *ShowVerifyredditContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ShowVerifyredditContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
 // UpdateVerifyredditContext provides the verifyreddit update action context.
@@ -670,9 +906,11 @@ func (ctx *UpdateVerifyredditContext) BadRequest(r *StandardError) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *UpdateVerifyredditContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
+func (ctx *UpdateVerifyredditContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
 }
 
 // Gone sends a HTTP response with status code 410.
@@ -729,12 +967,36 @@ func (ctx *ShowWalletContext) OK(r *Wallet) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowWalletContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ShowWalletContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *ShowWalletContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ShowWalletContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
 // UpdateWalletContext provides the wallet update action context.
@@ -774,9 +1036,11 @@ func (ctx *UpdateWalletContext) BadRequest(r *StandardError) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *UpdateWalletContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
+func (ctx *UpdateWalletContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
 }
 
 // Gone sends a HTTP response with status code 410.

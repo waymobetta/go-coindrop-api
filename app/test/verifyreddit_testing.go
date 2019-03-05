@@ -24,6 +24,255 @@ import (
 	"net/url"
 )
 
+// ShowVerifyredditBadRequest runs the method Show of the given controller with the given parameters.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func ShowVerifyredditBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, userID *string) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	query := url.Values{}
+	if userID != nil {
+		sliceVal := []string{*userID}
+		query["userId"] = sliceVal
+	}
+	u := &url.URL{
+		Path:     fmt.Sprintf("/v1/social/reddit/userid/verify"),
+		RawQuery: query.Encode(),
+	}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		panic("invalid test " + err.Error()) // bug
+	}
+	prms := url.Values{}
+	if userID != nil {
+		sliceVal := []string{*userID}
+		prms["userId"] = sliceVal
+	}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "VerifyredditTest"), rw, req, prms)
+	showCtx, _err := app.NewShowVerifyredditContext(goaCtx, req, service)
+	if _err != nil {
+		e, ok := _err.(goa.ServiceError)
+		if !ok {
+			panic("invalid test data " + _err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Perform action
+	_err = ctrl.Show(showCtx)
+
+	// Validate response
+	if _err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
+	}
+	if rw.Code != 400 {
+		t.Errorf("invalid response status code: got %+v, expected 400", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var _ok bool
+		mt, _ok = resp.(*app.StandardError)
+		if !_ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		_err = mt.Validate()
+		if _err != nil {
+			t.Errorf("invalid response media type: %s", _err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// ShowVerifyredditGone runs the method Show of the given controller with the given parameters.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func ShowVerifyredditGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, userID *string) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	query := url.Values{}
+	if userID != nil {
+		sliceVal := []string{*userID}
+		query["userId"] = sliceVal
+	}
+	u := &url.URL{
+		Path:     fmt.Sprintf("/v1/social/reddit/userid/verify"),
+		RawQuery: query.Encode(),
+	}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		panic("invalid test " + err.Error()) // bug
+	}
+	prms := url.Values{}
+	if userID != nil {
+		sliceVal := []string{*userID}
+		prms["userId"] = sliceVal
+	}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "VerifyredditTest"), rw, req, prms)
+	showCtx, _err := app.NewShowVerifyredditContext(goaCtx, req, service)
+	if _err != nil {
+		e, ok := _err.(goa.ServiceError)
+		if !ok {
+			panic("invalid test data " + _err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Perform action
+	_err = ctrl.Show(showCtx)
+
+	// Validate response
+	if _err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
+	}
+	if rw.Code != 410 {
+		t.Errorf("invalid response status code: got %+v, expected 410", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var _ok bool
+		mt, _ok = resp.(*app.StandardError)
+		if !_ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		_err = mt.Validate()
+		if _err != nil {
+			t.Errorf("invalid response media type: %s", _err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// ShowVerifyredditInternalServerError runs the method Show of the given controller with the given parameters.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func ShowVerifyredditInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, userID *string) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	query := url.Values{}
+	if userID != nil {
+		sliceVal := []string{*userID}
+		query["userId"] = sliceVal
+	}
+	u := &url.URL{
+		Path:     fmt.Sprintf("/v1/social/reddit/userid/verify"),
+		RawQuery: query.Encode(),
+	}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		panic("invalid test " + err.Error()) // bug
+	}
+	prms := url.Values{}
+	if userID != nil {
+		sliceVal := []string{*userID}
+		prms["userId"] = sliceVal
+	}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "VerifyredditTest"), rw, req, prms)
+	showCtx, _err := app.NewShowVerifyredditContext(goaCtx, req, service)
+	if _err != nil {
+		e, ok := _err.(goa.ServiceError)
+		if !ok {
+			panic("invalid test data " + _err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Perform action
+	_err = ctrl.Show(showCtx)
+
+	// Validate response
+	if _err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
+	}
+	if rw.Code != 500 {
+		t.Errorf("invalid response status code: got %+v, expected 500", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var _ok bool
+		mt, _ok = resp.(*app.StandardError)
+		if !_ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		_err = mt.Validate()
+		if _err != nil {
+			t.Errorf("invalid response media type: %s", _err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
 // ShowVerifyredditNotFound runs the method Show of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
@@ -446,15 +695,16 @@ func UpdateVerifyredditInternalServerError(t goatest.TInterface, ctx context.Con
 }
 
 // UpdateVerifyredditNotFound runs the method Update of the given controller with the given parameters and payload.
-// It returns the response writer so it's possible to inspect the response headers.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateVerifyredditNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, payload *app.UpdateUserPayload) http.ResponseWriter {
+func UpdateVerifyredditNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.VerifyredditController, payload *app.UpdateUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
+		resp   interface{}
 
-		respSetter goatest.ResponseSetterFunc = func(r interface{}) {}
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
 	)
 	if service == nil {
 		service = goatest.Service(&logBuf, respSetter)
@@ -474,7 +724,7 @@ func UpdateVerifyredditNotFound(t goatest.TInterface, ctx context.Context, servi
 			panic(err) // bug
 		}
 		t.Errorf("unexpected payload validation error: %+v", e)
-		return nil
+		return nil, nil
 	}
 
 	// Setup request context
@@ -498,7 +748,7 @@ func UpdateVerifyredditNotFound(t goatest.TInterface, ctx context.Context, servi
 			panic("invalid test data " + __err.Error()) // bug
 		}
 		t.Errorf("unexpected parameter validation error: %+v", _e)
-		return nil
+		return nil, nil
 	}
 	updateCtx.Payload = payload
 
@@ -512,9 +762,21 @@ func UpdateVerifyredditNotFound(t goatest.TInterface, ctx context.Context, servi
 	if rw.Code != 404 {
 		t.Errorf("invalid response status code: got %+v, expected 404", rw.Code)
 	}
+	var mt *app.StandardError
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.StandardError)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
 
 	// Return results
-	return rw
+	return rw, mt
 }
 
 // UpdateVerifyredditOK runs the method Update of the given controller with the given parameters and payload.

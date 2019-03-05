@@ -93,5 +93,5 @@ func getAuthToken() string {
 		log.Fatal(err)
 	}
 
-	return strings.TrimSpace(string(data))
+	return strings.Replace(strings.TrimSpace(string(data)), "\"", "", -1)
 }

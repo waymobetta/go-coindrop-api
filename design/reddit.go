@@ -10,6 +10,11 @@ var _ = Resource("reddit", func() {
 
 	Security(JWTAuth)
 
+	Response(NotFound, StandardErrorMedia)
+	Response(BadRequest, StandardErrorMedia)
+	Response(Gone, StandardErrorMedia)
+	Response(InternalServerError, StandardErrorMedia)
+
 	Action("show", func() {
 		Description("Get Reddit User")
 		Routing(GET(""))
@@ -20,7 +25,6 @@ var _ = Resource("reddit", func() {
 			})
 		})
 		Response(OK, RedditUserMedia)
-		Response(NotFound, StandardErrorMedia)
 	})
 
 	Action("create", func() {
@@ -28,10 +32,6 @@ var _ = Resource("reddit", func() {
 		Routing(POST(""))
 		Payload(CreateUserPayload)
 		Response(OK, RedditUserMedia)
-		Response(NotFound, StandardErrorMedia)
-		Response(BadRequest, StandardErrorMedia)
-		Response(Gone, StandardErrorMedia)
-		Response(InternalServerError, StandardErrorMedia)
 	})
 })
 

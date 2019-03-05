@@ -10,6 +10,11 @@ var _ = Resource("verifyreddit", func() {
 
 	Security(JWTAuth)
 
+	Response(NotFound, StandardErrorMedia)
+	Response(BadRequest, StandardErrorMedia)
+	Response(Gone, StandardErrorMedia)
+	Response(InternalServerError, StandardErrorMedia)
+
 	Action("show", func() {
 		Description("Get ")
 		Routing(GET(""))
@@ -20,7 +25,6 @@ var _ = Resource("verifyreddit", func() {
 			})
 		})
 		Response(OK, RedditUserMedia)
-		Response(NotFound, StandardErrorMedia)
 	})
 
 	Action("update", func() {
@@ -28,10 +32,6 @@ var _ = Resource("verifyreddit", func() {
 		Routing(POST(""))
 		Payload(UpdateUserPayload)
 		Response(OK, RedditUserMedia)
-		Response(NotFound)
-		Response(BadRequest, StandardErrorMedia)
-		Response(Gone, StandardErrorMedia)
-		Response(InternalServerError, StandardErrorMedia)
 	})
 })
 

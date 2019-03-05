@@ -66,23 +66,23 @@ func (c *Client) NewCreateTasksRequest(ctx context.Context, path string, payload
 	return req, nil
 }
 
-// ShowTasksPath computes a request path to the show action of tasks.
-func ShowTasksPath() string {
+// ListTasksPath computes a request path to the list action of tasks.
+func ListTasksPath() string {
 
 	return fmt.Sprintf("/v1/tasks")
 }
 
-// Get user tasks
-func (c *Client) ShowTasks(ctx context.Context, path string, userID *string) (*http.Response, error) {
-	req, err := c.NewShowTasksRequest(ctx, path, userID)
+// Get list of user tasks
+func (c *Client) ListTasks(ctx context.Context, path string, userID *string) (*http.Response, error) {
+	req, err := c.NewListTasksRequest(ctx, path, userID)
 	if err != nil {
 		return nil, err
 	}
 	return c.Client.Do(ctx, req)
 }
 
-// NewShowTasksRequest create the request corresponding to the show action endpoint of the tasks resource.
-func (c *Client) NewShowTasksRequest(ctx context.Context, path string, userID *string) (*http.Request, error) {
+// NewListTasksRequest create the request corresponding to the list action endpoint of the tasks resource.
+func (c *Client) NewListTasksRequest(ctx context.Context, path string, userID *string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "http"
@@ -93,6 +93,41 @@ func (c *Client) NewShowTasksRequest(ctx context.Context, path string, userID *s
 		values.Set("userId", *userID)
 	}
 	u.RawQuery = values.Encode()
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+	if c.JWTAuthSigner != nil {
+		if err := c.JWTAuthSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
+
+// ShowTasksPath computes a request path to the show action of tasks.
+func ShowTasksPath(taskID string) string {
+	param0 := taskID
+
+	return fmt.Sprintf("/v1/tasks/%s", param0)
+}
+
+// Get single task
+func (c *Client) ShowTasks(ctx context.Context, path string) (*http.Response, error) {
+	req, err := c.NewShowTasksRequest(ctx, path)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewShowTasksRequest create the request corresponding to the show action endpoint of the tasks resource.
+func (c *Client) NewShowTasksRequest(ctx context.Context, path string) (*http.Request, error) {
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, err

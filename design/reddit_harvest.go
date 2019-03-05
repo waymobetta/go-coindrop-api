@@ -10,15 +10,16 @@ var _ = Resource("redditharvest", func() {
 
 	Security(JWTAuth)
 
+	Response(NotFound, StandardErrorMedia)
+	Response(BadRequest, StandardErrorMedia)
+	Response(Gone, StandardErrorMedia)
+	Response(InternalServerError, StandardErrorMedia)
+
 	Action("update", func() {
 		Description("Update Reddit User Info")
 		Routing(POST(""))
 		Payload(UpdateUserPayload)
 		Response(OK, RedditUserMedia)
-		Response(NotFound, StandardErrorMedia)
-		Response(BadRequest, StandardErrorMedia)
-		Response(Gone, StandardErrorMedia)
-		Response(InternalServerError, StandardErrorMedia)
 	})
 })
 

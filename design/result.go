@@ -10,6 +10,11 @@ var _ = Resource("results", func() {
 
 	Security(JWTAuth)
 
+	Response(NotFound, StandardErrorMedia)
+	Response(BadRequest, StandardErrorMedia)
+	Response(Gone, StandardErrorMedia)
+	Response(InternalServerError, StandardErrorMedia)
+
 	Action("show", func() {
 		Description("Get quiz results")
 		Routing(GET(""))
@@ -20,7 +25,6 @@ var _ = Resource("results", func() {
 			})
 		})
 		Response(OK, QuizResultsMedia)
-		Response(NotFound, StandardErrorMedia)
 	})
 })
 

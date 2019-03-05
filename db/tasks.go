@@ -1,6 +1,7 @@
 package db
 
 import (
+	"database/sql"
 	"fmt"
 )
 
@@ -140,22 +141,18 @@ func (db *DB) GetUserTasks(t *TaskUser) ([]Task, error) {
 		coindrop_tasks2.token_allocation,
 		coindrop_tasks2.badge_id
 	FROM
-		coindrop_auth2
+		coindrop_tasks2
 	JOIN
 		coindrop_user_tasks2
 	ON
-		coindrop_auth2.id = coindrop_user_tasks2.user_id
-	JOIN
-		coindrop_tasks2
-	ON
 		coindrop_tasks2.id = coindrop_user_tasks2.task_id
 	WHERE
-		coindrop_auth2.cognito_auth_user_id = $1
+		coindrop_user_tasks2.user_id = $1
 	`
 
-	rows, err := db.client.Query(sqlStatement, t.AuthUserID)
+	rows, err := db.client.Query(sqlStatement, t.UserID)
 	if err != nil {
-		return tasks, err
+		return nil, err
 	}
 
 	defer rows.Close()
@@ -165,27 +162,115 @@ func (db *DB) GetUserTasks(t *TaskUser) ([]Task, error) {
 		// initialize new struct per task in db to hold task info
 		task := Task{BadgeData: new(Badge)}
 
+		var (
+			tokenName       sql.NullString
+			taskDescription sql.NullString
+			tokenAllocation sql.NullInt64
+			badgeID         sql.NullString
+		)
+
 		err = rows.Scan(
 			&task.ID,
 			&task.Title,
 			&task.Type,
 			&task.Author,
-			&task.Description,
-			&task.Token,
-			&task.TokenAllocation,
-			&task.BadgeData.ID,
+			&taskDescription,
+			&tokenName,
+			&tokenAllocation,
+			&badgeID,
 		)
 		if err != nil {
-			return tasks, err
+			return nil, err
 		}
+
+		task.Description = taskDescription.String
+		task.Token = tokenName.String
+		task.TokenAllocation = int(tokenAllocation.Int64)
+		task.BadgeData.ID = badgeID.String
+
 		// append task object to slice of tasks
 		tasks = append(tasks, task)
 	}
+
 	err = rows.Err()
 	if err != nil {
-		return tasks, err
+		return nil, err
 	}
+
 	return tasks, nil
+}
+
+// GetUserTask returns all info for specific quiz
+func (db *DB) GetUserTask(t *TaskUser) (*Task, error) {
+	sqlStatement := `
+	SELECT
+		coindrop_tasks2.id,
+		coindrop_tasks2.title,
+		coindrop_tasks2.type,
+		coindrop_tasks2.author,
+		coindrop_tasks2.description,
+		coindrop_tasks2.token_name,
+		coindrop_tasks2.token_allocation,
+		coindrop_tasks2.badge_id
+	FROM
+		coindrop_tasks2
+	JOIN
+		coindrop_user_tasks2
+	ON
+		coindrop_tasks2.id = coindrop_user_tasks2.task_id
+	WHERE
+		coindrop_user_tasks2.user_id = $1
+	AND
+		coindrop_user_tasks2.task_id = $2
+	LIMIT
+		1
+	`
+
+	rows, err := db.client.Query(sqlStatement, t.UserID, t.TaskID)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	// initialize new struct per task in db to hold task info
+	task := &Task{BadgeData: new(Badge)}
+
+	// iterate over rows
+	for rows.Next() {
+		var (
+			tokenName       sql.NullString
+			taskDescription sql.NullString
+			tokenAllocation sql.NullInt64
+			badgeID         sql.NullString
+		)
+
+		err = rows.Scan(
+			&task.ID,
+			&task.Title,
+			&task.Type,
+			&task.Author,
+			&taskDescription,
+			&tokenName,
+			&tokenAllocation,
+			&badgeID,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		task.Description = taskDescription.String
+		task.Token = tokenName.String
+		task.TokenAllocation = int(tokenAllocation.Int64)
+		task.BadgeData.ID = badgeID.String
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return task, nil
 }
 
 // AddUserTask adds the listing and associated task data of a specific user

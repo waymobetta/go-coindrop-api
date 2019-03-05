@@ -10,8 +10,13 @@ var _ = Resource("tasks", func() {
 
 	Security(JWTAuth)
 
-	Action("show", func() {
-		Description("Get user tasks")
+	Response(NotFound, StandardErrorMedia)
+	Response(BadRequest, StandardErrorMedia)
+	Response(Gone, StandardErrorMedia)
+	Response(InternalServerError, StandardErrorMedia)
+
+	Action("list", func() {
+		Description("Get list of user tasks")
 		Routing(GET(""))
 		Params(func() {
 			Param("userId", String, "User ID", func() {
@@ -20,7 +25,18 @@ var _ = Resource("tasks", func() {
 			})
 		})
 		Response(OK, TasksMedia)
-		Response(NotFound, StandardErrorMedia)
+	})
+
+	Action("show", func() {
+		Description("Get single task")
+		Routing(GET("/:taskId"))
+		Params(func() {
+			Param("taskId", String, "Task ID", func() {
+				Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
+				Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
+			})
+		})
+		Response(OK, TaskMedia)
 	})
 
 	Action("create", func() {
@@ -28,10 +44,6 @@ var _ = Resource("tasks", func() {
 		Routing(POST(""))
 		Payload(CreateTaskPayload)
 		Response(OK)
-		Response(NotFound)
-		Response(BadRequest, StandardErrorMedia)
-		Response(Gone, StandardErrorMedia)
-		Response(InternalServerError, StandardErrorMedia)
 	})
 
 	Action("update", func() {
@@ -46,10 +58,6 @@ var _ = Resource("tasks", func() {
 
 		Payload(TaskPayload)
 		Response(OK)
-		Response(NotFound)
-		Response(BadRequest, StandardErrorMedia)
-		Response(Gone, StandardErrorMedia)
-		Response(InternalServerError, StandardErrorMedia)
 	})
 })
 

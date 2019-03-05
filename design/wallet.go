@@ -10,6 +10,11 @@ var _ = Resource("wallet", func() {
 
 	Security(JWTAuth)
 
+	Response(NotFound, StandardErrorMedia)
+	Response(BadRequest, StandardErrorMedia)
+	Response(Gone, StandardErrorMedia)
+	Response(InternalServerError, StandardErrorMedia)
+
 	Action("show", func() {
 		Description("Get user wallet")
 		Routing(GET(""))
@@ -20,7 +25,6 @@ var _ = Resource("wallet", func() {
 			})
 		})
 		Response(OK, WalletMedia)
-		Response(NotFound, StandardErrorMedia)
 	})
 
 	Action("update", func() {
@@ -28,10 +32,6 @@ var _ = Resource("wallet", func() {
 		Routing(POST(""))
 		Payload(WalletPayload)
 		Response(OK, WalletMedia)
-		Response(NotFound)
-		Response(BadRequest, StandardErrorMedia)
-		Response(Gone, StandardErrorMedia)
-		Response(InternalServerError, StandardErrorMedia)
 	})
 })
 

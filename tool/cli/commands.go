@@ -75,10 +75,17 @@ type (
 		PrettyPrint bool
 	}
 
-	// ShowTasksCommand is the command line data structure for the show action of tasks
-	ShowTasksCommand struct {
+	// ListTasksCommand is the command line data structure for the list action of tasks
+	ListTasksCommand struct {
 		// User ID
 		UserID      string
+		PrettyPrint bool
+	}
+
+	// ShowTasksCommand is the command line data structure for the show action of tasks
+	ShowTasksCommand struct {
+		// Task ID
+		TaskID      string
 		PrettyPrint bool
 	}
 
@@ -193,87 +200,101 @@ Payload example:
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
-		Use:   "show",
-		Short: `show action`,
+		Use:   "list",
+		Short: `Get list of user tasks`,
 	}
-	tmp4 := new(ShowHealthcheckCommand)
+	tmp4 := new(ListTasksCommand)
 	sub = &cobra.Command{
-		Use:   `healthcheck ["/v1/health"]`,
+		Use:   `tasks ["/v1/tasks"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
 	}
 	tmp4.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp4.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp5 := new(ShowQuizCommand)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "show",
+		Short: `show action`,
+	}
+	tmp5 := new(ShowHealthcheckCommand)
 	sub = &cobra.Command{
-		Use:   `quiz ["/v1/quiz"]`,
+		Use:   `healthcheck ["/v1/health"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
 	}
 	tmp5.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp5.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp6 := new(ShowRedditCommand)
+	tmp6 := new(ShowQuizCommand)
 	sub = &cobra.Command{
-		Use:   `reddit ["/v1/social/reddit/userid"]`,
+		Use:   `quiz ["/v1/quiz"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp6.Run(c, args) },
 	}
 	tmp6.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp6.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp7 := new(ShowResultsCommand)
+	tmp7 := new(ShowRedditCommand)
 	sub = &cobra.Command{
-		Use:   `results ["/v1/quiz/results"]`,
+		Use:   `reddit ["/v1/social/reddit/userid"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp7.Run(c, args) },
 	}
 	tmp7.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp7.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp8 := new(ShowTasksCommand)
+	tmp8 := new(ShowResultsCommand)
 	sub = &cobra.Command{
-		Use:   `tasks ["/v1/tasks"]`,
+		Use:   `results ["/v1/quiz/results"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp8.Run(c, args) },
 	}
 	tmp8.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp8.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp9 := new(ShowUserCommand)
+	tmp9 := new(ShowTasksCommand)
 	sub = &cobra.Command{
-		Use:   `user ["/v1/users/USERID"]`,
+		Use:   `tasks ["/v1/tasks/TASKID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp9.Run(c, args) },
 	}
 	tmp9.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp9.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp10 := new(ShowVerifyredditCommand)
+	tmp10 := new(ShowUserCommand)
 	sub = &cobra.Command{
-		Use:   `verifyreddit ["/v1/social/reddit/userid/verify"]`,
+		Use:   `user ["/v1/users/USERID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp10.Run(c, args) },
 	}
 	tmp10.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp10.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp11 := new(ShowWalletCommand)
+	tmp11 := new(ShowVerifyredditCommand)
 	sub = &cobra.Command{
-		Use:   `wallet ["/v1/wallets"]`,
+		Use:   `verifyreddit ["/v1/social/reddit/userid/verify"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp11.Run(c, args) },
 	}
 	tmp11.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp11.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
+	tmp12 := new(ShowWalletCommand)
+	sub = &cobra.Command{
+		Use:   `wallet ["/v1/wallets"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp12.Run(c, args) },
+	}
+	tmp12.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp12.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "update",
 		Short: `update action`,
 	}
-	tmp12 := new(UpdateRedditharvestCommand)
+	tmp13 := new(UpdateRedditharvestCommand)
 	sub = &cobra.Command{
 		Use:   `redditharvest ["/v1/social/reddit/harvest"]`,
 		Short: ``,
@@ -285,12 +306,12 @@ Payload example:
    "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
    "username": "Officiis ad quis."
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp12.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp13.Run(c, args) },
 	}
-	tmp12.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp12.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp13.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp13.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp13 := new(UpdateTasksCommand)
+	tmp14 := new(UpdateTasksCommand)
 	sub = &cobra.Command{
 		Use:   `tasks ["/v1/tasks/TASKID"]`,
 		Short: ``,
@@ -301,12 +322,12 @@ Payload example:
 {
    "completed": false
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp13.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp14.Run(c, args) },
 	}
-	tmp13.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp13.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp14.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp14.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp14 := new(UpdateVerifyredditCommand)
+	tmp15 := new(UpdateVerifyredditCommand)
 	sub = &cobra.Command{
 		Use:   `verifyreddit ["/v1/social/reddit/userid/verify"]`,
 		Short: ``,
@@ -318,12 +339,12 @@ Payload example:
    "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
    "username": "Officiis ad quis."
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp14.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp15.Run(c, args) },
 	}
-	tmp14.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp14.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp15.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp15.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp15 := new(UpdateWalletCommand)
+	tmp16 := new(UpdateWalletCommand)
 	sub = &cobra.Command{
 		Use:   `wallet ["/v1/wallets"]`,
 		Short: ``,
@@ -334,10 +355,10 @@ Payload example:
 {
    "walletAddress": "0x845fdD93Cca3aE9e380d5556818e6d0b902B977c"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp15.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp16.Run(c, args) },
 	}
-	tmp15.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp15.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp16.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp16.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 }
@@ -696,8 +717,8 @@ func (cmd *CreateTasksCommand) RegisterFlags(cc *cobra.Command, c *client.Client
 	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 }
 
-// Run makes the HTTP request corresponding to the ShowTasksCommand command.
-func (cmd *ShowTasksCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the ListTasksCommand command.
+func (cmd *ListTasksCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
@@ -706,7 +727,33 @@ func (cmd *ShowTasksCommand) Run(c *client.Client, args []string) error {
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ShowTasks(ctx, path, stringFlagVal("userId", cmd.UserID))
+	resp, err := c.ListTasks(ctx, path, stringFlagVal("userId", cmd.UserID))
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListTasksCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var userID string
+	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
+}
+
+// Run makes the HTTP request corresponding to the ShowTasksCommand command.
+func (cmd *ShowTasksCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/v1/tasks/%v", url.QueryEscape(cmd.TaskID))
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ShowTasks(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -718,8 +765,8 @@ func (cmd *ShowTasksCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ShowTasksCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var userID string
-	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
+	var taskID string
+	cc.Flags().StringVar(&cmd.TaskID, "taskId", taskID, `Task ID`)
 }
 
 // Run makes the HTTP request corresponding to the UpdateTasksCommand command.

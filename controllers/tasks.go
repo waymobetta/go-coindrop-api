@@ -28,13 +28,52 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 	// Put your logic here
 
 	taskUser := new(db.TaskUser)
-	taskUser.AuthUserID = ctx.Params.Get("userId")
+	taskUser.UserID = ctx.Params.Get("userId")
+	taskUser.TaskID = ctx.TaskID
+
+	task, err := c.db.GetUserTask(taskUser)
+	if err != nil {
+		log.Errorf("[controller/tasks] failed to get user task: %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could not get user's tasks from db",
+		})
+	}
+
+	log.Printf("[controller/tasks] returned tasks for coindrop user: %v\n", taskUser.UserID)
+
+	return ctx.OK(&app.Task{
+		ID:              task.ID,
+		Title:           task.Title,
+		Type:            task.Type,
+		Author:          task.Author,
+		Description:     task.Description,
+		Token:           task.Token,
+		TokenAllocation: task.TokenAllocation,
+		Badge: &app.Badge{
+			ID:          task.BadgeData.ID,
+			Name:        task.BadgeData.Name,
+			Description: task.BadgeData.Description,
+			Recipients:  task.BadgeData.Recipients,
+		},
+	})
+	// TasksController_Show: end_implement
+}
+
+// List runs the list action.
+func (c *TasksController) List(ctx *app.ListTasksContext) error {
+	// TasksController_List: start_implement
+
+	// Put your logic here
+
+	taskUser := new(db.TaskUser)
+	taskUser.UserID = ctx.Params.Get("userId")
 
 	tasks, err := c.db.GetUserTasks(taskUser)
 	if err != nil {
-		log.Errorf("[controller/tasks] %v", err)
-		return ctx.NotFound(&app.StandardError{
-			Code:    400,
+		log.Errorf("[controller/tasks] failed to get user tasks: %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
 			Message: "could not get user's tasks from db",
 		})
 	}
@@ -59,13 +98,13 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 		})
 	}
 
-	log.Printf("[controller/tasks] returned tasks for coindrop user: %v\n", taskUser.AuthUserID)
+	log.Printf("[controller/tasks] returned tasks for coindrop user: %v\n", taskUser.UserID)
 
-	res := &app.Tasks{
+	return ctx.OK(&app.Tasks{
 		Tasks: t,
-	}
-	return ctx.OK(res)
-	// TasksController_Show: end_implement
+	})
+
+	// TasksController_List: end_implement
 }
 
 // Create runs the create action.
@@ -106,7 +145,7 @@ func (c *TasksController) Update(ctx *app.UpdateTasksContext) error {
 	// initialize new copy of UserTask struct in variable userTask
 	userTask := new(db.UserTask2)
 
-	// mark task complete and pass AuthUserID to userTask struct
+	// mark task complete and pass UserID to userTask struct
 	userTask.Completed = ctx.Payload.Completed
 	userTask.UserID = taskUser.UserID
 	userTask.TaskID = taskUser.TaskID
