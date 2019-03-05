@@ -91,15 +91,6 @@ type Task struct {
 
 // UserTask struct contains info about tasks for a specific user
 type UserTask struct {
-	ID         int      `json:"id"`
-	AuthUserID string   `json:"auth_user_id"`
-	Assigned   string   `json:"assigned"`
-	Completed  string   `json:"completed"`
-	ListData   ListData `json:"list_data"`
-}
-
-// UserTask2 ...
-type UserTask2 struct {
 	ID        string `json:"id"`
 	UserID    string `json:"user_id"`
 	TaskID    string `json:"task_id"`
