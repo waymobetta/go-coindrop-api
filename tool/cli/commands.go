@@ -389,7 +389,6 @@ Payload example:
 Payload example:
 
 {
-   "postedVerificationCode": "Non quia aliquam voluptatem quibusdam ut.",
    "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp18.Run(c, args) },

@@ -352,6 +352,7 @@ func (db *DB) GetUserRedditVerification(u *types.User) (*types.User, error) {
 	// create SQL statement for db writes
 	sqlStatement := `
 		SELECT
+			coindrop_reddit.username,
 			coindrop_reddit.posted_verification_code,
 			coindrop_reddit.confirmed_verification_code,
 			coindrop_reddit.verified
@@ -378,6 +379,7 @@ func (db *DB) GetUserRedditVerification(u *types.User) (*types.User, error) {
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
+		&u.Social.Reddit.Username,
 		&u.Social.Reddit.Verification.PostedVerificationCode,
 		&u.Social.Reddit.Verification.ConfirmedVerificationCode,
 		&u.Social.Reddit.Verification.Verified,
