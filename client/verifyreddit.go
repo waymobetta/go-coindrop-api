@@ -64,7 +64,7 @@ func UpdateVerifyredditPath() string {
 }
 
 // Update Reddit Verification Code
-func (c *Client) UpdateVerifyreddit(ctx context.Context, path string, payload *UpdateUserPayload, contentType string) (*http.Response, error) {
+func (c *Client) UpdateVerifyreddit(ctx context.Context, path string, payload *VerificationPayload, contentType string) (*http.Response, error) {
 	req, err := c.NewUpdateVerifyredditRequest(ctx, path, payload, contentType)
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func (c *Client) UpdateVerifyreddit(ctx context.Context, path string, payload *U
 }
 
 // NewUpdateVerifyredditRequest create the request corresponding to the update action endpoint of the verifyreddit resource.
-func (c *Client) NewUpdateVerifyredditRequest(ctx context.Context, path string, payload *UpdateUserPayload, contentType string) (*http.Request, error) {
+func (c *Client) NewUpdateVerifyredditRequest(ctx context.Context, path string, payload *VerificationPayload, contentType string) (*http.Request, error) {
 	var body bytes.Buffer
 	if contentType == "" {
 		contentType = "*/*" // Use default encoder

@@ -1189,7 +1189,7 @@ type UpdateVerifyredditContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	Payload *UpdateUserPayload
+	Payload *VerificationPayload
 }
 
 // NewUpdateVerifyredditContext parses the incoming request URL and body, performs validations and creates the

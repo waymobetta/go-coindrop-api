@@ -779,7 +779,7 @@ func MountVerifyredditController(service *goa.Service, ctrl VerifyredditControll
 		}
 		// Build the payload
 		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
-			rctx.Payload = rawPayload.(*UpdateUserPayload)
+			rctx.Payload = rawPayload.(*VerificationPayload)
 		} else {
 			return goa.MissingPayloadError()
 		}
@@ -817,7 +817,7 @@ func handleVerifyredditOrigin(h goa.Handler) goa.Handler {
 
 // unmarshalUpdateVerifyredditPayload unmarshals the request body into the context request data Payload field.
 func unmarshalUpdateVerifyredditPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
-	payload := &updateUserPayload{}
+	payload := &verificationPayload{}
 	if err := service.DecodeRequest(req, payload); err != nil {
 		return err
 	}

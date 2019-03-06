@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/jzelinskie/geddit"
-	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/types"
 )
 
@@ -72,7 +71,7 @@ func (a *AuthSessions) GetRedditUserTrophies(user *types.User) error {
 // GetRecentPostsFromSubreddit method to watch and pull last 5 posts from subreddit to match verification code
 func (a *AuthSessions) GetRecentPostsFromSubreddit(user *types.User) error {
 	// get 5 newest submissions from the subreddit
-	submissions, err := a.OAuthSession.SubredditSubmissions(VerificationSubredditName, "new", geddit.ListingOptions{Count: 1})
+	submissions, err := a.OAuthSession.SubredditSubmissions(VerificationSubredditName, "new", geddit.ListingOptions{Count: 10})
 	if err != nil {
 		return err
 	}
@@ -91,8 +90,9 @@ func (a *AuthSessions) GetRecentPostsFromSubreddit(user *types.User) error {
 			}
 		}
 	}
+
 	// if no verification match return error message
-	log.Errorln("[reddit] Verification code not matched")
+	// log.Errorln("[reddit] Verification code not matched")
 	return ErrVerificationNotMatch
 }
 

@@ -1,359 +1,372 @@
+// +build ignore
+
 package handlers
 
-// // UsersGet handles queries to return all stored users
-// func (h *Handlers) UsersGet(w http.ResponseWriter, r *http.Request) {
-// 	response := make(map[string]interface{})
-// 	// initialize new variable user of User struct
-// 	users := new(db.Users)
+import (
+	"encoding/json"
+	"io"
+	"io/ioutil"
+	"log"
+	"net/http"
 
-// 	// return slice of structs of all user listings
-// 	_, err := h.db.GetUsers(users)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	"github.com/waymobetta/go-coindrop-api/services/reddit"
+	"github.com/waymobetta/go-coindrop-api/utils"
+)
 
-// 	// marshall into JSON
-// 	_, err = json.Marshal(users)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+// UsersGet handles queries to return all stored users
+func (h *Handlers) UsersGet(w http.ResponseWriter, r *http.Request) {
+	response := make(map[string]interface{})
+	// initialize new variable user of User struct
+	users := new(db.Users)
 
-// 	response = utils.Message(true, users)
-// 	w.WriteHeader(http.StatusOK)
-// 	utils.Respond(w, response)
+	// return slice of structs of all user listings
+	_, err := h.db.GetUsers(users)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// 	log.Printf("[handler] successfully returned information for %d users\n", len(users.Users))
-// }
+	// marshall into JSON
+	_, err = json.Marshal(users)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// // RedditUserRemove removes a single user listing from db
-// func (h *Handlers) RedditUserRemove(w http.ResponseWriter, r *http.Request) {
-// 	response := make(map[string]interface{})
-// 	// initialize new variable user of User struct
-// 	user := new(db.User)
+	response = utils.Message(true, users)
+	w.WriteHeader(http.StatusOK)
+	utils.Respond(w, response)
 
-// 	// add limit for large payload protection
-// 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
-// 	defer r.Body.Close()
+	log.Printf("[handler] successfully returned information for %d users\n", len(users.Users))
+}
 
-// 	// unmarshal bytes into user struct
-// 	err = json.Unmarshal(body, &user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+// RedditUserRemove removes a single user listing from db
+func (h *Handlers) RedditUserRemove(w http.ResponseWriter, r *http.Request) {
+	response := make(map[string]interface{})
+	// initialize new variable user of User struct
+	user := new(db.User)
 
-// 	// remove user listing from db
-// 	_, err = h.db.RemoveRedditUser(user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+	defer r.Body.Close()
 
-// 	response = utils.Message(true, "success")
-// 	w.WriteHeader(http.StatusCreated)
-// 	utils.Respond(w, response)
+	// unmarshal bytes into user struct
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// 	log.Printf("[handler] successfully deleted user: %v\n\n", user.AuthUserID)
-// }
+	// remove user listing from db
+	_, err = h.db.RemoveRedditUser(user)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// // UpdateRedditVerificationCode handles updates to the verification data for a user
-// func (h *Handlers) UpdateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
-// 	response := make(map[string]interface{})
-// 	// initialize new variable user of User struct
-// 	user := new(db.User)
+	response = utils.Message(true, "success")
+	w.WriteHeader(http.StatusCreated)
+	utils.Respond(w, response)
 
-// 	// add limit for large payload protection
-// 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
-// 	defer r.Body.Close()
+	log.Printf("[handler] successfully deleted user: %v\n\n", user.AuthUserID)
+}
 
-// 	// unmarshal bytes into user struct
-// 	err = json.Unmarshal(body, &user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+// UpdateRedditVerificationCode handles updates to the verification data for a user
+func (h *Handlers) UpdateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
+	response := make(map[string]interface{})
+	// initialize new variable user of User struct
+	user := new(db.User)
 
-// 	// update the user listing in db
-// 	_, err = h.db.UpdateRedditVerificationCode(user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+	defer r.Body.Close()
 
-// 	response = utils.Message(true, "success")
-// 	w.WriteHeader(http.StatusCreated)
-// 	utils.Respond(w, response)
+	// unmarshal bytes into user struct
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// 	log.Printf("[handler] successfully updated verification info for user: %v\n", user.AuthUserID)
-// }
+	// update the user listing in db
+	_, err = h.db.UpdateRedditVerificationCode(user)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// // GenerateRedditVerificationCode generates a temporary verification code
-// func (h *Handlers) GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
-// 	response := make(map[string]interface{})
-// 	// initialize new variable user of User struct
-// 	user := new(db.User)
+	response = utils.Message(true, "success")
+	w.WriteHeader(http.StatusCreated)
+	utils.Respond(w, response)
 
-// 	// add limit for large payload protection
-// 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
-// 	defer r.Body.Close()
+	log.Printf("[handler] successfully updated verification info for user: %v\n", user.AuthUserID)
+}
 
-// 	// unmarshal bytes into user struct
-// 	err = json.Unmarshal(body, &user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+// GenerateRedditVerificationCode generates a temporary verification code
+func (h *Handlers) GenerateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
+	response := make(map[string]interface{})
+	// initialize new variable user of User struct
+	user := new(db.User)
 
-// 	// generate temporary verification code
-// 	verificationCode := verify.GenerateVerificationCode()
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+	defer r.Body.Close()
 
-// 	// update local user object variable with generated verification code
-// 	user.RedditData.VerificationData.StoredVerificationCode = verificationCode
+	// unmarshal bytes into user struct
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// 	// marshal into JSON
-// 	_, err = json.Marshal(&user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	// generate temporary verification code
+	verificationCode := verify.GenerateVerificationCode()
 
-// 	// store user verification data in db
-// 	_, err = h.db.UpdateRedditVerificationCode(user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	// update local user object variable with generated verification code
+	user.RedditData.VerificationData.StoredVerificationCode = verificationCode
 
-// 	response = utils.Message(true, "success")
-// 	w.WriteHeader(http.StatusOK)
-// 	utils.Respond(w, response)
+	// marshal into JSON
+	_, err = json.Marshal(&user)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// 	log.Printf("[handler] successfully generated verification code for user: %v\n", user.AuthUserID)
-// }
+	// store user verification data in db
+	_, err = h.db.UpdateRedditVerificationCode(user)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// // ValidateRedditVerificationCode validates the temporary verification code
-// func (h *Handlers) ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
-// 	response := make(map[string]interface{})
-// 	// declare new variable of type User
-// 	user := new(db.User)
+	response = utils.Message(true, "success")
+	w.WriteHeader(http.StatusOK)
+	utils.Respond(w, response)
 
-// 	// initialize struct for reddit auth sessions
-// 	authSession := new(reddit.AuthSessions)
+	log.Printf("[handler] successfully generated verification code for user: %v\n", user.AuthUserID)
+}
 
-// 	// initializes reddit OAuth sessions
-// 	authSession.InitRedditAuth()
+// ValidateRedditVerificationCode validates the temporary verification code
+func (h *Handlers) ValidateRedditVerificationCode(w http.ResponseWriter, r *http.Request) {
+	response := make(map[string]interface{})
+	// declare new variable of type User
+	user := new(db.User)
 
-// 	// add limit for large payload protection
-// 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
-// 	defer r.Body.Close()
+	// initialize struct for reddit auth sessions
+	authSession := new(reddit.AuthSessions)
 
-// 	// unmarshal bytes into user struct
-// 	err = json.Unmarshal(body, &user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	// initializes reddit OAuth sessions
+	authSession.InitRedditAuth()
 
-// 	// pull stored verification code + reddit username from DB
-// 	storedUserInfo, err := h.db.GetRedditUser(user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+	defer r.Body.Close()
 
-// 	// check reddit for matching verification code
-// 	updatedUserObj, err := authSession.GetRecentPostsFromSubreddit(storedUserInfo)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	// unmarshal bytes into user struct
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// 	log.Printf("[handler] checking %s against %s\n", updatedUserObj.RedditData.VerificationData.PostedVerificationCode, storedUserInfo.RedditData.VerificationData.StoredVerificationCode)
+	// pull stored verification code + reddit username from DB
+	storedUserInfo, err := h.db.GetRedditUser(user)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// 	// secondary validation of verification code
-// 	if updatedUserObj.RedditData.VerificationData.PostedVerificationCode != storedUserInfo.RedditData.VerificationData.StoredVerificationCode {
-// 		response = utils.Message(false, "unsuccessful")
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	// check reddit for matching verification code
+	updatedUserObj, err := authSession.GetRecentPostsFromSubreddit(storedUserInfo)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// 	// update verification field values
-// 	storedUserInfo.RedditData.VerificationData.PostedVerificationCode = updatedUserObj.RedditData.VerificationData.PostedVerificationCode
-// 	storedUserInfo.RedditData.VerificationData.IsVerified = true
+	log.Printf("[handler] checking %s against %s\n", updatedUserObj.RedditData.VerificationData.PostedVerificationCode, storedUserInfo.RedditData.VerificationData.StoredVerificationCode)
 
-// 	// update db with new info since verification codes matched
-// 	_, err = h.db.UpdateRedditVerificationCode(storedUserInfo)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	// secondary validation of verification code
+	if updatedUserObj.RedditData.VerificationData.PostedVerificationCode != storedUserInfo.RedditData.VerificationData.StoredVerificationCode {
+		response = utils.Message(false, "unsuccessful")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// 	response = utils.Message(true, "success")
-// 	w.WriteHeader(http.StatusOK)
-// 	utils.Respond(w, response)
+	// update verification field values
+	storedUserInfo.RedditData.VerificationData.PostedVerificationCode = updatedUserObj.RedditData.VerificationData.PostedVerificationCode
+	storedUserInfo.RedditData.VerificationData.IsVerified = true
 
-// 	log.Printf("[handler] successfully validated verification code for user: %v\n", user.AuthUserID)
-// }
+	// update db with new info since verification codes matched
+	_, err = h.db.UpdateRedditVerificationCode(storedUserInfo)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// // RedditUpdate returns Reddit profile info about the user
-// func (h *Handlers) RedditUpdate(w http.ResponseWriter, r *http.Request) {
-// 	response := make(map[string]interface{})
-// 	// declare new variable of type User
-// 	user := new(db.User)
+	response = utils.Message(true, "success")
+	w.WriteHeader(http.StatusOK)
+	utils.Respond(w, response)
 
-// 	// initialize struct for reddit auth sessions
-// 	authSession := new(reddit.AuthSessions)
+	log.Printf("[handler] successfully validated verification code for user: %v\n", user.AuthUserID)
+}
 
-// 	// initializes reddit OAuth sessions
-// 	authSession.InitRedditAuth()
+// RedditUpdate returns Reddit profile info about the user
+func (h *Handlers) RedditUpdate(w http.ResponseWriter, r *http.Request) {
+	response := make(map[string]interface{})
+	// declare new variable of type User
+	user := new(db.User)
 
-// 	// add limit for large payload protection
-// 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
-// 	defer r.Body.Close()
+	// initialize struct for reddit auth sessions
+	authSession := new(reddit.AuthSessions)
 
-// 	// unmarshal bytes into user struct
-// 	err = json.Unmarshal(body, &user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	// initializes reddit OAuth sessions
+	authSession.InitRedditAuth()
 
-// 	// pull stored reddit username from DB
-// 	user, err = h.db.GetRedditUser(user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	// add limit for large payload protection
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+	defer r.Body.Close()
 
-// 	log.Println("[handler] retrieving Reddit About info")
-// 	// get general about info for user
-// 	user, err = authSession.GetAboutInfo(user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	// unmarshal bytes into user struct
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// 	log.Println("[handler] retrieving Reddit Trophy info")
-// 	// get list of trophies user has been awarded
-// 	if err = authSession.GetRedditUserTrophies(user); err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	// pull stored reddit username from DB
+	user, err = h.db.GetRedditUser(user)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// 	log.Println("[handler] retrieving Reddit Submitted info")
-// 	// get slice of subreddits user is subscribed to based on activity
-// 	user, err = authSession.GetSubmittedInfo(user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	log.Println("[handler] retrieving Reddit About info")
+	// get general about info for user
+	user, err = authSession.GetAboutInfo(user)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// 	// update db with new Reddit profile info
-// 	_, err = h.db.UpdateRedditInfo(user)
-// 	if err != nil {
-// 		response = utils.Message(false, err)
-// 		w.WriteHeader(http.StatusInternalServerError)
-// 		w.Header().Add("Content-type", "application/json")
-// 		utils.Respond(w, response)
-// 		return
-// 	}
+	log.Println("[handler] retrieving Reddit Trophy info")
+	// get list of trophies user has been awarded
+	if err = authSession.GetRedditUserTrophies(user); err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// 	response = utils.Message(true, "success")
-// 	w.WriteHeader(http.StatusOK)
-// 	utils.Respond(w, response)
+	log.Println("[handler] retrieving Reddit Submitted info")
+	// get slice of subreddits user is subscribed to based on activity
+	user, err = authSession.GetSubmittedInfo(user)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
 
-// 	log.Printf("[handler] successfully updated Reddit info for user: %v\n", user.AuthUserID)
-// }
+	// update db with new Reddit profile info
+	_, err = h.db.UpdateRedditInfo(user)
+	if err != nil {
+		response = utils.Message(false, err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Add("Content-type", "application/json")
+		utils.Respond(w, response)
+		return
+	}
+
+	response = utils.Message(true, "success")
+	w.WriteHeader(http.StatusOK)
+	utils.Respond(w, response)
+
+	log.Printf("[handler] successfully updated Reddit info for user: %v\n", user.AuthUserID)
+}

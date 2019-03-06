@@ -7,7 +7,6 @@ import (
 	"github.com/waymobetta/go-coindrop-api/db"
 	"github.com/waymobetta/go-coindrop-api/services/reddit"
 	"github.com/waymobetta/go-coindrop-api/types"
-	"github.com/waymobetta/go-coindrop-api/verify"
 )
 
 // RedditharvestController implements the redditharvest resource.
@@ -34,7 +33,7 @@ func (c *RedditharvestController) Update(ctx *app.UpdateRedditharvestContext) er
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Username:     ctx.Payload.Username,
-				Verification: &verify.Verification2{},
+				Verification: &types.Verification{},
 			},
 		},
 	}
@@ -87,7 +86,7 @@ func (c *RedditharvestController) Update(ctx *app.UpdateRedditharvestContext) er
 				CommentKarma: user.Social.Reddit.CommentKarma,
 				Trophies:     user.Social.Reddit.Trophies,
 				Subreddits:   user.Social.Reddit.Subreddits,
-				Verification: &verify.Verification2{
+				Verification: &types.Verification{
 					PostedVerificationCode:    "",
 					ConfirmedVerificationCode: "",
 					Verified:                  false,

@@ -429,8 +429,7 @@ Payload example:
 Payload example:
 
 {
-   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
-   "username": "Natus neque pariatur reprehenderit officiis eos."
+   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp20.Run(c, args) },
 	}
@@ -1130,7 +1129,7 @@ func (cmd *UpdateVerifyredditCommand) Run(c *client.Client, args []string) error
 	} else {
 		path = "/v1/social/reddit/userid/verify"
 	}
-	var payload client.UpdateUserPayload
+	var payload client.VerificationPayload
 	if cmd.Payload != "" {
 		err := json.Unmarshal([]byte(cmd.Payload), &payload)
 		if err != nil {
