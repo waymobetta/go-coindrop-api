@@ -136,12 +136,11 @@ type QuizFields struct {
 
 // QuizResults struct contains info about a user's quiz results
 type QuizResults struct {
-	ID                 int    `json:"id"`
-	Title              string `json:"title"`
-	AuthUserID         string `json:"auth_user_id"`
+	QuizID             string `json:"quiz_id"`
+	UserID             string `json:"user_id"`
 	QuestionsCorrect   int    `json:"questions_correct"`
 	QuestionsIncorrect int    `json:"questions_incorrect"`
-	HasTakenQuiz       bool   `json:"has_taken_quiz"`
+	QuizTaken          bool   `json:"quiz_taken"`
 }
 
 // AllQuizResults struct contains a slice of QuizResults structs

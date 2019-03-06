@@ -159,6 +159,77 @@ func (ut *QuizPayload) Validate() (err error) {
 	return
 }
 
+// Quiz results payload
+type quizResultsPayload struct {
+	// Number of questions that were answered correct
+	QuestionsCorrect *int `form:"questionsCorrect,omitempty" json:"questionsCorrect,omitempty" yaml:"questionsCorrect,omitempty" xml:"questionsCorrect,omitempty"`
+	// Number of questions that were answered incorrect
+	QuestionsIncorrect *int `form:"questionsIncorrect,omitempty" json:"questionsIncorrect,omitempty" yaml:"questionsIncorrect,omitempty" xml:"questionsIncorrect,omitempty"`
+	// Quiz ID
+	QuizID *string `form:"quizId,omitempty" json:"quizId,omitempty" yaml:"quizId,omitempty" xml:"quizId,omitempty"`
+	// User ID
+	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
+}
+
+// Validate validates the quizResultsPayload type instance.
+func (ut *quizResultsPayload) Validate() (err error) {
+	if ut.QuizID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "quizId"))
+	}
+	if ut.UserID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "userId"))
+	}
+	if ut.QuestionsCorrect == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "questionsCorrect"))
+	}
+	if ut.QuestionsIncorrect == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "questionsIncorrect"))
+	}
+	return
+}
+
+// Publicize creates QuizResultsPayload from quizResultsPayload
+func (ut *quizResultsPayload) Publicize() *QuizResultsPayload {
+	var pub QuizResultsPayload
+	if ut.QuestionsCorrect != nil {
+		pub.QuestionsCorrect = *ut.QuestionsCorrect
+	}
+	if ut.QuestionsIncorrect != nil {
+		pub.QuestionsIncorrect = *ut.QuestionsIncorrect
+	}
+	if ut.QuizID != nil {
+		pub.QuizID = *ut.QuizID
+	}
+	if ut.UserID != nil {
+		pub.UserID = *ut.UserID
+	}
+	return &pub
+}
+
+// Quiz results payload
+type QuizResultsPayload struct {
+	// Number of questions that were answered correct
+	QuestionsCorrect int `form:"questionsCorrect" json:"questionsCorrect" yaml:"questionsCorrect" xml:"questionsCorrect"`
+	// Number of questions that were answered incorrect
+	QuestionsIncorrect int `form:"questionsIncorrect" json:"questionsIncorrect" yaml:"questionsIncorrect" xml:"questionsIncorrect"`
+	// Quiz ID
+	QuizID string `form:"quizId" json:"quizId" yaml:"quizId" xml:"quizId"`
+	// User ID
+	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+}
+
+// Validate validates the QuizResultsPayload type instance.
+func (ut *QuizResultsPayload) Validate() (err error) {
+	if ut.QuizID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "quizId"))
+	}
+	if ut.UserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "userId"))
+	}
+
+	return
+}
+
 // Task payload
 type taskPayload struct {
 	// Task completed

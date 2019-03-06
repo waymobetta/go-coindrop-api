@@ -285,8 +285,26 @@ func (c *Client) DecodeReddituser(resp *http.Response) (*Reddituser, error) {
 //
 // Identifier: application/vnd.results+json; view=default
 type Results struct {
-	// quiz results list
-	QuizResultsList interface{} `form:"quizResultsList" json:"quizResultsList" yaml:"quizResultsList" xml:"quizResultsList"`
+	// Count of correct quiz answers
+	QuestionsCorrect int `form:"questionsCorrect" json:"questionsCorrect" yaml:"questionsCorrect" xml:"questionsCorrect"`
+	// Count of incorrect quiz answers
+	QuestionsIncorrect int `form:"questionsIncorrect" json:"questionsIncorrect" yaml:"questionsIncorrect" xml:"questionsIncorrect"`
+	// Quiz ID
+	QuizID string `form:"quizId" json:"quizId" yaml:"quizId" xml:"quizId"`
+	// User ID
+	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+}
+
+// Validate validates the Results media type instance.
+func (mt *Results) Validate() (err error) {
+	if mt.UserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "userId"))
+	}
+	if mt.QuizID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "quizId"))
+	}
+
+	return
 }
 
 // DecodeResults decodes the Results instance encoded in resp body.
@@ -294,6 +312,30 @@ func (c *Client) DecodeResults(resp *http.Response) (*Results, error) {
 	var decoded Results
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
+}
+
+// ResultsCollection is the media type for an array of Results (default view)
+//
+// Identifier: application/vnd.results+json; type=collection; view=default
+type ResultsCollection []*Results
+
+// Validate validates the ResultsCollection media type instance.
+func (mt ResultsCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// DecodeResultsCollection decodes the ResultsCollection instance encoded in resp body.
+func (c *Client) DecodeResultsCollection(resp *http.Response) (ResultsCollection, error) {
+	var decoded ResultsCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
 }
 
 // Task (default view)

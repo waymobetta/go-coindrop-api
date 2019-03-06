@@ -147,37 +147,46 @@ func (db *DB) AddQuiz(quiz *types.Quiz) (*types.Quiz, error) {
 	return quiz, nil
 }
 
-// StoreQuizResults adds the quiz title and associated user results of a single quiz
-func (db *DB) StoreQuizResults(q *types.QuizResults) (*types.QuizResults, error) {
+// AddQuizResults adds the quiz title and associated user results of a single quiz
+func (db *DB) AddQuizResults(r *types.QuizResults) (*types.QuizResults, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
-		return q, err
+		return nil, err
 	}
 
 	// create SQL statement for db writes
-	sqlStatement := `INSERT INTO coindrop_quiz_results (title, auth_user_id, questions_correct, questions_incorrect, has_taken_quiz) VALUES ($1,$2,$3,$4,$5)`
+	sqlStatement := `
+			INSERT INTO
+				coindrop_quiz_results(
+					quiz_id,
+					user_id,
+					questions_correct,
+					questions_incorrect,
+					quiz_taken
+				)
+				VALUES ($1,$2,$3,$4,$5)`
 
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return q, err
+		return nil, err
 	}
 
 	defer stmt.Close()
 
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
-		q.Title,
-		q.AuthUserID,
-		q.QuestionsCorrect,
-		q.QuestionsIncorrect,
-		q.HasTakenQuiz,
+		r.QuizID,
+		r.UserID,
+		r.QuestionsCorrect,
+		r.QuestionsIncorrect,
+		r.QuizTaken,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
-		return q, err
+		return nil, err
 	}
 
 	// commit db write
@@ -185,75 +194,113 @@ func (db *DB) StoreQuizResults(q *types.QuizResults) (*types.QuizResults, error)
 	if err != nil {
 		// rollback transaciton if error thrown
 		tx.Rollback()
-		return q, err
+		return nil, err
 	}
 
-	return q, err
+	return r, err
 }
 
 // GetQuizResults returns all info for specific quiz
-func (db *DB) GetQuizResults(q *types.QuizResults) (*types.QuizResults, error) {
+func (db *DB) GetQuizResults(quizID, userID string) (*types.QuizResults, error) {
 	// create SQL statement for db query
-	sqlStatement := `SELECT questions_correct, questions_incorrect, has_taken_quiz FROM coindrop_quiz_results WHERE title = $1 AND auth_user_id = $2`
+	sqlStatement := `
+		SELECT
+			questions_correct,
+			questions_incorrect,
+			quiz_taken
+		FROM
+			coindrop_quiz_results
+		WHERE
+			quiz_id = $1
+		AND
+			user_id = $2`
 
 	// execute db query by passing in prepared SQL statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return q, err
+		return nil, err
 	}
 
 	defer stmt.Close()
 
 	// initialize row object
-	row := stmt.QueryRow(q.Title, q.AuthUserID)
+	row := stmt.QueryRow(quizID, userID)
+
+	var questionsCorrect sql.NullInt64
+	var questionsIncorrect sql.NullInt64
+	var quizTaken sql.NullBool
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
-		&q.QuestionsCorrect,
-		&q.QuestionsIncorrect,
-		&q.HasTakenQuiz,
+		&questionsCorrect,
+		&questionsIncorrect,
+		&quizTaken,
 	)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
 	if err != nil {
-		return q, err
+		return nil, err
 	}
 
-	return q, nil
+	return &types.QuizResults{
+		QuizID:             quizID,
+		UserID:             userID,
+		QuestionsCorrect:   int(questionsCorrect.Int64),
+		QuestionsIncorrect: int(questionsIncorrect.Int64),
+		QuizTaken:          quizTaken.Bool,
+	}, nil
 }
 
-// GetAllQuizResults returns all info for specific quiz
-func (db *DB) GetAllQuizResults(q *types.QuizResults, a *types.AllQuizResults) (*types.AllQuizResults, error) {
+// GetAllQuizResults returns all quiz results
+func (db *DB) GetAllQuizResults(userID string) ([]*types.QuizResults, error) {
 	// create SQL statement for db query
-	sqlStatement := `SELECT id, title, questions_correct, questions_incorrect, has_taken_quiz FROM coindrop_quiz_results WHERE auth_user_id = $1`
+	sqlStatement := `
+		SELECT
+			quiz_id,
+			questions_correct,
+			questions_incorrect,
+			quiz_taken
+		FROM
+			coindrop_quiz_results
+		WHERE
+			user_id = $1`
 
-	// execute db query by passing in prepared SQL statement
-	rows, err := db.client.Query(sqlStatement, q.AuthUserID)
+	// initialize row object
+	rows, err := db.client.Query(sqlStatement, userID)
 	if err != nil {
-		return a, err
+		return nil, err
 	}
 
 	defer rows.Close()
 
-	// iterate over rows
+	var results []*types.QuizResults
+
 	for rows.Next() {
-		// initialize new struct per user in db to hold user info
-		quizResults := types.QuizResults{}
+		var quizID sql.NullString
+		var questionsCorrect sql.NullInt64
+		var questionsIncorrect sql.NullInt64
+		var quizTaken sql.NullBool
+
+		// iterate over row object to retrieve queried value
 		err = rows.Scan(
-			&quizResults.ID,
-			&quizResults.Title,
-			&quizResults.QuestionsCorrect,
-			&quizResults.QuestionsIncorrect,
-			&quizResults.HasTakenQuiz,
+			&quizID,
+			&questionsCorrect,
+			&questionsIncorrect,
+			&quizTaken,
 		)
 		if err != nil {
-			return a, err
+			return nil, err
 		}
-		// append task object to slice of tasks
-		a.QuizResults = append(a.QuizResults, quizResults)
-	}
-	err = rows.Err()
-	if err != nil {
-		return a, err
+
+		results = append(results, &types.QuizResults{
+			QuizID:             quizID.String,
+			UserID:             userID,
+			QuestionsCorrect:   int(questionsCorrect.Int64),
+			QuestionsIncorrect: int(questionsIncorrect.Int64),
+			QuizTaken:          quizTaken.Bool,
+		})
 	}
 
-	return a, nil
+	return results, nil
 }

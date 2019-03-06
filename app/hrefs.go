@@ -32,8 +32,9 @@ func RedditHref() string {
 }
 
 // ResultsHref returns the resource href.
-func ResultsHref() string {
-	return "/v1/quiz/results"
+func ResultsHref(quizID interface{}) string {
+	paramquizID := strings.TrimLeftFunc(fmt.Sprintf("%v", quizID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/v1/quizzes/%v/results", paramquizID)
 }
 
 // TasksHref returns the resource href.

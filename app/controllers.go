@@ -368,6 +368,8 @@ func unmarshalUpdateRedditharvestPayload(ctx context.Context, service *goa.Servi
 // ResultsController is the controller interface for the Results actions.
 type ResultsController interface {
 	goa.Muxer
+	Create(*CreateResultsContext) error
+	List(*ListResultsContext) error
 	Show(*ShowResultsContext) error
 }
 
@@ -375,7 +377,48 @@ type ResultsController interface {
 func MountResultsController(service *goa.Service, ctrl ResultsController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/v1/quiz/results", ctrl.MuxHandler("preflight", handleResultsOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/quizzes/results", ctrl.MuxHandler("preflight", handleResultsOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/quizzes/:quizId/results", ctrl.MuxHandler("preflight", handleResultsOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateResultsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*QuizResultsPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleResultsOrigin(h)
+	service.Mux.Handle("POST", "/v1/quizzes/results", ctrl.MuxHandler("create", h, unmarshalCreateResultsPayload))
+	service.LogInfo("mount", "ctrl", "Results", "action", "Create", "route", "POST /v1/quizzes/results", "security", "JWTAuth")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListResultsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleResultsOrigin(h)
+	service.Mux.Handle("GET", "/v1/quizzes/results", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Results", "action", "List", "route", "GET /v1/quizzes/results", "security", "JWTAuth")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -391,8 +434,8 @@ func MountResultsController(service *goa.Service, ctrl ResultsController) {
 	}
 	h = handleSecurity("JWTAuth", h)
 	h = handleResultsOrigin(h)
-	service.Mux.Handle("GET", "/v1/quiz/results", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Results", "action", "Show", "route", "GET /v1/quiz/results", "security", "JWTAuth")
+	service.Mux.Handle("GET", "/v1/quizzes/:quizId/results", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Results", "action", "Show", "route", "GET /v1/quizzes/:quizId/results", "security", "JWTAuth")
 }
 
 // handleResultsOrigin applies the CORS response headers corresponding to the origin.
@@ -417,6 +460,21 @@ func handleResultsOrigin(h goa.Handler) goa.Handler {
 
 		return h(ctx, rw, req)
 	}
+}
+
+// unmarshalCreateResultsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateResultsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &quizResultsPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
 }
 
 // TasksController is the controller interface for the Tasks actions.
