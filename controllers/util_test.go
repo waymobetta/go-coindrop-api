@@ -67,6 +67,9 @@ func createServer() *httptest.Server {
 	quizzesCtrlr := controllers.NewQuizzesController(service, dbs)
 	app.MountQuizzesController(service, quizzesCtrlr)
 
+	webhooksCtrlr := controllers.NewWebhooksController(service, dbs)
+	app.MountWebhooksController(service, webhooksCtrlr)
+
 	svr := httptest.NewServer(service.Server.Handler)
 	return svr
 }

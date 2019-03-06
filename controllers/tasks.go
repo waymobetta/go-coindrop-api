@@ -15,10 +15,10 @@ type TasksController struct {
 }
 
 // NewTasksController creates a tasks controller.
-func NewTasksController(service *goa.Service, db *db.DB) *TasksController {
+func NewTasksController(service *goa.Service, dbs *db.DB) *TasksController {
 	return &TasksController{
 		Controller: service.NewController("TasksController"),
-		db:         db,
+		db:         dbs,
 	}
 }
 

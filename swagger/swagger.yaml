@@ -426,18 +426,6 @@ definitions:
       token: Magni necessitatibus debitis qui quos atque.
       tokenAllocation: 7060377002336781561
       type: Non voluptas dolor eligendi ipsum eius.
-    - author: Ut qui dolores expedita est.
-      badge:
-        description: Eaque facere voluptates consequatur nihil odit.
-        id: Quam quae aut cumque consequatur asperiores.
-        name: Hic illum veniam magni nam perferendis.
-        recipients: 7796898160710639916
-      description: Animi ipsum iusto.
-      id: Quia autem sed et facilis earum deserunt.
-      title: Modi eos possimus aliquam.
-      token: Magni necessitatibus debitis qui quos atque.
-      tokenAllocation: 7060377002336781561
-      type: Non voluptas dolor eligendi ipsum eius.
     items:
       $ref: '#/definitions/Task'
     title: 'Mediatype identifier: application/vnd.task+json; type=collection; view=default'
@@ -477,6 +465,18 @@ definitions:
     required:
     - tasks
     title: 'Mediatype identifier: application/vnd.tasks+json; view=default'
+    type: object
+  TypeformPayload:
+    description: Typeform payload
+    example:
+      data: 0.8299684188637702
+    properties:
+      data:
+        description: Data
+        example: 0.8299684188637702
+    required:
+    - data
+    title: TypeformPayload
     type: object
   UpdateUserPayload:
     description: Update Reddit User payload
@@ -1458,6 +1458,44 @@ paths:
       summary: update wallets
       tags:
       - wallets
+  /v1/webhooks/typeform:
+    post:
+      description: Typeform webhook
+      operationId: webhooks#typeform
+      parameters:
+      - description: Typeform payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/TypeformPayload'
+      produces:
+      - application/standard_error+json
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      summary: typeform webhooks
+      tags:
+      - webhooks
 produces:
 - application/json
 - application/xml

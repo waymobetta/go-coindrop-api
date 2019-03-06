@@ -259,6 +259,35 @@ type TaskPayload struct {
 	Completed bool `form:"completed" json:"completed" yaml:"completed" xml:"completed"`
 }
 
+// Typeform payload
+type typeformPayload struct {
+	// Data
+	Data interface{} `form:"data,omitempty" json:"data,omitempty" yaml:"data,omitempty" xml:"data,omitempty"`
+}
+
+// Validate validates the typeformPayload type instance.
+func (ut *typeformPayload) Validate() (err error) {
+	if ut.Data == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "data"))
+	}
+	return
+}
+
+// Publicize creates TypeformPayload from typeformPayload
+func (ut *typeformPayload) Publicize() *TypeformPayload {
+	var pub TypeformPayload
+	if ut.Data != nil {
+		pub.Data = ut.Data
+	}
+	return &pub
+}
+
+// Typeform payload
+type TypeformPayload struct {
+	// Data
+	Data interface{} `form:"data" json:"data" yaml:"data" xml:"data"`
+}
+
 // Update Reddit User payload
 type updateUserPayload struct {
 	// User ID

@@ -922,3 +922,77 @@ func unmarshalUpdateWalletsPayload(ctx context.Context, service *goa.Service, re
 	goa.ContextRequest(ctx).Payload = payload.Publicize()
 	return nil
 }
+
+// WebhooksController is the controller interface for the Webhooks actions.
+type WebhooksController interface {
+	goa.Muxer
+	Typeform(*TypeformWebhooksContext) error
+}
+
+// MountWebhooksController "mounts" a Webhooks resource controller on the given service.
+func MountWebhooksController(service *goa.Service, ctrl WebhooksController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/v1/webhooks/typeform", ctrl.MuxHandler("preflight", handleWebhooksOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewTypeformWebhooksContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*TypeformPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Typeform(rctx)
+	}
+	h = handleWebhooksOrigin(h)
+	service.Mux.Handle("POST", "/v1/webhooks/typeform", ctrl.MuxHandler("typeform", h, unmarshalTypeformWebhooksPayload))
+	service.LogInfo("mount", "ctrl", "Webhooks", "action", "Typeform", "route", "POST /v1/webhooks/typeform")
+}
+
+// handleWebhooksOrigin applies the CORS response headers corresponding to the origin.
+func handleWebhooksOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "*") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "OPTIONS, HEAD, POST, GET, UPDATE, DELETE, PATCH")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalTypeformWebhooksPayload unmarshals the request body into the context request data Payload field.
+func unmarshalTypeformWebhooksPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &typeformPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}

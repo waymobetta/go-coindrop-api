@@ -73,6 +73,7 @@ goa:
 	@rm reddit.go
 	@rm verifyreddit.go
 	@rm redditharvest.go
+	@rm webhooks.go
 	@MAKE swagger
 
 .PHONY: swagger
