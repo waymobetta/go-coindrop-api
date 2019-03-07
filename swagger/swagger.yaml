@@ -803,7 +803,6 @@ paths:
       - JWTAuth: []
       summary: show results
       tags:
-<<<<<<< Updated upstream
       - results
   /v1/quizzes/results:
     get:
@@ -881,11 +880,7 @@ paths:
       summary: create results
       tags:
       - results
-  /v1/social/reddit/harvest:
-=======
-      - quizzes
   /v1/social/reddit:
->>>>>>> Stashed changes
     post:
       description: Update Reddit User
       operationId: reddit#update
