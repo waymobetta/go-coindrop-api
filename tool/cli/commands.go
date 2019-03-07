@@ -403,7 +403,20 @@ Payload example:
 Payload example:
 
 {
-   "data": 0.8299684188637702
+   "event_id": "Blanditiis perferendis.",
+   "event_type": "Facilis aspernatur.",
+   "form_response": {
+      "answers": "1993-03-17T13:58:11Z",
+      "calculated": {
+         "score": 7152464490321729501
+      },
+      "definition": "ffc5e8d1-97ec-4a2a-af1e-661f47e4eaa1",
+      "form_id": "Molestiae praesentium debitis ut aliquam iusto et.",
+      "hidden": false,
+      "landed_at": "Totam deserunt et.",
+      "submitted_at": "Nesciunt mollitia.",
+      "token": "Quisquam sit facere qui praesentium."
+   }
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp18.Run(c, args) },
 	}

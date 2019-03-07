@@ -259,33 +259,130 @@ type TaskPayload struct {
 	Completed bool `form:"completed" json:"completed" yaml:"completed" xml:"completed"`
 }
 
-// Typeform payload
-type typeformPayload struct {
-	// Data
-	Data interface{} `form:"data,omitempty" json:"data,omitempty" yaml:"data,omitempty" xml:"data,omitempty"`
+// Typeform calculatd data
+type typeformCalculatedPayload struct {
+	// Score
+	Score *int `form:"score,omitempty" json:"score,omitempty" yaml:"score,omitempty" xml:"score,omitempty"`
 }
 
-// Validate validates the typeformPayload type instance.
-func (ut *typeformPayload) Validate() (err error) {
-	if ut.Data == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "data"))
+// Publicize creates TypeformCalculatedPayload from typeformCalculatedPayload
+func (ut *typeformCalculatedPayload) Publicize() *TypeformCalculatedPayload {
+	var pub TypeformCalculatedPayload
+	if ut.Score != nil {
+		pub.Score = ut.Score
 	}
-	return
+	return &pub
+}
+
+// Typeform calculatd data
+type TypeformCalculatedPayload struct {
+	// Score
+	Score *int `form:"score,omitempty" json:"score,omitempty" yaml:"score,omitempty" xml:"score,omitempty"`
+}
+
+// Typeform form data
+type typeformFormPayload struct {
+	// Answers
+	Answers interface{} `form:"answers,omitempty" json:"answers,omitempty" yaml:"answers,omitempty" xml:"answers,omitempty"`
+	// Calculated response
+	Calculated *typeformCalculatedPayload `form:"calculated,omitempty" json:"calculated,omitempty" yaml:"calculated,omitempty" xml:"calculated,omitempty"`
+	// Definition
+	Definition interface{} `form:"definition,omitempty" json:"definition,omitempty" yaml:"definition,omitempty" xml:"definition,omitempty"`
+	// Form ID
+	FormID *string `form:"form_id,omitempty" json:"form_id,omitempty" yaml:"form_id,omitempty" xml:"form_id,omitempty"`
+	// Hidden
+	Hidden interface{} `form:"hidden,omitempty" json:"hidden,omitempty" yaml:"hidden,omitempty" xml:"hidden,omitempty"`
+	// Form ID
+	LandedAt *string `form:"landed_at,omitempty" json:"landed_at,omitempty" yaml:"landed_at,omitempty" xml:"landed_at,omitempty"`
+	// Form ID
+	SubmittedAt *string `form:"submitted_at,omitempty" json:"submitted_at,omitempty" yaml:"submitted_at,omitempty" xml:"submitted_at,omitempty"`
+	// Form ID
+	Token *string `form:"token,omitempty" json:"token,omitempty" yaml:"token,omitempty" xml:"token,omitempty"`
+}
+
+// Publicize creates TypeformFormPayload from typeformFormPayload
+func (ut *typeformFormPayload) Publicize() *TypeformFormPayload {
+	var pub TypeformFormPayload
+	if ut.Answers != nil {
+		pub.Answers = ut.Answers
+	}
+	if ut.Calculated != nil {
+		pub.Calculated = ut.Calculated.Publicize()
+	}
+	if ut.Definition != nil {
+		pub.Definition = ut.Definition
+	}
+	if ut.FormID != nil {
+		pub.FormID = ut.FormID
+	}
+	if ut.Hidden != nil {
+		pub.Hidden = ut.Hidden
+	}
+	if ut.LandedAt != nil {
+		pub.LandedAt = ut.LandedAt
+	}
+	if ut.SubmittedAt != nil {
+		pub.SubmittedAt = ut.SubmittedAt
+	}
+	if ut.Token != nil {
+		pub.Token = ut.Token
+	}
+	return &pub
+}
+
+// Typeform form data
+type TypeformFormPayload struct {
+	// Answers
+	Answers interface{} `form:"answers,omitempty" json:"answers,omitempty" yaml:"answers,omitempty" xml:"answers,omitempty"`
+	// Calculated response
+	Calculated *TypeformCalculatedPayload `form:"calculated,omitempty" json:"calculated,omitempty" yaml:"calculated,omitempty" xml:"calculated,omitempty"`
+	// Definition
+	Definition interface{} `form:"definition,omitempty" json:"definition,omitempty" yaml:"definition,omitempty" xml:"definition,omitempty"`
+	// Form ID
+	FormID *string `form:"form_id,omitempty" json:"form_id,omitempty" yaml:"form_id,omitempty" xml:"form_id,omitempty"`
+	// Hidden
+	Hidden interface{} `form:"hidden,omitempty" json:"hidden,omitempty" yaml:"hidden,omitempty" xml:"hidden,omitempty"`
+	// Form ID
+	LandedAt *string `form:"landed_at,omitempty" json:"landed_at,omitempty" yaml:"landed_at,omitempty" xml:"landed_at,omitempty"`
+	// Form ID
+	SubmittedAt *string `form:"submitted_at,omitempty" json:"submitted_at,omitempty" yaml:"submitted_at,omitempty" xml:"submitted_at,omitempty"`
+	// Form ID
+	Token *string `form:"token,omitempty" json:"token,omitempty" yaml:"token,omitempty" xml:"token,omitempty"`
+}
+
+// Typeform payload
+type typeformPayload struct {
+	// Event ID
+	EventID *string `form:"event_id,omitempty" json:"event_id,omitempty" yaml:"event_id,omitempty" xml:"event_id,omitempty"`
+	// Event types
+	EventType *string `form:"event_type,omitempty" json:"event_type,omitempty" yaml:"event_type,omitempty" xml:"event_type,omitempty"`
+	// Form response
+	FormResponse *typeformFormPayload `form:"form_response,omitempty" json:"form_response,omitempty" yaml:"form_response,omitempty" xml:"form_response,omitempty"`
 }
 
 // Publicize creates TypeformPayload from typeformPayload
 func (ut *typeformPayload) Publicize() *TypeformPayload {
 	var pub TypeformPayload
-	if ut.Data != nil {
-		pub.Data = ut.Data
+	if ut.EventID != nil {
+		pub.EventID = ut.EventID
+	}
+	if ut.EventType != nil {
+		pub.EventType = ut.EventType
+	}
+	if ut.FormResponse != nil {
+		pub.FormResponse = ut.FormResponse.Publicize()
 	}
 	return &pub
 }
 
 // Typeform payload
 type TypeformPayload struct {
-	// Data
-	Data interface{} `form:"data" json:"data" yaml:"data" xml:"data"`
+	// Event ID
+	EventID *string `form:"event_id,omitempty" json:"event_id,omitempty" yaml:"event_id,omitempty" xml:"event_id,omitempty"`
+	// Event types
+	EventType *string `form:"event_type,omitempty" json:"event_type,omitempty" yaml:"event_type,omitempty" xml:"event_type,omitempty"`
+	// Form response
+	FormResponse *TypeformFormPayload `form:"form_response,omitempty" json:"form_response,omitempty" yaml:"form_response,omitempty" xml:"form_response,omitempty"`
 }
 
 // Update Reddit User payload

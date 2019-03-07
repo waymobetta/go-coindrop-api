@@ -26,7 +26,26 @@ var _ = Resource("webhooks", func() {
 // TypeformPayload is the payload for webhook.
 var TypeformPayload = Type("TypeformPayload", func() {
 	Description("Typeform payload")
-	Attribute("data", Any, "Data", func() {
-	})
-	Required("data")
+	Attribute("event_id", String, "Event ID")
+	Attribute("event_type", String, "Event types")
+	Attribute("form_response", TypeformFormPayload, "Form response")
+})
+
+// TypeformFormPayload ...
+var TypeformFormPayload = Type("TypeformFormPayload", func() {
+	Description("Typeform form data")
+	Attribute("form_id", String, "Form ID")
+	Attribute("token", String, "Form ID")
+	Attribute("landed_at", String, "Form ID")
+	Attribute("submitted_at", String, "Form ID")
+	Attribute("calculated", TypeformCalculatedPayload, "Calculated response")
+	Attribute("hidden", Any, "Hidden")
+	Attribute("definition", Any, "Definition")
+	Attribute("answers", Any, "Answers")
+})
+
+// TypeformCalculatedPayload ...
+var TypeformCalculatedPayload = Type("TypeformCalculatedPayload", func() {
+	Description("Typeform calculatd data")
+	Attribute("score", Integer, "Score")
 })

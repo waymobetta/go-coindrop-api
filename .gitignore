@@ -2,6 +2,7 @@
 .env.list
 .env.local
 .env.staging
+.env*
 .DS_Store
 
 # directories

@@ -143,6 +143,8 @@ type QuizFields struct {
 // QuizResults struct contains info about a user's quiz results
 type QuizResults struct {
 	QuizID             string `json:"quiz_id"`
+	TypeformFormID     string `json:"typeform_form_id"`
+	TypeformQuizURL    string `json:"typeform_quiz_url"`
 	UserID             string `json:"user_id"`
 	QuestionsCorrect   int    `json:"questions_correct"`
 	QuestionsIncorrect int    `json:"questions_incorrect"`

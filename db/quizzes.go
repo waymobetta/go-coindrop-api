@@ -159,7 +159,7 @@ func (db *DB) AddQuizResults(r *types.QuizResults) (*types.QuizResults, error) {
 	sqlStatement := `
 			INSERT INTO
 				coindrop_quiz_results(
-					quiz_id,
+					typeform_form_id,
 					user_id,
 					questions_correct,
 					questions_incorrect,
@@ -177,7 +177,7 @@ func (db *DB) AddQuizResults(r *types.QuizResults) (*types.QuizResults, error) {
 
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
-		r.QuizID,
+		r.TypeformFormID,
 		r.UserID,
 		r.QuestionsCorrect,
 		r.QuestionsIncorrect,
@@ -211,7 +211,7 @@ func (db *DB) GetQuizResults(quizID, userID string) (*types.QuizResults, error) 
 		FROM
 			coindrop_quiz_results
 		WHERE
-			quiz_id = $1
+			typeform_form_id = $1
 		AND
 			user_id = $2`
 
@@ -257,7 +257,7 @@ func (db *DB) GetAllQuizResults(userID string) ([]*types.QuizResults, error) {
 	// create SQL statement for db query
 	sqlStatement := `
 		SELECT
-			quiz_id,
+			typeform_form_id,
 			questions_correct,
 			questions_incorrect,
 			quiz_taken

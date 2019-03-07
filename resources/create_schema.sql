@@ -74,13 +74,14 @@ CREATE TABLE IF NOT EXISTS coindrop_tasks (
 CREATE TABLE IF NOT EXISTS coindrop_quizzes (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	title TEXT NOT NULL,
-	quiz_url TEXT NOT NULL,
-	quiz_id TEXT NOT NULL
+	typeform_form_url TEXT NOT NULL,
+	typeform_form_id TEXT NOT NULL
 );
 
 -- QUIZ RESULTS
 CREATE TABLE IF NOT EXISTS coindrop_quiz_results (
 	quiz_id uuid REFERENCES coindrop_quizzes(id),
+	typeform_form_id TEXT,
 	user_id uuid REFERENCES coindrop_auth(id),
 	questions_correct INTEGER NOT NULL,
 	questions_incorrect INTEGER NOT NULL,
