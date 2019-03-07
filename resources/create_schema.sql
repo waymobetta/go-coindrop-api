@@ -18,10 +18,11 @@ CREATE TABLE IF NOT EXISTS coindrop_auth (
 );
 
 -- WALLETS
-CREATE TABLE IF NOT EXISTS coindrop_wallets (
-	id uuid DEFAULT uuid_generate_v4() UNIQUE,
-	address TEXT,
-	user_id uuid REFERENCES coindrop_auth(id)
+CREATE TABLE coindrop_wallets (
+    id uuid DEFAULT uuid_generate_v4() UNIQUE,
+    address text,
+    user_id uuid REFERENCES coindrop_auth(id),
+    type text
 );
 
 -- REDDIT
@@ -96,9 +97,7 @@ CREATE TABLE IF NOT EXISTS coindrop_user_tasks (
 	completed BOOLEAN DEFAULT false
 );
 
-CREATE UNIQUE INDEX "coindrop_wallets_address_user_id_uniq_idx" ON "public"."coindrop_wallets"("address","user_id");
-
-CREATE UNIQUE INDEX "coindrop_wallets_user_id_uniq_idx" ON "public"."coindrop_wallets"("user_id");
+CREATE UNIQUE INDEX coindrop_wallets_user_id_type_uniq_idx ON coindrop_wallets(user_id uuid_ops,type text_ops);
 
 -- NOT USED YET --
 
