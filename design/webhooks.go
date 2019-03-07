@@ -39,7 +39,7 @@ var TypeformFormPayload = Type("TypeformFormPayload", func() {
 	Attribute("landed_at", String, "Form ID")
 	Attribute("submitted_at", String, "Form ID")
 	Attribute("calculated", TypeformCalculatedPayload, "Calculated response")
-	Attribute("hidden", Any, "Hidden")
+	Attribute("hidden", TypeformHiddenPayload, "Hidden")
 	Attribute("definition", Any, "Definition")
 	Attribute("answers", Any, "Answers")
 })
@@ -48,4 +48,10 @@ var TypeformFormPayload = Type("TypeformFormPayload", func() {
 var TypeformCalculatedPayload = Type("TypeformCalculatedPayload", func() {
 	Description("Typeform calculatd data")
 	Attribute("score", Integer, "Score")
+})
+
+// TypeformHiddenPayload ...
+var TypeformHiddenPayload = Type("TypeformHiddenPayload", func() {
+	Description("Typeform hidden data")
+	Attribute("user_id", String, "User ID")
 })

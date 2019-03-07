@@ -291,7 +291,7 @@ type typeformFormPayload struct {
 	// Form ID
 	FormID *string `form:"form_id,omitempty" json:"form_id,omitempty" yaml:"form_id,omitempty" xml:"form_id,omitempty"`
 	// Hidden
-	Hidden interface{} `form:"hidden,omitempty" json:"hidden,omitempty" yaml:"hidden,omitempty" xml:"hidden,omitempty"`
+	Hidden *typeformHiddenPayload `form:"hidden,omitempty" json:"hidden,omitempty" yaml:"hidden,omitempty" xml:"hidden,omitempty"`
 	// Form ID
 	LandedAt *string `form:"landed_at,omitempty" json:"landed_at,omitempty" yaml:"landed_at,omitempty" xml:"landed_at,omitempty"`
 	// Form ID
@@ -316,7 +316,7 @@ func (ut *typeformFormPayload) Publicize() *TypeformFormPayload {
 		pub.FormID = ut.FormID
 	}
 	if ut.Hidden != nil {
-		pub.Hidden = ut.Hidden
+		pub.Hidden = ut.Hidden.Publicize()
 	}
 	if ut.LandedAt != nil {
 		pub.LandedAt = ut.LandedAt
@@ -341,13 +341,34 @@ type TypeformFormPayload struct {
 	// Form ID
 	FormID *string `form:"form_id,omitempty" json:"form_id,omitempty" yaml:"form_id,omitempty" xml:"form_id,omitempty"`
 	// Hidden
-	Hidden interface{} `form:"hidden,omitempty" json:"hidden,omitempty" yaml:"hidden,omitempty" xml:"hidden,omitempty"`
+	Hidden *TypeformHiddenPayload `form:"hidden,omitempty" json:"hidden,omitempty" yaml:"hidden,omitempty" xml:"hidden,omitempty"`
 	// Form ID
 	LandedAt *string `form:"landed_at,omitempty" json:"landed_at,omitempty" yaml:"landed_at,omitempty" xml:"landed_at,omitempty"`
 	// Form ID
 	SubmittedAt *string `form:"submitted_at,omitempty" json:"submitted_at,omitempty" yaml:"submitted_at,omitempty" xml:"submitted_at,omitempty"`
 	// Form ID
 	Token *string `form:"token,omitempty" json:"token,omitempty" yaml:"token,omitempty" xml:"token,omitempty"`
+}
+
+// Typeform hidden data
+type typeformHiddenPayload struct {
+	// User ID
+	UserID *string `form:"user_id,omitempty" json:"user_id,omitempty" yaml:"user_id,omitempty" xml:"user_id,omitempty"`
+}
+
+// Publicize creates TypeformHiddenPayload from typeformHiddenPayload
+func (ut *typeformHiddenPayload) Publicize() *TypeformHiddenPayload {
+	var pub TypeformHiddenPayload
+	if ut.UserID != nil {
+		pub.UserID = ut.UserID
+	}
+	return &pub
+}
+
+// Typeform hidden data
+type TypeformHiddenPayload struct {
+	// User ID
+	UserID *string `form:"user_id,omitempty" json:"user_id,omitempty" yaml:"user_id,omitempty" xml:"user_id,omitempty"`
 }
 
 // Typeform payload

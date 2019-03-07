@@ -400,12 +400,14 @@ Payload example:
       "calculated": {
          "score": 7152464490321729501
       },
-      "definition": "3455698a-4e3e-4688-9396-22d782b0068b",
+      "definition": "b5e870d6-e9f4-44b5-b4c4-bc2d7252a220",
       "form_id": "Molestiae praesentium debitis ut aliquam iusto et.",
-      "hidden": false,
-      "landed_at": "Totam deserunt et.",
-      "submitted_at": "Nesciunt mollitia.",
-      "token": "Quisquam sit facere qui praesentium."
+      "hidden": {
+         "user_id": "Qui consequatur."
+      },
+      "landed_at": "Deserunt et est nesciunt.",
+      "submitted_at": "Ducimus quisquam sit facere qui praesentium.",
+      "token": "Delectus sit eos error."
    }
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp17.Run(c, args) },

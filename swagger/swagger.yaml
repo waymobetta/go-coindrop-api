@@ -146,6 +146,8 @@ definitions:
       question: Non ut.
     - answer: Iure amet.
       question: Non ut.
+    - answer: Iure amet.
+      question: Non ut.
     items:
       $ref: '#/definitions/Quiz-Fields'
     title: 'Mediatype identifier: application/vnd.quiz-fields+json; type=collection;
@@ -335,6 +337,10 @@ definitions:
       questionsIncorrect: 4147622380271908661
       quizId: Eos eos.
       userId: Repellat optio nam.
+    - questionsCorrect: 4613454974692095968
+      questionsIncorrect: 4147622380271908661
+      quizId: Eos eos.
+      userId: Repellat optio nam.
     items:
       $ref: '#/definitions/Results'
     title: 'Mediatype identifier: application/vnd.results+json; type=collection; view=default'
@@ -432,18 +438,6 @@ definitions:
       token: Magni necessitatibus debitis qui quos atque.
       tokenAllocation: 7060377002336781561
       type: Non voluptas dolor eligendi ipsum eius.
-    - author: Ut qui dolores expedita est.
-      badge:
-        description: Eaque facere voluptates consequatur nihil odit.
-        id: Quam quae aut cumque consequatur asperiores.
-        name: Hic illum veniam magni nam perferendis.
-        recipients: 7796898160710639916
-      description: Animi ipsum iusto.
-      id: Quia autem sed et facilis earum deserunt.
-      title: Modi eos possimus aliquam.
-      token: Magni necessitatibus debitis qui quos atque.
-      tokenAllocation: 7060377002336781561
-      type: Non voluptas dolor eligendi ipsum eius.
     items:
       $ref: '#/definitions/Task'
     title: 'Mediatype identifier: application/vnd.task+json; type=collection; view=default'
@@ -465,30 +459,6 @@ definitions:
     description: Tasks (default view)
     example:
       tasks:
-      - author: Ut qui dolores expedita est.
-        badge:
-          description: Eaque facere voluptates consequatur nihil odit.
-          id: Quam quae aut cumque consequatur asperiores.
-          name: Hic illum veniam magni nam perferendis.
-          recipients: 7796898160710639916
-        description: Animi ipsum iusto.
-        id: Quia autem sed et facilis earum deserunt.
-        title: Modi eos possimus aliquam.
-        token: Magni necessitatibus debitis qui quos atque.
-        tokenAllocation: 7060377002336781561
-        type: Non voluptas dolor eligendi ipsum eius.
-      - author: Ut qui dolores expedita est.
-        badge:
-          description: Eaque facere voluptates consequatur nihil odit.
-          id: Quam quae aut cumque consequatur asperiores.
-          name: Hic illum veniam magni nam perferendis.
-          recipients: 7796898160710639916
-        description: Animi ipsum iusto.
-        id: Quia autem sed et facilis earum deserunt.
-        title: Modi eos possimus aliquam.
-        token: Magni necessitatibus debitis qui quos atque.
-        tokenAllocation: 7060377002336781561
-        type: Non voluptas dolor eligendi ipsum eius.
       - author: Ut qui dolores expedita est.
         badge:
           description: Eaque facere voluptates consequatur nihil odit.
@@ -526,12 +496,13 @@ definitions:
       answers: "1993-03-17T13:58:11Z"
       calculated:
         score: 7152464490321729501
-      definition: d7157477-714d-454d-9bbf-c55c188d9f31
+      definition: a8504f74-e5b4-418d-a1de-f76ef8b68a2c
       form_id: Molestiae praesentium debitis ut aliquam iusto et.
-      hidden: false
-      landed_at: Totam deserunt et.
-      submitted_at: Nesciunt mollitia.
-      token: Quisquam sit facere qui praesentium.
+      hidden:
+        user_id: Qui consequatur.
+      landed_at: Deserunt et est nesciunt.
+      submitted_at: Ducimus quisquam sit facere qui praesentium.
+      token: Delectus sit eos error.
     properties:
       answers:
         description: Answers
@@ -540,27 +511,37 @@ definitions:
         $ref: '#/definitions/TypeformCalculatedPayload'
       definition:
         description: Definition
-        example: d7157477-714d-454d-9bbf-c55c188d9f31
+        example: a8504f74-e5b4-418d-a1de-f76ef8b68a2c
       form_id:
         description: Form ID
         example: Molestiae praesentium debitis ut aliquam iusto et.
         type: string
       hidden:
-        description: Hidden
-        example: false
+        $ref: '#/definitions/TypeformHiddenPayload'
       landed_at:
         description: Form ID
-        example: Totam deserunt et.
+        example: Deserunt et est nesciunt.
         type: string
       submitted_at:
         description: Form ID
-        example: Nesciunt mollitia.
+        example: Ducimus quisquam sit facere qui praesentium.
         type: string
       token:
         description: Form ID
-        example: Quisquam sit facere qui praesentium.
+        example: Delectus sit eos error.
         type: string
     title: TypeformFormPayload
+    type: object
+  TypeformHiddenPayload:
+    description: Typeform hidden data
+    example:
+      user_id: Qui consequatur.
+    properties:
+      user_id:
+        description: User ID
+        example: Qui consequatur.
+        type: string
+    title: TypeformHiddenPayload
     type: object
   TypeformPayload:
     description: Typeform payload
@@ -571,12 +552,13 @@ definitions:
         answers: "1993-03-17T13:58:11Z"
         calculated:
           score: 7152464490321729501
-        definition: d7157477-714d-454d-9bbf-c55c188d9f31
+        definition: a8504f74-e5b4-418d-a1de-f76ef8b68a2c
         form_id: Molestiae praesentium debitis ut aliquam iusto et.
-        hidden: false
-        landed_at: Totam deserunt et.
-        submitted_at: Nesciunt mollitia.
-        token: Quisquam sit facere qui praesentium.
+        hidden:
+          user_id: Qui consequatur.
+        landed_at: Deserunt et est nesciunt.
+        submitted_at: Ducimus quisquam sit facere qui praesentium.
+        token: Delectus sit eos error.
     properties:
       event_id:
         description: Event ID

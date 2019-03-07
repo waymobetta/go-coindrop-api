@@ -51,7 +51,12 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 		}
 
 		if form.Hidden != nil {
-			// TODO: read user id
+			if form.Hidden != nil {
+				hidden := *form.Hidden
+				if hidden.UserID != nil {
+					userID = *hidden.UserID
+				}
+			}
 		}
 	}
 
@@ -59,9 +64,6 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 	if incorrect < 0 {
 		incorrect = 0
 	}
-
-	// TODO: read from payload
-	userID = "efb93f03-9802-45b5-9ba0-5c23e68c9d68"
 
 	results := &types.QuizResults{
 		TypeformFormID:     formID,
