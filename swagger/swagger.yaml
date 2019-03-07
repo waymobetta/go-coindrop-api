@@ -803,6 +803,7 @@ paths:
       - JWTAuth: []
       summary: show results
       tags:
+<<<<<<< Updated upstream
       - results
   /v1/quizzes/results:
     get:
@@ -881,6 +882,183 @@ paths:
       tags:
       - results
   /v1/social/reddit/harvest:
+=======
+      - quizzes
+  /v1/social/reddit:
+>>>>>>> Stashed changes
+    post:
+      description: Update Reddit User
+      operationId: reddit#update
+      parameters:
+      - description: Create Reddit User payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateUserPayload'
+      produces:
+      - application/standard_error+json
+      - application/vnd.reddituser+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Reddituser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: update reddit
+      tags:
+      - reddit
+  /v1/social/reddit/{userId}:
+    get:
+      description: Get Reddit User
+      operationId: reddit#show
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        required: true
+        type: string
+      produces:
+      - application/standard_error+json
+      - application/vnd.reddituser+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Reddituser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: show reddit
+      tags:
+      - reddit
+  /v1/social/reddit/{userId}/verify:
+    get:
+      description: Get Reddit Verification
+      operationId: reddit#display
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        required: true
+        type: string
+      produces:
+      - application/standard_error+json
+      - application/vnd.reddituser+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Reddituser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: display reddit
+      tags:
+      - reddit
+    post:
+      description: Update Reddit Verification
+      operationId: reddit#verify
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        required: true
+        type: string
+      - description: Social Account Verification Payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/VerificationPayload'
+      produces:
+      - application/standard_error+json
+      - application/vnd.reddituser+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Reddituser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: verify reddit
+      tags:
+      - reddit
+  /v1/social/reddit/harvest:
     post:
       description: Update Reddit User Info
       operationId: redditharvest#update
@@ -922,172 +1100,6 @@ paths:
       summary: update redditharvest
       tags:
       - redditharvest
-  /v1/social/reddit/userid:
-    get:
-      description: Get Reddit User
-      operationId: reddit#show
-      parameters:
-      - description: User ID
-        in: query
-        name: userId
-        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
-        required: false
-        type: string
-      produces:
-      - application/standard_error+json
-      - application/vnd.reddituser+json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/Reddituser'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "410":
-          description: Gone
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/Standard_error'
-      schemes:
-      - http
-      security:
-      - JWTAuth: []
-      summary: show reddit
-      tags:
-      - reddit
-    post:
-      description: Create Reddit User
-      operationId: reddit#create
-      parameters:
-      - description: Create Reddit User payload
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/CreateUserPayload'
-      produces:
-      - application/standard_error+json
-      - application/vnd.reddituser+json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/Reddituser'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "410":
-          description: Gone
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/Standard_error'
-      schemes:
-      - http
-      security:
-      - JWTAuth: []
-      summary: create reddit
-      tags:
-      - reddit
-  /v1/social/reddit/userid/verify:
-    get:
-      description: 'Get '
-      operationId: verifyreddit#show
-      parameters:
-      - description: User ID
-        in: query
-        name: userId
-        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
-        required: false
-        type: string
-      produces:
-      - application/standard_error+json
-      - application/vnd.reddituser+json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/Reddituser'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "410":
-          description: Gone
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/Standard_error'
-      schemes:
-      - http
-      security:
-      - JWTAuth: []
-      summary: show verifyreddit
-      tags:
-      - verifyreddit
-    post:
-      description: Update Reddit Verification Code
-      operationId: verifyreddit#update
-      parameters:
-      - description: Social Account Verification Payload
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/VerificationPayload'
-      produces:
-      - application/standard_error+json
-      - application/vnd.reddituser+json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/Reddituser'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "410":
-          description: Gone
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/Standard_error'
-      schemes:
-      - http
-      security:
-      - JWTAuth: []
-      summary: update verifyreddit
-      tags:
-      - verifyreddit
   /v1/tasks:
     get:
       description: Get list of user tasks

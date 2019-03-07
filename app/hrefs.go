@@ -27,8 +27,9 @@ func QuizzesHref(quizID interface{}) string {
 }
 
 // RedditHref returns the resource href.
-func RedditHref() string {
-	return "/v1/social/reddit/userid"
+func RedditHref(userID interface{}) string {
+	paramuserID := strings.TrimLeftFunc(fmt.Sprintf("%v", userID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/v1/social/reddit/%v", paramuserID)
 }
 
 // ResultsHref returns the resource href.
@@ -47,11 +48,6 @@ func TasksHref(taskID interface{}) string {
 func UsersHref(userID interface{}) string {
 	paramuserID := strings.TrimLeftFunc(fmt.Sprintf("%v", userID), func(r rune) bool { return r == '/' })
 	return fmt.Sprintf("/v1/users/%v", paramuserID)
-}
-
-// VerifyredditHref returns the resource href.
-func VerifyredditHref() string {
-	return "/v1/social/reddit/userid/verify"
 }
 
 // WalletsHref returns the resource href.

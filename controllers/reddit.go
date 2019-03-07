@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
+	"github.com/waymobetta/go-coindrop-api/services/reddit"
 	"github.com/waymobetta/go-coindrop-api/types"
 )
 
@@ -66,7 +67,7 @@ func (c *RedditController) Show(ctx *app.ShowRedditContext) error {
 }
 
 // Update runs the update action.
-func (c *RedditController) Create(ctx *app.CreateRedditContext) error {
+func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 	// RedditController_Create: start_implement
 
 	// Put your logic here
@@ -110,4 +111,109 @@ func (c *RedditController) Create(ctx *app.CreateRedditContext) error {
 
 	return ctx.OK(res)
 	// RedditController_Update: end_implement
+}
+
+// Display runs the display action.
+func (c *RedditController) Display(ctx *app.DisplayRedditContext) error {
+	// RedditController_Display: start_implement
+
+	// Put your logic here
+
+	user := &types.User{
+		CognitoAuthUserID: ctx.Params.Get("userId"),
+		Social: &types.Social{
+			Reddit: &types.Reddit{
+				Verification: &types.Verification{},
+			},
+		},
+	}
+
+	_, err := c.db.GetUserRedditVerification(user)
+	if err != nil {
+		log.Errorf("[controller/reddit] %v", err)
+		return ctx.NotFound(&app.StandardError{
+			Code:    400,
+			Message: "could not get user verification info from db",
+		})
+	}
+
+	log.Printf("[controller/reddit] returned verification information for coindrop user: %v\n", user.CognitoAuthUserID)
+
+	res := &app.Reddituser{
+		Verification: &app.Verification{
+			PostedVerificationCode:    user.Social.Reddit.Verification.PostedVerificationCode,
+			ConfirmedVerificationCode: user.Social.Reddit.Verification.ConfirmedVerificationCode,
+			Verified:                  user.Social.Reddit.Verification.Verified,
+		},
+	}
+
+	return ctx.OK(res)
+	// RedditController_Display: end_implement
+}
+
+// Verify runs the verify action.
+func (c *RedditController) Verify(ctx *app.VerifyRedditContext) error {
+	// RedditController_Verify: start_implement
+
+	// Put your logic here
+
+	user := &types.User{
+		CognitoAuthUserID: ctx.Payload.UserID,
+		Social: &types.Social{
+			Reddit: &types.Reddit{
+				Verification: &types.Verification{},
+			},
+		},
+	}
+
+	// initializes reddit OAuth sessions
+	authSession, err := reddit.NewRedditAuth()
+	if err != nil {
+		log.Errorf("[controller/reddit] error: %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could not start reddit auth session",
+		})
+	}
+
+	// get previously stored verification info from db
+	_, err = c.db.GetUserRedditVerification(user)
+	if err != nil {
+		log.Errorf("[controller/reddit] %v", err)
+		return ctx.NotFound(&app.StandardError{
+			Code:    400,
+			Message: "could not get user verification info from db",
+		})
+	}
+
+	// retrieve verification code from coindrop verification subreddit
+	err = authSession.GetRecentPostsFromSubreddit(user)
+	if err != nil {
+		log.Errorf("[controller/reddit] %v", err)
+		return ctx.NotFound(&app.StandardError{
+			Code:    400,
+			Message: "verification code does not match",
+		})
+	}
+
+	// update verification code for user in db
+	_, err = c.db.UpdateRedditVerificationCode(user)
+	if err != nil {
+		log.Errorf("[controller/reddit] %v", err)
+		return ctx.NotFound(&app.StandardError{
+			Code:    400,
+			Message: "could not get user verification info from db",
+		})
+	}
+
+	log.Printf("[controller/reddit] successfully verified reddit account for coindrop user: %v\n", user.CognitoAuthUserID)
+
+	res := &app.Reddituser{
+		Verification: &app.Verification{
+			Verified: user.Social.Reddit.Verification.Verified,
+		},
+	}
+
+	return ctx.OK(res)
+	// RedditController_Verify: end_implement
 }

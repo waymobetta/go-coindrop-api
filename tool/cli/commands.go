@@ -52,15 +52,31 @@ type (
 		PrettyPrint bool
 	}
 
-	// CreateRedditCommand is the command line data structure for the create action of reddit
-	CreateRedditCommand struct {
-		Payload     string
-		ContentType string
+	// DisplayRedditCommand is the command line data structure for the display action of reddit
+	DisplayRedditCommand struct {
+		// User ID
+		UserID      string
 		PrettyPrint bool
 	}
 
 	// ShowRedditCommand is the command line data structure for the show action of reddit
 	ShowRedditCommand struct {
+		// User ID
+		UserID      string
+		PrettyPrint bool
+	}
+
+	// UpdateRedditCommand is the command line data structure for the update action of reddit
+	UpdateRedditCommand struct {
+		Payload     string
+		ContentType string
+		PrettyPrint bool
+	}
+
+	// VerifyRedditCommand is the command line data structure for the verify action of reddit
+	VerifyRedditCommand struct {
+		Payload     string
+		ContentType string
 		// User ID
 		UserID      string
 		PrettyPrint bool
@@ -143,20 +159,6 @@ type (
 		PrettyPrint bool
 	}
 
-	// ShowVerifyredditCommand is the command line data structure for the show action of verifyreddit
-	ShowVerifyredditCommand struct {
-		// User ID
-		UserID      string
-		PrettyPrint bool
-	}
-
-	// UpdateVerifyredditCommand is the command line data structure for the update action of verifyreddit
-	UpdateVerifyredditCommand struct {
-		Payload     string
-		ContentType string
-		PrettyPrint bool
-	}
-
 	// ShowWalletsCommand is the command line data structure for the show action of wallets
 	ShowWalletsCommand struct {
 		// User ID
@@ -202,42 +204,58 @@ Payload example:
 	tmp1.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp1.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp2 := new(CreateRedditCommand)
+	tmp2 := new(CreateTasksCommand)
 	sub = &cobra.Command{
-		Use:   `reddit ["/v1/social/reddit/userid"]`,
+		Use:   `tasks ["/v1/tasks"]`,
 		Short: ``,
 		Long: `
 
 Payload example:
 
 {
+<<<<<<< Updated upstream
    "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
    "username": "Totam quia amet reiciendis velit."
+=======
+   "taskId": "Natus neque pariatur reprehenderit officiis eos.",
+   "userId": "Sit amet non voluptatem id."
+>>>>>>> Stashed changes
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
 	tmp2.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp2.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
+<<<<<<< Updated upstream
 	tmp3 := new(CreateResultsCommand)
 	sub = &cobra.Command{
 		Use:   `results ["/v1/quizzes/results"]`,
+=======
+	tmp3 := new(CreateUsersCommand)
+	sub = &cobra.Command{
+		Use:   `users ["/v1/users"]`,
+>>>>>>> Stashed changes
 		Short: ``,
 		Long: `
 
 Payload example:
 
 {
+<<<<<<< Updated upstream
    "questionsCorrect": 1029121870343962906,
    "questionsIncorrect": 3901860836045060093,
    "quizId": "Non voluptatem id.",
    "userId": "Sit et molestias sed possimus enim et."
+=======
+   "cognitoAuthUserId": "Et molestias sed possimus enim et."
+>>>>>>> Stashed changes
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
 	}
 	tmp3.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp3.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
+<<<<<<< Updated upstream
 	tmp4 := new(CreateTasksCommand)
 	sub = &cobra.Command{
 		Use:   `tasks ["/v1/tasks"]`,
@@ -251,6 +269,18 @@ Payload example:
    "userId": "Inventore ducimus fuga."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
+=======
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "display",
+		Short: `Get Reddit Verification`,
+	}
+	tmp4 := new(DisplayRedditCommand)
+	sub = &cobra.Command{
+		Use:   `reddit ["/v1/social/reddit/USERID/verify"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
+>>>>>>> Stashed changes
 	}
 	tmp4.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp4.PrettyPrint, "pp", false, "Pretty print response body")
@@ -319,7 +349,11 @@ Payload example:
 	}
 	tmp10 := new(ShowHealthcheckCommand)
 	sub = &cobra.Command{
+<<<<<<< Updated upstream
 		Use:   `healthcheck ["/v1/health"]`,
+=======
+		Use:   `reddit ["/v1/social/reddit/USERID"]`,
+>>>>>>> Stashed changes
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp10.Run(c, args) },
 	}
@@ -353,24 +387,50 @@ Payload example:
 	tmp13.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp13.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
+<<<<<<< Updated upstream
 	tmp14 := new(ShowTasksCommand)
 	sub = &cobra.Command{
 		Use:   `tasks ["/v1/tasks/TASKID"]`,
+=======
+	tmp14 := new(ShowWalletsCommand)
+	sub = &cobra.Command{
+		Use:   `wallets ["/v1/wallets"]`,
+>>>>>>> Stashed changes
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp14.Run(c, args) },
 	}
 	tmp14.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp14.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
+<<<<<<< Updated upstream
 	tmp15 := new(ShowUsersCommand)
 	sub = &cobra.Command{
 		Use:   `users ["/v1/users/USERID"]`,
+=======
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "update",
+		Short: `update action`,
+	}
+	tmp15 := new(UpdateRedditCommand)
+	sub = &cobra.Command{
+		Use:   `reddit ["/v1/social/reddit"]`,
+>>>>>>> Stashed changes
 		Short: ``,
-		RunE:  func(cmd *cobra.Command, args []string) error { return tmp15.Run(c, args) },
+		Long: `
+
+Payload example:
+
+{
+   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
+   "username": "Ea porro sunt facilis alias."
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp15.Run(c, args) },
 	}
 	tmp15.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp15.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
+<<<<<<< Updated upstream
 	tmp16 := new(ShowVerifyredditCommand)
 	sub = &cobra.Command{
 		Use:   `verifyreddit ["/v1/social/reddit/userid/verify"]`,
@@ -416,6 +476,9 @@ Payload example:
 		Short: `update action`,
 	}
 	tmp19 := new(UpdateRedditharvestCommand)
+=======
+	tmp16 := new(UpdateRedditharvestCommand)
+>>>>>>> Stashed changes
 	sub = &cobra.Command{
 		Use:   `redditharvest ["/v1/social/reddit/harvest"]`,
 		Short: ``,
@@ -448,23 +511,11 @@ Payload example:
 	tmp20.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp20.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
+<<<<<<< Updated upstream
 	tmp21 := new(UpdateVerifyredditCommand)
-	sub = &cobra.Command{
-		Use:   `verifyreddit ["/v1/social/reddit/userid/verify"]`,
-		Short: ``,
-		Long: `
-
-Payload example:
-
-{
-   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26"
-}`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp21.Run(c, args) },
-	}
-	tmp21.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp21.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp22 := new(UpdateWalletsCommand)
+=======
+	tmp18 := new(UpdateWalletsCommand)
+>>>>>>> Stashed changes
 	sub = &cobra.Command{
 		Use:   `wallets ["/v1/wallets"]`,
 		Short: ``,
@@ -474,6 +525,31 @@ Payload example:
 
 {
    "walletAddress": "0x845fdD93Cca3aE9e380d5556818e6d0b902B977c"
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp21.Run(c, args) },
+	}
+	tmp21.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp21.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+<<<<<<< Updated upstream
+	tmp22 := new(UpdateWalletsCommand)
+=======
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "verify",
+		Short: `Update Reddit Verification`,
+	}
+	tmp19 := new(VerifyRedditCommand)
+>>>>>>> Stashed changes
+	sub = &cobra.Command{
+		Use:   `reddit ["/v1/social/reddit/USERID/verify"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp22.Run(c, args) },
 	}
@@ -743,24 +819,17 @@ func (cmd *ShowQuizzesCommand) RegisterFlags(cc *cobra.Command, c *client.Client
 	cc.Flags().StringVar(&cmd.QuizID, "quizId", quizID, `Quiz ID`)
 }
 
-// Run makes the HTTP request corresponding to the CreateRedditCommand command.
-func (cmd *CreateRedditCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the DisplayRedditCommand command.
+func (cmd *DisplayRedditCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = "/v1/social/reddit/userid"
-	}
-	var payload client.CreateUserPayload
-	if cmd.Payload != "" {
-		err := json.Unmarshal([]byte(cmd.Payload), &payload)
-		if err != nil {
-			return fmt.Errorf("failed to deserialize payload: %s", err)
-		}
+		path = fmt.Sprintf("/v1/social/reddit/%v/verify", url.QueryEscape(cmd.UserID))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.CreateReddit(ctx, path, &payload, cmd.ContentType)
+	resp, err := c.DisplayReddit(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -771,9 +840,9 @@ func (cmd *CreateRedditCommand) Run(c *client.Client, args []string) error {
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *CreateRedditCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
-	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+func (cmd *DisplayRedditCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var userID string
+	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
 }
 
 // Run makes the HTTP request corresponding to the ShowRedditCommand command.
@@ -782,11 +851,11 @@ func (cmd *ShowRedditCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = "/v1/social/reddit/userid"
+		path = fmt.Sprintf("/v1/social/reddit/%v", url.QueryEscape(cmd.UserID))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ShowReddit(ctx, path, stringFlagVal("userId", cmd.UserID))
+	resp, err := c.ShowReddit(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -798,6 +867,74 @@ func (cmd *ShowRedditCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *ShowRedditCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var userID string
+	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
+}
+
+// Run makes the HTTP request corresponding to the UpdateRedditCommand command.
+func (cmd *UpdateRedditCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/v1/social/reddit"
+	}
+	var payload client.CreateUserPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.UpdateReddit(ctx, path, &payload, cmd.ContentType)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *UpdateRedditCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+}
+
+// Run makes the HTTP request corresponding to the VerifyRedditCommand command.
+func (cmd *VerifyRedditCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/v1/social/reddit/%v/verify", url.QueryEscape(cmd.UserID))
+	}
+	var payload client.VerificationPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.VerifyReddit(ctx, path, &payload, cmd.ContentType)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *VerifyRedditCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 	var userID string
 	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
 }
@@ -1121,65 +1258,6 @@ func (cmd *ShowUsersCommand) Run(c *client.Client, args []string) error {
 func (cmd *ShowUsersCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var userID string
 	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
-}
-
-// Run makes the HTTP request corresponding to the ShowVerifyredditCommand command.
-func (cmd *ShowVerifyredditCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = "/v1/social/reddit/userid/verify"
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ShowVerifyreddit(ctx, path, stringFlagVal("userId", cmd.UserID))
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *ShowVerifyredditCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var userID string
-	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
-}
-
-// Run makes the HTTP request corresponding to the UpdateVerifyredditCommand command.
-func (cmd *UpdateVerifyredditCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = "/v1/social/reddit/userid/verify"
-	}
-	var payload client.VerificationPayload
-	if cmd.Payload != "" {
-		err := json.Unmarshal([]byte(cmd.Payload), &payload)
-		if err != nil {
-			return fmt.Errorf("failed to deserialize payload: %s", err)
-		}
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.UpdateVerifyreddit(ctx, path, &payload, cmd.ContentType)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *UpdateVerifyredditCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
-	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 }
 
 // Run makes the HTTP request corresponding to the ShowWalletsCommand command.
