@@ -157,15 +157,32 @@ func (db *DB) AddQuizResults(r *types.QuizResults) (*types.QuizResults, error) {
 
 	// create SQL statement for db writes
 	sqlStatement := `
-			INSERT INTO
-				coindrop_quiz_results(
-					typeform_form_id,
-					user_id,
-					questions_correct,
-					questions_incorrect,
-					quiz_taken
+		INSERT INTO
+			coindrop_quiz_results(
+				typeform_form_id,
+				user_id,
+				questions_correct,
+				questions_incorrect,
+				quiz_taken,
+				quiz_id
+			)
+			VALUES 
+			(
+				$1,
+				$2,
+				$3,
+				$4,
+				$5, 
+				(
+					SELECT 
+						id 
+					FROM 
+						coindrop_quizzes
+					WHERE 
+						typeform_form_id = $1
 				)
-				VALUES ($1,$2,$3,$4,$5)`
+			)
+		`
 
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)

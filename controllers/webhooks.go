@@ -51,11 +51,9 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 		}
 
 		if form.Hidden != nil {
-			if form.Hidden != nil {
-				hidden := *form.Hidden
-				if hidden.UserID != nil {
-					userID = *hidden.UserID
-				}
+			hidden := *form.Hidden
+			if hidden.UserID != nil {
+				userID = *hidden.UserID
 			}
 		}
 	}
@@ -66,6 +64,7 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 	}
 
 	results := &types.QuizResults{
+		QuizID:             "",
 		TypeformFormID:     formID,
 		UserID:             userID,
 		QuestionsCorrect:   correct,
