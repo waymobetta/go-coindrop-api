@@ -265,28 +265,36 @@ func (ctx *ShowQuizzesContext) InternalServerError(r *StandardError) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
-// CreateRedditContext provides the reddit create action context.
-type CreateRedditContext struct {
+// DisplayRedditContext provides the reddit display action context.
+type DisplayRedditContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	Payload *CreateUserPayload
+	UserID string
 }
 
-// NewCreateRedditContext parses the incoming request URL and body, performs validations and creates the
-// context used by the reddit controller create action.
-func NewCreateRedditContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateRedditContext, error) {
+// NewDisplayRedditContext parses the incoming request URL and body, performs validations and creates the
+// context used by the reddit controller display action.
+func NewDisplayRedditContext(ctx context.Context, r *http.Request, service *goa.Service) (*DisplayRedditContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := CreateRedditContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := DisplayRedditContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramUserID := req.Params["userId"]
+	if len(paramUserID) > 0 {
+		rawUserID := paramUserID[0]
+		rctx.UserID = rawUserID
+		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, rctx.UserID); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`userId`, rctx.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+		}
+	}
 	return &rctx, err
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *CreateRedditContext) OK(r *Reddituser) error {
+func (ctx *DisplayRedditContext) OK(r *Reddituser) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.reddituser+json")
 	}
@@ -294,7 +302,7 @@ func (ctx *CreateRedditContext) OK(r *Reddituser) error {
 }
 
 // BadRequest sends a HTTP response with status code 400.
-func (ctx *CreateRedditContext) BadRequest(r *StandardError) error {
+func (ctx *DisplayRedditContext) BadRequest(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -302,7 +310,7 @@ func (ctx *CreateRedditContext) BadRequest(r *StandardError) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *CreateRedditContext) NotFound(r *StandardError) error {
+func (ctx *DisplayRedditContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -310,7 +318,7 @@ func (ctx *CreateRedditContext) NotFound(r *StandardError) error {
 }
 
 // Gone sends a HTTP response with status code 410.
-func (ctx *CreateRedditContext) Gone(r *StandardError) error {
+func (ctx *DisplayRedditContext) Gone(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -318,7 +326,7 @@ func (ctx *CreateRedditContext) Gone(r *StandardError) error {
 }
 
 // InternalServerError sends a HTTP response with status code 500.
-func (ctx *CreateRedditContext) InternalServerError(r *StandardError) error {
+func (ctx *DisplayRedditContext) InternalServerError(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -330,7 +338,7 @@ type ShowRedditContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	UserID *string
+	UserID string
 }
 
 // NewShowRedditContext parses the incoming request URL and body, performs validations and creates the
@@ -345,11 +353,9 @@ func NewShowRedditContext(ctx context.Context, r *http.Request, service *goa.Ser
 	paramUserID := req.Params["userId"]
 	if len(paramUserID) > 0 {
 		rawUserID := paramUserID[0]
-		rctx.UserID = &rawUserID
-		if rctx.UserID != nil {
-			if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *rctx.UserID); !ok {
-				err = goa.MergeErrors(err, goa.InvalidPatternError(`userId`, *rctx.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
-			}
+		rctx.UserID = rawUserID
+		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, rctx.UserID); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`userId`, rctx.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
 		}
 	}
 	return &rctx, err
@@ -389,6 +395,135 @@ func (ctx *ShowRedditContext) Gone(r *StandardError) error {
 
 // InternalServerError sends a HTTP response with status code 500.
 func (ctx *ShowRedditContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
+// UpdateRedditContext provides the reddit update action context.
+type UpdateRedditContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Payload *CreateUserPayload
+}
+
+// NewUpdateRedditContext parses the incoming request URL and body, performs validations and creates the
+// context used by the reddit controller update action.
+func NewUpdateRedditContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateRedditContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := UpdateRedditContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *UpdateRedditContext) OK(r *Reddituser) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.reddituser+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *UpdateRedditContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *UpdateRedditContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *UpdateRedditContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *UpdateRedditContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
+// VerifyRedditContext provides the reddit verify action context.
+type VerifyRedditContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	UserID  string
+	Payload *VerificationPayload
+}
+
+// NewVerifyRedditContext parses the incoming request URL and body, performs validations and creates the
+// context used by the reddit controller verify action.
+func NewVerifyRedditContext(ctx context.Context, r *http.Request, service *goa.Service) (*VerifyRedditContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := VerifyRedditContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramUserID := req.Params["userId"]
+	if len(paramUserID) > 0 {
+		rawUserID := paramUserID[0]
+		rctx.UserID = rawUserID
+		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, rctx.UserID); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`userId`, rctx.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *VerifyRedditContext) OK(r *Reddituser) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.reddituser+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *VerifyRedditContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *VerifyRedditContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *VerifyRedditContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *VerifyRedditContext) InternalServerError(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -1108,136 +1243,6 @@ func (ctx *ShowUsersContext) Gone(r *StandardError) error {
 
 // InternalServerError sends a HTTP response with status code 500.
 func (ctx *ShowUsersContext) InternalServerError(r *StandardError) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
-}
-
-// ShowVerifyredditContext provides the verifyreddit show action context.
-type ShowVerifyredditContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	UserID *string
-}
-
-// NewShowVerifyredditContext parses the incoming request URL and body, performs validations and creates the
-// context used by the verifyreddit controller show action.
-func NewShowVerifyredditContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowVerifyredditContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := ShowVerifyredditContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramUserID := req.Params["userId"]
-	if len(paramUserID) > 0 {
-		rawUserID := paramUserID[0]
-		rctx.UserID = &rawUserID
-		if rctx.UserID != nil {
-			if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *rctx.UserID); !ok {
-				err = goa.MergeErrors(err, goa.InvalidPatternError(`userId`, *rctx.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
-			}
-		}
-	}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ShowVerifyredditContext) OK(r *Reddituser) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.reddituser+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ShowVerifyredditContext) BadRequest(r *StandardError) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *ShowVerifyredditContext) NotFound(r *StandardError) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
-}
-
-// Gone sends a HTTP response with status code 410.
-func (ctx *ShowVerifyredditContext) Gone(r *StandardError) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *ShowVerifyredditContext) InternalServerError(r *StandardError) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
-}
-
-// UpdateVerifyredditContext provides the verifyreddit update action context.
-type UpdateVerifyredditContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	Payload *VerificationPayload
-}
-
-// NewUpdateVerifyredditContext parses the incoming request URL and body, performs validations and creates the
-// context used by the verifyreddit controller update action.
-func NewUpdateVerifyredditContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateVerifyredditContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := UpdateVerifyredditContext{Context: ctx, ResponseData: resp, RequestData: req}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *UpdateVerifyredditContext) OK(r *Reddituser) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.reddituser+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *UpdateVerifyredditContext) BadRequest(r *StandardError) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *UpdateVerifyredditContext) NotFound(r *StandardError) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
-}
-
-// Gone sends a HTTP response with status code 410.
-func (ctx *UpdateVerifyredditContext) Gone(r *StandardError) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *UpdateVerifyredditContext) InternalServerError(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}

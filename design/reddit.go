@@ -6,7 +6,7 @@ import (
 )
 
 var _ = Resource("reddit", func() {
-	BasePath("/v1/social/reddit/userid")
+	BasePath("/v1/social/reddit")
 
 	Security(JWTAuth)
 
@@ -17,7 +17,7 @@ var _ = Resource("reddit", func() {
 
 	Action("show", func() {
 		Description("Get Reddit User")
-		Routing(GET(""))
+		Routing(GET("/:userId"))
 		Params(func() {
 			Param("userId", String, "User ID", func() {
 				Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
@@ -27,10 +27,35 @@ var _ = Resource("reddit", func() {
 		Response(OK, RedditUserMedia)
 	})
 
-	Action("create", func() {
-		Description("Create Reddit User")
+	Action("update", func() {
+		Description("Update Reddit User")
 		Routing(POST(""))
 		Payload(CreateUserPayload)
+		Response(OK, RedditUserMedia)
+	})
+
+	Action("verify", func() {
+		Description("Update Reddit Verification")
+		Routing(POST("/:userId/verify"))
+		Params(func() {
+			Param("userId", String, "User ID", func() {
+				Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
+				Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
+			})
+		})
+		Payload(VerificationPayload)
+		Response(OK, RedditUserMedia)
+	})
+
+	Action("display", func() {
+		Description("Get Reddit Verification")
+		Routing(GET("/:userId/verify"))
+		Params(func() {
+			Param("userId", String, "User ID", func() {
+				Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
+				Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
+			})
+		})
 		Response(OK, RedditUserMedia)
 	})
 })
@@ -87,5 +112,37 @@ var CreateUserPayload = Type("CreateUserPayload", func() {
 	Required(
 		"userId",
 		"username",
+	)
+})
+
+// VerificationMedia ...
+var VerificationMedia = MediaType("application/vnd.verification+json", func() {
+	Description("Account Verification")
+	Attributes(func() {
+		Attribute("postedVerificationCode", String, "Posted Verification Code")
+		Attribute("confirmedVerificationCode", String, "Confirmed Verification Code")
+		Attribute("verified", Boolean, "Account Verified Flag")
+		Required(
+			"postedVerificationCode",
+			"confirmedVerificationCode",
+			"verified",
+		)
+	})
+	View("default", func() {
+		Attribute("postedVerificationCode")
+		Attribute("confirmedVerificationCode")
+		Attribute("verified")
+	})
+})
+
+// VerificationPayload is the payload for updating verification data of a social account
+var VerificationPayload = Type("VerificationPayload", func() {
+	Description("Social Account Verification Payload")
+	Attribute("userId", String, "User ID", func() {
+		Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
+		Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
+	})
+	Required(
+		"userId",
 	)
 })
