@@ -97,7 +97,7 @@ func GetProfileByUserID(u *types.User) (*types.User, error) {
 					Verification: &types.Verification{
 						PostedVerificationCode:    aboutProfResStruct.Items[index].AboutMe,
 						ConfirmedVerificationCode: u.Social.StackOverflow.Verification.ConfirmedVerificationCode,
-						Verified:                  false,
+						Verified:                  u.Social.StackOverflow.Verification.Verified,
 					},
 				},
 			},
