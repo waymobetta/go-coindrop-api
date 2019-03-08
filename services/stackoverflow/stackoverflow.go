@@ -34,7 +34,7 @@ func GetProfileByUserID(u *types.User) (*types.User, error) {
 	req, err := http.NewRequest("GET", profileURL, nil)
 	if err != nil {
 		log.Errorf("[services/stackoverflow] Error preparing GET request for user profile info; %v\n", err)
-		return u, err
+		return err
 	}
 	req.Header.Set("Content-Type", "application/json")
 
@@ -46,7 +46,7 @@ func GetProfileByUserID(u *types.User) (*types.User, error) {
 	res, err := client.Do(req)
 	if err != nil {
 		log.Errorf("[services/stackoverflow] Error fetching user profile info; %v\n", err)
-		return u, err
+		return err
 	}
 	defer res.Body.Close()
 
@@ -54,7 +54,7 @@ func GetProfileByUserID(u *types.User) (*types.User, error) {
 	byteArr, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		log.Errorf("[services/stackoverflow] Error reading response body; %v\n", err)
-		return u, err
+		return err
 	}
 
 	// initialize new struct to contain AboutProfileResponse
@@ -63,7 +63,7 @@ func GetProfileByUserID(u *types.User) (*types.User, error) {
 	// unmarshal JSON into AboutProfileResponse struct
 	if err := json.Unmarshal(byteArr, &aboutProfResStruct); err != nil {
 		log.Errorf("[services/stackoverflow] Error unmarshalling JSON; %v\n", err)
-		return u, err
+		return err
 	}
 
 	log.Printf("[services/stackoverflow] found profile info for user: %s!\n", aboutProfResStruct.Items[0].DisplayName)
@@ -102,9 +102,9 @@ func GetProfileByUserID(u *types.User) (*types.User, error) {
 				},
 			},
 		}
-		return u, nil
+		return nil
 	}
-	return u, nil
+	return nil
 }
 
 // GetAssociatedAccounts method fetches associated communities of user
