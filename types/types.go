@@ -53,7 +53,7 @@ type Reddit struct {
 type StackOverflow struct {
 	ID                string        `json:"id"`
 	ExchangeAccountID int           `json:"exchange_account_id"`
-	UserID            int           `json:"user_id"`
+	StackUserID       int           `json:"stack_user_id"`
 	DisplayName       string        `json:"display_name"`
 	Accounts          []string      `json:"accounts"`
 	Communities       []Community   `json:"communities"`
