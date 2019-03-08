@@ -106,6 +106,9 @@ func main() {
 	redditCtrlr := controllers.NewRedditController(service, dbs)
 	app.MountRedditController(service, redditCtrlr)
 
+	stackOverflowCtrlr := controllers.NewStackoverflowController(service, dbs)
+	app.MountStackoverflowController(service, stackOverflowCtrlr)
+
 	redditHarvestCtrlr := controllers.NewRedditharvestController(service, dbs)
 	app.MountRedditharvestController(service, redditHarvestCtrlr)
 
