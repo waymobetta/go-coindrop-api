@@ -22,7 +22,7 @@ const (
 )
 
 // GetProfileByUserID fetches basic user profile info by unique user ID
-func GetProfileByUserID(u *types.User) (*types.User, error) {
+func GetProfileByUserID(u *types.User) error {
 	log.Printf("[stackoverflow] collecting profile information for user ID: %v\n", u.Social.StackOverflow.StackUserID)
 
 	profileEndpoint := fmt.Sprintf("/users/%v?order=desc&sort=reputation&site=stackoverflow&filter=!-*jbN*IioeFP", u.Social.StackOverflow.StackUserID)
@@ -108,7 +108,7 @@ func GetProfileByUserID(u *types.User) (*types.User, error) {
 }
 
 // GetAssociatedAccounts method fetches associated communities of user
-func GetAssociatedAccounts(u *types.User) (*types.User, error) {
+func GetAssociatedAccounts(u *types.User) error {
 	log.Printf("[services/stackoverflow] collecting associated account information for user: %s\n", u.Social.StackOverflow.DisplayName)
 
 	associatedAccountsEndpoint := fmt.Sprintf("/users/%v/associated", u.Social.StackOverflow.ExchangeAccountID)
@@ -120,7 +120,7 @@ func GetAssociatedAccounts(u *types.User) (*types.User, error) {
 	req, err := http.NewRequest("GET", associatedAccountsURL, nil)
 	if err != nil {
 		log.Errorf("[services/stackoverflow] Error preparing GET request for user associated accounts info; %v\n", err)
-		return u, err
+		return err
 	}
 	req.Header.Set("Content-Type", "application/json")
 
@@ -132,7 +132,7 @@ func GetAssociatedAccounts(u *types.User) (*types.User, error) {
 	res, err := client.Do(req)
 	if err != nil {
 		log.Errorf("[services/stackoverflow] Error fetching user profile info; %v\n", err)
-		return u, err
+		return err
 	}
 	defer res.Body.Close()
 
@@ -145,7 +145,7 @@ func GetAssociatedAccounts(u *types.User) (*types.User, error) {
 	byteArr, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		log.Errorf("[services/stackoverflow] Error reading response body\n%v", err)
-		return u, err
+		return err
 	}
 
 	// initialize new struct to contain AssociatedCommunitiesResponse
@@ -154,7 +154,7 @@ func GetAssociatedAccounts(u *types.User) (*types.User, error) {
 	// unmarshal JSON into AssociatedCommunitiesResponse struct
 	if err := json.Unmarshal(byteArr, &associatedCommunitiesStruct); err != nil {
 		log.Errorf("[services/stackoverflow] Error unmarshalling JSON; %v\n", err)
-		return u, err
+		return err
 	}
 
 	log.Printf("[services/stackoverflow] Found associated account info for user: %s!\n", u.Social.StackOverflow.DisplayName)
@@ -185,7 +185,7 @@ func GetAssociatedAccounts(u *types.User) (*types.User, error) {
 		u.Social.StackOverflow.Communities = append(u.Social.StackOverflow.Communities, communityObj)
 	}
 
-	return u, nil
+	return nil
 }
 
 // VerificationCheck checks posted verif. code against that which is stored
