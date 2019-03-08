@@ -17,6 +17,9 @@ import (
 const (
 	// baseAPI is the base URL for the Stack Overflow API
 	baseAPI = "https://api.stackexchange.com/2.2"
+)
+
+var (
 	// noVerifError is generated if the verification code does not match
 	noVerifError = errors.New("verification code does not match")
 )
@@ -138,7 +141,7 @@ func GetAssociatedAccounts(u *types.User) error {
 
 	// return if not 200
 	if res.StatusCode != http.StatusOK {
-		return u, err
+		return err
 	}
 
 	// read result of GET request
@@ -192,14 +195,14 @@ func GetAssociatedAccounts(u *types.User) error {
 func VerificationCheck(u *types.User) error {
 	// secondary validation to see if codes match
 	if !strings.Contains(
-		user.Social.StackOverflow.Verification.PostedVerificationCode,
-		user.Social.StackOverflow.Verification.ConfirmedVerificationCode,
+		u.Social.StackOverflow.Verification.PostedVerificationCode,
+		u.Social.StackOverflow.Verification.ConfirmedVerificationCode,
 	) {
 		return noVerifError
 	}
 
 	// if no error, update verification field values
-	user.Social.StackOverflow.Verification.Verified = true
+	u.Social.StackOverflow.Verification.Verified = true
 
 	return nil
 }
