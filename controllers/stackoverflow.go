@@ -1,9 +1,7 @@
 package controllers
 
 import (
-	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/goadesign/goa"
 	log "github.com/sirupsen/logrus"
@@ -11,10 +9,6 @@ import (
 	"github.com/waymobetta/go-coindrop-api/db"
 	"github.com/waymobetta/go-coindrop-api/services/stackoverflow"
 	"github.com/waymobetta/go-coindrop-api/types"
-)
-
-var (
-	noVerifError = errors.New("verification code does not match")
 )
 
 // StackoverflowController implements the stackoverflow resource.
@@ -186,27 +180,25 @@ func (c *StackoverflowController) Verify(ctx *app.VerifyStackoverflowContext) er
 		})
 	}
 
-	// secondary validation to see if codes match
-	if !strings.Contains(user.Social.StackOverflow.Verification.PostedVerificationCode, user.Social.StackOverflow.Verification.ConfirmedVerificationCode) {
-		log.Errorf("[controller/stackoverflow] %v", noVerifError)
+	// check to see if posted verification code matches that which is stored
+	err = stackoverflow.VerificationCheck(user)
+	if err != nil {
+		log.Errorf("[controller/stackoverflow] %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
 			Message: "verification code does not match",
 		})
 	}
 
-	// if no error, update verification field values
-	user.Social.StackOverflow.Verification.Verified = true
-
 	fmt.Println("\n")
-	fmt.Printf("UPDATED USER: %v\n\n", user)
+	fmt.Printf("STORING UPDATED USER: %v\n\n", user)
 
 	_, err = c.db.UpdateStackVerificationCode(user)
 	if err != nil {
 		log.Errorf("[controller/stackoverflow] %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
-			Message: "could not get user verification info from db",
+			Message: "could not update user verification info in db",
 		})
 	}
 
