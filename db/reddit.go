@@ -15,29 +15,29 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 
 	// create SQL statement for db writes
 	sqlStatement := `
-	INSERT INTO
-		coindrop_reddit
-		(
-			user_id,
-			username,
-			comment_karma,
-			link_karma,
-			subreddits,
-			trophies,
-			posted_verification_code,
-			verified
-		)
-	VALUES
-		(
-			$1,
-			$2,
-			$3,
-			$4,
-			$5,
-			$6,
-			$7,
-			$8,
-		)
+		INSERT INTO
+			coindrop_reddit
+			(
+				user_id,
+				username,
+				comment_karma,
+				link_karma,
+				subreddits,
+				trophies,
+				posted_verification_code,
+				verified
+			)
+		VALUES
+			(
+				$1,
+				$2,
+				$3,
+				$4,
+				$5,
+				$6,
+				$7,
+				$8,
+			)
 	`
 
 	// prepare statement
@@ -120,7 +120,7 @@ func (db *DB) GetUsers(users *types.Users) (*types.Users, error) {
 			pq.Array(&user.Social.Reddit.Trophies),
 			&user.Social.Reddit.Verification.Verified,
 			// stack overflow
-			&user.Social.StackOverflow.UserID,
+			&user.Social.StackOverflow.StackUserID,
 			&user.Social.StackOverflow.ExchangeAccountID,
 			&user.Social.StackOverflow.DisplayName,
 			pq.Array(&user.Social.StackOverflow.Accounts),
