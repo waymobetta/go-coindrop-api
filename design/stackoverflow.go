@@ -1,14 +1,12 @@
 package design
 
-/*
-
 import (
 	. "github.com/goadesign/goa/design"        // Use . imports to enable the DSL
 	. "github.com/goadesign/goa/design/apidsl" // Use . imports to enable the DSL
 )
 
 var _ = Resource("stackoverflow", func() {
-	BasePath("/v1/stackoverflow")
+	BasePath("/v1/social/stackoverflow")
 
 	Security(JWTAuth)
 
@@ -18,8 +16,8 @@ var _ = Resource("stackoverflow", func() {
 	Response(InternalServerError, StandardErrorMedia)
 
 	Action("show", func() {
-		Description("Get stack overflow user info")
-		Routing(GET(""))
+		Description("Get Stack Overflow User")
+		Routing(GET("/:userId"))
 		Params(func() {
 			Param("userId", String, "User ID", func() {
 				Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
@@ -29,19 +27,47 @@ var _ = Resource("stackoverflow", func() {
 		Response(OK, StackOverflowUserMedia)
 	})
 
-	// Action("update", func() {
-	// 	Description("Update stack overflow user info")
-	// 	Routing(POST(""))
-	// 	Payload(WalletPayload)
-	// 	Response(OK)
-	// })
+	Action("update", func() {
+		Description("Update stack overflow user info")
+		Routing(POST(""))
+		Payload(CreateUserPayload)
+		Response(OK, StackOverflowUserMedia)
+	})
+
+	Action("verify", func() {
+		Description("Update Stack Overflow Verification")
+		Routing(POST("/:userId/verify"))
+		Params(func() {
+			Param("userId", String, "User ID", func() {
+				Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
+				Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
+			})
+		})
+		Payload(VerificationPayload)
+		Response(OK, StackOverflowUserMedia)
+	})
+
+	Action("display", func() {
+		Description("Get Stack Overflow Verification")
+		Routing(GET("/:userId/verify"))
+		Params(func() {
+			Param("userId", String, "User ID", func() {
+				Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
+				Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
+			})
+		})
+		Response(OK, StackOverflowUserMedia)
+	})
 })
 
 // StackOverflowUserMedia ...
 var StackOverflowUserMedia = MediaType("application/vnd.stackoverflowuser+json", func() {
 	Description("Stack Overflow User Info")
 	Attributes(func() {
-		Attribute("id", String, "ID")
+		Attribute("id", String, "ID", func() {
+			Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
+			Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
+		})
 		Attribute("userId", String, "User ID", func() {
 			Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
 			Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
@@ -49,22 +75,25 @@ var StackOverflowUserMedia = MediaType("application/vnd.stackoverflowuser+json",
 		Attribute("exchangeAccountId", String, "Stack Exchange Account ID")
 		Attribute("stackUserId", String, "Stack Overflow Community-Specific Account ID")
 		Attribute("displayName", String, "Display Name")
-		Attribute("accounts", CollectionOf(String), "Stack Exchange Accounts")
-		Required("accounts")
+		Attribute("accounts", ArrayOf(String), "Stack Exchange Accounts")
+		Attribute("verification", VerificationMedia, "Social Account Verification")
+		Required(
+			"id",
+			"userId",
+			"exchangeAccountId",
+			"stackUserId",
+			"displayName",
+			"accounts",
+			"verification",
+		)
 	})
 	View("default", func() {
+		Attribute("id")
+		Attribute("userId")
+		Attribute("exchangeAccountId")
+		Attribute("stackUserId")
 		Attribute("displayName")
+		Attribute("accounts")
+		Attribute("verification")
 	})
 })
-
-// // StackOverflowUserPayload is the payload for updating a user's wallet
-// var WalletPayload = Type("WalletPayload", func() {
-// 	Description("Wallet payload")
-// 	Attribute("walletAddress", String, "Wallet address", func() {
-// 		Pattern("^0x[0-9a-fA-F]{40}$")
-// 		Example("0x845fdD93Cca3aE9e380d5556818e6d0b902B977c")
-// 	})
-// 	Required("walletAddress")
-// })
-
-*/
