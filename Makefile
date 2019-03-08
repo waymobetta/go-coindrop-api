@@ -71,6 +71,7 @@ goa:
 	@rm quizzes.go
 	@rm results.go
 	@rm reddit.go
+	@rm stackoverflow.go
 	@rm redditharvest.go
 	@rm webhooks.go
 	@MAKE swagger
