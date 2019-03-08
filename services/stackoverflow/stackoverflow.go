@@ -2,9 +2,11 @@ package stackoverflow
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -15,6 +17,8 @@ import (
 const (
 	// baseAPI is the base URL for the Stack Overflow API
 	baseAPI = "https://api.stackexchange.com/2.2"
+	// noVerifError is generated if the verification code does not match
+	noVerifError = errors.New("verification code does not match")
 )
 
 // GetProfileByUserID fetches basic user profile info by unique user ID
@@ -182,4 +186,17 @@ func GetAssociatedAccounts(u *types.User) (*types.User, error) {
 	}
 
 	return u, nil
+}
+
+// VerificationCheck
+func VerificationCheck(u *types.User) error {
+	// secondary validation to see if codes match
+	if !strings.Contains(user.Social.StackOverflow.Verification.PostedVerificationCode, user.Social.StackOverflow.Verification.ConfirmedVerificationCode) {
+		return noVerifError
+	}
+
+	// if no error, update verification field values
+	user.Social.StackOverflow.Verification.Verified = true
+
+	return nil
 }
