@@ -30,7 +30,7 @@ var _ = Resource("stackoverflow", func() {
 	Action("update", func() {
 		Description("Update stack overflow user info")
 		Routing(POST(""))
-		Payload(CreateUserPayload)
+		Payload(CreateStackOverflowUserPayload)
 		Response(OK, StackOverflowUserMedia)
 	})
 
@@ -58,6 +58,20 @@ var _ = Resource("stackoverflow", func() {
 		})
 		Response(OK, StackOverflowUserMedia)
 	})
+})
+
+// CreateStackOverflowUserPayload is the payload for creating a listing for a user's reddit info
+var CreateStackOverflowUserPayload = Type("CreateStackOverflowUserPayload", func() {
+	Description("Create Stack Overflow User payload")
+	Attribute("userId", String, "User ID", func() {
+		Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
+		Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
+	})
+	Attribute("stackUserId", String, "Stack Overflow User ID")
+	Required(
+		"userId",
+		"stackUserId",
+	)
 })
 
 // StackOverflowUserMedia ...
