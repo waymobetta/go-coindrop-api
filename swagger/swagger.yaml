@@ -36,15 +36,36 @@ definitions:
     - recipients
     title: 'Mediatype identifier: application/vnd.badge+json; view=default'
     type: object
+  CreateStackOverflowUserPayload:
+    description: Create Stack Overflow User payload
+    example:
+      stackUserId: 5.883414777953174e+18
+      userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
+    properties:
+      stackUserId:
+        description: Stack Overflow Community-Specific Account ID
+        example: 5.883414777953174e+18
+        format: int64
+        type: integer
+      userId:
+        description: User ID
+        example: 9302608f-f6a4-4004-b088-63e5fb43cc26
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        type: string
+    required:
+    - userId
+    - stackUserId
+    title: CreateStackOverflowUserPayload
+    type: object
   CreateTaskPayload:
     description: Create Task payload
     example:
-      taskId: Fuga natus tempora maiores assumenda.
+      taskId: Natus tempora maiores assumenda.
       userId: Distinctio quo blanditiis perferendis et facilis aspernatur.
     properties:
       taskId:
         description: Task ID
-        example: Fuga natus tempora maiores assumenda.
+        example: Natus tempora maiores assumenda.
         type: string
       userId:
         description: User ID
@@ -571,7 +592,7 @@ definitions:
       answers: false
       calculated:
         score: 6.356251368009257e+18
-      definition: f170f709-435b-498a-8d60-2920bdd2c2c5
+      definition: 881ff41c-e802-4345-9721-3881faf1952d
       form_id: Et est nesciunt mollitia ducimus.
       hidden:
         user_id: Sit facere qui praesentium.
@@ -586,7 +607,7 @@ definitions:
         $ref: '#/definitions/TypeformCalculatedPayload'
       definition:
         description: Definition
-        example: f170f709-435b-498a-8d60-2920bdd2c2c5
+        example: 881ff41c-e802-4345-9721-3881faf1952d
       form_id:
         description: Form ID
         example: Et est nesciunt mollitia ducimus.
@@ -627,7 +648,7 @@ definitions:
         answers: false
         calculated:
           score: 6.356251368009257e+18
-        definition: f170f709-435b-498a-8d60-2920bdd2c2c5
+        definition: 881ff41c-e802-4345-9721-3881faf1952d
         form_id: Et est nesciunt mollitia ducimus.
         hidden:
           user_id: Sit facere qui praesentium.
@@ -1269,12 +1290,12 @@ paths:
       description: Update stack overflow user info
       operationId: stackoverflow#update
       parameters:
-      - description: Create Reddit User payload
+      - description: Create Stack Overflow User payload
         in: body
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/CreateUserPayload'
+          $ref: '#/definitions/CreateStackOverflowUserPayload'
       produces:
       - application/standard_error+json
       - application/vnd.stackoverflowuser+json

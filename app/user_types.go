@@ -14,6 +14,62 @@ import (
 	"github.com/goadesign/goa"
 )
 
+// Create Stack Overflow User payload
+type createStackOverflowUserPayload struct {
+	// Stack Overflow Community-Specific Account ID
+	StackUserID *int `form:"stackUserId,omitempty" json:"stackUserId,omitempty" yaml:"stackUserId,omitempty" xml:"stackUserId,omitempty"`
+	// User ID
+	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
+}
+
+// Validate validates the createStackOverflowUserPayload type instance.
+func (ut *createStackOverflowUserPayload) Validate() (err error) {
+	if ut.UserID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "userId"))
+	}
+	if ut.StackUserID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "stackUserId"))
+	}
+	if ut.UserID != nil {
+		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *ut.UserID); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`request.userId`, *ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+		}
+	}
+	return
+}
+
+// Publicize creates CreateStackOverflowUserPayload from createStackOverflowUserPayload
+func (ut *createStackOverflowUserPayload) Publicize() *CreateStackOverflowUserPayload {
+	var pub CreateStackOverflowUserPayload
+	if ut.StackUserID != nil {
+		pub.StackUserID = *ut.StackUserID
+	}
+	if ut.UserID != nil {
+		pub.UserID = *ut.UserID
+	}
+	return &pub
+}
+
+// Create Stack Overflow User payload
+type CreateStackOverflowUserPayload struct {
+	// Stack Overflow Community-Specific Account ID
+	StackUserID int `form:"stackUserId" json:"stackUserId" yaml:"stackUserId" xml:"stackUserId"`
+	// User ID
+	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+}
+
+// Validate validates the CreateStackOverflowUserPayload type instance.
+func (ut *CreateStackOverflowUserPayload) Validate() (err error) {
+	if ut.UserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "userId"))
+	}
+
+	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, ut.UserID); !ok {
+		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.userId`, ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+	}
+	return
+}
+
 // Create Task payload
 type createTaskPayload struct {
 	// Task ID

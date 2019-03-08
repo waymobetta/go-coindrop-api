@@ -262,7 +262,7 @@ Payload example:
 Payload example:
 
 {
-   "taskId": "Fuga natus tempora maiores assumenda.",
+   "taskId": "Natus tempora maiores assumenda.",
    "userId": "Distinctio quo blanditiis perferendis et facilis aspernatur."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
@@ -448,7 +448,7 @@ Payload example:
       "calculated": {
          "score": 6356251368009257377
       },
-      "definition": "718ecd9c-7359-46eb-933c-1385ef43ffb3",
+      "definition": "8556cd13-de01-420d-bcb2-99c2bcfdc15c",
       "form_id": "Et est nesciunt mollitia ducimus.",
       "hidden": {
          "user_id": "Sit facere qui praesentium."
@@ -511,8 +511,8 @@ Payload example:
 Payload example:
 
 {
-   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
-   "username": "Omnis sit."
+   "stackUserId": 5883414777953173127,
+   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp22.Run(c, args) },
 	}
@@ -1147,7 +1147,7 @@ func (cmd *UpdateStackoverflowCommand) Run(c *client.Client, args []string) erro
 	} else {
 		path = "/v1/social/stackoverflow"
 	}
-	var payload client.CreateUserPayload
+	var payload client.CreateStackOverflowUserPayload
 	if cmd.Payload != "" {
 		err := json.Unmarshal([]byte(cmd.Payload), &payload)
 		if err != nil {

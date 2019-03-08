@@ -95,7 +95,7 @@ func UpdateStackoverflowPath() string {
 }
 
 // Update stack overflow user info
-func (c *Client) UpdateStackoverflow(ctx context.Context, path string, payload *CreateUserPayload, contentType string) (*http.Response, error) {
+func (c *Client) UpdateStackoverflow(ctx context.Context, path string, payload *CreateStackOverflowUserPayload, contentType string) (*http.Response, error) {
 	req, err := c.NewUpdateStackoverflowRequest(ctx, path, payload, contentType)
 	if err != nil {
 		return nil, err
@@ -104,7 +104,7 @@ func (c *Client) UpdateStackoverflow(ctx context.Context, path string, payload *
 }
 
 // NewUpdateStackoverflowRequest create the request corresponding to the update action endpoint of the stackoverflow resource.
-func (c *Client) NewUpdateStackoverflowRequest(ctx context.Context, path string, payload *CreateUserPayload, contentType string) (*http.Request, error) {
+func (c *Client) NewUpdateStackoverflowRequest(ctx context.Context, path string, payload *CreateStackOverflowUserPayload, contentType string) (*http.Request, error) {
 	var body bytes.Buffer
 	if contentType == "" {
 		contentType = "*/*" // Use default encoder

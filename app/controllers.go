@@ -599,7 +599,7 @@ func MountStackoverflowController(service *goa.Service, ctrl StackoverflowContro
 		}
 		// Build the payload
 		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
-			rctx.Payload = rawPayload.(*CreateUserPayload)
+			rctx.Payload = rawPayload.(*CreateStackOverflowUserPayload)
 		} else {
 			return goa.MissingPayloadError()
 		}
@@ -660,7 +660,7 @@ func handleStackoverflowOrigin(h goa.Handler) goa.Handler {
 
 // unmarshalUpdateStackoverflowPayload unmarshals the request body into the context request data Payload field.
 func unmarshalUpdateStackoverflowPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
-	payload := &createUserPayload{}
+	payload := &createStackOverflowUserPayload{}
 	if err := service.DecodeRequest(req, payload); err != nil {
 		return err
 	}

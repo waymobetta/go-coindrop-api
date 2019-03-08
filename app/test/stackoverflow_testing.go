@@ -768,7 +768,7 @@ func ShowStackoverflowOK(t goatest.TInterface, ctx context.Context, service *goa
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateStackoverflowBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowController, payload *app.CreateUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateStackoverflowBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowController, payload *app.CreateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -853,7 +853,7 @@ func UpdateStackoverflowBadRequest(t goatest.TInterface, ctx context.Context, se
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateStackoverflowGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowController, payload *app.CreateUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateStackoverflowGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowController, payload *app.CreateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -938,7 +938,7 @@ func UpdateStackoverflowGone(t goatest.TInterface, ctx context.Context, service 
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateStackoverflowInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowController, payload *app.CreateUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateStackoverflowInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowController, payload *app.CreateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1023,7 +1023,7 @@ func UpdateStackoverflowInternalServerError(t goatest.TInterface, ctx context.Co
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateStackoverflowNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowController, payload *app.CreateUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateStackoverflowNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowController, payload *app.CreateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1108,7 +1108,7 @@ func UpdateStackoverflowNotFound(t goatest.TInterface, ctx context.Context, serv
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateStackoverflowOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowController, payload *app.CreateUserPayload) (http.ResponseWriter, *app.Stackoverflowuser) {
+func UpdateStackoverflowOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowController, payload *app.CreateStackOverflowUserPayload) (http.ResponseWriter, *app.Stackoverflowuser) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer

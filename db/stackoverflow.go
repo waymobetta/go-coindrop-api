@@ -245,7 +245,7 @@ func (db *DB) GetUserStackOverfloVerification(u *types.User) (*types.User, error
 		JOIN
 			coindrop_stackoverflow
 		ON
-			coindrop_auth.id = coindrop_stackoverflow..user_id
+			coindrop_auth.id = coindrop_stackoverflow.user_id
 		WHERE
 			coindrop_auth.cognito_auth_user_id = $1
 	`
