@@ -188,10 +188,13 @@ func GetAssociatedAccounts(u *types.User) (*types.User, error) {
 	return u, nil
 }
 
-// VerificationCheck
+// VerificationCheck checks posted verif. code against that which is stored
 func VerificationCheck(u *types.User) error {
 	// secondary validation to see if codes match
-	if !strings.Contains(user.Social.StackOverflow.Verification.PostedVerificationCode, user.Social.StackOverflow.Verification.ConfirmedVerificationCode) {
+	if !strings.Contains(
+		user.Social.StackOverflow.Verification.PostedVerificationCode,
+		user.Social.StackOverflow.Verification.ConfirmedVerificationCode,
+	) {
 		return noVerifError
 	}
 
