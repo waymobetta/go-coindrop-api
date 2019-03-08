@@ -50,7 +50,7 @@ func (db *DB) AddStackUser(u *types.User) (*types.User, error) {
 	_, err = stmt.Exec(
 		&u.CognitoAuthUserID,
 		&u.Social.StackOverflow.ExchangeAccountID,
-		&u.Social.StackOverflow.UserID,
+		&u.Social.StackOverflow.StackUserID,
 		&u.Social.StackOverflow.DisplayName,
 		pq.Array(&u.Social.StackOverflow.Accounts),
 		&u.Social.StackOverflow.Verification.PostedVerificationCode,
@@ -78,11 +78,21 @@ func (db *DB) GetStackUser(u *types.User) (*types.User, error) {
 	// create SQL statement for db writes
 	sqlStatement := `
 		SELECT 
-			* 
-		FROM 
-			coindrop_stackoverflow 
-		WHERE 
-			user_id = $1
+			coindrop_stackoverflow.exchange_account_id,
+			coindrop_stackoverflow.stack_user_id,
+			coindrop_stackoverflow.display_name,
+			coindrop_stackoverflow.accounts,
+			coindrop_stackoverflow.posted_verification_code,
+			coindrop_stackoverflow.confirmed_verification_code,
+			coindrop_stackoverflow.verified
+		FROM
+			coindrop_auth
+		JOIN
+			coindrop_stackoverflow
+		ON
+			coindrop_auth.id = coindrop_stackoverflow.user_id
+		WHERE
+			cognito_auth_user_id = $1
 	`
 
 	// prepare statement
@@ -98,10 +108,8 @@ func (db *DB) GetStackUser(u *types.User) (*types.User, error) {
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
-		&u.ID,
-		&u.CognitoAuthUserID,
 		&u.Social.StackOverflow.ExchangeAccountID,
-		&u.Social.StackOverflow.UserID,
+		&u.Social.StackOverflow.StackUserID,
 		&u.Social.StackOverflow.DisplayName,
 		pq.Array(&u.Social.StackOverflow.Accounts),
 		&u.Social.StackOverflow.Verification.PostedVerificationCode,
@@ -131,8 +139,11 @@ func (db *DB) UpdateStackAboutInfo(u *types.User) (*types.User, error) {
 			exchange_account_id = $1, 
 			display_name = $2, 
 			accounts = $3 
+		FROM
+			coindrop_auth
 		WHERE 
-			user_id = $4
+			coindrop_auth.id = coindrop_stackoverflow.user_id AND
+			coindrop_auth.cognito_auth_user_id = $4
 	`
 
 	// prepare statement
@@ -180,11 +191,13 @@ func (db *DB) UpdateStackVerificationCode(u *types.User) (*types.User, error) {
 		UPDATE 
 			coindrop_stackoverflow 
 		SET 
-			user_id = $1, 
-			posted_verification_code = $2, 
-			verified = $3
-		WHERE 
-			user_id = $4
+			posted_verification_code = $1, 
+			verified = $2
+		FROM
+			coindrop_auth
+		WHERE
+			coindrop_auth.id = coindrop_stackoverflow.user_id AND
+			coindrop_auth.cognito_auth_user_id = $3
 	`
 
 	// prepare statement
@@ -197,7 +210,6 @@ func (db *DB) UpdateStackVerificationCode(u *types.User) (*types.User, error) {
 
 	// execute db write using unique reddit username as the identifier
 	_, err = stmt.Exec(
-		u.Social.StackOverflow.UserID,
 		u.Social.StackOverflow.Verification.PostedVerificationCode,
 		u.Social.StackOverflow.Verification.Verified,
 		u.CognitoAuthUserID,
@@ -213,6 +225,50 @@ func (db *DB) UpdateStackVerificationCode(u *types.User) (*types.User, error) {
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
+		return u, err
+	}
+
+	return u, nil
+}
+
+// GetUserStackOverflowVerification ...
+func (db *DB) GetUserStackOverfloVerification(u *types.User) (*types.User, error) {
+	// create SQL statement for db writes
+	sqlStatement := `
+		SELECT
+			coindrop_stackoverflow.stack_user_id,
+			coindrop_stackoverflow.posted_verification_code,
+			coindrop_stackoverflow.confirmed_verification_code,
+			coindrop_stackoverflow.verified
+		FROM
+			coindrop_auth
+		JOIN
+			coindrop_stackoverflow
+		ON
+			coindrop_auth.id = coindrop_stackoverflow..user_id
+		WHERE
+			coindrop_auth.cognito_auth_user_id = $1
+	`
+
+	// prepare statement
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return u, err
+	}
+
+	defer stmt.Close()
+
+	// initialize row object
+	row := stmt.QueryRow(u.CognitoAuthUserID)
+
+	// iterate over row object to retrieve queried value
+	err = row.Scan(
+		&u.Social.StackOverflow.StackUserID,
+		&u.Social.StackOverflow.Verification.PostedVerificationCode,
+		&u.Social.StackOverflow.Verification.ConfirmedVerificationCode,
+		&u.Social.StackOverflow.Verification.Verified,
+	)
+	if err != nil {
 		return u, err
 	}
 
