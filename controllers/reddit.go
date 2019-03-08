@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/goadesign/goa"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
@@ -105,8 +103,6 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 		})
 	}
 
-	fmt.Println(user)
-
 	res := &app.Reddituser{}
 
 	return ctx.OK(res)
@@ -202,7 +198,7 @@ func (c *RedditController) Verify(ctx *app.VerifyRedditContext) error {
 		log.Errorf("[controller/reddit] %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
-			Message: "could not get user verification info from db",
+			Message: "could not update user verification info in db",
 		})
 	}
 
