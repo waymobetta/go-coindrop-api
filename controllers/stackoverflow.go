@@ -167,9 +167,6 @@ func (c *StackoverflowController) Verify(ctx *app.VerifyStackoverflowContext) er
 		})
 	}
 
-	// simulate scraping profile
-	// user.Social.StackOverflow.Verification.PostedVerificationCode = ""
-
 	// check Stack Overflow for matching verification code
 	_, err = stackoverflow.GetProfileByUserID(user)
 	if err != nil {
