@@ -138,6 +138,13 @@ type (
 		PrettyPrint bool
 	}
 
+	// UpdateStackoverflowharvestCommand is the command line data structure for the update action of stackoverflowharvest
+	UpdateStackoverflowharvestCommand struct {
+		Payload     string
+		ContentType string
+		PrettyPrint bool
+	}
+
 	// CreateTasksCommand is the command line data structure for the create action of tasks
 	CreateTasksCommand struct {
 		Payload     string
@@ -262,8 +269,8 @@ Payload example:
 Payload example:
 
 {
-   "taskId": "Natus tempora maiores assumenda.",
-   "userId": "Distinctio quo blanditiis perferendis et facilis aspernatur."
+   "taskId": "Distinctio quo blanditiis perferendis et facilis aspernatur.",
+   "userId": "Eos expedita unde."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
 	}
@@ -279,7 +286,7 @@ Payload example:
 Payload example:
 
 {
-   "cognitoAuthUserId": "Expedita unde aut."
+   "cognitoAuthUserId": "Praesentium debitis ut."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
 	}
@@ -441,21 +448,21 @@ Payload example:
 Payload example:
 
 {
-   "event_id": "Praesentium debitis ut.",
-   "event_type": "Iusto et.",
+   "event_id": "Iusto et.",
+   "event_type": "Qui consequatur.",
    "form_response": {
-      "answers": false,
+      "answers": "0309ad59-e821-4e49-b193-de71a8ae82c4",
       "calculated": {
-         "score": 6356251368009257377
+         "score": 4532132465653549517
       },
-      "definition": "8556cd13-de01-420d-bcb2-99c2bcfdc15c",
-      "form_id": "Et est nesciunt mollitia ducimus.",
+      "definition": "2016-04-22T21:50:45Z",
+      "form_id": "Mollitia ducimus quisquam sit facere.",
       "hidden": {
-         "user_id": "Sit facere qui praesentium."
+         "user_id": "Praesentium quae delectus sit eos error."
       },
-      "landed_at": "Delectus sit eos error.",
-      "submitted_at": "Sunt est occaecati nihil.",
-      "token": "Laudantium qui eaque dolorem nostrum."
+      "landed_at": "Sunt est occaecati nihil.",
+      "submitted_at": "Laudantium qui eaque dolorem nostrum.",
+      "token": "Est voluptas temporibus."
    }
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp19.Run(c, args) },
@@ -519,7 +526,24 @@ Payload example:
 	tmp22.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp22.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp23 := new(UpdateTasksCommand)
+	tmp23 := new(UpdateStackoverflowharvestCommand)
+	sub = &cobra.Command{
+		Use:   `stackoverflowharvest ["/v1/social/stackoverflow/harvest"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "stackUserId": "Natus tempora maiores assumenda.",
+   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26"
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp23.Run(c, args) },
+	}
+	tmp23.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp23.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp24 := new(UpdateTasksCommand)
 	sub = &cobra.Command{
 		Use:   `tasks ["/v1/tasks/TASKID"]`,
 		Short: ``,
@@ -530,12 +554,12 @@ Payload example:
 {
    "completed": false
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp23.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp24.Run(c, args) },
 	}
-	tmp23.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp23.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp24.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp24.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp24 := new(UpdateWalletsCommand)
+	tmp25 := new(UpdateWalletsCommand)
 	sub = &cobra.Command{
 		Use:   `wallets ["/v1/wallets"]`,
 		Short: ``,
@@ -546,35 +570,19 @@ Payload example:
 {
    "walletAddress": "0x845fdD93Cca3aE9e380d5556818e6d0b902B977c"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp24.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp25.Run(c, args) },
 	}
-	tmp24.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp24.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp25.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp25.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "verify",
 		Short: `verify action`,
 	}
-	tmp25 := new(VerifyRedditCommand)
+	tmp26 := new(VerifyRedditCommand)
 	sub = &cobra.Command{
 		Use:   `reddit ["/v1/social/reddit/USERID/verify"]`,
-		Short: ``,
-		Long: `
-
-Payload example:
-
-{
-   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26"
-}`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp25.Run(c, args) },
-	}
-	tmp25.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp25.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp26 := new(VerifyStackoverflowCommand)
-	sub = &cobra.Command{
-		Use:   `stackoverflow ["/v1/social/stackoverflow/USERID/verify"]`,
 		Short: ``,
 		Long: `
 
@@ -587,6 +595,22 @@ Payload example:
 	}
 	tmp26.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp26.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp27 := new(VerifyStackoverflowCommand)
+	sub = &cobra.Command{
+		Use:   `stackoverflow ["/v1/social/stackoverflow/USERID/verify"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26"
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp27.Run(c, args) },
+	}
+	tmp27.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp27.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 }
@@ -1205,6 +1229,39 @@ func (cmd *VerifyStackoverflowCommand) RegisterFlags(cc *cobra.Command, c *clien
 	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 	var userID string
 	cc.Flags().StringVar(&cmd.UserID, "userId", userID, `User ID`)
+}
+
+// Run makes the HTTP request corresponding to the UpdateStackoverflowharvestCommand command.
+func (cmd *UpdateStackoverflowharvestCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/v1/social/stackoverflow/harvest"
+	}
+	var payload client.UpdateStackOverflowUserPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.UpdateStackoverflowharvest(ctx, path, &payload, cmd.ContentType)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *UpdateStackoverflowharvestCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 }
 
 // Run makes the HTTP request corresponding to the CreateTasksCommand command.

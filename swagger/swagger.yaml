@@ -60,16 +60,16 @@ definitions:
   CreateTaskPayload:
     description: Create Task payload
     example:
-      taskId: Natus tempora maiores assumenda.
-      userId: Distinctio quo blanditiis perferendis et facilis aspernatur.
+      taskId: Distinctio quo blanditiis perferendis et facilis aspernatur.
+      userId: Eos expedita unde.
     properties:
       taskId:
         description: Task ID
-        example: Natus tempora maiores assumenda.
+        example: Distinctio quo blanditiis perferendis et facilis aspernatur.
         type: string
       userId:
         description: User ID
-        example: Distinctio quo blanditiis perferendis et facilis aspernatur.
+        example: Eos expedita unde.
         type: string
     required:
     - userId
@@ -167,6 +167,8 @@ definitions:
       question: Non ut.
     - answer: Iure amet.
       question: Non ut.
+    - answer: Iure amet.
+      question: Non ut.
     items:
       $ref: '#/definitions/Quiz-Fields'
     title: 'Mediatype identifier: application/vnd.quiz-fields+json; type=collection;
@@ -175,6 +177,12 @@ definitions:
   QuizCollection:
     description: QuizCollection is the media type for an array of Quiz (default view)
     example:
+    - fields:
+      - answer: Iure amet.
+        question: Non ut.
+      id: Corrupti eum fugit eaque.
+      title: Autem est.
+      userId: Omnis labore.
     - fields:
       - answer: Iure amet.
         question: Non ut.
@@ -342,10 +350,6 @@ definitions:
     description: ResultsCollection is the media type for an array of Results (default
       view)
     example:
-    - questionsCorrect: 4.613454974692096e+18
-      questionsIncorrect: 4.147622380271909e+18
-      quizId: Eos eos.
-      userId: Repellat optio nam.
     - questionsCorrect: 4.613454974692096e+18
       questionsIncorrect: 4.147622380271909e+18
       quizId: Eos eos.
@@ -577,11 +581,11 @@ definitions:
   TypeformCalculatedPayload:
     description: Typeform calculatd data
     example:
-      score: 6.356251368009257e+18
+      score: 4.5321324656535496e+18
     properties:
       score:
         description: Score
-        example: 6.356251368009257e+18
+        example: 4.5321324656535496e+18
         format: int64
         type: integer
     title: TypeformCalculatedPayload
@@ -589,84 +593,104 @@ definitions:
   TypeformFormPayload:
     description: Typeform form data
     example:
-      answers: false
+      answers: 4d614765-9f72-4ea6-bdbb-9af693dd3a75
       calculated:
-        score: 6.356251368009257e+18
-      definition: 881ff41c-e802-4345-9721-3881faf1952d
-      form_id: Et est nesciunt mollitia ducimus.
+        score: 4.5321324656535496e+18
+      definition: "2016-04-22T21:50:45Z"
+      form_id: Mollitia ducimus quisquam sit facere.
       hidden:
-        user_id: Sit facere qui praesentium.
-      landed_at: Delectus sit eos error.
-      submitted_at: Sunt est occaecati nihil.
-      token: Laudantium qui eaque dolorem nostrum.
+        user_id: Praesentium quae delectus sit eos error.
+      landed_at: Sunt est occaecati nihil.
+      submitted_at: Laudantium qui eaque dolorem nostrum.
+      token: Est voluptas temporibus.
     properties:
       answers:
         description: Answers
-        example: false
+        example: 4d614765-9f72-4ea6-bdbb-9af693dd3a75
       calculated:
         $ref: '#/definitions/TypeformCalculatedPayload'
       definition:
         description: Definition
-        example: 881ff41c-e802-4345-9721-3881faf1952d
+        example: "2016-04-22T21:50:45Z"
       form_id:
         description: Form ID
-        example: Et est nesciunt mollitia ducimus.
+        example: Mollitia ducimus quisquam sit facere.
         type: string
       hidden:
         $ref: '#/definitions/TypeformHiddenPayload'
       landed_at:
         description: Form ID
-        example: Delectus sit eos error.
+        example: Sunt est occaecati nihil.
         type: string
       submitted_at:
         description: Form ID
-        example: Sunt est occaecati nihil.
+        example: Laudantium qui eaque dolorem nostrum.
         type: string
       token:
         description: Form ID
-        example: Laudantium qui eaque dolorem nostrum.
+        example: Est voluptas temporibus.
         type: string
     title: TypeformFormPayload
     type: object
   TypeformHiddenPayload:
     description: Typeform hidden data
     example:
-      user_id: Sit facere qui praesentium.
+      user_id: Praesentium quae delectus sit eos error.
     properties:
       user_id:
         description: User ID
-        example: Sit facere qui praesentium.
+        example: Praesentium quae delectus sit eos error.
         type: string
     title: TypeformHiddenPayload
     type: object
   TypeformPayload:
     description: Typeform payload
     example:
-      event_id: Praesentium debitis ut.
-      event_type: Iusto et.
+      event_id: Iusto et.
+      event_type: Qui consequatur.
       form_response:
-        answers: false
+        answers: 4d614765-9f72-4ea6-bdbb-9af693dd3a75
         calculated:
-          score: 6.356251368009257e+18
-        definition: 881ff41c-e802-4345-9721-3881faf1952d
-        form_id: Et est nesciunt mollitia ducimus.
+          score: 4.5321324656535496e+18
+        definition: "2016-04-22T21:50:45Z"
+        form_id: Mollitia ducimus quisquam sit facere.
         hidden:
-          user_id: Sit facere qui praesentium.
-        landed_at: Delectus sit eos error.
-        submitted_at: Sunt est occaecati nihil.
-        token: Laudantium qui eaque dolorem nostrum.
+          user_id: Praesentium quae delectus sit eos error.
+        landed_at: Sunt est occaecati nihil.
+        submitted_at: Laudantium qui eaque dolorem nostrum.
+        token: Est voluptas temporibus.
     properties:
       event_id:
         description: Event ID
-        example: Praesentium debitis ut.
+        example: Iusto et.
         type: string
       event_type:
         description: Event types
-        example: Iusto et.
+        example: Qui consequatur.
         type: string
       form_response:
         $ref: '#/definitions/TypeformFormPayload'
     title: TypeformPayload
+    type: object
+  UpdateStackOverflowUserPayload:
+    description: Update Stack Overflow User payload
+    example:
+      stackUserId: Natus tempora maiores assumenda.
+      userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
+    properties:
+      stackUserId:
+        description: Stack Overflow Community-Specific Account ID
+        example: Natus tempora maiores assumenda.
+        type: string
+      userId:
+        description: User ID
+        example: 9302608f-f6a4-4004-b088-63e5fb43cc26
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        type: string
+    required:
+    - userId
+    - stackUserId
+    title: UpdateStackOverflowUserPayload
     type: object
   UpdateUserPayload:
     description: Update Reddit User payload
@@ -719,11 +743,11 @@ definitions:
   UserPayload:
     description: User payload
     example:
-      cognitoAuthUserId: Expedita unde aut.
+      cognitoAuthUserId: Praesentium debitis ut.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Expedita unde aut.
+        example: Praesentium debitis ut.
         type: string
     required:
     - cognitoAuthUserId
@@ -1458,6 +1482,48 @@ paths:
       summary: verify stackoverflow
       tags:
       - stackoverflow
+  /v1/social/stackoverflow/harvest:
+    post:
+      description: Update Stack Overflow User Info
+      operationId: stackoverflowharvest#update
+      parameters:
+      - description: Update Stack Overflow User payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateStackOverflowUserPayload'
+      produces:
+      - application/standard_error+json
+      - application/vnd.stackoverflowuser+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Stackoverflowuser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: update stackoverflowharvest
+      tags:
+      - stackoverflowharvest
   /v1/tasks:
     get:
       description: Get list of user tasks

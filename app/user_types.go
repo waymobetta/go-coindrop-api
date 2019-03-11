@@ -462,6 +462,64 @@ type TypeformPayload struct {
 	FormResponse *TypeformFormPayload `form:"form_response,omitempty" json:"form_response,omitempty" yaml:"form_response,omitempty" xml:"form_response,omitempty"`
 }
 
+// Update Stack Overflow User payload
+type updateStackOverflowUserPayload struct {
+	// Stack Overflow Community-Specific Account ID
+	StackUserID *string `form:"stackUserId,omitempty" json:"stackUserId,omitempty" yaml:"stackUserId,omitempty" xml:"stackUserId,omitempty"`
+	// User ID
+	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
+}
+
+// Validate validates the updateStackOverflowUserPayload type instance.
+func (ut *updateStackOverflowUserPayload) Validate() (err error) {
+	if ut.UserID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "userId"))
+	}
+	if ut.StackUserID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "stackUserId"))
+	}
+	if ut.UserID != nil {
+		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *ut.UserID); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`request.userId`, *ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+		}
+	}
+	return
+}
+
+// Publicize creates UpdateStackOverflowUserPayload from updateStackOverflowUserPayload
+func (ut *updateStackOverflowUserPayload) Publicize() *UpdateStackOverflowUserPayload {
+	var pub UpdateStackOverflowUserPayload
+	if ut.StackUserID != nil {
+		pub.StackUserID = *ut.StackUserID
+	}
+	if ut.UserID != nil {
+		pub.UserID = *ut.UserID
+	}
+	return &pub
+}
+
+// Update Stack Overflow User payload
+type UpdateStackOverflowUserPayload struct {
+	// Stack Overflow Community-Specific Account ID
+	StackUserID string `form:"stackUserId" json:"stackUserId" yaml:"stackUserId" xml:"stackUserId"`
+	// User ID
+	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+}
+
+// Validate validates the UpdateStackOverflowUserPayload type instance.
+func (ut *UpdateStackOverflowUserPayload) Validate() (err error) {
+	if ut.UserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "userId"))
+	}
+	if ut.StackUserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "stackUserId"))
+	}
+	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, ut.UserID); !ok {
+		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.userId`, ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+	}
+	return
+}
+
 // Update Reddit User payload
 type updateUserPayload struct {
 	// User ID
