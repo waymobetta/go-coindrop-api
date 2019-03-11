@@ -112,6 +112,9 @@ func main() {
 	redditHarvestCtrlr := controllers.NewRedditharvestController(service, dbs)
 	app.MountRedditharvestController(service, redditHarvestCtrlr)
 
+	stackOverflowHarvestCtrlr := controllers.NewStackoverflowController(service, dbs)
+	app.MountStackoverflowharvestController(service, stackOverflowHarvestCtrlr)
+
 	webhooksCtrlr := controllers.NewWebhooksController(service, dbs)
 	app.MountWebhooksController(service, webhooksCtrlr)
 
