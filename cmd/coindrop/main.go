@@ -112,11 +112,11 @@ func main() {
 	redditHarvestCtrlr := controllers.NewRedditharvestController(service, dbs)
 	app.MountRedditharvestController(service, redditHarvestCtrlr)
 
-	stackOverflowHarvestCtrlr := controllers.NewStackoverflowController(service, dbs)
+	stackOverflowHarvestCtrlr := controllers.NewStackoverflowharvestController(service, dbs)
 	app.MountStackoverflowharvestController(service, stackOverflowHarvestCtrlr)
 
-	webhooksCtrlr := controllers.NewWebhooksController(service, dbs)
-	app.MountWebhooksController(service, webhooksCtrlr)
+	// webhooksCtrlr := controllers.NewWebhooksController(service, dbs)
+	// app.MountWebhooksController(service, webhooksCtrlr)
 
 	// goa handler
 	goaHandler := c.Handler(mw.RateLimitHandler(service.Server.Handler))
