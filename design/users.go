@@ -54,28 +54,3 @@ var _ = Resource("users", func() { // Resources group related API endpoints
 		NoSecurity()
 	})
 })
-
-// UserMedia defines the media type used to render users.
-var UserMedia = MediaType("application/vnd.user+json", func() {
-	Description("A user")
-	Attributes(func() { // Attributes define the media type shape.
-		Attribute("id", String, "Unique user ID")
-		Attribute("cognitoAuthUserId", String, "Cognito auth user ID")
-		Attribute("name", String, "Name of user")
-		Attribute("walletAddress", String, "Wallet address")
-		Required("id")
-	})
-	View("default", func() { // View defines a rendering of the media type.
-		Attribute("id") // Media types may have multiple views and must
-		Attribute("cognitoAuthUserId")
-		Attribute("name")
-		Attribute("walletAddress")
-	})
-})
-
-// UserPayload is the payload for creating a user
-var UserPayload = Type("UserPayload", func() {
-	Description("User payload")
-	Attribute("cognitoAuthUserId", String, "Cognito auth user ID")
-	Required("cognitoAuthUserId")
-})

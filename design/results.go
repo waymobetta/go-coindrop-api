@@ -40,31 +40,3 @@ var _ = Resource("results", func() {
 		Response(OK, CollectionOf(QuizResultsMedia))
 	})
 })
-
-// QuizResultsPayload is the payload for creating a user
-var QuizResultsPayload = Type("QuizResultsPayload", func() {
-	Description("Quiz results payload")
-	Attribute("quizId", String, "Quiz ID")
-	Attribute("userId", String, "User ID")
-	Attribute("questionsCorrect", Integer, "Number of questions that were answered correct")
-	Attribute("questionsIncorrect", Integer, "Number of questions that were answered incorrect")
-	Required("quizId", "userId", "questionsCorrect", "questionsIncorrect")
-})
-
-// QuizResultsMedia ...
-var QuizResultsMedia = MediaType("application/vnd.results+json", func() {
-	Description("Quiz results")
-	Attributes(func() {
-		Attribute("userId", String, "User ID")
-		Attribute("quizId", String, "Quiz ID")
-		Attribute("questionsCorrect", Integer, "Count of correct quiz answers")
-		Attribute("questionsIncorrect", Integer, "Count of incorrect quiz answers")
-		Required("userId", "quizId", "questionsCorrect", "questionsIncorrect")
-	})
-	View("default", func() {
-		Attribute("userId")
-		Attribute("quizId")
-		Attribute("questionsCorrect")
-		Attribute("questionsIncorrect")
-	})
-})

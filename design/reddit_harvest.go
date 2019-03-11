@@ -22,17 +22,3 @@ var _ = Resource("redditharvest", func() {
 		Response(OK, RedditUserMedia)
 	})
 })
-
-// UpdateUserPayload is the payload for updating a user's reddit info
-var UpdateUserPayload = Type("UpdateUserPayload", func() {
-	Description("Update Reddit User payload")
-	Attribute("userId", String, "User ID", func() {
-		Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
-		Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
-	})
-	Attribute("username", String, "Reddit Username")
-	Required(
-		"userId",
-		"username",
-	)
-})
