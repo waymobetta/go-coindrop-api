@@ -100,7 +100,7 @@ func (c *RedditharvestController) Update(ctx *app.UpdateRedditharvestContext) er
 		log.Errorf("[controller/reddit] %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
-			Message: "could not update create reddit info listing in db",
+			Message: "could not update Reddit user listing in db",
 		})
 	}
 

@@ -168,7 +168,7 @@ func (c *StackoverflowController) Verify(ctx *app.VerifyStackoverflowContext) er
 	}
 
 	// check Stack Overflow for matching verification code
-	err = stackoverflow.GetProfileByUserID(user)
+	_, err = stackoverflow.GetProfileByUserID(user)
 	if err != nil {
 		log.Errorf("[controller/stackoverflow] %v", err)
 		return ctx.NotFound(&app.StandardError{

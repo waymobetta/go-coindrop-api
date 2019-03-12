@@ -60,16 +60,16 @@ definitions:
   CreateTaskPayload:
     description: Create Task payload
     example:
-      taskId: Distinctio quo blanditiis perferendis et facilis aspernatur.
-      userId: Eos expedita unde.
+      taskId: Tempora maiores assumenda.
+      userId: Distinctio quo blanditiis perferendis et facilis aspernatur.
     properties:
       taskId:
         description: Task ID
-        example: Distinctio quo blanditiis perferendis et facilis aspernatur.
+        example: Tempora maiores assumenda.
         type: string
       userId:
         description: User ID
-        example: Eos expedita unde.
+        example: Distinctio quo blanditiis perferendis et facilis aspernatur.
         type: string
     required:
     - userId
@@ -167,8 +167,6 @@ definitions:
       question: Non ut.
     - answer: Iure amet.
       question: Non ut.
-    - answer: Iure amet.
-      question: Non ut.
     items:
       $ref: '#/definitions/Quiz-Fields'
     title: 'Mediatype identifier: application/vnd.quiz-fields+json; type=collection;
@@ -177,12 +175,6 @@ definitions:
   QuizCollection:
     description: QuizCollection is the media type for an array of Quiz (default view)
     example:
-    - fields:
-      - answer: Iure amet.
-        question: Non ut.
-      id: Corrupti eum fugit eaque.
-      title: Autem est.
-      userId: Omnis labore.
     - fields:
       - answer: Iure amet.
         question: Non ut.
@@ -350,6 +342,10 @@ definitions:
     description: ResultsCollection is the media type for an array of Results (default
       view)
     example:
+    - questionsCorrect: 4.613454974692096e+18
+      questionsIncorrect: 4.147622380271909e+18
+      quizId: Eos eos.
+      userId: Repellat optio nam.
     - questionsCorrect: 4.613454974692096e+18
       questionsIncorrect: 4.147622380271909e+18
       quizId: Eos eos.
@@ -581,11 +577,11 @@ definitions:
   TypeformCalculatedPayload:
     description: Typeform calculatd data
     example:
-      score: 4.5321324656535496e+18
+      score: 6.356251368009257e+18
     properties:
       score:
         description: Score
-        example: 4.5321324656535496e+18
+        example: 6.356251368009257e+18
         format: int64
         type: integer
     title: TypeformCalculatedPayload
@@ -593,80 +589,80 @@ definitions:
   TypeformFormPayload:
     description: Typeform form data
     example:
-      answers: 4d614765-9f72-4ea6-bdbb-9af693dd3a75
+      answers: false
       calculated:
-        score: 4.5321324656535496e+18
-      definition: "2016-04-22T21:50:45Z"
-      form_id: Mollitia ducimus quisquam sit facere.
+        score: 6.356251368009257e+18
+      definition: bb795bd8-ca57-4a6a-a756-99b8b2b69692
+      form_id: Et est nesciunt mollitia ducimus.
       hidden:
-        user_id: Praesentium quae delectus sit eos error.
-      landed_at: Sunt est occaecati nihil.
-      submitted_at: Laudantium qui eaque dolorem nostrum.
-      token: Est voluptas temporibus.
+        user_id: Sit facere qui praesentium.
+      landed_at: Delectus sit eos error.
+      submitted_at: Sunt est occaecati nihil.
+      token: Laudantium qui eaque dolorem nostrum.
     properties:
       answers:
         description: Answers
-        example: 4d614765-9f72-4ea6-bdbb-9af693dd3a75
+        example: false
       calculated:
         $ref: '#/definitions/TypeformCalculatedPayload'
       definition:
         description: Definition
-        example: "2016-04-22T21:50:45Z"
+        example: bb795bd8-ca57-4a6a-a756-99b8b2b69692
       form_id:
         description: Form ID
-        example: Mollitia ducimus quisquam sit facere.
+        example: Et est nesciunt mollitia ducimus.
         type: string
       hidden:
         $ref: '#/definitions/TypeformHiddenPayload'
       landed_at:
         description: Form ID
-        example: Sunt est occaecati nihil.
+        example: Delectus sit eos error.
         type: string
       submitted_at:
         description: Form ID
-        example: Laudantium qui eaque dolorem nostrum.
+        example: Sunt est occaecati nihil.
         type: string
       token:
         description: Form ID
-        example: Est voluptas temporibus.
+        example: Laudantium qui eaque dolorem nostrum.
         type: string
     title: TypeformFormPayload
     type: object
   TypeformHiddenPayload:
     description: Typeform hidden data
     example:
-      user_id: Praesentium quae delectus sit eos error.
+      user_id: Sit facere qui praesentium.
     properties:
       user_id:
         description: User ID
-        example: Praesentium quae delectus sit eos error.
+        example: Sit facere qui praesentium.
         type: string
     title: TypeformHiddenPayload
     type: object
   TypeformPayload:
     description: Typeform payload
     example:
-      event_id: Iusto et.
-      event_type: Qui consequatur.
+      event_id: Praesentium debitis ut.
+      event_type: Iusto et.
       form_response:
-        answers: 4d614765-9f72-4ea6-bdbb-9af693dd3a75
+        answers: false
         calculated:
-          score: 4.5321324656535496e+18
-        definition: "2016-04-22T21:50:45Z"
-        form_id: Mollitia ducimus quisquam sit facere.
+          score: 6.356251368009257e+18
+        definition: bb795bd8-ca57-4a6a-a756-99b8b2b69692
+        form_id: Et est nesciunt mollitia ducimus.
         hidden:
-          user_id: Praesentium quae delectus sit eos error.
-        landed_at: Sunt est occaecati nihil.
-        submitted_at: Laudantium qui eaque dolorem nostrum.
-        token: Est voluptas temporibus.
+          user_id: Sit facere qui praesentium.
+        landed_at: Delectus sit eos error.
+        submitted_at: Sunt est occaecati nihil.
+        token: Laudantium qui eaque dolorem nostrum.
     properties:
       event_id:
         description: Event ID
-        example: Iusto et.
+        example: Praesentium debitis ut.
         type: string
       event_type:
         description: Event types
-        example: Qui consequatur.
+        example: Iusto et.
         type: string
       form_response:
         $ref: '#/definitions/TypeformFormPayload'
@@ -675,13 +671,14 @@ definitions:
   UpdateStackOverflowUserPayload:
     description: Update Stack Overflow User payload
     example:
-      stackUserId: Natus tempora maiores assumenda.
+      stackUserId: 2.8442790699129226e+18
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
     properties:
       stackUserId:
         description: Stack Overflow Community-Specific Account ID
-        example: Natus tempora maiores assumenda.
-        type: string
+        example: 2.8442790699129226e+18
+        format: int64
+        type: integer
       userId:
         description: User ID
         example: 9302608f-f6a4-4004-b088-63e5fb43cc26
@@ -743,11 +740,11 @@ definitions:
   UserPayload:
     description: User payload
     example:
-      cognitoAuthUserId: Praesentium debitis ut.
+      cognitoAuthUserId: Expedita unde aut.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Praesentium debitis ut.
+        example: Expedita unde aut.
         type: string
     required:
     - cognitoAuthUserId
