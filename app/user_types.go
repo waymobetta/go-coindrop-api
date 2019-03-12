@@ -465,7 +465,7 @@ type TypeformPayload struct {
 // Update Stack Overflow User payload
 type updateStackOverflowUserPayload struct {
 	// Stack Overflow Community-Specific Account ID
-	StackUserID *string `form:"stackUserId,omitempty" json:"stackUserId,omitempty" yaml:"stackUserId,omitempty" xml:"stackUserId,omitempty"`
+	StackUserID *int `form:"stackUserId,omitempty" json:"stackUserId,omitempty" yaml:"stackUserId,omitempty" xml:"stackUserId,omitempty"`
 	// User ID
 	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
 }
@@ -501,7 +501,7 @@ func (ut *updateStackOverflowUserPayload) Publicize() *UpdateStackOverflowUserPa
 // Update Stack Overflow User payload
 type UpdateStackOverflowUserPayload struct {
 	// Stack Overflow Community-Specific Account ID
-	StackUserID string `form:"stackUserId" json:"stackUserId" yaml:"stackUserId" xml:"stackUserId"`
+	StackUserID int `form:"stackUserId" json:"stackUserId" yaml:"stackUserId" xml:"stackUserId"`
 	// User ID
 	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
 }
@@ -511,9 +511,7 @@ func (ut *UpdateStackOverflowUserPayload) Validate() (err error) {
 	if ut.UserID == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "userId"))
 	}
-	if ut.StackUserID == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "stackUserId"))
-	}
+
 	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, ut.UserID); !ok {
 		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.userId`, ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
 	}
