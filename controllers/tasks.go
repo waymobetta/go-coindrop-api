@@ -27,9 +27,14 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 	// TasksController_Show: start_implement
 
 	// Put your logic here
-
+	userID := ctx.Params.Get("userId")
+	// Note: if query string `userId` is empty,
+	// then use user ID from auth token
+	if userID == "" {
+		userID = ctx.Value("authUserID").(string)
+	}
 	taskUser := new(types.TaskUser)
-	taskUser.UserID = ctx.Params.Get("userId")
+	taskUser.UserID = userID
 	taskUser.TaskID = ctx.TaskID
 
 	task, err := c.db.GetUserTask(taskUser)
@@ -37,7 +42,7 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 		log.Errorf("[controller/tasks] failed to get user task: %v", err)
 		return ctx.InternalServerError(&app.StandardError{
 			Code:    500,
-			Message: "could not get user's tasks from db",
+			Message: "could not get user task",
 		})
 	}
 
@@ -67,15 +72,22 @@ func (c *TasksController) List(ctx *app.ListTasksContext) error {
 
 	// Put your logic here
 
+	userID := ctx.Params.Get("userId")
+	// Note: if query string `userId` is empty,
+	// then use user ID from auth token
+	if userID == "" {
+		userID = ctx.Value("authUserID").(string)
+	}
+
 	taskUser := new(types.TaskUser)
-	taskUser.UserID = ctx.Params.Get("userId")
+	taskUser.UserID = userID
 
 	tasks, err := c.db.GetUserTasks(taskUser)
 	if err != nil {
 		log.Errorf("[controller/tasks] failed to get user tasks: %v", err)
 		return ctx.InternalServerError(&app.StandardError{
 			Code:    500,
-			Message: "could not get user's tasks from db",
+			Message: "could not get user's tasks",
 		})
 	}
 
