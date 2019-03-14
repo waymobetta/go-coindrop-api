@@ -128,6 +128,12 @@ func (db *DB) GetProfile(userID string) (*types.Profile, error) {
 		&name,
 		&username,
 	)
+	if err == sql.ErrNoRows {
+		return &types.Profile{
+			Name:     "",
+			Username: "",
+		}, nil
+	}
 	if err != nil {
 		return nil, err
 	}
