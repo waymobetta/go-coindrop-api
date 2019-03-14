@@ -139,3 +139,11 @@ var TypeformHiddenPayload = Type("TypeformHiddenPayload", func() {
 	Description("Typeform hidden data")
 	Attribute("user_id", String, "User ID")
 })
+
+// ProfilePayload is the payload for creating a user
+var ProfilePayload = Type("ProfilePayload", func() {
+	Description("Profile payload")
+	Attribute("name", String, "Name")
+	Attribute("username", String, "Username")
+	Required("name", "username")
+})

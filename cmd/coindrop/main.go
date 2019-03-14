@@ -91,6 +91,9 @@ func main() {
 	usersCtrlr := controllers.NewUsersController(service, dbs)
 	app.MountUsersController(service, usersCtrlr)
 
+	profilesCtrlr := controllers.NewProfilesController(service, dbs)
+	app.MountProfilesController(service, profilesCtrlr)
+
 	walletsCtrlr := controllers.NewWalletsController(service, dbs)
 	app.MountWalletsController(service, walletsCtrlr)
 

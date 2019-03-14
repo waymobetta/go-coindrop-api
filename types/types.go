@@ -20,6 +20,14 @@ type User struct {
 	Social            *Social `json:"social"`
 }
 
+// Profile info
+type Profile struct {
+	ID       string `json:"id"`
+	UserID   string `json:"user_id"`
+	Name     string `json:"name"`
+	Username string `json:"username"`
+}
+
 // Wallet ...
 type Wallet struct {
 	ID      string `json:"id"`

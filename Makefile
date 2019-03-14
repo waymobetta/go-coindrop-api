@@ -74,6 +74,7 @@ goa:
 	@rm stackoverflow.go
 	@rm redditharvest.go
 	@rm webhooks.go
+	@rm profiles.go
 	@MAKE swagger
 
 .PHONY: swagger

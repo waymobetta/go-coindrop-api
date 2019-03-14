@@ -112,3 +112,12 @@ CREATE TABLE IF NOT EXISTS coindrop_stackoverflow_communities (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	name TEXT NOT NULL
 );
+
+CREATE TABLE "public"."coindrop_profiles" (
+    "id" uuid DEFAULT uuid_generate_v4(),
+    "user_id" uuid UNIQUE,
+    "name" text,
+    "username" text,
+    "image_url" text,
+    PRIMARY KEY ("id")
+);

@@ -191,3 +191,19 @@ var VerificationMedia = MediaType("application/vnd.verification+json", func() {
 		Attribute("verified")
 	})
 })
+
+// ProfileMedia defines the media type used to render users.
+var ProfileMedia = MediaType("application/vnd.profile+json", func() {
+	Description("A user profile")
+	Attributes(func() { // Attributes define the media type shape.
+		Attribute("id", String, "Unique user ID")
+		Attribute("name", String, "Name")
+		Attribute("username", String, "Username")
+		Required("id", "name", "username")
+	})
+	View("default", func() { // View defines a rendering of the media type.
+		Attribute("id") // Media types may have multiple views and must
+		Attribute("name")
+		Attribute("username")
+	})
+})
