@@ -40,10 +40,7 @@ func (c *StackoverflowharvestController) Update(ctx *app.UpdateStackoverflowharv
 	log.Println("[handler] retrieving Stack Overflow About info")
 	// get general about info for user
 
-	// TODO:
-	// why does this need a multi-return, the pointer should handle this
-
-	user, err := stackoverflow.GetProfileByUserID(user)
+	err := stackoverflow.GetProfileByUserID(user)
 	if err != nil {
 		log.Errorf("[controller/stackoverflow] %v", err)
 		return ctx.NotFound(&app.StandardError{
