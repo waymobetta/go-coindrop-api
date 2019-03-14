@@ -61,14 +61,15 @@ CREATE TABLE IF NOT EXISTS coindrop_badges (
 
 -- TASKS
 CREATE TABLE IF NOT EXISTS coindrop_tasks (
-	id uuid DEFAULT uuid_generate_v4() UNIQUE,
-	title TEXT NOT NULL,
-	type TEXT NOT NULL,
-	author TEXT NOT NULL,
-	description TEXT NOT NULL,
-	token_name TEXT,
-	token_allocation INTEGER,
-	badge_id uuid REFERENCES coindrop_badges(id)
+    id uuid DEFAULT uuid_generate_v4() UNIQUE,
+    title text NOT NULL,
+    type text NOT NULL,
+    author text NOT NULL,
+    description text NOT NULL,
+    token_name text,
+    token_allocation integer,
+    badge_id uuid REFERENCES coindrop_badges(id),
+    logo_url text
 );
 
 -- QUIZZES
