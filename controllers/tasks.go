@@ -62,6 +62,7 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 			Description: task.BadgeData.Description,
 			Recipients:  task.BadgeData.Recipients,
 		},
+		LogoURL: task.LogoURL,
 	})
 	// TasksController_Show: end_implement
 }
@@ -108,6 +109,7 @@ func (c *TasksController) List(ctx *app.ListTasksContext) error {
 				Description: task.BadgeData.Description,
 				Recipients:  task.BadgeData.Recipients,
 			},
+			LogoURL: task.LogoURL,
 		})
 	}
 
