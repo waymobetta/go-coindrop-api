@@ -188,8 +188,8 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 			&taskDescription,
 			&tokenName,
 			&tokenAllocation,
-			&logoURL,
 			&badgeID,
+			&logoURL,
 		)
 		if err != nil {
 			return nil, err
@@ -277,8 +277,8 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 			&taskDescription,
 			&tokenName,
 			&tokenAllocation,
-			&logoURL,
 			&badgeID,
+			&logoURL,
 		)
 		if err != nil {
 			return nil, err
