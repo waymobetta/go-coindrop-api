@@ -141,7 +141,8 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 		coindrop_tasks.description,
 		coindrop_tasks.token_name,
 		coindrop_tasks.token_allocation,
-		coindrop_tasks.badge_id
+		coindrop_tasks.badge_id,
+		coindrop_tasks.logo_url
 	FROM
 		coindrop_tasks
 	JOIN
@@ -176,6 +177,7 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 			taskDescription sql.NullString
 			tokenAllocation sql.NullInt64
 			badgeID         sql.NullString
+			logoURL         sql.NullString
 		)
 
 		err = rows.Scan(
@@ -186,6 +188,7 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 			&taskDescription,
 			&tokenName,
 			&tokenAllocation,
+			&logoURL,
 			&badgeID,
 		)
 		if err != nil {
@@ -196,6 +199,7 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 		task.Token = tokenName.String
 		task.TokenAllocation = int(tokenAllocation.Int64)
 		task.BadgeData.ID = badgeID.String
+		task.LogoURL = logoURL.String
 
 		// append task object to slice of tasks
 		tasks = append(tasks, task)
@@ -220,7 +224,8 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 		coindrop_tasks.description,
 		coindrop_tasks.token_name,
 		coindrop_tasks.token_allocation,
-		coindrop_tasks.badge_id
+		coindrop_tasks.badge_id,
+		coindrop_tasks.logo_url
 	FROM
 		coindrop_tasks
 	JOIN
@@ -261,6 +266,7 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 			taskDescription sql.NullString
 			tokenAllocation sql.NullInt64
 			badgeID         sql.NullString
+			logoURL         sql.NullString
 		)
 
 		err = rows.Scan(
@@ -271,6 +277,7 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 			&taskDescription,
 			&tokenName,
 			&tokenAllocation,
+			&logoURL,
 			&badgeID,
 		)
 		if err != nil {
@@ -281,6 +288,7 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 		task.Token = tokenName.String
 		task.TokenAllocation = int(tokenAllocation.Int64)
 		task.BadgeData.ID = badgeID.String
+		task.LogoURL = logoURL.String
 	}
 
 	err = rows.Err()
