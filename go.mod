@@ -16,7 +16,7 @@ require (
 	github.com/gogo/protobuf v1.2.0 // indirect
 	github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
-	github.com/gorilla/handlers v1.4.0
+	github.com/gorilla/handlers v1.4.0 // indirect
 	github.com/gorilla/mux v1.7.0
 	github.com/hashicorp/go-immutable-radix v1.0.0 // indirect
 	github.com/inconshreveable/log15 v0.0.0-20180818164646-67afb5ed74ec // indirect
@@ -38,13 +38,12 @@ require (
 	github.com/syndtr/goleveldb v0.0.0-20181128100959-b001fa50d6b2 // indirect
 	github.com/throttled/throttled v2.2.4+incompatible
 	github.com/ugorji/go/codec v0.0.0-20190128213124-ee1426cffec0 // indirect
-	github.com/waymobetta/gognito v0.0.0-20190119050508-7c95da5c18c9
+	github.com/waymobetta/gognito v0.0.0-20190119050508-7c95da5c18c9 // indirect
 	github.com/waymobetta/wmb v0.0.0-20180226053614-b7f39fbf8259 // indirect
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea // indirect
-	goa.design/plugins v0.0.0-20190206182554-2f93974dfc1e
+	goa.design/plugins v0.0.0-20190206182554-2f93974dfc1e // indirect
 	golang.org/x/net v0.0.0-20190125091013-d26f9f9a57f3 // indirect
 	golang.org/x/oauth2 v0.0.0-20190130055435-99b60b757ec1 // indirect
 	golang.org/x/tools v0.0.0-20190130214255-bb1329dc71a0 // indirect
-	google.golang.org/appengine v1.4.0
 	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
