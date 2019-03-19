@@ -18,6 +18,10 @@ func (db *DB) UpdateWallet(userID, newWalletAddress, walletType string) (*types.
 
 	// create SQL statement for db update
 
+	// TODO:
+	// fix error
+	// pq: there is no unique or exclusion constraint matching the ON CONFLICT specification
+
 	sqlStatement := `
 		INSERT INTO
 			coindrop_wallets(address, user_id)
