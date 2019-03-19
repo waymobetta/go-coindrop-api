@@ -12,6 +12,21 @@ var UserPayload = Type("UserPayload", func() {
 	Required("cognitoAuthUserId")
 })
 
+// CreateTaskPayload is the payload for creating a task
+var CreateTaskPayload = Type("CreateTaskPayload", func() {
+	Description("Create Task payload")
+	Attribute("userId", String, "User ID")
+	Attribute("taskId", String, "Task ID")
+	Required("userId", "taskId")
+})
+
+// TaskPayload is the payload for updating a task
+var TaskPayload = Type("TaskPayload", func() {
+	Description("Task payload")
+	Attribute("completed", Boolean, "Task completed")
+	Required("completed")
+})
+
 // WalletPayload is the payload for updating a user's wallet
 var WalletPayload = Type("WalletPayload", func() {
 	Description("Wallet payload")
