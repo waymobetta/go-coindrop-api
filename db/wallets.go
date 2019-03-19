@@ -9,7 +9,7 @@ import (
 // WALLET
 
 // UpdateWallet updates the wallet address of a single user
-func (db *DB) UpdateWallet(userID, newWalletAddress string) (*types.Wallet, error) {
+func (db *DB) UpdateWallet(userID, newWalletAddress, walletType string) (*types.Wallet, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := db.client.Begin()
 	if err != nil {
@@ -30,6 +30,8 @@ func (db *DB) UpdateWallet(userID, newWalletAddress string) (*types.Wallet, erro
 			address = $1
 		WHERE
 			coindrop_wallets.user_id = $2
+		AND
+			coindrop_wallets.type = $3
 	`
 
 	// prepare statement
@@ -45,7 +47,7 @@ func (db *DB) UpdateWallet(userID, newWalletAddress string) (*types.Wallet, erro
 	}
 
 	// execute db write using unique ID as the identifier
-	_, err = stmt.Exec(newWalletAddress, userID)
+	_, err = stmt.Exec(newWalletAddress, userID, walletType)
 	if err != nil {
 		// rollback transaction if error thrown
 		tx.Rollback()
@@ -68,7 +70,8 @@ func (db *DB) GetWallet(userID string) (*types.Wallet, error) {
 	// create SQL statement for db update
 	sqlStatement := `
 		SELECT
-			address
+			address,
+			type
 		FROM
 			coindrop_wallets
 		WHERE
@@ -92,6 +95,7 @@ func (db *DB) GetWallet(userID string) (*types.Wallet, error) {
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
 		&walletAddress,
+		&wallet.Type,
 	)
 
 	wallet.Address = walletAddress.String
