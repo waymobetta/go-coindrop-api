@@ -8,4 +8,5 @@ DROP TABLE IF EXISTS coindrop_user_tasks;
 DROP TABLE IF EXISTS coindrop_tasks;
 DROP TABLE IF EXISTS coindrop_wallets;
 DROP TABLE IF EXISTS coindrop_badges;
+DROP TABLE IF EXISTS coindrop_profiles;
 DROP TABLE IF EXISTS coindrop_auth;
