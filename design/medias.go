@@ -23,6 +23,79 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 	})
 })
 
+var BadgeMedia = MediaType("application/vnd.badge+json", func() {
+	Description("Badge")
+	Attributes(func() {
+		Attribute("id", String, "badge ID")
+		Attribute("name", String, "badge name")
+		Attribute("description", String, "badge description")
+		Attribute("recipients", Integer, "badge recipients")
+		Required(
+			"id",
+			"name",
+			"description",
+			"recipients",
+		)
+	})
+	View("default", func() {
+		Attribute("id")
+		Attribute("name")
+		Attribute("description")
+		Attribute("recipients")
+	})
+})
+
+// TaskMedia ...
+var TaskMedia = MediaType("application/vnd.task+json", func() {
+	Description("Task")
+	Attributes(func() {
+		Attribute("id", String, "task ID")
+		Attribute("title", String, "task title")
+		Attribute("type", String, "task type")
+		Attribute("author", String, "task author")
+		Attribute("description", String, "task description")
+		Attribute("token", String, "task token")
+		Attribute("tokenAllocation", Integer, "token allocation")
+		Attribute("badge", BadgeMedia, "task badge")
+		Attribute("logoURL", String, "logo URL")
+		Required(
+			"id",
+			"title",
+			"type",
+			"author",
+			"description",
+			"token",
+			"tokenAllocation",
+			"badge",
+			"logoURL",
+		)
+	})
+	View("default", func() {
+		Attribute("id")
+		Attribute("title")
+		Attribute("type")
+		Attribute("author")
+		Attribute("description")
+		Attribute("token")
+		Attribute("tokenAllocation")
+		Attribute("badge")
+		Attribute("logoURL")
+	})
+})
+
+// TasksMedia ...
+var TasksMedia = MediaType("application/vnd.tasks+json", func() {
+	Description("Tasks")
+	Attributes(func() {
+		Attribute("userId", String, "user ID")
+		Attribute("tasks", CollectionOf(TaskMedia), "list of tasks")
+		Required("tasks")
+	})
+	View("default", func() {
+		Attribute("tasks")
+	})
+})
+
 // WalletMedia ...
 var WalletMedia = MediaType("application/vnd.wallet+json", func() {
 	Description("A wallet")
