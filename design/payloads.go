@@ -34,7 +34,8 @@ var WalletPayload = Type("WalletPayload", func() {
 		Pattern("^0x[0-9a-fA-F]{40}$")
 		Example("0x845fdD93Cca3aE9e380d5556818e6d0b902B977c")
 	})
-	Required("walletAddress")
+	Attribute("type", String, "type")
+	Required("walletAddress", "type")
 })
 
 // CreateUserPayload is the payload for creating a listing for a user's reddit info
