@@ -42,8 +42,8 @@ func (c *WalletsController) Show(ctx *app.ShowWalletsContext) error {
 	log.Printf("[controller/wallet] returned wallet for coindrop user: %v\n; wallet address: %s", userID, wallet.Address)
 
 	res := &app.Wallet{
-		Address: wallet.Address,
-		Type:    wallet.Type,
+		Address:    wallet.Address,
+		WalletType: wallet.Type,
 	}
 
 	return ctx.OK(res)
