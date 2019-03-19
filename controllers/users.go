@@ -29,11 +29,13 @@ func (c *UsersController) Create(ctx *app.CreateUsersContext) error {
 
 	// Put your logic here
 	// initialize new user struct object
-	user := new(types.User)
-	user.CognitoAuthUserID = ctx.Payload.CognitoAuthUserID
+	user := &types.User{
+		CognitoAuthUserID: ctx.Payload.CognitoAuthUserID,
+		Wallet:            &types.Wallet{},
+	}
 
 	// insert the AWS cognito user ID into the coindrop_auth table
-	newUser, err := c.db.AddUserID(user)
+	err := c.db.AddUserID(user.CognitoAuthUserID)
 	if err != nil {
 		log.Errorf("[controller/user] %v", err)
 		return ctx.BadRequest(&app.StandardError{
@@ -46,8 +48,8 @@ func (c *UsersController) Create(ctx *app.CreateUsersContext) error {
 
 	res := &app.User{
 		ID:                "",
-		CognitoAuthUserID: &newUser.CognitoAuthUserID,
-		WalletAddress:     &newUser.Wallet.Address,
+		CognitoAuthUserID: &user.CognitoAuthUserID,
+		WalletAddress:     &user.Wallet.Address,
 	}
 
 	return ctx.OK(res)
