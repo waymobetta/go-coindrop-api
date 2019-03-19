@@ -7,11 +7,11 @@ import (
 )
 
 // AddUserID inserts an AWS cognito user ID to the coindrop_auth table
-func (db *DB) AddUserID(u *types.User) (*types.User, error) {
+func (db *DB) AddUserID(cognitoUserID string) error {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := db.client.Begin()
 	if err != nil {
-		return u, err
+		return err
 	}
 
 	// create SQL statement for db update
@@ -30,28 +30,26 @@ func (db *DB) AddUserID(u *types.User) (*types.User, error) {
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return u, err
+		return err
 	}
 
 	defer stmt.Close()
 
 	// execute db write using unique ID as the identifier
-	_, err = stmt.Exec(u.CognitoAuthUserID)
+	_, err = stmt.Exec(cognitoUserID)
 	if err != nil {
 		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
+		return tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
+		return tx.Rollback()
 	}
 
-	return u, nil
+	return nil
 }
 
 // GetUser gets user by ID
