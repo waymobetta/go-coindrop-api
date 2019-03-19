@@ -97,11 +97,11 @@ func (db *DB) GetWallet(userID string) (*types.Wallet, error) {
 	wallet.Address = walletAddress.String
 
 	if err == sql.ErrNoRows {
-		return nil, nil
+		return wallet, nil
 	}
 
 	if err != nil {
-		return nil, err
+		return wallet, err
 	}
 
 	return wallet, nil
