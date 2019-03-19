@@ -33,6 +33,7 @@ type Wallet struct {
 	ID      string `json:"id"`
 	UserID  string `json:"user_id"`
 	Address string `json:"address"`
+	Type    string `json:"type"`
 }
 
 // Social ...
