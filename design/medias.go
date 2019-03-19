@@ -109,10 +109,11 @@ var WalletMedia = MediaType("application/vnd.wallet+json", func() {
 			Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
 		})
 		Attribute("address", String, "wallet address")
-		Required("id", "address")
+		Attribute("type", String, "type")
+		Required("id", "address", "type")
 	})
 	View("default", func() {
-		Attribute("address")
+		Attribute("address", "type")
 	})
 })
 
