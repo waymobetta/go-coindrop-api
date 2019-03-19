@@ -712,12 +712,17 @@ func (ut *VerificationPayload) Validate() (err error) {
 type walletPayload struct {
 	// Wallet address
 	WalletAddress *string `form:"walletAddress,omitempty" json:"walletAddress,omitempty" yaml:"walletAddress,omitempty" xml:"walletAddress,omitempty"`
+	// wallet type
+	WalletType *string `form:"walletType,omitempty" json:"walletType,omitempty" yaml:"walletType,omitempty" xml:"walletType,omitempty"`
 }
 
 // Validate validates the walletPayload type instance.
 func (ut *walletPayload) Validate() (err error) {
 	if ut.WalletAddress == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "walletAddress"))
+	}
+	if ut.WalletType == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "walletType"))
 	}
 	if ut.WalletAddress != nil {
 		if ok := goa.ValidatePattern(`^0x[0-9a-fA-F]{40}$`, *ut.WalletAddress); !ok {
@@ -733,6 +738,9 @@ func (ut *walletPayload) Publicize() *WalletPayload {
 	if ut.WalletAddress != nil {
 		pub.WalletAddress = *ut.WalletAddress
 	}
+	if ut.WalletType != nil {
+		pub.WalletType = *ut.WalletType
+	}
 	return &pub
 }
 
@@ -740,12 +748,17 @@ func (ut *walletPayload) Publicize() *WalletPayload {
 type WalletPayload struct {
 	// Wallet address
 	WalletAddress string `form:"walletAddress" json:"walletAddress" yaml:"walletAddress" xml:"walletAddress"`
+	// wallet type
+	WalletType string `form:"walletType" json:"walletType" yaml:"walletType" xml:"walletType"`
 }
 
 // Validate validates the WalletPayload type instance.
 func (ut *WalletPayload) Validate() (err error) {
 	if ut.WalletAddress == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "walletAddress"))
+	}
+	if ut.WalletType == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "walletType"))
 	}
 	if ok := goa.ValidatePattern(`^0x[0-9a-fA-F]{40}$`, ut.WalletAddress); !ok {
 		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.walletAddress`, ut.WalletAddress, `^0x[0-9a-fA-F]{40}$`))

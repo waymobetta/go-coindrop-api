@@ -612,12 +612,17 @@ func (c *Client) DecodeVerification(resp *http.Response) (*Verification, error) 
 type Wallet struct {
 	// wallet address
 	Address string `form:"address" json:"address" yaml:"address" xml:"address"`
+	// wallet type
+	WalletType string `form:"walletType" json:"walletType" yaml:"walletType" xml:"walletType"`
 }
 
 // Validate validates the Wallet media type instance.
 func (mt *Wallet) Validate() (err error) {
 	if mt.Address == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "address"))
+	}
+	if mt.WalletType == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "walletType"))
 	}
 	return
 }
