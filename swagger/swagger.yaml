@@ -80,7 +80,7 @@ definitions:
     description: Create Reddit User payload
     example:
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      username: Molestiae praesentium debitis ut aliquam iusto et.
+      username: Qui consequatur.
     properties:
       userId:
         description: User ID
@@ -89,7 +89,7 @@ definitions:
         type: string
       username:
         description: Username
-        example: Molestiae praesentium debitis ut aliquam iusto et.
+        example: Qui consequatur.
         type: string
     required:
     - userId
@@ -137,16 +137,16 @@ definitions:
   ProfilePayload:
     description: Profile payload
     example:
-      name: Natus tempora maiores assumenda.
-      username: Distinctio quo blanditiis perferendis et facilis aspernatur.
+      name: Distinctio quo blanditiis perferendis et facilis aspernatur.
+      username: Eos expedita unde.
     properties:
       name:
         description: Name
-        example: Natus tempora maiores assumenda.
+        example: Distinctio quo blanditiis perferendis et facilis aspernatur.
         type: string
       username:
         description: Username
-        example: Distinctio quo blanditiis perferendis et facilis aspernatur.
+        example: Eos expedita unde.
         type: string
     required:
     - name
@@ -262,11 +262,11 @@ definitions:
   QuizPayload:
     description: Quiz payload
     example:
-      title: Eos expedita unde.
+      title: Molestiae praesentium debitis ut aliquam iusto et.
     properties:
       title:
         description: Title
-        example: Eos expedita unde.
+        example: Molestiae praesentium debitis ut aliquam iusto et.
         type: string
     required:
     - title
@@ -275,28 +275,28 @@ definitions:
   QuizResultsPayload:
     description: Quiz results payload
     example:
-      questionsCorrect: 230173268679833734
-      questionsIncorrect: 4532132465653549517
-      quizId: Est nesciunt mollitia ducimus quisquam sit facere.
-      userId: Praesentium quae delectus sit eos error.
+      questionsCorrect: 5596219260918666530
+      questionsIncorrect: 9103688236887389998
+      quizId: Sit facere qui praesentium.
+      userId: Delectus sit eos error.
     properties:
       questionsCorrect:
         description: Number of questions that were answered correct
-        example: 230173268679833734
+        example: 5596219260918666530
         format: int64
         type: integer
       questionsIncorrect:
         description: Number of questions that were answered incorrect
-        example: 4532132465653549517
+        example: 9103688236887389998
         format: int64
         type: integer
       quizId:
         description: Quiz ID
-        example: Est nesciunt mollitia ducimus quisquam sit facere.
+        example: Sit facere qui praesentium.
         type: string
       userId:
         description: User ID
-        example: Praesentium quae delectus sit eos error.
+        example: Delectus sit eos error.
         type: string
     required:
     - quizId
@@ -528,10 +528,11 @@ definitions:
         recipients: 7796898160710639916
       description: Ut et non enim.
       id: Officiis ad quis.
-      title: Exercitationem dignissimos est dolores sequi cumque.
-      token: Dolorum accusantium eos accusantium molestias.
-      tokenAllocation: 3650632619386144973
-      type: Sit sed nobis.
+      logoURL: Exercitationem dignissimos est dolores sequi cumque.
+      title: Dolorum accusantium eos accusantium molestias.
+      token: Eligendi sit sed nobis.
+      tokenAllocation: 3786236844148253728
+      type: Suscipit error ea.
     properties:
       author:
         description: task author
@@ -547,22 +548,26 @@ definitions:
         description: task ID
         example: Officiis ad quis.
         type: string
+      logoURL:
+        description: logo URL
+        example: Exercitationem dignissimos est dolores sequi cumque.
+        type: string
       title:
         description: task title
-        example: Exercitationem dignissimos est dolores sequi cumque.
+        example: Dolorum accusantium eos accusantium molestias.
         type: string
       token:
         description: task token
-        example: Dolorum accusantium eos accusantium molestias.
+        example: Eligendi sit sed nobis.
         type: string
       tokenAllocation:
         description: token allocation
-        example: 3650632619386144973
+        example: 3786236844148253728
         format: int64
         type: integer
       type:
         description: task type
-        example: Sit sed nobis.
+        example: Suscipit error ea.
         type: string
     required:
     - id
@@ -573,6 +578,7 @@ definitions:
     - token
     - tokenAllocation
     - badge
+    - logoURL
     title: 'Mediatype identifier: application/vnd.task+json; view=default'
     type: object
   TaskCollection:
@@ -586,10 +592,11 @@ definitions:
         recipients: 7796898160710639916
       description: Ut et non enim.
       id: Officiis ad quis.
-      title: Exercitationem dignissimos est dolores sequi cumque.
-      token: Dolorum accusantium eos accusantium molestias.
-      tokenAllocation: 3650632619386144973
-      type: Sit sed nobis.
+      logoURL: Exercitationem dignissimos est dolores sequi cumque.
+      title: Dolorum accusantium eos accusantium molestias.
+      token: Eligendi sit sed nobis.
+      tokenAllocation: 3786236844148253728
+      type: Suscipit error ea.
     - author: Sunt voluptatum recusandae facilis perferendis.
       badge:
         description: Eaque facere voluptates consequatur nihil odit.
@@ -598,10 +605,11 @@ definitions:
         recipients: 7796898160710639916
       description: Ut et non enim.
       id: Officiis ad quis.
-      title: Exercitationem dignissimos est dolores sequi cumque.
-      token: Dolorum accusantium eos accusantium molestias.
-      tokenAllocation: 3650632619386144973
-      type: Sit sed nobis.
+      logoURL: Exercitationem dignissimos est dolores sequi cumque.
+      title: Dolorum accusantium eos accusantium molestias.
+      token: Eligendi sit sed nobis.
+      tokenAllocation: 3786236844148253728
+      type: Suscipit error ea.
     - author: Sunt voluptatum recusandae facilis perferendis.
       badge:
         description: Eaque facere voluptates consequatur nihil odit.
@@ -610,10 +618,11 @@ definitions:
         recipients: 7796898160710639916
       description: Ut et non enim.
       id: Officiis ad quis.
-      title: Exercitationem dignissimos est dolores sequi cumque.
-      token: Dolorum accusantium eos accusantium molestias.
-      tokenAllocation: 3650632619386144973
-      type: Sit sed nobis.
+      logoURL: Exercitationem dignissimos est dolores sequi cumque.
+      title: Dolorum accusantium eos accusantium molestias.
+      token: Eligendi sit sed nobis.
+      tokenAllocation: 3786236844148253728
+      type: Suscipit error ea.
     items:
       $ref: '#/definitions/Task'
     title: 'Mediatype identifier: application/vnd.task+json; type=collection; view=default'
@@ -643,10 +652,11 @@ definitions:
           recipients: 7796898160710639916
         description: Ut et non enim.
         id: Officiis ad quis.
-        title: Exercitationem dignissimos est dolores sequi cumque.
-        token: Dolorum accusantium eos accusantium molestias.
-        tokenAllocation: 3650632619386144973
-        type: Sit sed nobis.
+        logoURL: Exercitationem dignissimos est dolores sequi cumque.
+        title: Dolorum accusantium eos accusantium molestias.
+        token: Eligendi sit sed nobis.
+        tokenAllocation: 3786236844148253728
+        type: Suscipit error ea.
       - author: Sunt voluptatum recusandae facilis perferendis.
         badge:
           description: Eaque facere voluptates consequatur nihil odit.
@@ -655,10 +665,11 @@ definitions:
           recipients: 7796898160710639916
         description: Ut et non enim.
         id: Officiis ad quis.
-        title: Exercitationem dignissimos est dolores sequi cumque.
-        token: Dolorum accusantium eos accusantium molestias.
-        tokenAllocation: 3650632619386144973
-        type: Sit sed nobis.
+        logoURL: Exercitationem dignissimos est dolores sequi cumque.
+        title: Dolorum accusantium eos accusantium molestias.
+        token: Eligendi sit sed nobis.
+        tokenAllocation: 3786236844148253728
+        type: Suscipit error ea.
     properties:
       tasks:
         $ref: '#/definitions/TaskCollection'
@@ -785,7 +796,7 @@ definitions:
     description: Update Reddit User payload
     example:
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      username: Qui consequatur.
+      username: Deserunt et est nesciunt.
     properties:
       userId:
         description: User ID
@@ -794,7 +805,7 @@ definitions:
         type: string
       username:
         description: Reddit Username
-        example: Qui consequatur.
+        example: Deserunt et est nesciunt.
         type: string
     required:
     - userId
@@ -804,26 +815,26 @@ definitions:
   User:
     description: A user (default view)
     example:
-      cognitoAuthUserId: Et ea porro.
-      id: Facilis alias blanditiis qui rerum totam.
-      name: Amet reiciendis velit facilis natus neque pariatur.
-      walletAddress: Officiis eos id sit amet non.
+      cognitoAuthUserId: Facilis alias blanditiis qui rerum totam.
+      id: Amet reiciendis velit facilis natus neque pariatur.
+      name: Officiis eos id sit amet non.
+      walletAddress: Id omnis sit et molestias sed possimus.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Et ea porro.
+        example: Facilis alias blanditiis qui rerum totam.
         type: string
       id:
         description: Unique user ID
-        example: Facilis alias blanditiis qui rerum totam.
+        example: Amet reiciendis velit facilis natus neque pariatur.
         type: string
       name:
         description: Name of user
-        example: Amet reiciendis velit facilis natus neque pariatur.
+        example: Officiis eos id sit amet non.
         type: string
       walletAddress:
         description: Wallet address
-        example: Officiis eos id sit amet non.
+        example: Id omnis sit et molestias sed possimus.
         type: string
     required:
     - id
@@ -884,11 +895,11 @@ definitions:
   Wallet:
     description: A wallet (default view)
     example:
-      address: Quia inventore ducimus.
+      address: Fuga natus tempora maiores assumenda.
     properties:
       address:
         description: wallet address
-        example: Quia inventore ducimus.
+        example: Fuga natus tempora maiores assumenda.
         type: string
     required:
     - address

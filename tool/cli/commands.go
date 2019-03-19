@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.4.1
+// --version=v1.3.1
 
 package cli
 
@@ -260,8 +260,8 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 Payload example:
 
 {
-   "name": "Natus tempora maiores assumenda.",
-   "username": "Distinctio quo blanditiis perferendis et facilis aspernatur."
+   "name": "Distinctio quo blanditiis perferendis et facilis aspernatur.",
+   "username": "Eos expedita unde."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
@@ -277,7 +277,7 @@ Payload example:
 Payload example:
 
 {
-   "title": "Eos expedita unde."
+   "title": "Molestiae praesentium debitis ut aliquam iusto et."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
@@ -293,10 +293,10 @@ Payload example:
 Payload example:
 
 {
-   "questionsCorrect": 230173268679833734,
-   "questionsIncorrect": 4532132465653549517,
-   "quizId": "Est nesciunt mollitia ducimus quisquam sit facere.",
-   "userId": "Praesentium quae delectus sit eos error."
+   "questionsCorrect": 5596219260918666530,
+   "questionsIncorrect": 9103688236887389998,
+   "quizId": "Sit facere qui praesentium.",
+   "userId": "Delectus sit eos error."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
 	}
@@ -545,8 +545,8 @@ Payload example:
 Payload example:
 
 {
-   "name": "Natus tempora maiores assumenda.",
-   "username": "Distinctio quo blanditiis perferendis et facilis aspernatur."
+   "name": "Distinctio quo blanditiis perferendis et facilis aspernatur.",
+   "username": "Eos expedita unde."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp23.Run(c, args) },
 	}
@@ -563,7 +563,7 @@ Payload example:
 
 {
    "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
-   "username": "Molestiae praesentium debitis ut aliquam iusto et."
+   "username": "Qui consequatur."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp24.Run(c, args) },
 	}
@@ -580,7 +580,7 @@ Payload example:
 
 {
    "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
-   "username": "Qui consequatur."
+   "username": "Deserunt et est nesciunt."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp25.Run(c, args) },
 	}

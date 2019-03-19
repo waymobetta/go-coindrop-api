@@ -72,6 +72,7 @@ goa:
 	@rm results.go
 	@rm reddit.go
 	@rm stackoverflow.go
+	@rm stackoverflowharvest.go
 	@rm redditharvest.go
 	@rm webhooks.go
 	@rm profiles.go

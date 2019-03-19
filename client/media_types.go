@@ -6,7 +6,7 @@
 // $ goagen
 // --design=github.com/waymobetta/go-coindrop-api/design
 // --out=$(GOPATH)/src/github.com/waymobetta/go-coindrop-api
-// --version=v1.4.1
+// --version=v1.3.1
 
 package client
 
@@ -442,6 +442,8 @@ type Task struct {
 	Description string `form:"description" json:"description" yaml:"description" xml:"description"`
 	// task ID
 	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
+	// logo URL
+	LogoURL string `form:"logoURL" json:"logoURL" yaml:"logoURL" xml:"logoURL"`
 	// task title
 	Title string `form:"title" json:"title" yaml:"title" xml:"title"`
 	// task token
@@ -475,6 +477,9 @@ func (mt *Task) Validate() (err error) {
 
 	if mt.Badge == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "badge"))
+	}
+	if mt.LogoURL == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "logoURL"))
 	}
 	if mt.Badge != nil {
 		if err2 := mt.Badge.Validate(); err2 != nil {

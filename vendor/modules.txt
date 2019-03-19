@@ -2,6 +2,8 @@
 github.com/armon/go-metrics
 # github.com/beefsack/go-rate v0.0.0-20180408011153-efa7637bb9b6
 github.com/beefsack/go-rate
+# github.com/davecgh/go-spew v1.1.1
+github.com/davecgh/go-spew/spew
 # github.com/dgrijalva/jwt-go v3.2.0+incompatible
 github.com/dgrijalva/jwt-go
 # github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598
@@ -10,6 +12,7 @@ github.com/dimfeld/httppath
 github.com/dimfeld/httptreemux
 # github.com/goadesign/goa v1.4.1
 github.com/goadesign/goa
+github.com/goadesign/goa/cors
 github.com/goadesign/goa/goatest
 github.com/goadesign/goa/client
 github.com/goadesign/goa/middleware
@@ -23,8 +26,6 @@ github.com/gofrs/uuid
 github.com/golang/protobuf/proto
 # github.com/google/go-querystring v1.0.0
 github.com/google/go-querystring/query
-# github.com/gorilla/handlers v1.4.0
-github.com/gorilla/handlers
 # github.com/gorilla/mux v1.7.0
 github.com/gorilla/mux
 # github.com/hashicorp/go-immutable-radix v1.0.0
@@ -54,8 +55,6 @@ github.com/spf13/pflag
 # github.com/throttled/throttled v2.2.4+incompatible
 github.com/throttled/throttled
 github.com/throttled/throttled/store/memstore
-# github.com/waymobetta/gognito v0.0.0-20190119050508-7c95da5c18c9
-github.com/waymobetta/gognito
 # github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea
 github.com/zach-klippenstein/goregen
 # golang.org/x/crypto v0.0.0-20180904163835-0709b304e793
