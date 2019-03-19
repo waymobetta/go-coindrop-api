@@ -35,7 +35,10 @@ var WalletPayload = Type("WalletPayload", func() {
 		Example("0x845fdD93Cca3aE9e380d5556818e6d0b902B977c")
 	})
 	Attribute("walletType", String, "wallet type")
-	Required("walletAddress", "type")
+	Required(
+		"walletAddress",
+		"walletType",
+	)
 })
 
 // CreateUserPayload is the payload for creating a listing for a user's reddit info
