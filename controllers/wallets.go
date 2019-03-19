@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // WalletsController implements the wallet resource.
@@ -42,6 +43,7 @@ func (c *WalletsController) Show(ctx *app.ShowWalletsContext) error {
 
 	res := &app.Wallet{
 		Address: wallet.Address,
+		Type:    wallet.Type,
 	}
 
 	return ctx.OK(res)
@@ -54,9 +56,14 @@ func (c *WalletsController) Update(ctx *app.UpdateWalletsContext) error {
 
 	// Put your logic here
 	userID := ctx.Value("authUserID").(string)
-	newWalletAddress := ctx.Payload.WalletAddress
 
-	wallet, err := c.db.UpdateWallet(userID, newWalletAddress)
+	// payload
+	wallet := &types.Wallet{
+		Address: ctx.Payload.WalletAddress,
+		Type:    ctx.Payload.WalletType,
+	}
+
+	wallet, err := c.db.UpdateWallet(userID, wallet.Address, wallet.Type)
 	if err != nil {
 		log.Errorf("[controller/wallet] %v", err)
 		return ctx.BadRequest(&app.StandardError{
@@ -68,7 +75,8 @@ func (c *WalletsController) Update(ctx *app.UpdateWalletsContext) error {
 	log.Printf("[controller/wallet] successfully updated wallet for coindrop user: %v\n", userID)
 
 	return ctx.OK(&app.Wallet{
-		Address: wallet.Address,
+		Address:    wallet.Address,
+		WalletType: wallet.Type,
 	})
 	// WalletsController_Update: end_implement
 }
