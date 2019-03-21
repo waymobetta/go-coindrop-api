@@ -28,7 +28,7 @@ func (c *WalletsController) Show(ctx *app.ShowWalletsContext) error {
 	// WalletsController_Show: start_implement
 
 	// Put your logic here
-	userID := ctx.Value("authUserID").(string)
+	userID := ctx.Params.Get("userId")
 
 	// return a user's wallets using the AWS cognito user ID as the key
 	wallets, err := c.db.GetWallets(userID)
