@@ -633,3 +633,53 @@ func (c *Client) DecodeWallet(resp *http.Response) (*Wallet, error) {
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
 }
+
+// WalletCollection is the media type for an array of Wallet (default view)
+//
+// Identifier: application/vnd.wallet+json; type=collection; view=default
+type WalletCollection []*Wallet
+
+// Validate validates the WalletCollection media type instance.
+func (mt WalletCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// DecodeWalletCollection decodes the WalletCollection instance encoded in resp body.
+func (c *Client) DecodeWalletCollection(resp *http.Response) (WalletCollection, error) {
+	var decoded WalletCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
+}
+
+// Wallets (default view)
+//
+// Identifier: application/vnd.wallets+json; view=default
+type Wallets struct {
+	// list of wallets
+	Wallets WalletCollection `form:"wallets" json:"wallets" yaml:"wallets" xml:"wallets"`
+}
+
+// Validate validates the Wallets media type instance.
+func (mt *Wallets) Validate() (err error) {
+	if mt.Wallets == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "wallets"))
+	}
+	if err2 := mt.Wallets.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
+	}
+	return
+}
+
+// DecodeWallets decodes the Wallets instance encoded in resp body.
+func (c *Client) DecodeWallets(resp *http.Response) (*Wallets, error) {
+	var decoded Wallets
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}

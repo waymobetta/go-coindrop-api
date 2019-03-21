@@ -506,3 +506,39 @@ func (mt *Wallet) Validate() (err error) {
 	}
 	return
 }
+
+// WalletCollection is the media type for an array of Wallet (default view)
+//
+// Identifier: application/vnd.wallet+json; type=collection; view=default
+type WalletCollection []*Wallet
+
+// Validate validates the WalletCollection media type instance.
+func (mt WalletCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// Wallets (default view)
+//
+// Identifier: application/vnd.wallets+json; view=default
+type Wallets struct {
+	// list of wallets
+	Wallets WalletCollection `form:"wallets" json:"wallets" yaml:"wallets" xml:"wallets"`
+}
+
+// Validate validates the Wallets media type instance.
+func (mt *Wallets) Validate() (err error) {
+	if mt.Wallets == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "wallets"))
+	}
+	if err2 := mt.Wallets.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
+	}
+	return
+}

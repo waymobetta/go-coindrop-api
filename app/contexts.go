@@ -1855,9 +1855,9 @@ func NewShowWalletsContext(ctx context.Context, r *http.Request, service *goa.Se
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowWalletsContext) OK(r *Wallet) error {
+func (ctx *ShowWalletsContext) OK(r *Wallets) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.wallet+json")
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.wallets+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
@@ -1915,11 +1915,13 @@ func NewUpdateWalletsContext(ctx context.Context, r *http.Request, service *goa.
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *UpdateWalletsContext) OK(r *Wallet) error {
+func (ctx *UpdateWalletsContext) OK(resp []byte) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.wallet+json")
+		ctx.ResponseData.Header().Set("Content-Type", "text/plain")
 	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+	ctx.ResponseData.WriteHeader(200)
+	_, err := ctx.ResponseData.Write(resp)
+	return err
 }
 
 // BadRequest sends a HTTP response with status code 400.
