@@ -46,8 +46,8 @@ var WalletPayload = Type("WalletPayload", func() {
 	)
 })
 
-// CreateUserPayload is the payload for creating a listing for a user's reddit info
-var CreateUserPayload = Type("CreateUserPayload", func() {
+// CreateRedditUserPayload is the payload for creating a listing for a user's reddit info
+var CreateRedditUserPayload = Type("CreateUserPayload", func() {
 	Description("Create Reddit User payload")
 	Attribute("userId", String, "User ID", func() {
 		Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
