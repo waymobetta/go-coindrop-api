@@ -218,9 +218,15 @@ func (db *DB) GetWallets(userID string) ([]types.Wallet, error) {
 			)
 	`
 
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return nil, err
+	}
+
+	defer stmt.Close()
+
 	// prepare statement
-	rows, err := db.client.Query(
-		sqlStatement,
+	rows, err := stmt.Query(
 		userID,
 	)
 	if err != nil {
@@ -244,11 +250,6 @@ func (db *DB) GetWallets(userID string) ([]types.Wallet, error) {
 
 		// append wallet object to slice of wallets
 		wallets = append(wallets, wallet)
-	}
-
-	err = rows.Err()
-	if err != nil {
-		return nil, err
 	}
 
 	return wallets, nil
