@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/goadesign/goa"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
@@ -62,32 +60,50 @@ func (c *WalletsController) Update(ctx *app.UpdateWalletsContext) error {
 	// WalletsController_Update: start_implement
 
 	// Put your logic here
-	userID := ctx.Value("authUserID").(string)
+	// userID := ctx.Value("authUserID").(string)
 
-	user, err := c.db.GetUser(userID)
+	userID := ctx.Payload.UserID
+	address := ctx.Payload.WalletAddress
+	walletType := ctx.Payload.WalletType
+
+	var walletStored bool
+
+	// TODO:
+	// needs better error handling
+
+	_, err := c.db.GetWallet(userID, walletType)
 	if err != nil {
-		log.Errorf("[controller/wallet] %v", err)
-		return ctx.BadRequest(&app.StandardError{
-			Code:    400,
-			Message: "could not get user ID from db",
-		})
+		walletStored = false
 	}
 
-	// update wallet in db
-	wallet, err := c.db.UpdateWallet(
-		user.ID,
-		ctx.Payload.WalletAddress,
-		ctx.Payload.WalletType,
-	)
-	if err != nil {
-		log.Errorf("[controller/wallet] %v", err)
-		return ctx.BadRequest(&app.StandardError{
-			Code:    400,
-			Message: "could not update wallet in db",
-		})
+	if walletStored {
+		// update wallet in db
+		_, err := c.db.UpdateWallet(
+			userID,
+			address,
+			walletType,
+		)
+		if err != nil {
+			log.Errorf("[controller/wallet] %v", err)
+			return ctx.BadRequest(&app.StandardError{
+				Code:    400,
+				Message: "could not update wallet in db",
+			})
+		}
+	} else {
+		_, err := c.db.AddWallet(
+			userID,
+			address,
+			walletType,
+		)
+		if err != nil {
+			log.Errorf("[controller/wallet] %v", err)
+			return ctx.BadRequest(&app.StandardError{
+				Code:    400,
+				Message: "could not insert wallet in db",
+			})
+		}
 	}
-
-	fmt.Println(wallet)
 
 	log.Printf("[controller/wallet] successfully updated wallet for coindrop user: %v\n", userID)
 
