@@ -70,12 +70,15 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 
 	// Put your logic here
 
-	// TODO:
-	// 1. fix to prevent creating duplicates
-	// 2. fix SQL statement to join auth table for user ID
+	// userID := ctx.Value("authUserID").(string)
+	userID := ctx.Payload.UserID
 
-	user := &types.User{
-		CognitoAuthUserID: ctx.Value("authUserID").(string),
+	// TODO:
+	// use fix similar to wallets update method [controllers/wallets]
+	// 2. fix to prevent creating duplicates
+
+	user = &types.User{
+		CognitoAuthUserID: userID,
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Username:     ctx.Payload.Username,
@@ -92,14 +95,12 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 		},
 	}
 
-	user.UserID = "a1f75b14-a475-4dee-a1ea-bc4c0d391e7e"
-
-	_, err := c.db.AddRedditUser(user)
+	_, err = c.db.AddRedditUser(user)
 	if err != nil {
 		log.Errorf("[controller/reddit] %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
-			Message: "could not update create reddit info listing in db",
+			Message: "could not update reddit info listing in db",
 		})
 	}
 
