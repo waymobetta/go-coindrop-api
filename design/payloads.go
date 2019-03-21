@@ -103,8 +103,8 @@ var VerificationPayload = Type("VerificationPayload", func() {
 	)
 })
 
-// UpdateUserPayload is the payload for updating a user's reddit info
-var UpdateUserPayload = Type("UpdateUserPayload", func() {
+// UpdateRedditUserPayload is the payload for updating a user's reddit info
+var UpdateRedditUserPayload = Type("UpdateRedditUserPayload", func() {
 	Description("Update Reddit User payload")
 	Attribute("userId", String, "User ID", func() {
 		Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
@@ -117,7 +117,7 @@ var UpdateUserPayload = Type("UpdateUserPayload", func() {
 	)
 })
 
-// UpdateUserPayload is the payload for updating a user's reddit info
+// UpdateStackOverflowUserPayload is the payload for updating a user's reddit info
 var UpdateStackOverflowUserPayload = Type("UpdateStackOverflowUserPayload", func() {
 	Description("Update Stack Overflow User payload")
 	Attribute("userId", String, "User ID", func() {

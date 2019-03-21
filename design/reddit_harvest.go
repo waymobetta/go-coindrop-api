@@ -18,7 +18,7 @@ var _ = Resource("redditharvest", func() {
 	Action("update", func() {
 		Description("Update Reddit User Info")
 		Routing(POST(""))
-		Payload(UpdateUserPayload)
+		Payload(UpdateRedditUserPayload)
 		Response(OK, RedditUserMedia)
 	})
 })
