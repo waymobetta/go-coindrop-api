@@ -23,6 +23,7 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 	})
 })
 
+// BadgeMedia ...
 var BadgeMedia = MediaType("application/vnd.badge+json", func() {
 	Description("Badge")
 	Attributes(func() {
@@ -119,6 +120,19 @@ var WalletMedia = MediaType("application/vnd.wallet+json", func() {
 	View("default", func() {
 		Attribute("address")
 		Attribute("walletType")
+	})
+})
+
+// WalletsMedia ...
+var WalletsMedia = MediaType("application/vnd.wallets+json", func() {
+	Description("Wallets")
+	Attributes(func() {
+		Attribute("userId", String, "user ID")
+		Attribute("wallets", CollectionOf(WalletMedia), "list of wallets")
+		Required("wallets")
+	})
+	View("default", func() {
+		Attribute("wallets")
 	})
 })
 
