@@ -24,13 +24,13 @@ var _ = Resource("wallets", func() {
 				Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
 			})
 		})
-		Response(OK, WalletMedia)
+		Response(OK, WalletsMedia)
 	})
 
 	Action("update", func() {
 		Description("Update user wallet")
 		Routing(POST(""))
 		Payload(WalletPayload)
-		Response(OK, WalletMedia)
+		Response(OK)
 	})
 })
