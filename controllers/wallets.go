@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/goadesign/goa"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
-	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // WalletsController implements the wallet resource.
@@ -29,24 +30,30 @@ func (c *WalletsController) Show(ctx *app.ShowWalletsContext) error {
 	// Put your logic here
 	userID := ctx.Value("authUserID").(string)
 
-	// return a user's wallet using the AWS cognito user ID as the key
-	wallet, err := c.db.GetWallet(userID)
+	// return a user's wallets using the AWS cognito user ID as the key
+	wallets, err := c.db.GetWallets(userID)
 	if err != nil {
 		log.Errorf("[controller/wallet] %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
-			Message: "could not get wallet from db",
+			Message: "could not get wallets from db",
 		})
 	}
 
-	log.Printf("[controller/wallet] returned wallet for coindrop user: %v\n; wallet address: %s", userID, wallet.Address)
+	var w app.WalletCollection
 
-	res := &app.Wallet{
-		Address:    wallet.Address,
-		WalletType: wallet.Type,
+	for _, wallet := range wallets {
+		w = append(w, &app.Wallet{
+			Address:    wallet.Address,
+			WalletType: wallet.Type,
+		})
 	}
 
-	return ctx.OK(res)
+	log.Printf("[controller/wallet] returned wallets for coindrop user: %v", userID)
+
+	return ctx.OK(&app.Wallets{
+		Wallets: w,
+	})
 	// WalletsController_Show: end_implement
 }
 
@@ -57,13 +64,21 @@ func (c *WalletsController) Update(ctx *app.UpdateWalletsContext) error {
 	// Put your logic here
 	userID := ctx.Value("authUserID").(string)
 
-	// payload
-	wallet := &types.Wallet{
-		Address: ctx.Payload.WalletAddress,
-		Type:    ctx.Payload.WalletType,
+	user, err := c.db.GetUser(userID)
+	if err != nil {
+		log.Errorf("[controller/wallet] %v", err)
+		return ctx.BadRequest(&app.StandardError{
+			Code:    400,
+			Message: "could not get user ID from db",
+		})
 	}
 
-	wallet, err := c.db.UpdateWallet(userID, wallet.Address, wallet.Type)
+	// update wallet in db
+	wallet, err := c.db.UpdateWallet(
+		user.ID,
+		ctx.Payload.WalletAddress,
+		ctx.Payload.WalletType,
+	)
 	if err != nil {
 		log.Errorf("[controller/wallet] %v", err)
 		return ctx.BadRequest(&app.StandardError{
@@ -72,11 +87,10 @@ func (c *WalletsController) Update(ctx *app.UpdateWalletsContext) error {
 		})
 	}
 
+	fmt.Println(wallet)
+
 	log.Printf("[controller/wallet] successfully updated wallet for coindrop user: %v\n", userID)
 
-	return ctx.OK(&app.Wallet{
-		Address:    wallet.Address,
-		WalletType: wallet.Type,
-	})
+	return ctx.OK([]byte("ok"))
 	// WalletsController_Update: end_implement
 }
