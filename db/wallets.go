@@ -77,6 +77,7 @@ func (db *DB) UpdateWallet(userID, newWalletAddress, walletType string) (*types.
 	return wallet, nil
 }
 
+// AddWallet adds a new wallet for the user
 func (db *DB) AddWallet(userID, newWalletAddress, walletType string) (*types.Wallet, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := db.client.Begin()
@@ -133,7 +134,7 @@ func (db *DB) AddWallet(userID, newWalletAddress, walletType string) (*types.Wal
 	return wallet, nil
 }
 
-// GetWallet updates the wallet address of a single user
+// GetWallet returns a user's wallet based on type
 func (db *DB) GetWallet(userID, walletType string) (*types.Wallet, error) {
 	// create SQL statement for db update
 	sqlStatement := `
@@ -195,7 +196,7 @@ func (db *DB) GetWallet(userID, walletType string) (*types.Wallet, error) {
 	return wallet, nil
 }
 
-// GetWallet updates the wallet address of a single user
+// GetWallets returns a user's wallets
 func (db *DB) GetWallets(userID string) ([]types.Wallet, error) {
 	wallets := []types.Wallet{}
 
