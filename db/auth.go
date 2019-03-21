@@ -56,18 +56,11 @@ func (db *DB) AddUserID(cognitoUserID string) error {
 func (db *DB) GetUser(userID string) (*types.User, error) {
 	sqlStatement := `
 		SELECT
-			coindrop_auth.id,
-			coindrop_auth.cognito_auth_user_id,
-			coindrop_wallets.id as wallet_id,
-			coindrop_wallets.address
+			coindrop_auth.id
 		FROM
 			coindrop_auth
-		FULL OUTER JOIN
-			coindrop_wallets
-		ON
-			coindrop_wallets.user_id = coindrop_auth.id
 		WHERE
-			coindrop_auth.id = $1;
+			coindrop_auth.cognito_auth_user_id = $1;
 	`
 
 	// prepare statement
@@ -82,22 +75,14 @@ func (db *DB) GetUser(userID string) (*types.User, error) {
 	row := stmt.QueryRow(userID)
 
 	user := new(types.User)
-	user.Wallet = new(types.Wallet)
 	var cognitoAuthUserID sql.NullString
-	var walletID sql.NullString
-	var walletAddress sql.NullString
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
 		&user.ID,
-		&cognitoAuthUserID,
-		&walletID,
-		&walletAddress,
 	)
 
 	user.CognitoAuthUserID = cognitoAuthUserID.String
-	user.Wallet.ID = walletID.String
-	user.Wallet.Address = walletAddress.String
 
 	if err == sql.ErrNoRows {
 		return nil, nil
