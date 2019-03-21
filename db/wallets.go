@@ -39,10 +39,19 @@ func (db *DB) UpdateWallet(userID, newWalletAddress, walletType string) (*types.
 	// `
 
 	sqlStatement := `
-		UPDATE SET
+		UPDATE 
+			coindrop_wallets
+		SET
 			address = $1
 		WHERE
-			coindrop_wallets.user_id = $2
+			coindrop_wallets.user_id = (
+				SELECT
+					id
+				FROM
+					coindrop_auth
+				WHERE
+					coindrop_auth.cognito_auth_user_id = $2
+			)
 		AND
 			coindrop_wallets.type = $3
 	`
@@ -90,11 +99,18 @@ func (db *DB) AddWallet(userID, newWalletAddress, walletType string) (*types.Wal
 	sqlStatement := `
 		INSERT INTO
 			coindrop_wallets (
-				address,
 				user_id,
+				address,
 				type
 			) VALUES (
-				$1,
+				(
+					SELECT
+						id
+					FROM
+						coindrop_auth
+					WHERE
+						cognito_auth_user_id = $1
+				),
 				$2,
 				$3
 			)
@@ -115,8 +131,8 @@ func (db *DB) AddWallet(userID, newWalletAddress, walletType string) (*types.Wal
 
 	// execute db write using unique ID as the identifier
 	_, err = stmt.Exec(
-		newWalletAddress,
 		userID,
+		newWalletAddress,
 		walletType,
 	)
 	if err != nil {
@@ -142,11 +158,7 @@ func (db *DB) GetWallet(userID, walletType string) (*types.Wallet, error) {
 			address,
 			type
 		FROM
-			coindrop_auth
-		JOIN
 			coindrop_wallets
-		ON
-			coindrop_auth.id = coindrop_wallets.user_id
 		WHERE
 			user_id = (
 				SELECT 
@@ -157,6 +169,8 @@ func (db *DB) GetWallet(userID, walletType string) (*types.Wallet, error) {
 					cognito_auth_user_id = $1
 			) AND
 			coindrop_wallets.type = $2
+		LIMIT
+			1
 	`
 
 	// prepare statement
@@ -174,19 +188,15 @@ func (db *DB) GetWallet(userID, walletType string) (*types.Wallet, error) {
 	)
 
 	wallet := &types.Wallet{}
-	var walletAddress sql.NullString
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
-		&walletAddress,
+		&wallet.Address,
 		&wallet.Type,
 	)
 
-	wallet.Address = walletAddress.String
-	wallet.Type = walletType
-
 	if err == sql.ErrNoRows {
-		return wallet, nil
+		return nil, err
 	}
 
 	if err != nil {
