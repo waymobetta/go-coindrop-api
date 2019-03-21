@@ -1201,7 +1201,7 @@ func (cmd *UpdateRedditharvestCommand) Run(c *client.Client, args []string) erro
 	} else {
 		path = "/v1/social/reddit/harvest"
 	}
-	var payload client.UpdateUserPayload
+	var payload client.UpdateRedditUserPayload
 	if cmd.Payload != "" {
 		err := json.Unmarshal([]byte(cmd.Payload), &payload)
 		if err != nil {

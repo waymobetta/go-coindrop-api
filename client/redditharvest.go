@@ -25,7 +25,7 @@ func UpdateRedditharvestPath() string {
 }
 
 // Update Reddit User Info
-func (c *Client) UpdateRedditharvest(ctx context.Context, path string, payload *UpdateUserPayload, contentType string) (*http.Response, error) {
+func (c *Client) UpdateRedditharvest(ctx context.Context, path string, payload *UpdateRedditUserPayload, contentType string) (*http.Response, error) {
 	req, err := c.NewUpdateRedditharvestRequest(ctx, path, payload, contentType)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (c *Client) UpdateRedditharvest(ctx context.Context, path string, payload *
 }
 
 // NewUpdateRedditharvestRequest create the request corresponding to the update action endpoint of the redditharvest resource.
-func (c *Client) NewUpdateRedditharvestRequest(ctx context.Context, path string, payload *UpdateUserPayload, contentType string) (*http.Request, error) {
+func (c *Client) NewUpdateRedditharvestRequest(ctx context.Context, path string, payload *UpdateRedditUserPayload, contentType string) (*http.Request, error) {
 	var body bytes.Buffer
 	if contentType == "" {
 		contentType = "*/*" // Use default encoder

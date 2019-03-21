@@ -28,7 +28,7 @@ import (
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateRedditharvestBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateRedditharvestBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -113,7 +113,7 @@ func UpdateRedditharvestBadRequest(t goatest.TInterface, ctx context.Context, se
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateRedditharvestGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateRedditharvestGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -198,7 +198,7 @@ func UpdateRedditharvestGone(t goatest.TInterface, ctx context.Context, service 
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateRedditharvestInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateRedditharvestInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -283,7 +283,7 @@ func UpdateRedditharvestInternalServerError(t goatest.TInterface, ctx context.Co
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateRedditharvestNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateRedditharvestNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -368,7 +368,7 @@ func UpdateRedditharvestNotFound(t goatest.TInterface, ctx context.Context, serv
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateRedditharvestOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateUserPayload) (http.ResponseWriter, *app.Reddituser) {
+func UpdateRedditharvestOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.Reddituser) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer

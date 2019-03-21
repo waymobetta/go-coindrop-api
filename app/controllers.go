@@ -524,7 +524,7 @@ func MountRedditharvestController(service *goa.Service, ctrl RedditharvestContro
 		}
 		// Build the payload
 		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
-			rctx.Payload = rawPayload.(*UpdateUserPayload)
+			rctx.Payload = rawPayload.(*UpdateRedditUserPayload)
 		} else {
 			return goa.MissingPayloadError()
 		}
@@ -562,7 +562,7 @@ func handleRedditharvestOrigin(h goa.Handler) goa.Handler {
 
 // unmarshalUpdateRedditharvestPayload unmarshals the request body into the context request data Payload field.
 func unmarshalUpdateRedditharvestPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
-	payload := &updateUserPayload{}
+	payload := &updateRedditUserPayload{}
 	if err := service.DecodeRequest(req, payload); err != nil {
 		return err
 	}

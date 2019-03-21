@@ -512,6 +512,64 @@ type TypeformPayload struct {
 	FormResponse *TypeformFormPayload `form:"form_response,omitempty" json:"form_response,omitempty" yaml:"form_response,omitempty" xml:"form_response,omitempty"`
 }
 
+// Update Reddit User payload
+type updateRedditUserPayload struct {
+	// User ID
+	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
+	// Reddit Username
+	Username *string `form:"username,omitempty" json:"username,omitempty" yaml:"username,omitempty" xml:"username,omitempty"`
+}
+
+// Validate validates the updateRedditUserPayload type instance.
+func (ut *updateRedditUserPayload) Validate() (err error) {
+	if ut.UserID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "userId"))
+	}
+	if ut.Username == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "username"))
+	}
+	if ut.UserID != nil {
+		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *ut.UserID); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`request.userId`, *ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+		}
+	}
+	return
+}
+
+// Publicize creates UpdateRedditUserPayload from updateRedditUserPayload
+func (ut *updateRedditUserPayload) Publicize() *UpdateRedditUserPayload {
+	var pub UpdateRedditUserPayload
+	if ut.UserID != nil {
+		pub.UserID = *ut.UserID
+	}
+	if ut.Username != nil {
+		pub.Username = *ut.Username
+	}
+	return &pub
+}
+
+// Update Reddit User payload
+type UpdateRedditUserPayload struct {
+	// User ID
+	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+	// Reddit Username
+	Username string `form:"username" json:"username" yaml:"username" xml:"username"`
+}
+
+// Validate validates the UpdateRedditUserPayload type instance.
+func (ut *UpdateRedditUserPayload) Validate() (err error) {
+	if ut.UserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "userId"))
+	}
+	if ut.Username == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "username"))
+	}
+	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, ut.UserID); !ok {
+		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.userId`, ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+	}
+	return
+}
+
 // Update Stack Overflow User payload
 type updateStackOverflowUserPayload struct {
 	// Stack Overflow Community-Specific Account ID
@@ -562,64 +620,6 @@ func (ut *UpdateStackOverflowUserPayload) Validate() (err error) {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "userId"))
 	}
 
-	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, ut.UserID); !ok {
-		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.userId`, ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
-	}
-	return
-}
-
-// Update Reddit User payload
-type updateUserPayload struct {
-	// User ID
-	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
-	// Reddit Username
-	Username *string `form:"username,omitempty" json:"username,omitempty" yaml:"username,omitempty" xml:"username,omitempty"`
-}
-
-// Validate validates the updateUserPayload type instance.
-func (ut *updateUserPayload) Validate() (err error) {
-	if ut.UserID == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "userId"))
-	}
-	if ut.Username == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "username"))
-	}
-	if ut.UserID != nil {
-		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *ut.UserID); !ok {
-			err = goa.MergeErrors(err, goa.InvalidPatternError(`request.userId`, *ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
-		}
-	}
-	return
-}
-
-// Publicize creates UpdateUserPayload from updateUserPayload
-func (ut *updateUserPayload) Publicize() *UpdateUserPayload {
-	var pub UpdateUserPayload
-	if ut.UserID != nil {
-		pub.UserID = *ut.UserID
-	}
-	if ut.Username != nil {
-		pub.Username = *ut.Username
-	}
-	return &pub
-}
-
-// Update Reddit User payload
-type UpdateUserPayload struct {
-	// User ID
-	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
-	// Reddit Username
-	Username string `form:"username" json:"username" yaml:"username" xml:"username"`
-}
-
-// Validate validates the UpdateUserPayload type instance.
-func (ut *UpdateUserPayload) Validate() (err error) {
-	if ut.UserID == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "userId"))
-	}
-	if ut.Username == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "username"))
-	}
 	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, ut.UserID); !ok {
 		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.userId`, ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
 	}

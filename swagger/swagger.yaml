@@ -734,6 +734,26 @@ definitions:
         $ref: '#/definitions/TypeformFormPayload'
     title: TypeformPayload
     type: object
+  UpdateRedditUserPayload:
+    description: Update Reddit User payload
+    example:
+      userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
+      username: Delectus sit eos error.
+    properties:
+      userId:
+        description: User ID
+        example: 9302608f-f6a4-4004-b088-63e5fb43cc26
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        type: string
+      username:
+        description: Reddit Username
+        example: Delectus sit eos error.
+        type: string
+    required:
+    - userId
+    - username
+    title: UpdateRedditUserPayload
+    type: object
   UpdateStackOverflowUserPayload:
     description: Update Stack Overflow User payload
     example:
@@ -754,26 +774,6 @@ definitions:
     - userId
     - stackUserId
     title: UpdateStackOverflowUserPayload
-    type: object
-  UpdateUserPayload:
-    description: Update Reddit User payload
-    example:
-      userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      username: Delectus sit eos error.
-    properties:
-      userId:
-        description: User ID
-        example: 9302608f-f6a4-4004-b088-63e5fb43cc26
-        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
-        type: string
-      username:
-        description: Reddit Username
-        example: Delectus sit eos error.
-        type: string
-    required:
-    - userId
-    - username
-    title: UpdateUserPayload
     type: object
   User:
     description: A user (default view)
@@ -1549,7 +1549,7 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/UpdateUserPayload'
+          $ref: '#/definitions/UpdateRedditUserPayload'
       produces:
       - application/standard_error+json
       - application/vnd.reddituser+json
