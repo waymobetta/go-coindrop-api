@@ -889,9 +889,15 @@ definitions:
   WalletPayload:
     description: Wallet payload
     example:
+      userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
       walletAddress: 0x845fdD93Cca3aE9e380d5556818e6d0b902B977c
       walletType: Animi quas dolore id repellat.
     properties:
+      userId:
+        description: User ID
+        example: 9302608f-f6a4-4004-b088-63e5fb43cc26
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        type: string
       walletAddress:
         description: Wallet address
         example: 0x845fdD93Cca3aE9e380d5556818e6d0b902B977c
@@ -902,6 +908,7 @@ definitions:
         example: Animi quas dolore id repellat.
         type: string
     required:
+    - userId
     - walletAddress
     - walletType
     title: WalletPayload

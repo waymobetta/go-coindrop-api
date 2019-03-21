@@ -710,6 +710,8 @@ func (ut *VerificationPayload) Validate() (err error) {
 
 // Wallet payload
 type walletPayload struct {
+	// User ID
+	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
 	// Wallet address
 	WalletAddress *string `form:"walletAddress,omitempty" json:"walletAddress,omitempty" yaml:"walletAddress,omitempty" xml:"walletAddress,omitempty"`
 	// wallet type
@@ -718,11 +720,19 @@ type walletPayload struct {
 
 // Validate validates the walletPayload type instance.
 func (ut *walletPayload) Validate() (err error) {
+	if ut.UserID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "userId"))
+	}
 	if ut.WalletAddress == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "walletAddress"))
 	}
 	if ut.WalletType == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "walletType"))
+	}
+	if ut.UserID != nil {
+		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *ut.UserID); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`request.userId`, *ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+		}
 	}
 	if ut.WalletAddress != nil {
 		if ok := goa.ValidatePattern(`^0x[0-9a-fA-F]{40}$`, *ut.WalletAddress); !ok {
@@ -735,6 +745,9 @@ func (ut *walletPayload) Validate() (err error) {
 // Publicize creates WalletPayload from walletPayload
 func (ut *walletPayload) Publicize() *WalletPayload {
 	var pub WalletPayload
+	if ut.UserID != nil {
+		pub.UserID = *ut.UserID
+	}
 	if ut.WalletAddress != nil {
 		pub.WalletAddress = *ut.WalletAddress
 	}
@@ -746,6 +759,8 @@ func (ut *walletPayload) Publicize() *WalletPayload {
 
 // Wallet payload
 type WalletPayload struct {
+	// User ID
+	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
 	// Wallet address
 	WalletAddress string `form:"walletAddress" json:"walletAddress" yaml:"walletAddress" xml:"walletAddress"`
 	// wallet type
@@ -754,11 +769,17 @@ type WalletPayload struct {
 
 // Validate validates the WalletPayload type instance.
 func (ut *WalletPayload) Validate() (err error) {
+	if ut.UserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "userId"))
+	}
 	if ut.WalletAddress == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "walletAddress"))
 	}
 	if ut.WalletType == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "walletType"))
+	}
+	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, ut.UserID); !ok {
+		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.userId`, ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
 	}
 	if ok := goa.ValidatePattern(`^0x[0-9a-fA-F]{40}$`, ut.WalletAddress); !ok {
 		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.walletAddress`, ut.WalletAddress, `^0x[0-9a-fA-F]{40}$`))

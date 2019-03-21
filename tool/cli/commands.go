@@ -646,6 +646,7 @@ Payload example:
 Payload example:
 
 {
+   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
    "walletAddress": "0x845fdD93Cca3aE9e380d5556818e6d0b902B977c",
    "walletType": "Animi quas dolore id repellat."
 }`,
