@@ -29,7 +29,14 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 			)
 		VALUES
 			(
-				$1,
+				(
+					SELECT
+						id
+					FROM
+						coindrop_auth
+					WHERE
+						coindrop_auth.cognito_auth_user_id = $1
+				),
 				$2,
 				$3,
 				$4,
@@ -50,7 +57,7 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
-		u.UserID,
+		u.CognitoAuthUserID,
 		u.Social.Reddit.Username,
 		u.Social.Reddit.LinkKarma,
 		u.Social.Reddit.CommentKarma,
