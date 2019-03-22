@@ -77,7 +77,7 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 	// use fix similar to wallets update method [controllers/wallets]
 	// 2. fix to prevent creating duplicates
 
-	user = &types.User{
+	user := &types.User{
 		CognitoAuthUserID: userID,
 		Social: &types.Social{
 			Reddit: &types.Reddit{
@@ -95,13 +95,31 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 		},
 	}
 
-	_, err = c.db.AddRedditUser(user)
+	var userFound bool
+
+	_, err := c.db.GetRedditUser(user)
 	if err != nil {
-		log.Errorf("[controller/reddit] %v", err)
-		return ctx.NotFound(&app.StandardError{
-			Code:    400,
-			Message: "could not update reddit info listing in db",
-		})
+		userFound = false
+	}
+
+	if userFound {
+		_, err := c.db.UpdateRedditUser(user)
+		if err != nil {
+			log.Errorf("[controller/reddit] %v", err)
+			return ctx.NotFound(&app.StandardError{
+				Code:    400,
+				Message: "could not update user's reddit info listing in db",
+			})
+		}
+	} else {
+		_, err = c.db.AddRedditUser(user)
+		if err != nil {
+			log.Errorf("[controller/reddit] %v", err)
+			return ctx.NotFound(&app.StandardError{
+				Code:    400,
+				Message: "could not add user's reddit listing to db",
+			})
+		}
 	}
 
 	res := &app.Reddituser{}
