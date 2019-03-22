@@ -122,9 +122,11 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 		}
 	}
 
-	res := &app.Reddituser{}
-
-	return ctx.OK(res)
+	return ctx.OK(
+		[]byte(
+			"ok",
+		),
+	)
 	// RedditController_Update: end_implement
 }
 
