@@ -31,7 +31,7 @@ var _ = Resource("reddit", func() {
 		Description("Update Reddit User")
 		Routing(POST(""))
 		Payload(CreateRedditUserPayload)
-		Response(OK, RedditUserMedia)
+		Response(OK)
 	})
 
 	Action("verify", func() {
