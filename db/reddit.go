@@ -80,7 +80,84 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 		return u, err
 	}
 
-	return u, err
+	return u, nil
+}
+
+// UpdateRedditUser updates the listing and associated data of a single user
+func (db *DB) UpdateRedditUser(u *types.User) (*types.User, error) {
+	// initialize statement write to database
+	tx, err := db.client.Begin()
+	if err != nil {
+		return u, err
+	}
+
+	// create SQL statement for db writes
+	sqlStatement := `
+		UPDATE
+			coindrop_reddit
+		SET
+			(
+				user_id,
+				username,
+				comment_karma,
+				link_karma,
+				subreddits,
+				trophies,
+				posted_verification_code,
+				verified
+			)
+		VALUES
+			(
+				(
+					SELECT
+						id
+					FROM
+						coindrop_auth
+					WHERE
+						coindrop_auth.cognito_auth_user_id = $1
+				),
+				$2,
+				$3,
+				$4,
+				$5,
+				$6,
+				$7,
+				$8,
+			)
+	`
+
+	// prepare statement
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return u, err
+	}
+
+	defer stmt.Close()
+
+	// execute db write using unique user ID + associated data
+	_, err = stmt.Exec(
+		u.CognitoAuthUserID,
+		u.Social.Reddit.Username,
+		u.Social.Reddit.LinkKarma,
+		u.Social.Reddit.CommentKarma,
+		pq.Array(u.Social.Reddit.Subreddits),
+		pq.Array(u.Social.Reddit.Trophies),
+		u.Social.Reddit.Verification.PostedVerificationCode,
+		u.Social.Reddit.Verification.Verified,
+	)
+	if err != nil {
+		// rollback transaction if error throw
+		return u, tx.Rollback()
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaciton if error thrown
+		return u, tx.Rollback()
+	}
+
+	return u, nil
 }
 
 // GetUsers returns info for all users
@@ -210,10 +287,17 @@ func (db *DB) RemoveRedditUser(u *types.User) (*types.User, error) {
 
 	// create SQL statement for db writes
 	sqlStatement := `
-	DELETE FROM
-		coindrop_reddit
-	WHERE
-		auth_user_id = $1
+		DELETE FROM
+			coindrop_reddit
+		WHERE
+			user_id = (
+				SELECT
+					id
+				FROM
+					coindrop_auth
+				WHERE
+					cognito_auth_user_id = $1
+			)
 	`
 
 	// prepare statement
