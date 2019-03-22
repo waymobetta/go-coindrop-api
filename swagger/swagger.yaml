@@ -1379,12 +1379,10 @@ paths:
           $ref: '#/definitions/CreateUserPayload'
       produces:
       - application/standard_error+json
-      - application/vnd.reddituser+json
+      - text/plain
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/Reddituser'
         "400":
           description: Bad Request
           schema:

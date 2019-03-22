@@ -107,6 +107,8 @@ func (c *WalletsController) Update(ctx *app.UpdateWalletsContext) error {
 
 	log.Printf("[controller/wallet] successfully updated wallet for coindrop user: %v\n", userID)
 
-	return ctx.OK([]byte("ok"))
+	return ctx.OK(
+		[]byte("ok"),
+	)
 	// WalletsController_Update: end_implement
 }

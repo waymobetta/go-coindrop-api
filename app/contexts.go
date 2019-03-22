@@ -672,11 +672,13 @@ func NewUpdateRedditContext(ctx context.Context, r *http.Request, service *goa.S
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *UpdateRedditContext) OK(r *Reddituser) error {
+func (ctx *UpdateRedditContext) OK(resp []byte) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.reddituser+json")
+		ctx.ResponseData.Header().Set("Content-Type", "text/plain")
 	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+	ctx.ResponseData.WriteHeader(200)
+	_, err := ctx.ResponseData.Write(resp)
+	return err
 }
 
 // BadRequest sends a HTTP response with status code 400.
