@@ -17,27 +17,6 @@ func (db *DB) UpdateWallet(userID, newWalletAddress, walletType string) (*types.
 	}
 
 	// create SQL statement for db update
-
-	// TODO:
-	// fix error
-	// pq: there is no unique or exclusion constraint matching the ON CONFLICT specification
-
-	// sqlStatement := `
-	// 	INSERT INTO
-	// 		coindrop_wallets(address, user_id)
-	// 	VALUES(
-	// 		$1, $2
-	// 	)
-	// 	ON CONFLICT (user_id)
-	// 	DO UPDATE
-	// 	SET
-	// 		address = $1
-	// 	WHERE
-	// 		coindrop_wallets.user_id = $2
-	// 	AND
-	// 		coindrop_wallets.type = $3
-	// `
-
 	sqlStatement := `
 		UPDATE 
 			coindrop_wallets
@@ -70,7 +49,11 @@ func (db *DB) UpdateWallet(userID, newWalletAddress, walletType string) (*types.
 	}
 
 	// execute db write using unique ID as the identifier
-	_, err = stmt.Exec(newWalletAddress, userID, walletType)
+	_, err = stmt.Exec(
+		newWalletAddress,
+		userID,
+		walletType,
+	)
 	if err != nil {
 		// rollback transaction if error thrown
 		return nil, tx.Rollback()
