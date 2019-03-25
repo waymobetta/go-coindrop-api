@@ -69,14 +69,14 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 
 	// Put your logic here
 
-	userID := ctx.Value("authUserID").(string)
+	// userID := ctx.Value("authUserID").(string)
 
 	// TODO:
 	// use fix similar to wallets update method [controllers/wallets]
 	// 2. fix to prevent creating duplicates
 
 	user := &types.User{
-		UserID: userID,
+		UserID: ctx.Payload.UserID,
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Username:     ctx.Payload.Username,
