@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/goadesign/goa"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
@@ -32,15 +30,13 @@ func (c *StackoverflowController) Display(ctx *app.DisplayStackoverflowContext) 
 	// Put your logic here
 
 	user := &types.User{
-		CognitoAuthUserID: ctx.Params.Get("userId"),
+		UserID: ctx.Params.Get("userId"),
 		Social: &types.Social{
 			StackOverflow: &types.StackOverflow{
 				Verification: &types.Verification{},
 			},
 		},
 	}
-
-	user.CognitoAuthUserID = ctx.Params.Get("userId")
 
 	_, err := c.db.GetUserStackOverfloVerification(user)
 	if err != nil {
@@ -71,14 +67,13 @@ func (c *StackoverflowController) Show(ctx *app.ShowStackoverflowContext) error 
 	// Put your logic here
 
 	user := &types.User{
+		UserID: ctx.Params.Get("userId"),
 		Social: &types.Social{
 			StackOverflow: &types.StackOverflow{
 				Verification: &types.Verification{},
 			},
 		},
 	}
-
-	user.CognitoAuthUserID = ctx.Params.Get("userId")
 
 	_, err := c.db.AddStackUser(user)
 	if err != nil {
@@ -110,8 +105,10 @@ func (c *StackoverflowController) Update(ctx *app.UpdateStackoverflowContext) er
 
 	// Put your logic here
 
+	// userID := ctx.Value("authUserID").(string)
+
 	user := &types.User{
-		CognitoAuthUserID: ctx.Value("authUserID").(string),
+		UserID: ctx.Payload.UserID,
 		Social: &types.Social{
 			StackOverflow: &types.StackOverflow{
 				StackUserID:       0,
@@ -150,7 +147,7 @@ func (c *StackoverflowController) Verify(ctx *app.VerifyStackoverflowContext) er
 	// Put your logic here
 
 	user := &types.User{
-		CognitoAuthUserID: ctx.Payload.UserID,
+		UserID: ctx.Payload.UserID,
 		Social: &types.Social{
 			StackOverflow: &types.StackOverflow{
 				Verification: &types.Verification{},
@@ -186,9 +183,6 @@ func (c *StackoverflowController) Verify(ctx *app.VerifyStackoverflowContext) er
 			Message: "verification code does not match",
 		})
 	}
-
-	fmt.Println("\n")
-	fmt.Printf("STORING UPDATED USER: %v\n\n", user)
 
 	_, err = c.db.UpdateStackVerificationCode(user)
 	if err != nil {
