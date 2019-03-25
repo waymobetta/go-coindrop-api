@@ -150,14 +150,7 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 	ON
 		coindrop_tasks.id = coindrop_user_tasks.task_id
 	WHERE
-		coindrop_user_tasks.user_id = (
-					SELECT 
-						id
-					FROM 
-						coindrop_auth
-					WHERE 
-						cognito_auth_user_id = $1
-				)
+		coindrop_user_tasks.user_id = $1
 	`
 
 	rows, err := db.client.Query(sqlStatement, t.UserID)
@@ -233,14 +226,7 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 	ON
 		coindrop_tasks.id = coindrop_user_tasks.task_id
 	WHERE
-		coindrop_user_tasks.user_id = (
-			SELECT
-				id
-			FROM 
-				coindrop_auth
-			WHERE 
-				cognito_auth_user_id = $1
-		)
+		coindrop_user_tasks.user_id $1
 	AND
 		coindrop_user_tasks.task_id = $2
 	LIMIT
