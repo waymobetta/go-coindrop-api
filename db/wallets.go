@@ -23,14 +23,7 @@ func (db *DB) UpdateWallet(userID, newWalletAddress, walletType string) (*types.
 		SET
 			address = $1
 		WHERE
-			coindrop_wallets.user_id = (
-				SELECT
-					id
-				FROM
-					coindrop_auth
-				WHERE
-					coindrop_auth.cognito_auth_user_id = $2
-			)
+			coindrop_wallets.user_id $2
 		AND
 			coindrop_wallets.type = $3
 	`
@@ -86,14 +79,7 @@ func (db *DB) AddWallet(userID, newWalletAddress, walletType string) (*types.Wal
 				address,
 				type
 			) VALUES (
-				(
-					SELECT
-						id
-					FROM
-						coindrop_auth
-					WHERE
-						cognito_auth_user_id = $1
-				),
+				$1,
 				$2,
 				$3
 			)
@@ -143,14 +129,8 @@ func (db *DB) GetWallet(userID, walletType string) (*types.Wallet, error) {
 		FROM
 			coindrop_wallets
 		WHERE
-			user_id = (
-				SELECT 
-					id
-				FROM 
-					coindrop_auth
-				WHERE 
-					cognito_auth_user_id = $1
-			) AND
+			coindrop_wallets.user_id = $1
+		AND
 			coindrop_wallets.type = $2
 		LIMIT
 			1
@@ -201,14 +181,7 @@ func (db *DB) GetWallets(userID string) ([]types.Wallet, error) {
 		FROM
 			coindrop_wallets
 		WHERE
-			coindrop_wallets.user_id = (
-				SELECT 
-					id
-				FROM 
-					coindrop_auth
-				WHERE 
-					cognito_auth_user_id = $1
-			)
+			coindrop_wallets.user_id = $1
 	`
 
 	stmt, err := db.client.Prepare(sqlStatement)
