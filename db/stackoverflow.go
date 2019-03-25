@@ -86,13 +86,9 @@ func (db *DB) GetStackUser(u *types.User) (*types.User, error) {
 			coindrop_stackoverflow.confirmed_verification_code,
 			coindrop_stackoverflow.verified
 		FROM
-			coindrop_auth
-		JOIN
 			coindrop_stackoverflow
-		ON
-			coindrop_auth.id = coindrop_stackoverflow.user_id
 		WHERE
-			cognito_auth_user_id = $1
+			coindrop_stackoverflow.user_id = $1
 	`
 
 	// prepare statement
@@ -104,7 +100,7 @@ func (db *DB) GetStackUser(u *types.User) (*types.User, error) {
 	defer stmt.Close()
 
 	// initialize row object
-	row := stmt.QueryRow(u.CognitoAuthUserID)
+	row := stmt.QueryRow(u.UserID)
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
@@ -140,10 +136,9 @@ func (db *DB) UpdateStackAboutInfo(u *types.User) (*types.User, error) {
 			display_name = $2, 
 			accounts = $3 
 		FROM
-			coindrop_auth
-		WHERE 
-			coindrop_auth.id = coindrop_stackoverflow.user_id AND
-			coindrop_auth.cognito_auth_user_id = $4
+			coindrop_stackoverflow
+		WHERE
+			coindrop_stackoverflow.user_id = $4
 	`
 
 	// prepare statement
@@ -159,7 +154,7 @@ func (db *DB) UpdateStackAboutInfo(u *types.User) (*types.User, error) {
 		u.Social.StackOverflow.ExchangeAccountID,
 		u.Social.StackOverflow.DisplayName,
 		pq.Array(u.Social.StackOverflow.Accounts),
-		u.CognitoAuthUserID,
+		u.UserID,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
@@ -194,10 +189,9 @@ func (db *DB) UpdateStackVerificationCode(u *types.User) (*types.User, error) {
 			posted_verification_code = $1, 
 			verified = $2
 		FROM
-			coindrop_auth
+			coindrop_stackoverflow
 		WHERE
-			coindrop_auth.id = coindrop_stackoverflow.user_id AND
-			coindrop_auth.cognito_auth_user_id = $3
+			coindrop_stackoverflow.user_id = $3
 	`
 
 	// prepare statement
@@ -212,7 +206,7 @@ func (db *DB) UpdateStackVerificationCode(u *types.User) (*types.User, error) {
 	_, err = stmt.Exec(
 		u.Social.StackOverflow.Verification.PostedVerificationCode,
 		u.Social.StackOverflow.Verification.Verified,
-		u.CognitoAuthUserID,
+		u.UserID,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
@@ -241,13 +235,9 @@ func (db *DB) GetUserStackOverfloVerification(u *types.User) (*types.User, error
 			coindrop_stackoverflow.confirmed_verification_code,
 			coindrop_stackoverflow.verified
 		FROM
-			coindrop_auth
-		JOIN
 			coindrop_stackoverflow
-		ON
-			coindrop_auth.id = coindrop_stackoverflow.user_id
 		WHERE
-			coindrop_auth.cognito_auth_user_id = $1
+			coindrop_stackoverflow.user_id = $1
 	`
 
 	// prepare statement
@@ -259,7 +249,7 @@ func (db *DB) GetUserStackOverfloVerification(u *types.User) (*types.User, error
 	defer stmt.Close()
 
 	// initialize row object
-	row := stmt.QueryRow(u.CognitoAuthUserID)
+	row := stmt.QueryRow(u.UserID)
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
