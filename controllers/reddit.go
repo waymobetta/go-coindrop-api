@@ -30,14 +30,13 @@ func (c *RedditController) Show(ctx *app.ShowRedditContext) error {
 	// Put your logic here
 
 	user := &types.User{
+		UserID: ctx.Params.Get("userId"),
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Verification: &types.Verification{},
 			},
 		},
 	}
-
-	user.CognitoAuthUserID = ctx.Params.Get("userId")
 
 	_, err := c.db.GetRedditUser(user)
 	if err != nil {
@@ -70,15 +69,14 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 
 	// Put your logic here
 
-	// userID := ctx.Value("authUserID").(string)
-	userID := ctx.Payload.UserID
+	userID := ctx.Value("authUserID").(string)
 
 	// TODO:
 	// use fix similar to wallets update method [controllers/wallets]
 	// 2. fix to prevent creating duplicates
 
 	user := &types.User{
-		CognitoAuthUserID: userID,
+		UserID: userID,
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Username:     ctx.Payload.Username,
@@ -137,7 +135,7 @@ func (c *RedditController) Display(ctx *app.DisplayRedditContext) error {
 	// Put your logic here
 
 	user := &types.User{
-		CognitoAuthUserID: ctx.Params.Get("userId"),
+		UserID: ctx.Params.Get("userId"),
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Verification: &types.Verification{},
@@ -175,7 +173,7 @@ func (c *RedditController) Verify(ctx *app.VerifyRedditContext) error {
 	// Put your logic here
 
 	user := &types.User{
-		CognitoAuthUserID: ctx.Payload.UserID,
+		UserID: ctx.Payload.UserID,
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Verification: &types.Verification{},
