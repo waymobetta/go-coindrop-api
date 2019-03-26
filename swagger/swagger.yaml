@@ -2137,10 +2137,12 @@ paths:
           $ref: '#/definitions/WalletPayload'
       produces:
       - application/standard_error+json
-      - text/plain
+      - application/vnd.wallet+json
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/Wallet'
         "400":
           description: Bad Request
           schema:
