@@ -110,7 +110,7 @@ func (c *StackoverflowController) Update(ctx *app.UpdateStackoverflowContext) er
 		UserID: ctx.Payload.UserID,
 		Social: &types.Social{
 			StackOverflow: &types.StackOverflow{
-				StackUserID:       0,
+				StackUserID:       ctx.Payload.StackUserID,
 				ExchangeAccountID: 0,
 				DisplayName:       "",
 				Accounts:          []string{},
