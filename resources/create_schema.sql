@@ -21,28 +21,28 @@ CREATE TABLE IF NOT EXISTS coindrop_auth (
 
 -- WALLETS
 CREATE TABLE coindrop_wallets (
-    id uuid DEFAULT uuid_generate_v4() UNIQUE,
-    address text,
-    user_id uuid REFERENCES coindrop_auth(id),
-    type text,
-    created_at timestamp with time zone DEFAULT now(),
-    updated_at timestamp with time zone
+  id uuid DEFAULT uuid_generate_v4() UNIQUE,
+  address text,
+  user_id uuid REFERENCES coindrop_auth(id),
+  type text,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone
 );
 
 -- REDDIT
 CREATE TABLE coindrop_reddit (
-    id uuid DEFAULT uuid_generate_v4() UNIQUE,
-    user_id uuid REFERENCES coindrop_auth(id) UNIQUE,
-    username text NOT NULL UNIQUE,
-    comment_karma integer NOT NULL,
-    link_karma integer NOT NULL,
-    subreddits text[] NOT NULL,
-    trophies text[] NOT NULL,
-    posted_verification_code text NOT NULL,
-    confirmed_verification_code text DEFAULT gen_verif_code() UNIQUE,
-    verified boolean NOT NULL,
-    created_at timestamp with time zone DEFAULT now(),
-    updated_at timestamp with time zone
+  id uuid DEFAULT uuid_generate_v4() UNIQUE,
+  user_id uuid REFERENCES coindrop_auth(id) UNIQUE,
+  username text NOT NULL UNIQUE,
+  comment_karma integer NOT NULL,
+  link_karma integer NOT NULL,
+  subreddits text[] NOT NULL,
+  trophies text[] NOT NULL,
+  posted_verification_code text NOT NULL,
+  confirmed_verification_code text DEFAULT gen_verif_code() UNIQUE,
+  verified boolean NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone
 );
 
 -- STACK OVERFLOW
@@ -63,25 +63,26 @@ CREATE TABLE IF NOT EXISTS coindrop_stackoverflow (
 -- BADGE
 CREATE TABLE IF NOT EXISTS coindrop_badges (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
-	name TEXT NOT NULL,
+	name TEXT NOT NULL UNIQUE,
 	description TEXT,
 	created_at timestamp with time zone DEFAULT now(),
-	updated_at timestamp with time zone
+	updated_at timestamp with time zone,
+	logo_url TEXT
 );
 
 -- TASKS
 CREATE TABLE IF NOT EXISTS coindrop_tasks (
-    id uuid DEFAULT uuid_generate_v4() UNIQUE,
-    title text NOT NULL,
-    type text NOT NULL,
-    author text NOT NULL,
-    description text NOT NULL,
-    token_name text,
-    token_allocation integer,
-    badge_id uuid REFERENCES coindrop_badges(id),
-    logo_url text,
-    created_at timestamp with time zone DEFAULT now(),
-    updated_at timestamp with time zone
+  id uuid DEFAULT uuid_generate_v4() UNIQUE,
+  title text NOT NULL,
+  type text NOT NULL,
+  author text NOT NULL,
+  description text NOT NULL,
+  token_name text,
+  token_allocation integer,
+  badge_id uuid REFERENCES coindrop_badges(id),
+  logo_url text,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone
 );
 
 -- QUIZZES
