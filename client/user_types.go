@@ -16,14 +16,19 @@ import (
 
 // Create Badge payload
 type createBadgePayload struct {
-	// Badge ID
-	BadgeID *string `form:"badgeId,omitempty" json:"badgeId,omitempty" yaml:"badgeId,omitempty" xml:"badgeId,omitempty"`
+	// Badge description
+	Description *string `form:"description,omitempty" json:"description,omitempty" yaml:"description,omitempty" xml:"description,omitempty"`
+	// Badge name
+	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
 }
 
 // Validate validates the createBadgePayload type instance.
 func (ut *createBadgePayload) Validate() (err error) {
-	if ut.BadgeID == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "badgeId"))
+	if ut.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "name"))
+	}
+	if ut.Description == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "description"))
 	}
 	return
 }
@@ -31,22 +36,30 @@ func (ut *createBadgePayload) Validate() (err error) {
 // Publicize creates CreateBadgePayload from createBadgePayload
 func (ut *createBadgePayload) Publicize() *CreateBadgePayload {
 	var pub CreateBadgePayload
-	if ut.BadgeID != nil {
-		pub.BadgeID = *ut.BadgeID
+	if ut.Description != nil {
+		pub.Description = *ut.Description
+	}
+	if ut.Name != nil {
+		pub.Name = *ut.Name
 	}
 	return &pub
 }
 
 // Create Badge payload
 type CreateBadgePayload struct {
-	// Badge ID
-	BadgeID string `form:"badgeId" json:"badgeId" yaml:"badgeId" xml:"badgeId"`
+	// Badge description
+	Description string `form:"description" json:"description" yaml:"description" xml:"description"`
+	// Badge name
+	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
 }
 
 // Validate validates the CreateBadgePayload type instance.
 func (ut *CreateBadgePayload) Validate() (err error) {
-	if ut.BadgeID == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "badgeId"))
+	if ut.Name == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "name"))
+	}
+	if ut.Description == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "description"))
 	}
 	return
 }
