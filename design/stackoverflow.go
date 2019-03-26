@@ -44,7 +44,7 @@ var _ = Resource("stackoverflow", func() {
 			})
 		})
 		Payload(VerificationPayload)
-		Response(OK, StackOverflowUserMedia)
+		Response(OK, VerificationMedia)
 	})
 
 	Action("display", func() {
