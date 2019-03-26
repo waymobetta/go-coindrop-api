@@ -48,6 +48,7 @@ func (c *RedditController) Show(ctx *app.ShowRedditContext) error {
 	}
 
 	res := &app.Reddituser{
+		ID:           user.Social.Reddit.ID,
 		Username:     user.Social.Reddit.Username,
 		LinkKarma:    user.Social.Reddit.LinkKarma,
 		CommentKarma: user.Social.Reddit.CommentKarma,
@@ -135,12 +136,10 @@ func (c *RedditController) Display(ctx *app.DisplayRedditContext) error {
 
 	log.Printf("[controller/reddit] returned verification information for coindrop user: %v\n", user.CognitoAuthUserID)
 
-	res := &app.Reddituser{
-		Verification: &app.Verification{
-			PostedVerificationCode:    user.Social.Reddit.Verification.PostedVerificationCode,
-			ConfirmedVerificationCode: user.Social.Reddit.Verification.ConfirmedVerificationCode,
-			Verified:                  user.Social.Reddit.Verification.Verified,
-		},
+	res := &app.Verification{
+		PostedVerificationCode:    user.Social.Reddit.Verification.PostedVerificationCode,
+		ConfirmedVerificationCode: user.Social.Reddit.Verification.ConfirmedVerificationCode,
+		Verified:                  user.Social.Reddit.Verification.Verified,
 	}
 
 	return ctx.OK(res)
