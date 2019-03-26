@@ -32,5 +32,6 @@ require (
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea // indirect
 	golang.org/x/oauth2 v0.0.0-20190130055435-99b60b757ec1 // indirect
 	golang.org/x/tools v0.0.0-20190321154406-ae772f11d294 // indirect
+	google.golang.org/appengine v1.4.0
 	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
