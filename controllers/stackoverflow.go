@@ -49,12 +49,10 @@ func (c *StackoverflowController) Display(ctx *app.DisplayStackoverflowContext) 
 
 	log.Printf("[controller/stackoverflow] returned verification information for coindrop user: %v\n", user.CognitoAuthUserID)
 
-	res := &app.Stackoverflowuser{
-		Verification: &app.Verification{
-			PostedVerificationCode:    user.Social.StackOverflow.Verification.PostedVerificationCode,
-			ConfirmedVerificationCode: user.Social.StackOverflow.Verification.ConfirmedVerificationCode,
-			Verified:                  user.Social.StackOverflow.Verification.Verified,
-		},
+	res := &app.Verification{
+		PostedVerificationCode:    user.Social.StackOverflow.Verification.PostedVerificationCode,
+		ConfirmedVerificationCode: user.Social.StackOverflow.Verification.ConfirmedVerificationCode,
+		Verified:                  user.Social.StackOverflow.Verification.Verified,
 	}
 	return ctx.OK(res)
 	// StackoverflowController_Display: end_implement
