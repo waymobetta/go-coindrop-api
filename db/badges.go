@@ -1,8 +1,6 @@
 package db
 
 import (
-	"database/sql"
-
 	"github.com/waymobetta/go-coindrop-api/types"
 )
 
@@ -53,7 +51,7 @@ func (db *DB) GetBadges() ([]types.Badge, error) {
 }
 
 // GetUserBadges method returns all badges tied to a specific user
-func (db *DB) GetUserBadges() ([]types.Badge, error) {
+func (db *DB) GetUserBadges(userID string) ([]types.Badge, error) {
 	badges := []types.Badge{}
 
 	sqlStatement := `
@@ -75,7 +73,7 @@ func (db *DB) GetUserBadges() ([]types.Badge, error) {
 			coindrop_user_tasks.user_id = $1
 	`
 
-	rows, err := db.client.Query(sqlStatement, t.UserID)
+	rows, err := db.client.Query(sqlStatement, userID)
 	if err != nil {
 		return nil, err
 	}
