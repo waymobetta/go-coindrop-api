@@ -544,9 +544,9 @@ func NewDisplayRedditContext(ctx context.Context, r *http.Request, service *goa.
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *DisplayRedditContext) OK(r *Reddituser) error {
+func (ctx *DisplayRedditContext) OK(r *Verification) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.reddituser+json")
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.verification+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
@@ -1059,9 +1059,9 @@ func NewDisplayStackoverflowContext(ctx context.Context, r *http.Request, servic
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *DisplayStackoverflowContext) OK(r *Stackoverflowuser) error {
+func (ctx *DisplayStackoverflowContext) OK(r *Verification) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.stackoverflowuser+json")
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.verification+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
@@ -1256,9 +1256,9 @@ func NewVerifyStackoverflowContext(ctx context.Context, r *http.Request, service
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *VerifyStackoverflowContext) OK(r *Stackoverflowuser) error {
+func (ctx *VerifyStackoverflowContext) OK(r *Verification) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.stackoverflowuser+json")
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.verification+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }

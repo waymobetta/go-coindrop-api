@@ -324,7 +324,7 @@ func DisplayStackoverflowNotFound(t goatest.TInterface, ctx context.Context, ser
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DisplayStackoverflowOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowController, userID string) (http.ResponseWriter, *app.Stackoverflowuser) {
+func DisplayStackoverflowOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowController, userID string) (http.ResponseWriter, *app.Verification) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -377,12 +377,12 @@ func DisplayStackoverflowOK(t goatest.TInterface, ctx context.Context, service *
 	if rw.Code != 200 {
 		t.Errorf("invalid response status code: got %+v, expected 200", rw.Code)
 	}
-	var mt *app.Stackoverflowuser
+	var mt *app.Verification
 	if resp != nil {
 		var _ok bool
-		mt, _ok = resp.(*app.Stackoverflowuser)
+		mt, _ok = resp.(*app.Verification)
 		if !_ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Stackoverflowuser", resp, resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Verification", resp, resp)
 		}
 		_err = mt.Validate()
 		if _err != nil {
@@ -1537,7 +1537,7 @@ func VerifyStackoverflowNotFound(t goatest.TInterface, ctx context.Context, serv
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func VerifyStackoverflowOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowController, userID string, payload *app.VerificationPayload) (http.ResponseWriter, *app.Stackoverflowuser) {
+func VerifyStackoverflowOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowController, userID string, payload *app.VerificationPayload) (http.ResponseWriter, *app.Verification) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1602,12 +1602,12 @@ func VerifyStackoverflowOK(t goatest.TInterface, ctx context.Context, service *g
 	if rw.Code != 200 {
 		t.Errorf("invalid response status code: got %+v, expected 200", rw.Code)
 	}
-	var mt *app.Stackoverflowuser
+	var mt *app.Verification
 	if resp != nil {
 		var __ok bool
-		mt, __ok = resp.(*app.Stackoverflowuser)
+		mt, __ok = resp.(*app.Verification)
 		if !__ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Stackoverflowuser", resp, resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Verification", resp, resp)
 		}
 		__err = mt.Validate()
 		if __err != nil {

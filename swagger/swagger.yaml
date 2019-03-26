@@ -1463,12 +1463,12 @@ paths:
         type: string
       produces:
       - application/standard_error+json
-      - application/vnd.reddituser+json
+      - application/vnd.verification+json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/Reddituser'
+            $ref: '#/definitions/Verification'
         "400":
           description: Bad Request
           schema:
@@ -1678,12 +1678,12 @@ paths:
         type: string
       produces:
       - application/standard_error+json
-      - application/vnd.stackoverflowuser+json
+      - application/vnd.verification+json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/Stackoverflowuser'
+            $ref: '#/definitions/Verification'
         "400":
           description: Bad Request
           schema:
@@ -1725,12 +1725,12 @@ paths:
           $ref: '#/definitions/VerificationPayload'
       produces:
       - application/standard_error+json
-      - application/vnd.stackoverflowuser+json
+      - application/vnd.verification+json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/Stackoverflowuser'
+            $ref: '#/definitions/Verification'
         "400":
           description: Bad Request
           schema:

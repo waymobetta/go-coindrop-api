@@ -324,7 +324,7 @@ func DisplayRedditNotFound(t goatest.TInterface, ctx context.Context, service *g
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DisplayRedditOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditController, userID string) (http.ResponseWriter, *app.Reddituser) {
+func DisplayRedditOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditController, userID string) (http.ResponseWriter, *app.Verification) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -377,12 +377,12 @@ func DisplayRedditOK(t goatest.TInterface, ctx context.Context, service *goa.Ser
 	if rw.Code != 200 {
 		t.Errorf("invalid response status code: got %+v, expected 200", rw.Code)
 	}
-	var mt *app.Reddituser
+	var mt *app.Verification
 	if resp != nil {
 		var _ok bool
-		mt, _ok = resp.(*app.Reddituser)
+		mt, _ok = resp.(*app.Verification)
 		if !_ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Reddituser", resp, resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Verification", resp, resp)
 		}
 		_err = mt.Validate()
 		if _err != nil {
