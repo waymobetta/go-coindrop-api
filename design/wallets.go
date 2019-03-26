@@ -31,6 +31,6 @@ var _ = Resource("wallets", func() {
 		Description("Update user wallet")
 		Routing(POST(""))
 		Payload(WalletPayload)
-		Response(OK)
+		Response(OK, WalletMedia)
 	})
 })
