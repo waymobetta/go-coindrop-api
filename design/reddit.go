@@ -56,6 +56,6 @@ var _ = Resource("reddit", func() {
 				Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
 			})
 		})
-		Response(OK, RedditUserMedia)
+		Response(OK, VerificationMedia)
 	})
 })
