@@ -30,27 +30,27 @@ CREATE TABLE coindrop_wallets (
 );
 
 -- REDDIT
-CREATE TABLE IF NOT EXISTS coindrop_reddit (
-	id uuid DEFAULT uuid_generate_v4() UNIQUE,
-	user_id uuid REFERENCES coindrop_auth(id),
-	username TEXT NOT NULL,
-	comment_karma INTEGER NOT NULL,
-	link_karma INTEGER NOT NULL,
-	subreddits TEXT ARRAY NOT NULL,
-	trophies TEXT ARRAY NOT NULL,
-	posted_verification_code TEXT NOT NULL,
-	confirmed_verification_code TEXT DEFAULT gen_verif_code() UNIQUE,
-	verified BOOLEAN NOT NULL,
-	created_at timestamp with time zone DEFAULT now(),
-	updated_at timestamp with time zone
+CREATE TABLE coindrop_reddit (
+    id uuid DEFAULT uuid_generate_v4() UNIQUE,
+    user_id uuid REFERENCES coindrop_auth(id) UNIQUE,
+    username text NOT NULL UNIQUE,
+    comment_karma integer NOT NULL,
+    link_karma integer NOT NULL,
+    subreddits text[] NOT NULL,
+    trophies text[] NOT NULL,
+    posted_verification_code text NOT NULL,
+    confirmed_verification_code text DEFAULT gen_verif_code() UNIQUE,
+    verified boolean NOT NULL,
+    created_at timestamp with time zone DEFAULT now(),
+    updated_at timestamp with time zone
 );
 
 -- STACK OVERFLOW
 CREATE TABLE IF NOT EXISTS coindrop_stackoverflow (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
-	user_id uuid REFERENCES coindrop_auth(id),
+	user_id uuid REFERENCES coindrop_auth(id) UNIQUE,
 	exchange_account_id INTEGER NOT NULL,
-	stack_user_id INTEGER NOT NULL,
+	stack_user_id INTEGER NOT NULL UNIQUE,
 	display_name TEXT NOT NULL,
 	accounts TEXT ARRAY NOT NULL,
 	posted_verification_code TEXT NOT NULL,
