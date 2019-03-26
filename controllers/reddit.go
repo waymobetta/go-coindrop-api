@@ -203,10 +203,8 @@ func (c *RedditController) Verify(ctx *app.VerifyRedditContext) error {
 
 	log.Printf("[controller/reddit] successfully verified reddit account for coindrop user: %v\n", user.CognitoAuthUserID)
 
-	res := &app.Reddituser{
-		Verification: &app.Verification{
-			Verified: user.Social.Reddit.Verification.Verified,
-		},
+	res := &app.Verification{
+		Verified: user.Social.Reddit.Verification.Verified,
 	}
 
 	return ctx.OK(res)
