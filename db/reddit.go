@@ -36,7 +36,7 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 				$5,
 				$6,
 				$7,
-				$8,
+				$8
 			)
 	`
 
@@ -106,7 +106,7 @@ func (db *DB) UpdateRedditUser(u *types.User) (*types.User, error) {
 				$5,
 				$6,
 				$7,
-				$8,
+				$8
 			)
 	`
 
@@ -414,6 +414,8 @@ func (db *DB) GetUserRedditVerification(u *types.User) (*types.User, error) {
 			coindrop_reddit.posted_verification_code,
 			coindrop_reddit.confirmed_verification_code,
 			coindrop_reddit.verified
+		FROM
+			coindrop_reddit
 		WHERE
 			coindrop_reddit.user_id = $1
 	`

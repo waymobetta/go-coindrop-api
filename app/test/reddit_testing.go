@@ -1105,15 +1105,16 @@ func UpdateRedditNotFound(t goatest.TInterface, ctx context.Context, service *go
 }
 
 // UpdateRedditOK runs the method Update of the given controller with the given parameters and payload.
-// It returns the response writer so it's possible to inspect the response headers.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateRedditOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditController, payload *app.CreateUserPayload) http.ResponseWriter {
+func UpdateRedditOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditController, payload *app.CreateUserPayload) (http.ResponseWriter, *app.Reddituser) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
+		resp   interface{}
 
-		respSetter goatest.ResponseSetterFunc = func(r interface{}) {}
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
 	)
 	if service == nil {
 		service = goatest.Service(&logBuf, respSetter)
@@ -1133,7 +1134,7 @@ func UpdateRedditOK(t goatest.TInterface, ctx context.Context, service *goa.Serv
 			panic(err) // bug
 		}
 		t.Errorf("unexpected payload validation error: %+v", e)
-		return nil
+		return nil, nil
 	}
 
 	// Setup request context
@@ -1157,7 +1158,7 @@ func UpdateRedditOK(t goatest.TInterface, ctx context.Context, service *goa.Serv
 			panic("invalid test data " + __err.Error()) // bug
 		}
 		t.Errorf("unexpected parameter validation error: %+v", _e)
-		return nil
+		return nil, nil
 	}
 	updateCtx.Payload = payload
 
@@ -1171,9 +1172,21 @@ func UpdateRedditOK(t goatest.TInterface, ctx context.Context, service *goa.Serv
 	if rw.Code != 200 {
 		t.Errorf("invalid response status code: got %+v, expected 200", rw.Code)
 	}
+	var mt *app.Reddituser
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.Reddituser)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Reddituser", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
 
 	// Return results
-	return rw
+	return rw, mt
 }
 
 // VerifyRedditBadRequest runs the method Verify of the given controller with the given parameters and payload.
