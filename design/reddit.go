@@ -44,7 +44,7 @@ var _ = Resource("reddit", func() {
 			})
 		})
 		Payload(VerificationPayload)
-		Response(OK, RedditUserMedia)
+		Response(OK, VerificationMedia)
 	})
 
 	Action("display", func() {
