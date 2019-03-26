@@ -17,9 +17,11 @@ var CreateBadgePayload = Type("CreateBadgePayload", func() {
 	Description("Create Badge payload")
 	Attribute("name", String, "Badge name")
 	Attribute("description", String, "Badge description")
+	Attribute("logoURL", String, "Badge logo URL")
 	Required(
 		"name",
 		"description",
+		"logoURL",
 	)
 })
 
