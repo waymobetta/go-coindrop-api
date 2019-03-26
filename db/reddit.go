@@ -214,6 +214,7 @@ func (db *DB) GetRedditUser(u *types.User) (*types.User, error) {
 	// create SQL statement for db writes
 	sqlStatement := `
 		SELECT
+			coindrop_reddit.id,
 			coindrop_reddit.username,
 			coindrop_reddit.comment_karma,
 			coindrop_reddit.link_karma,
@@ -241,6 +242,7 @@ func (db *DB) GetRedditUser(u *types.User) (*types.User, error) {
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
+		&u.Social.Reddit.ID,
 		&u.Social.Reddit.Username,
 		&u.Social.Reddit.CommentKarma,
 		&u.Social.Reddit.LinkKarma,
