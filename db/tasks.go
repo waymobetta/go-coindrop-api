@@ -2,7 +2,6 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/waymobetta/go-coindrop-api/types"
 )
@@ -310,7 +309,6 @@ func (db *DB) AddUserTask(u *types.UserTask) (*types.UserTask, error) {
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		fmt.Println("HII")
 		return u, err
 	}
 
