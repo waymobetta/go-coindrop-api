@@ -60,7 +60,7 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 			ID:          task.BadgeData.ID,
 			Name:        task.BadgeData.Name,
 			Description: task.BadgeData.Description,
-			Recipients:  task.BadgeData.Recipients,
+			LogoURL:     task.BadgeData.LogoURL,
 		},
 		LogoURL: task.LogoURL,
 	})
@@ -107,7 +107,7 @@ func (c *TasksController) List(ctx *app.ListTasksContext) error {
 				ID:          task.BadgeData.ID,
 				Name:        task.BadgeData.Name,
 				Description: task.BadgeData.Description,
-				Recipients:  task.BadgeData.Recipients,
+				LogoURL:     task.BadgeData.LogoURL,
 			},
 			LogoURL: task.LogoURL,
 		})
