@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // WalletsController implements the wallet resource.
@@ -64,15 +65,18 @@ func (c *WalletsController) Update(ctx *app.UpdateWalletsContext) error {
 	// userID := ctx.Value("authUserID").(string)
 
 	userID := ctx.Payload.UserID
-	address := ctx.Payload.WalletAddress
-	walletType := ctx.Payload.WalletType
 
-	var walletStored bool
+	wallet := &types.Wallet{
+		Address: ctx.Payload.WalletAddress,
+		Type:    ctx.Payload.WalletType,
+	}
+
+	walletStored := true
 
 	// TODO:
 	// needs better error handling
 
-	_, err := c.db.GetWallet(userID, walletType)
+	_, err := c.db.GetWallet(userID, wallet.Type)
 	if err != nil {
 		walletStored = false
 	}
@@ -81,8 +85,8 @@ func (c *WalletsController) Update(ctx *app.UpdateWalletsContext) error {
 		// update wallet in db
 		_, err := c.db.UpdateWallet(
 			userID,
-			address,
-			walletType,
+			wallet.Address,
+			wallet.Type,
 		)
 		if err != nil {
 			log.Errorf("[controller/wallet] %v", err)
@@ -94,8 +98,8 @@ func (c *WalletsController) Update(ctx *app.UpdateWalletsContext) error {
 	} else {
 		_, err := c.db.AddWallet(
 			userID,
-			address,
-			walletType,
+			wallet.Address,
+			wallet.Type,
 		)
 		if err != nil {
 			log.Errorf("[controller/wallet] %v", err)
@@ -108,10 +112,11 @@ func (c *WalletsController) Update(ctx *app.UpdateWalletsContext) error {
 
 	log.Printf("[controller/wallet] successfully updated wallet for coindrop user: %v\n", userID)
 
-	return ctx.OK(
-		[]byte(
-			"ok",
-		),
-	)
+	res := &app.Wallet{
+		Address:    wallet.Address,
+		WalletType: wallet.Type,
+	}
+
+	return ctx.OK(res)
 	// WalletsController_Update: end_implement
 }
