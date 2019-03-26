@@ -27,7 +27,7 @@ func (db *DB) GetBadges() ([]types.Badge, error) {
 	// iterate over rows
 	for rows.Next() {
 		// initialize new struct per badge in db to hold badge info
-		badge := new(types.Badge)
+		badge := types.Badge{}
 
 		err = rows.Scan(
 			&badge.ID,
@@ -83,7 +83,7 @@ func (db *DB) GetUserBadges(userID string) ([]types.Badge, error) {
 	// iterate over rows
 	for rows.Next() {
 		// initialize new struct per badge in db to hold badge info
-		badge := new(types.Badge)
+		badge := types.Badge{}
 
 		err = rows.Scan(
 			&badge.ID,
