@@ -25,7 +25,7 @@ var (
 )
 
 // GetProfileByUserID fetches basic user profile info by unique user ID
-func GetProfileByUserID(u *types.User) error {
+func GetProfileByUserID(u *types.User) (*types.AboutProfileResponse, error) {
 	log.Printf("[stackoverflow] collecting profile information for user ID: %v\n", u.Social.StackOverflow.StackUserID)
 
 	profileEndpoint := fmt.Sprintf("/users/%v?order=desc&sort=reputation&site=stackoverflow&filter=!-*jbN*IioeFP", u.Social.StackOverflow.StackUserID)
@@ -37,7 +37,7 @@ func GetProfileByUserID(u *types.User) error {
 	req, err := http.NewRequest("GET", profileURL, nil)
 	if err != nil {
 		log.Errorf("[services/stackoverflow] Error preparing GET request for user profile info; %v\n", err)
-		return err
+		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
 
@@ -49,7 +49,7 @@ func GetProfileByUserID(u *types.User) error {
 	res, err := client.Do(req)
 	if err != nil {
 		log.Errorf("[services/stackoverflow] Error fetching user profile info; %v\n", err)
-		return err
+		return nil, err
 	}
 	defer res.Body.Close()
 
@@ -57,30 +57,21 @@ func GetProfileByUserID(u *types.User) error {
 	byteArr, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		log.Errorf("[services/stackoverflow] Error reading response body; %v\n", err)
-		return err
+		return nil, err
 	}
 
 	// initialize new struct to contain AboutProfileResponse
-	aboutProfResStruct := new(AboutProfileResponse)
+	aboutProfResStruct := new(types.AboutProfileResponse)
 
 	// unmarshal JSON into AboutProfileResponse struct
 	if err := json.Unmarshal(byteArr, &aboutProfResStruct); err != nil {
 		log.Errorf("[services/stackoverflow] Error unmarshalling JSON; %v\n", err)
-		return err
+		return nil, err
 	}
 
 	log.Printf("[services/stackoverflow] found profile info for user: %s!\n", aboutProfResStruct.Items[0].DisplayName)
 
-	accounts := []string{}
-
-	// iterate over number of items in the response
-	// NOTE: there should only be a single item
-
-	u.Social.StackOverflow.DisplayName = aboutProfResStruct.Items[0].DisplayName
-	u.Social.StackOverflow.ExchangeAccountID = aboutProfResStruct.Items[0].AccountID
-	u.Social.StackOverflow.Accounts = accounts
-
-	return nil
+	return aboutProfResStruct, nil
 }
 
 // GetAssociatedAccounts method fetches associated communities of user
@@ -125,7 +116,7 @@ func GetAssociatedAccounts(u *types.User) error {
 	}
 
 	// initialize new struct to contain AssociatedCommunitiesResponse
-	associatedCommunitiesStruct := new(AssociatedCommunitiesResponse)
+	associatedCommunitiesStruct := new(types.AssociatedCommunitiesResponse)
 
 	// unmarshal JSON into AssociatedCommunitiesResponse struct
 	if err := json.Unmarshal(byteArr, &associatedCommunitiesStruct); err != nil {
