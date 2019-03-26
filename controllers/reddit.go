@@ -72,8 +72,7 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 	// userID := ctx.Value("authUserID").(string)
 
 	// TODO:
-	// use fix similar to wallets update method [controllers/wallets]
-	// 2. fix to prevent creating duplicates
+	// fix to prevent creating duplicates
 
 	user := &types.User{
 		UserID: ctx.Payload.UserID,
@@ -93,38 +92,20 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 		},
 	}
 
-	var userFound bool
-
-	_, err := c.db.GetRedditUser(user)
+	user, err := c.db.AddRedditUser(user)
 	if err != nil {
-		userFound = false
+		log.Errorf("[controller/reddit] %v", err)
+		return ctx.NotFound(&app.StandardError{
+			Code:    400,
+			Message: "could not add user's reddit listing to db",
+		})
 	}
 
-	if userFound {
-		_, err := c.db.UpdateRedditUser(user)
-		if err != nil {
-			log.Errorf("[controller/reddit] %v", err)
-			return ctx.NotFound(&app.StandardError{
-				Code:    400,
-				Message: "could not update user's reddit info listing in db",
-			})
-		}
-	} else {
-		_, err = c.db.AddRedditUser(user)
-		if err != nil {
-			log.Errorf("[controller/reddit] %v", err)
-			return ctx.NotFound(&app.StandardError{
-				Code:    400,
-				Message: "could not add user's reddit listing to db",
-			})
-		}
+	res := &app.Reddituser{
+		Username:     user.Social.Reddit.Username,
+		Verification: &app.Verification{},
 	}
-
-	return ctx.OK(
-		[]byte(
-			"ok",
-		),
-	)
+	return ctx.OK(res)
 	// RedditController_Update: end_implement
 }
 
