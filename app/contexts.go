@@ -741,9 +741,9 @@ func NewVerifyRedditContext(ctx context.Context, r *http.Request, service *goa.S
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *VerifyRedditContext) OK(r *Reddituser) error {
+func (ctx *VerifyRedditContext) OK(r *Verification) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.reddituser+json")
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.verification+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
