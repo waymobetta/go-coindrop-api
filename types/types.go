@@ -171,7 +171,7 @@ type Badge struct {
 	Description string `json:"description"`
 	ID          string `json:"id"`
 	Name        string `json:"name"`
-	Recipients  int    `json:"recipients"`
+	LogoURL     string `json:"logo_url"`
 }
 
 // TypeformWebHookResponse struct contains info from the TypeformWebHook response
