@@ -78,18 +78,18 @@ func (db *DB) GetStackUser(u *types.User) (*types.User, error) {
 	// create SQL statement for db writes
 	sqlStatement := `
 		SELECT
-			coindrop_stackoverflow.id,
-			coindrop_stackoverflow.exchange_account_id,
-			coindrop_stackoverflow.stack_user_id,
-			coindrop_stackoverflow.display_name,
-			coindrop_stackoverflow.accounts,
-			coindrop_stackoverflow.posted_verification_code,
-			coindrop_stackoverflow.confirmed_verification_code,
-			coindrop_stackoverflow.verified
+			id,
+			exchange_account_id,
+			stack_user_id,
+			display_name,
+			accounts,
+			posted_verification_code,
+			confirmed_verification_code,
+			verified
 		FROM
 			coindrop_stackoverflow
 		WHERE
-			coindrop_stackoverflow.user_id = $1
+			user_id = $1
 	`
 
 	// prepare statement
@@ -136,11 +136,9 @@ func (db *DB) UpdateStackAboutInfo(u *types.User) (*types.User, error) {
 		SET 
 			exchange_account_id = $1, 
 			display_name = $2, 
-			accounts = $3 
-		FROM
-			coindrop_stackoverflow
+			accounts = $3
 		WHERE
-			coindrop_stackoverflow.user_id = $4
+			user_id = $4
 	`
 
 	// prepare statement
@@ -190,10 +188,8 @@ func (db *DB) UpdateStackVerificationCode(u *types.User) (*types.User, error) {
 		SET 
 			posted_verification_code = $1, 
 			verified = $2
-		FROM
-			coindrop_stackoverflow
 		WHERE
-			coindrop_stackoverflow.user_id = $3
+			user_id = $3
 	`
 
 	// prepare statement
@@ -232,14 +228,14 @@ func (db *DB) GetUserStackOverfloVerification(u *types.User) (*types.User, error
 	// create SQL statement for db writes
 	sqlStatement := `
 		SELECT
-			coindrop_stackoverflow.stack_user_id,
-			coindrop_stackoverflow.posted_verification_code,
-			coindrop_stackoverflow.confirmed_verification_code,
-			coindrop_stackoverflow.verified
+			stack_user_id,
+			posted_verification_code,
+			confirmed_verification_code,
+			verified
 		FROM
 			coindrop_stackoverflow
 		WHERE
-			coindrop_stackoverflow.user_id = $1
+			user_id = $1
 	`
 
 	// prepare statement
