@@ -46,6 +46,18 @@ var BadgeMedia = MediaType("application/vnd.badge+json", func() {
 	})
 })
 
+// BadgesMedia ...
+var BadgesMedia = MediaType("application/vnd.badges+json", func() {
+	Description("Badges")
+	Attributes(func() {
+		Attribute("badges", CollectionOf(BadgeMedia), "list of badges")
+		Required("badges")
+	})
+	View("default", func() {
+		Attribute("badges")
+	})
+})
+
 // TaskMedia ...
 var TaskMedia = MediaType("application/vnd.task+json", func() {
 	Description("Task")
