@@ -30,19 +30,19 @@ var BadgeMedia = MediaType("application/vnd.badge+json", func() {
 		Attribute("id", String, "badge ID")
 		Attribute("name", String, "badge name")
 		Attribute("description", String, "badge description")
-		Attribute("recipients", Integer, "badge recipients")
+		Attribute("logoURL", String, "badge logo")
 		Required(
 			"id",
 			"name",
 			"description",
-			"recipients",
+			"logoURL",
 		)
 	})
 	View("default", func() {
 		Attribute("id")
 		Attribute("name")
 		Attribute("description")
-		Attribute("recipients")
+		Attribute("logoURL")
 	})
 })
 
