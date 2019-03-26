@@ -23,9 +23,9 @@ func (db *DB) UpdateWallet(userID, newWalletAddress, walletType string) (*types.
 		SET
 			address = $1
 		WHERE
-			coindrop_wallets.user_id $2
+			user_id = $2
 		AND
-			coindrop_wallets.type = $3
+			type = $3
 	`
 
 	// prepare statement
@@ -129,9 +129,9 @@ func (db *DB) GetWallet(userID, walletType string) (*types.Wallet, error) {
 		FROM
 			coindrop_wallets
 		WHERE
-			coindrop_wallets.user_id = $1
+			user_id = $1
 		AND
-			coindrop_wallets.type = $2
+			type = $2
 		LIMIT
 			1
 	`
