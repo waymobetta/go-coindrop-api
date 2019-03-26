@@ -164,7 +164,7 @@ func (c *StackoverflowController) Verify(ctx *app.VerifyStackoverflowContext) er
 	}
 
 	// check Stack Overflow for matching verification code
-	err = stackoverflow.GetProfileByUserID(user)
+	aboutProfile, err := stackoverflow.GetProfileByUserID(user)
 	if err != nil {
 		log.Errorf("[controller/stackoverflow] %v", err)
 		return ctx.NotFound(&app.StandardError{
@@ -172,6 +172,11 @@ func (c *StackoverflowController) Verify(ctx *app.VerifyStackoverflowContext) er
 			Message: "could not get stack user profile",
 		})
 	}
+
+	user.Social.StackOverflow.DisplayName = aboutProfile.Items[0].DisplayName
+	user.Social.StackOverflow.ExchangeAccountID = aboutProfile.Items[0].AccountID
+	user.Social.StackOverflow.Accounts = []string{}
+	user.Social.StackOverflow.Verification.PostedVerificationCode = aboutProfile.Items[0].AboutMe
 
 	// check to see if posted verification code matches that which is stored
 	err = stackoverflow.VerificationCheck(user)
