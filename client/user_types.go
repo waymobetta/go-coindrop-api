@@ -18,6 +18,8 @@ import (
 type createBadgePayload struct {
 	// Badge description
 	Description *string `form:"description,omitempty" json:"description,omitempty" yaml:"description,omitempty" xml:"description,omitempty"`
+	// Badge logo URL
+	LogoURL *string `form:"logoURL,omitempty" json:"logoURL,omitempty" yaml:"logoURL,omitempty" xml:"logoURL,omitempty"`
 	// Badge name
 	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
 }
@@ -30,6 +32,9 @@ func (ut *createBadgePayload) Validate() (err error) {
 	if ut.Description == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "description"))
 	}
+	if ut.LogoURL == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "logoURL"))
+	}
 	return
 }
 
@@ -38,6 +43,9 @@ func (ut *createBadgePayload) Publicize() *CreateBadgePayload {
 	var pub CreateBadgePayload
 	if ut.Description != nil {
 		pub.Description = *ut.Description
+	}
+	if ut.LogoURL != nil {
+		pub.LogoURL = *ut.LogoURL
 	}
 	if ut.Name != nil {
 		pub.Name = *ut.Name
@@ -49,6 +57,8 @@ func (ut *createBadgePayload) Publicize() *CreateBadgePayload {
 type CreateBadgePayload struct {
 	// Badge description
 	Description string `form:"description" json:"description" yaml:"description" xml:"description"`
+	// Badge logo URL
+	LogoURL string `form:"logoURL" json:"logoURL" yaml:"logoURL" xml:"logoURL"`
 	// Badge name
 	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
 }
@@ -60,6 +70,9 @@ func (ut *CreateBadgePayload) Validate() (err error) {
 	}
 	if ut.Description == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "description"))
+	}
+	if ut.LogoURL == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "logoURL"))
 	}
 	return
 }

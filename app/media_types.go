@@ -41,10 +41,10 @@ type Badge struct {
 	Description string `form:"description" json:"description" yaml:"description" xml:"description"`
 	// badge ID
 	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
+	// badge logo
+	LogoURL string `form:"logoURL" json:"logoURL" yaml:"logoURL" xml:"logoURL"`
 	// badge name
 	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
-	// badge recipients
-	Recipients int `form:"recipients" json:"recipients" yaml:"recipients" xml:"recipients"`
 }
 
 // Validate validates the Badge media type instance.
@@ -58,7 +58,9 @@ func (mt *Badge) Validate() (err error) {
 	if mt.Description == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "description"))
 	}
-
+	if mt.LogoURL == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "logoURL"))
+	}
 	return
 }
 

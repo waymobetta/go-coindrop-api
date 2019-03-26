@@ -9,8 +9,8 @@ definitions:
     example:
       description: Eaque facere voluptates consequatur nihil odit.
       id: Quam quae aut cumque consequatur asperiores.
-      name: Hic illum veniam magni nam perferendis.
-      recipients: 7796898160710639916
+      logoURL: Hic illum veniam magni nam perferendis.
+      name: Quis ut unde aliquam voluptatibus.
     properties:
       description:
         description: badge description
@@ -20,20 +20,19 @@ definitions:
         description: badge ID
         example: Quam quae aut cumque consequatur asperiores.
         type: string
-      name:
-        description: badge name
+      logoURL:
+        description: badge logo
         example: Hic illum veniam magni nam perferendis.
         type: string
-      recipients:
-        description: badge recipients
-        example: 7796898160710639916
-        format: int64
-        type: integer
+      name:
+        description: badge name
+        example: Quis ut unde aliquam voluptatibus.
+        type: string
     required:
     - id
     - name
     - description
-    - recipients
+    - logoURL
     title: 'Mediatype identifier: application/vnd.badge+json; view=default'
     type: object
   BadgeCollection:
@@ -42,12 +41,12 @@ definitions:
     example:
     - description: Eaque facere voluptates consequatur nihil odit.
       id: Quam quae aut cumque consequatur asperiores.
-      name: Hic illum veniam magni nam perferendis.
-      recipients: 7796898160710639916
+      logoURL: Hic illum veniam magni nam perferendis.
+      name: Quis ut unde aliquam voluptatibus.
     - description: Eaque facere voluptates consequatur nihil odit.
       id: Quam quae aut cumque consequatur asperiores.
-      name: Hic illum veniam magni nam perferendis.
-      recipients: 7796898160710639916
+      logoURL: Hic illum veniam magni nam perferendis.
+      name: Quis ut unde aliquam voluptatibus.
     items:
       $ref: '#/definitions/Badge'
     title: 'Mediatype identifier: application/vnd.badge+json; type=collection; view=default'
@@ -58,16 +57,16 @@ definitions:
       badges:
       - description: Eaque facere voluptates consequatur nihil odit.
         id: Quam quae aut cumque consequatur asperiores.
-        name: Hic illum veniam magni nam perferendis.
-        recipients: 7796898160710639916
+        logoURL: Hic illum veniam magni nam perferendis.
+        name: Quis ut unde aliquam voluptatibus.
       - description: Eaque facere voluptates consequatur nihil odit.
         id: Quam quae aut cumque consequatur asperiores.
-        name: Hic illum veniam magni nam perferendis.
-        recipients: 7796898160710639916
+        logoURL: Hic illum veniam magni nam perferendis.
+        name: Quis ut unde aliquam voluptatibus.
       - description: Eaque facere voluptates consequatur nihil odit.
         id: Quam quae aut cumque consequatur asperiores.
-        name: Hic illum veniam magni nam perferendis.
-        recipients: 7796898160710639916
+        logoURL: Hic illum veniam magni nam perferendis.
+        name: Quis ut unde aliquam voluptatibus.
     properties:
       badges:
         $ref: '#/definitions/BadgeCollection'
@@ -79,30 +78,36 @@ definitions:
     description: Create Badge payload
     example:
       description: Debitis ut aliquam iusto et.
-      name: Qui consequatur.
+      logoURL: Qui consequatur.
+      name: Deserunt et est nesciunt.
     properties:
       description:
         description: Badge description
         example: Debitis ut aliquam iusto et.
         type: string
+      logoURL:
+        description: Badge logo URL
+        example: Qui consequatur.
+        type: string
       name:
         description: Badge name
-        example: Qui consequatur.
+        example: Deserunt et est nesciunt.
         type: string
     required:
     - name
     - description
+    - logoURL
     title: CreateBadgePayload
     type: object
   CreateStackOverflowUserPayload:
     description: Create Stack Overflow User payload
     example:
-      stackUserId: 6038413587502404235
+      stackUserId: 8586480788233448399
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
     properties:
       stackUserId:
         description: Stack Overflow Community-Specific Account ID
-        example: 6038413587502404235
+        example: 8586480788233448399
         format: int64
         type: integer
       userId:
@@ -118,16 +123,16 @@ definitions:
   CreateTaskPayload:
     description: Create Task payload
     example:
-      taskId: Doloribus voluptas animi.
-      userId: Dolore id repellat quidem.
+      taskId: Quas dolore id repellat quidem et dolores.
+      userId: At nemo eligendi consequuntur.
     properties:
       taskId:
         description: Task ID
-        example: Doloribus voluptas animi.
+        example: Quas dolore id repellat quidem et dolores.
         type: string
       userId:
         description: User ID
-        example: Dolore id repellat quidem.
+        example: At nemo eligendi consequuntur.
         type: string
     required:
     - userId
@@ -138,7 +143,7 @@ definitions:
     description: Create Reddit User payload
     example:
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      username: Sunt est occaecati nihil.
+      username: Laudantium qui eaque dolorem nostrum.
     properties:
       userId:
         description: User ID
@@ -147,7 +152,7 @@ definitions:
         type: string
       username:
         description: Username
-        example: Sunt est occaecati nihil.
+        example: Laudantium qui eaque dolorem nostrum.
         type: string
     required:
     - userId
@@ -157,11 +162,11 @@ definitions:
   Healthcheck:
     description: Health check (default view)
     example:
-      status: Aliquam voluptatibus ut aspernatur iure amet.
+      status: Amet tenetur.
     properties:
       status:
         description: Status
-        example: Aliquam voluptatibus ut aspernatur iure amet.
+        example: Amet tenetur.
         type: string
     required:
     - status
@@ -170,21 +175,21 @@ definitions:
   Profile:
     description: A user profile (default view)
     example:
-      id: Non ut.
-      name: Corrupti eum fugit eaque.
-      username: Autem est.
+      id: Ut quis corrupti eum fugit.
+      name: Reiciendis autem.
+      username: Corporis omnis labore autem et.
     properties:
       id:
         description: Unique user ID
-        example: Non ut.
+        example: Ut quis corrupti eum fugit.
         type: string
       name:
         description: Name
-        example: Corrupti eum fugit eaque.
+        example: Reiciendis autem.
         type: string
       username:
         description: Username
-        example: Autem est.
+        example: Corporis omnis labore autem et.
         type: string
     required:
     - id
@@ -195,16 +200,16 @@ definitions:
   ProfilePayload:
     description: Profile payload
     example:
-      name: Deserunt et est nesciunt.
-      username: Ducimus quisquam sit facere qui praesentium.
+      name: Ducimus quisquam sit facere qui praesentium.
+      username: Delectus sit eos error.
     properties:
       name:
         description: Name
-        example: Deserunt et est nesciunt.
+        example: Ducimus quisquam sit facere qui praesentium.
         type: string
       username:
         description: Username
-        example: Ducimus quisquam sit facere qui praesentium.
+        example: Delectus sit eos error.
         type: string
     required:
     - name
@@ -215,29 +220,25 @@ definitions:
     description: Quiz (default view)
     example:
       fields:
-      - answer: Labore autem et non et.
-        question: Aut ullam.
-      - answer: Labore autem et non et.
-        question: Aut ullam.
-      - answer: Labore autem et non et.
-        question: Aut ullam.
-      id: Officiis odit vero eum.
-      title: Quo rerum saepe adipisci error itaque velit.
-      userId: Rerum et natus est.
+      - answer: Corporis aut ullam.
+        question: Officiis odit vero eum.
+      id: Quo rerum saepe adipisci error itaque velit.
+      title: Rerum et natus est.
+      userId: Harum labore.
     properties:
       fields:
         $ref: '#/definitions/Quiz-FieldsCollection'
       id:
         description: Quiz ID
-        example: Officiis odit vero eum.
+        example: Quo rerum saepe adipisci error itaque velit.
         type: string
       title:
         description: Quiz title
-        example: Quo rerum saepe adipisci error itaque velit.
+        example: Rerum et natus est.
         type: string
       userId:
         description: Quiz user ID
-        example: Rerum et natus est.
+        example: Harum labore.
         type: string
     required:
     - id
@@ -249,16 +250,16 @@ definitions:
   Quiz-Fields:
     description: Quiz fields (default view)
     example:
-      answer: Labore autem et non et.
-      question: Aut ullam.
+      answer: Corporis aut ullam.
+      question: Officiis odit vero eum.
     properties:
       answer:
         description: Answer
-        example: Labore autem et non et.
+        example: Corporis aut ullam.
         type: string
       question:
         description: Question
-        example: Aut ullam.
+        example: Officiis odit vero eum.
         type: string
     required:
     - question
@@ -269,10 +270,10 @@ definitions:
     description: Quiz-FieldsCollection is the media type for an array of Quiz-Fields
       (default view)
     example:
-    - answer: Labore autem et non et.
-      question: Aut ullam.
-    - answer: Labore autem et non et.
-      question: Aut ullam.
+    - answer: Corporis aut ullam.
+      question: Officiis odit vero eum.
+    - answer: Corporis aut ullam.
+      question: Officiis odit vero eum.
     items:
       $ref: '#/definitions/Quiz-Fields'
     title: 'Mediatype identifier: application/vnd.quiz-fields+json; type=collection;
@@ -282,35 +283,23 @@ definitions:
     description: QuizCollection is the media type for an array of Quiz (default view)
     example:
     - fields:
-      - answer: Labore autem et non et.
-        question: Aut ullam.
-      - answer: Labore autem et non et.
-        question: Aut ullam.
-      - answer: Labore autem et non et.
-        question: Aut ullam.
-      id: Officiis odit vero eum.
-      title: Quo rerum saepe adipisci error itaque velit.
-      userId: Rerum et natus est.
+      - answer: Corporis aut ullam.
+        question: Officiis odit vero eum.
+      id: Quo rerum saepe adipisci error itaque velit.
+      title: Rerum et natus est.
+      userId: Harum labore.
     - fields:
-      - answer: Labore autem et non et.
-        question: Aut ullam.
-      - answer: Labore autem et non et.
-        question: Aut ullam.
-      - answer: Labore autem et non et.
-        question: Aut ullam.
-      id: Officiis odit vero eum.
-      title: Quo rerum saepe adipisci error itaque velit.
-      userId: Rerum et natus est.
+      - answer: Corporis aut ullam.
+        question: Officiis odit vero eum.
+      id: Quo rerum saepe adipisci error itaque velit.
+      title: Rerum et natus est.
+      userId: Harum labore.
     - fields:
-      - answer: Labore autem et non et.
-        question: Aut ullam.
-      - answer: Labore autem et non et.
-        question: Aut ullam.
-      - answer: Labore autem et non et.
-        question: Aut ullam.
-      id: Officiis odit vero eum.
-      title: Quo rerum saepe adipisci error itaque velit.
-      userId: Rerum et natus est.
+      - answer: Corporis aut ullam.
+        question: Officiis odit vero eum.
+      id: Quo rerum saepe adipisci error itaque velit.
+      title: Rerum et natus est.
+      userId: Harum labore.
     items:
       $ref: '#/definitions/Quiz'
     title: 'Mediatype identifier: application/vnd.quiz+json; type=collection; view=default'
@@ -318,11 +307,11 @@ definitions:
   QuizPayload:
     description: Quiz payload
     example:
-      title: Delectus sit eos error.
+      title: Sunt est occaecati nihil.
     properties:
       title:
         description: Title
-        example: Delectus sit eos error.
+        example: Sunt est occaecati nihil.
         type: string
     required:
     - title
@@ -331,28 +320,28 @@ definitions:
   QuizResultsPayload:
     description: Quiz results payload
     example:
-      questionsCorrect: 7111619386511698810
-      questionsIncorrect: 1175978443648425630
-      quizId: Temporibus pariatur autem dignissimos distinctio.
-      userId: Earum sed modi cumque est.
+      questionsCorrect: 7697794898457579137
+      questionsIncorrect: 7753763266690571344
+      quizId: Distinctio culpa earum sed modi cumque est.
+      userId: Aspernatur voluptatem.
     properties:
       questionsCorrect:
         description: Number of questions that were answered correct
-        example: 7111619386511698810
+        example: 7697794898457579137
         format: int64
         type: integer
       questionsIncorrect:
         description: Number of questions that were answered incorrect
-        example: 1175978443648425630
+        example: 7753763266690571344
         format: int64
         type: integer
       quizId:
         description: Quiz ID
-        example: Temporibus pariatur autem dignissimos distinctio.
+        example: Distinctio culpa earum sed modi cumque est.
         type: string
       userId:
         description: User ID
-        example: Earum sed modi cumque est.
+        example: Aspernatur voluptatem.
         type: string
     required:
     - quizId
@@ -364,26 +353,25 @@ definitions:
   Reddituser:
     description: A Reddit User (default view)
     example:
-      commentKarma: 2665542689227252385
+      commentKarma: 7845310732658946328
       id: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      linkKarma: 2120682418908718348
+      linkKarma: 8223200910020865789
       subreddits:
-      - Nesciunt itaque quam sit.
-      - Nesciunt itaque quam sit.
-      - Nesciunt itaque quam sit.
+      - Quas et eos.
+      - Quas et eos.
+      - Quas et eos.
       trophies:
-      - Voluptates dolore quas et.
-      - Voluptates dolore quas et.
+      - Repellat optio nam.
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      username: Eos quia repellat optio nam voluptatem.
+      username: Quibusdam ut qui dolores expedita est.
       verification:
-        confirmedVerificationCode: Ut qui dolores expedita est.
-        postedVerificationCode: Animi ipsum iusto.
+        confirmedVerificationCode: Animi ipsum iusto.
+        postedVerificationCode: Quia autem sed et facilis earum deserunt.
         verified: false
     properties:
       commentKarma:
         description: Comment Karma
-        example: 2665542689227252385
+        example: 7845310732658946328
         format: int64
         type: integer
       id:
@@ -393,26 +381,25 @@ definitions:
         type: string
       linkKarma:
         description: Link Karma
-        example: 2120682418908718348
+        example: 8223200910020865789
         format: int64
         type: integer
       subreddits:
         description: User subreddits
         example:
-        - Nesciunt itaque quam sit.
-        - Nesciunt itaque quam sit.
-        - Nesciunt itaque quam sit.
+        - Quas et eos.
+        - Quas et eos.
+        - Quas et eos.
         items:
-          example: Nesciunt itaque quam sit.
+          example: Quas et eos.
           type: string
         type: array
       trophies:
         description: User trophies
         example:
-        - Voluptates dolore quas et.
-        - Voluptates dolore quas et.
+        - Repellat optio nam.
         items:
-          example: Voluptates dolore quas et.
+          example: Repellat optio nam.
           type: string
         type: array
       userId:
@@ -422,7 +409,7 @@ definitions:
         type: string
       username:
         description: Username
-        example: Eos quia repellat optio nam voluptatem.
+        example: Quibusdam ut qui dolores expedita est.
         type: string
       verification:
         $ref: '#/definitions/Verification'
@@ -440,28 +427,28 @@ definitions:
   Results:
     description: Quiz results (default view)
     example:
-      questionsCorrect: 3274364288701861333
-      questionsIncorrect: 655195948941630872
-      quizId: Et facilis earum deserunt.
-      userId: Modi eos possimus aliquam.
+      questionsCorrect: 5841114704636265796
+      questionsIncorrect: 866599375965575278
+      quizId: Aliquam ipsa magni necessitatibus debitis qui quos.
+      userId: Quasi excepturi non voluptas dolor.
     properties:
       questionsCorrect:
         description: Count of correct quiz answers
-        example: 3274364288701861333
+        example: 5841114704636265796
         format: int64
         type: integer
       questionsIncorrect:
         description: Count of incorrect quiz answers
-        example: 655195948941630872
+        example: 866599375965575278
         format: int64
         type: integer
       quizId:
         description: Quiz ID
-        example: Et facilis earum deserunt.
+        example: Aliquam ipsa magni necessitatibus debitis qui quos.
         type: string
       userId:
         description: User ID
-        example: Modi eos possimus aliquam.
+        example: Quasi excepturi non voluptas dolor.
         type: string
     required:
     - userId
@@ -474,14 +461,14 @@ definitions:
     description: ResultsCollection is the media type for an array of Results (default
       view)
     example:
-    - questionsCorrect: 3274364288701861333
-      questionsIncorrect: 655195948941630872
-      quizId: Et facilis earum deserunt.
-      userId: Modi eos possimus aliquam.
-    - questionsCorrect: 3274364288701861333
-      questionsIncorrect: 655195948941630872
-      quizId: Et facilis earum deserunt.
-      userId: Modi eos possimus aliquam.
+    - questionsCorrect: 5841114704636265796
+      questionsIncorrect: 866599375965575278
+      quizId: Aliquam ipsa magni necessitatibus debitis qui quos.
+      userId: Quasi excepturi non voluptas dolor.
+    - questionsCorrect: 5841114704636265796
+      questionsIncorrect: 866599375965575278
+      quizId: Aliquam ipsa magni necessitatibus debitis qui quos.
+      userId: Quasi excepturi non voluptas dolor.
     items:
       $ref: '#/definitions/Results'
     title: 'Mediatype identifier: application/vnd.results+json; type=collection; view=default'
@@ -490,36 +477,34 @@ definitions:
     description: Stack Overflow User Info (default view)
     example:
       accounts:
-      - Debitis qui quos atque.
-      - Debitis qui quos atque.
-      - Debitis qui quos atque.
-      displayName: Excepturi non voluptas dolor eligendi ipsum eius.
-      exchangeAccountId: 7010645504245384994
+      - Repellat animi.
+      - Repellat animi.
+      displayName: Sunt voluptatum recusandae facilis perferendis.
+      exchangeAccountId: 4018368700293466900
       id: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      stackUserId: 4463294319792730909
+      stackUserId: 3120674769674414976
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
       verification:
-        confirmedVerificationCode: Ut qui dolores expedita est.
-        postedVerificationCode: Animi ipsum iusto.
+        confirmedVerificationCode: Animi ipsum iusto.
+        postedVerificationCode: Quia autem sed et facilis earum deserunt.
         verified: false
     properties:
       accounts:
         description: Stack Exchange Accounts
         example:
-        - Debitis qui quos atque.
-        - Debitis qui quos atque.
-        - Debitis qui quos atque.
+        - Repellat animi.
+        - Repellat animi.
         items:
-          example: Debitis qui quos atque.
+          example: Repellat animi.
           type: string
         type: array
       displayName:
         description: Display Name
-        example: Excepturi non voluptas dolor eligendi ipsum eius.
+        example: Sunt voluptatum recusandae facilis perferendis.
         type: string
       exchangeAccountId:
         description: Stack Exchange Account ID
-        example: 7010645504245384994
+        example: 4018368700293466900
         format: int64
         type: integer
       id:
@@ -529,7 +514,7 @@ definitions:
         type: string
       stackUserId:
         description: Stack Overflow Community-Specific Account ID
-        example: 4463294319792730909
+        example: 3120674769674414976
         format: int64
         type: integer
       userId:
@@ -572,54 +557,54 @@ definitions:
   Task:
     description: Task (default view)
     example:
-      author: Sunt voluptatum recusandae facilis perferendis.
+      author: Non enim.
       badge:
         description: Eaque facere voluptates consequatur nihil odit.
         id: Quam quae aut cumque consequatur asperiores.
-        name: Hic illum veniam magni nam perferendis.
-        recipients: 7796898160710639916
-      description: Ut et non enim.
-      id: Officiis ad quis.
-      logoURL: Exercitationem dignissimos est dolores sequi cumque.
-      title: Dolorum accusantium eos accusantium molestias.
-      token: Eligendi sit sed nobis.
-      tokenAllocation: 3786236844148253728
-      type: Suscipit error ea.
+        logoURL: Hic illum veniam magni nam perferendis.
+        name: Quis ut unde aliquam voluptatibus.
+      description: Officiis ad quis.
+      id: Exercitationem dignissimos est dolores sequi cumque.
+      logoURL: Dolorum accusantium eos accusantium molestias.
+      title: Eligendi sit sed nobis.
+      token: Non suscipit error ea incidunt aut qui.
+      tokenAllocation: 8751277579802007077
+      type: Ipsa et ea porro sunt facilis.
     properties:
       author:
         description: task author
-        example: Sunt voluptatum recusandae facilis perferendis.
+        example: Non enim.
         type: string
       badge:
         $ref: '#/definitions/Badge'
       description:
         description: task description
-        example: Ut et non enim.
+        example: Officiis ad quis.
         type: string
       id:
         description: task ID
-        example: Officiis ad quis.
+        example: Exercitationem dignissimos est dolores sequi cumque.
         type: string
       logoURL:
         description: logo URL
-        example: Exercitationem dignissimos est dolores sequi cumque.
+        example: Dolorum accusantium eos accusantium molestias.
         type: string
       title:
         description: task title
-        example: Dolorum accusantium eos accusantium molestias.
+        example: Eligendi sit sed nobis.
         type: string
       token:
         description: task token
-        example: Eligendi sit sed nobis.
+        example: Non suscipit error ea incidunt aut qui.
         type: string
       tokenAllocation:
         description: token allocation
-        example: 3786236844148253728
+        example: 8751277579802007077
         format: int64
         type: integer
       type:
         description: task type
-        example: Suscipit error ea.
+        example: Ipsa et ea porro sunt facilis.
         type: string
     required:
     - id
@@ -636,45 +621,45 @@ definitions:
   TaskCollection:
     description: TaskCollection is the media type for an array of Task (default view)
     example:
-    - author: Sunt voluptatum recusandae facilis perferendis.
+    - author: Non enim.
       badge:
         description: Eaque facere voluptates consequatur nihil odit.
         id: Quam quae aut cumque consequatur asperiores.
-        name: Hic illum veniam magni nam perferendis.
-        recipients: 7796898160710639916
-      description: Ut et non enim.
-      id: Officiis ad quis.
-      logoURL: Exercitationem dignissimos est dolores sequi cumque.
-      title: Dolorum accusantium eos accusantium molestias.
-      token: Eligendi sit sed nobis.
-      tokenAllocation: 3786236844148253728
-      type: Suscipit error ea.
-    - author: Sunt voluptatum recusandae facilis perferendis.
+        logoURL: Hic illum veniam magni nam perferendis.
+        name: Quis ut unde aliquam voluptatibus.
+      description: Officiis ad quis.
+      id: Exercitationem dignissimos est dolores sequi cumque.
+      logoURL: Dolorum accusantium eos accusantium molestias.
+      title: Eligendi sit sed nobis.
+      token: Non suscipit error ea incidunt aut qui.
+      tokenAllocation: 8751277579802007077
+      type: Ipsa et ea porro sunt facilis.
+    - author: Non enim.
       badge:
         description: Eaque facere voluptates consequatur nihil odit.
         id: Quam quae aut cumque consequatur asperiores.
-        name: Hic illum veniam magni nam perferendis.
-        recipients: 7796898160710639916
-      description: Ut et non enim.
-      id: Officiis ad quis.
-      logoURL: Exercitationem dignissimos est dolores sequi cumque.
-      title: Dolorum accusantium eos accusantium molestias.
-      token: Eligendi sit sed nobis.
-      tokenAllocation: 3786236844148253728
-      type: Suscipit error ea.
-    - author: Sunt voluptatum recusandae facilis perferendis.
+        logoURL: Hic illum veniam magni nam perferendis.
+        name: Quis ut unde aliquam voluptatibus.
+      description: Officiis ad quis.
+      id: Exercitationem dignissimos est dolores sequi cumque.
+      logoURL: Dolorum accusantium eos accusantium molestias.
+      title: Eligendi sit sed nobis.
+      token: Non suscipit error ea incidunt aut qui.
+      tokenAllocation: 8751277579802007077
+      type: Ipsa et ea porro sunt facilis.
+    - author: Non enim.
       badge:
         description: Eaque facere voluptates consequatur nihil odit.
         id: Quam quae aut cumque consequatur asperiores.
-        name: Hic illum veniam magni nam perferendis.
-        recipients: 7796898160710639916
-      description: Ut et non enim.
-      id: Officiis ad quis.
-      logoURL: Exercitationem dignissimos est dolores sequi cumque.
-      title: Dolorum accusantium eos accusantium molestias.
-      token: Eligendi sit sed nobis.
-      tokenAllocation: 3786236844148253728
-      type: Suscipit error ea.
+        logoURL: Hic illum veniam magni nam perferendis.
+        name: Quis ut unde aliquam voluptatibus.
+      description: Officiis ad quis.
+      id: Exercitationem dignissimos est dolores sequi cumque.
+      logoURL: Dolorum accusantium eos accusantium molestias.
+      title: Eligendi sit sed nobis.
+      token: Non suscipit error ea incidunt aut qui.
+      tokenAllocation: 8751277579802007077
+      type: Ipsa et ea porro sunt facilis.
     items:
       $ref: '#/definitions/Task'
     title: 'Mediatype identifier: application/vnd.task+json; type=collection; view=default'
@@ -682,11 +667,11 @@ definitions:
   TaskPayload:
     description: Task payload
     example:
-      completed: true
+      completed: false
     properties:
       completed:
         description: Task completed
-        example: true
+        example: false
         type: boolean
     required:
     - completed
@@ -696,45 +681,45 @@ definitions:
     description: Tasks (default view)
     example:
       tasks:
-      - author: Sunt voluptatum recusandae facilis perferendis.
+      - author: Non enim.
         badge:
           description: Eaque facere voluptates consequatur nihil odit.
           id: Quam quae aut cumque consequatur asperiores.
-          name: Hic illum veniam magni nam perferendis.
-          recipients: 7796898160710639916
-        description: Ut et non enim.
-        id: Officiis ad quis.
-        logoURL: Exercitationem dignissimos est dolores sequi cumque.
-        title: Dolorum accusantium eos accusantium molestias.
-        token: Eligendi sit sed nobis.
-        tokenAllocation: 3786236844148253728
-        type: Suscipit error ea.
-      - author: Sunt voluptatum recusandae facilis perferendis.
+          logoURL: Hic illum veniam magni nam perferendis.
+          name: Quis ut unde aliquam voluptatibus.
+        description: Officiis ad quis.
+        id: Exercitationem dignissimos est dolores sequi cumque.
+        logoURL: Dolorum accusantium eos accusantium molestias.
+        title: Eligendi sit sed nobis.
+        token: Non suscipit error ea incidunt aut qui.
+        tokenAllocation: 8751277579802007077
+        type: Ipsa et ea porro sunt facilis.
+      - author: Non enim.
         badge:
           description: Eaque facere voluptates consequatur nihil odit.
           id: Quam quae aut cumque consequatur asperiores.
-          name: Hic illum veniam magni nam perferendis.
-          recipients: 7796898160710639916
-        description: Ut et non enim.
-        id: Officiis ad quis.
-        logoURL: Exercitationem dignissimos est dolores sequi cumque.
-        title: Dolorum accusantium eos accusantium molestias.
-        token: Eligendi sit sed nobis.
-        tokenAllocation: 3786236844148253728
-        type: Suscipit error ea.
-      - author: Sunt voluptatum recusandae facilis perferendis.
+          logoURL: Hic illum veniam magni nam perferendis.
+          name: Quis ut unde aliquam voluptatibus.
+        description: Officiis ad quis.
+        id: Exercitationem dignissimos est dolores sequi cumque.
+        logoURL: Dolorum accusantium eos accusantium molestias.
+        title: Eligendi sit sed nobis.
+        token: Non suscipit error ea incidunt aut qui.
+        tokenAllocation: 8751277579802007077
+        type: Ipsa et ea porro sunt facilis.
+      - author: Non enim.
         badge:
           description: Eaque facere voluptates consequatur nihil odit.
           id: Quam quae aut cumque consequatur asperiores.
-          name: Hic illum veniam magni nam perferendis.
-          recipients: 7796898160710639916
-        description: Ut et non enim.
-        id: Officiis ad quis.
-        logoURL: Exercitationem dignissimos est dolores sequi cumque.
-        title: Dolorum accusantium eos accusantium molestias.
-        token: Eligendi sit sed nobis.
-        tokenAllocation: 3786236844148253728
-        type: Suscipit error ea.
+          logoURL: Hic illum veniam magni nam perferendis.
+          name: Quis ut unde aliquam voluptatibus.
+        description: Officiis ad quis.
+        id: Exercitationem dignissimos est dolores sequi cumque.
+        logoURL: Dolorum accusantium eos accusantium molestias.
+        title: Eligendi sit sed nobis.
+        token: Non suscipit error ea incidunt aut qui.
+        tokenAllocation: 8751277579802007077
+        type: Ipsa et ea porro sunt facilis.
     properties:
       tasks:
         $ref: '#/definitions/TaskCollection'
@@ -745,11 +730,11 @@ definitions:
   TypeformCalculatedPayload:
     description: Typeform calculatd data
     example:
-      score: 2610259656744398048
+      score: 1693829049351308170
     properties:
       score:
         description: Score
-        example: 2610259656744398048
+        example: 1693829049351308170
         format: int64
         type: integer
     title: TypeformCalculatedPayload
@@ -757,28 +742,28 @@ definitions:
   TypeformFormPayload:
     description: Typeform form data
     example:
-      answers: "1989-05-30T00:01:56Z"
+      answers: 2610259656744398048
       calculated:
-        score: 2610259656744398048
-      definition: false
-      form_id: Inventore iusto ducimus temporibus.
+        score: 1693829049351308170
+      definition: 0.059389719152862716
+      form_id: Iusto ducimus temporibus et.
       hidden:
-        user_id: Delectus non tenetur dolores culpa recusandae.
+        user_id: Non tenetur dolores culpa recusandae.
       landed_at: Dolor culpa dignissimos.
       submitted_at: Dolore ipsum fuga ipsam et iste.
       token: Aut saepe atque fugit.
     properties:
       answers:
         description: Answers
-        example: "1989-05-30T00:01:56Z"
+        example: 2610259656744398048
       calculated:
         $ref: '#/definitions/TypeformCalculatedPayload'
       definition:
         description: Definition
-        example: false
+        example: 0.059389719152862716
       form_id:
         description: Form ID
-        example: Inventore iusto ducimus temporibus.
+        example: Iusto ducimus temporibus et.
         type: string
       hidden:
         $ref: '#/definitions/TypeformHiddenPayload'
@@ -799,38 +784,38 @@ definitions:
   TypeformHiddenPayload:
     description: Typeform hidden data
     example:
-      user_id: Delectus non tenetur dolores culpa recusandae.
+      user_id: Non tenetur dolores culpa recusandae.
     properties:
       user_id:
         description: User ID
-        example: Delectus non tenetur dolores culpa recusandae.
+        example: Non tenetur dolores culpa recusandae.
         type: string
     title: TypeformHiddenPayload
     type: object
   TypeformPayload:
     description: Typeform payload
     example:
-      event_id: Aut accusantium labore.
-      event_type: Dolor odio sunt sed culpa incidunt nobis.
+      event_id: Labore ut dolor odio sunt.
+      event_type: Culpa incidunt nobis autem.
       form_response:
-        answers: "1989-05-30T00:01:56Z"
+        answers: 2610259656744398048
         calculated:
-          score: 2610259656744398048
-        definition: false
-        form_id: Inventore iusto ducimus temporibus.
+          score: 1693829049351308170
+        definition: 0.059389719152862716
+        form_id: Iusto ducimus temporibus et.
         hidden:
-          user_id: Delectus non tenetur dolores culpa recusandae.
+          user_id: Non tenetur dolores culpa recusandae.
         landed_at: Dolor culpa dignissimos.
         submitted_at: Dolore ipsum fuga ipsam et iste.
         token: Aut saepe atque fugit.
     properties:
       event_id:
         description: Event ID
-        example: Aut accusantium labore.
+        example: Labore ut dolor odio sunt.
         type: string
       event_type:
         description: Event types
-        example: Dolor odio sunt sed culpa incidunt nobis.
+        example: Culpa incidunt nobis autem.
         type: string
       form_response:
         $ref: '#/definitions/TypeformFormPayload'
@@ -840,7 +825,7 @@ definitions:
     description: Update Reddit User payload
     example:
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      username: Laudantium qui eaque dolorem nostrum.
+      username: Est voluptas temporibus.
     properties:
       userId:
         description: User ID
@@ -849,7 +834,7 @@ definitions:
         type: string
       username:
         description: Reddit Username
-        example: Laudantium qui eaque dolorem nostrum.
+        example: Est voluptas temporibus.
         type: string
     required:
     - userId
@@ -859,12 +844,12 @@ definitions:
   UpdateStackOverflowUserPayload:
     description: Update Stack Overflow User payload
     example:
-      stackUserId: 3706076214951106465
+      stackUserId: 7310822479299914746
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
     properties:
       stackUserId:
         description: Stack Overflow Community-Specific Account ID
-        example: 3706076214951106465
+        example: 7310822479299914746
         format: int64
         type: integer
       userId:
@@ -880,26 +865,26 @@ definitions:
   User:
     description: A user (default view)
     example:
-      cognitoAuthUserId: Facilis alias blanditiis qui rerum totam.
-      id: Amet reiciendis velit facilis natus neque pariatur.
-      name: Officiis eos id sit amet non.
-      walletAddress: Id omnis sit et molestias sed possimus.
+      cognitoAuthUserId: Velit facilis natus neque pariatur.
+      id: Officiis eos id sit amet non.
+      name: Id omnis sit et molestias sed possimus.
+      walletAddress: Et fugit non quia aliquam voluptatem.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Facilis alias blanditiis qui rerum totam.
+        example: Velit facilis natus neque pariatur.
         type: string
       id:
         description: Unique user ID
-        example: Amet reiciendis velit facilis natus neque pariatur.
+        example: Officiis eos id sit amet non.
         type: string
       name:
         description: Name of user
-        example: Officiis eos id sit amet non.
+        example: Id omnis sit et molestias sed possimus.
         type: string
       walletAddress:
         description: Wallet address
-        example: Id omnis sit et molestias sed possimus.
+        example: Et fugit non quia aliquam voluptatem.
         type: string
     required:
     - id
@@ -908,11 +893,11 @@ definitions:
   UserPayload:
     description: User payload
     example:
-      cognitoAuthUserId: Error at nemo eligendi consequuntur.
+      cognitoAuthUserId: Eius omnis.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Error at nemo eligendi consequuntur.
+        example: Eius omnis.
         type: string
     required:
     - cognitoAuthUserId
@@ -921,17 +906,17 @@ definitions:
   Verification:
     description: Account Verification (default view)
     example:
-      confirmedVerificationCode: Ut qui dolores expedita est.
-      postedVerificationCode: Animi ipsum iusto.
+      confirmedVerificationCode: Animi ipsum iusto.
+      postedVerificationCode: Quia autem sed et facilis earum deserunt.
       verified: false
     properties:
       confirmedVerificationCode:
         description: Confirmed Verification Code
-        example: Ut qui dolores expedita est.
+        example: Animi ipsum iusto.
         type: string
       postedVerificationCode:
         description: Posted Verification Code
-        example: Animi ipsum iusto.
+        example: Quia autem sed et facilis earum deserunt.
         type: string
       verified:
         description: Account Verified Flag
@@ -960,16 +945,16 @@ definitions:
   Wallet:
     description: A wallet (default view)
     example:
-      address: Fuga natus tempora maiores assumenda.
-      walletType: Distinctio quo blanditiis perferendis et facilis aspernatur.
+      address: Blanditiis perferendis.
+      walletType: Facilis aspernatur.
     properties:
       address:
         description: wallet address
-        example: Fuga natus tempora maiores assumenda.
+        example: Blanditiis perferendis.
         type: string
       walletType:
         description: wallet type
-        example: Distinctio quo blanditiis perferendis et facilis aspernatur.
+        example: Facilis aspernatur.
         type: string
     required:
     - address
@@ -980,10 +965,10 @@ definitions:
     description: WalletCollection is the media type for an array of Wallet (default
       view)
     example:
-    - address: Fuga natus tempora maiores assumenda.
-      walletType: Distinctio quo blanditiis perferendis et facilis aspernatur.
-    - address: Fuga natus tempora maiores assumenda.
-      walletType: Distinctio quo blanditiis perferendis et facilis aspernatur.
+    - address: Blanditiis perferendis.
+      walletType: Facilis aspernatur.
+    - address: Blanditiis perferendis.
+      walletType: Facilis aspernatur.
     items:
       $ref: '#/definitions/Wallet'
     title: 'Mediatype identifier: application/vnd.wallet+json; type=collection; view=default'
@@ -993,7 +978,7 @@ definitions:
     example:
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
       walletAddress: 0x845fdD93Cca3aE9e380d5556818e6d0b902B977c
-      walletType: Rerum eius omnis corporis sint reprehenderit repellendus.
+      walletType: Sint reprehenderit repellendus ut aut.
     properties:
       userId:
         description: User ID
@@ -1007,7 +992,7 @@ definitions:
         type: string
       walletType:
         description: wallet type
-        example: Rerum eius omnis corporis sint reprehenderit repellendus.
+        example: Sint reprehenderit repellendus ut aut.
         type: string
     required:
     - userId
@@ -1019,8 +1004,8 @@ definitions:
     description: Wallets (default view)
     example:
       wallets:
-      - address: Fuga natus tempora maiores assumenda.
-        walletType: Distinctio quo blanditiis perferendis et facilis aspernatur.
+      - address: Blanditiis perferendis.
+        walletType: Facilis aspernatur.
     properties:
       wallets:
         $ref: '#/definitions/WalletCollection'
