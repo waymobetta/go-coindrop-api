@@ -31,6 +31,7 @@ func (c *BadgesController) Create(ctx *app.CreateBadgesContext) error {
 	badge := &types.Badge{
 		Name:        ctx.Payload.Name,
 		Description: ctx.Payload.Description,
+		LogoURL:     ctx.Payload.LogoURL,
 	}
 
 	err := c.db.AddBadge(badge)
@@ -46,6 +47,7 @@ func (c *BadgesController) Create(ctx *app.CreateBadgesContext) error {
 		ID:          badge.ID,
 		Name:        badge.Name,
 		Description: badge.Description,
+		LogoURL:     badge.LogoURL,
 	}
 	return ctx.OK(res)
 	// BadgesController_Create: end_implement
@@ -80,6 +82,7 @@ func (c *BadgesController) List(ctx *app.ListBadgesContext) error {
 			ID:          badge.ID,
 			Name:        badge.Name,
 			Description: badge.Description,
+			LogoURL:     badge.LogoURL,
 		})
 	}
 
@@ -115,6 +118,7 @@ func (c *BadgesController) Show(ctx *app.ShowBadgesContext) error {
 			ID:          badge.ID,
 			Name:        badge.Name,
 			Description: badge.Description,
+			LogoURL:     badge.LogoURL,
 		})
 	}
 
