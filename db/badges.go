@@ -12,7 +12,8 @@ func (db *DB) GetBadges() ([]types.Badge, error) {
 		SELECT 
 			coindrop_badges.id,
 			coindrop_badges.name,
-			coindrop_badges.description
+			coindrop_badges.description,
+			coindrop_badges.logo_url
 		FROM
 			coindrop_badges
 	`
@@ -33,6 +34,7 @@ func (db *DB) GetBadges() ([]types.Badge, error) {
 			&badge.ID,
 			&badge.Name,
 			&badge.Description,
+			&badge.LogoURL,
 		)
 		if err != nil {
 			return nil, err
@@ -58,7 +60,8 @@ func (db *DB) GetUserBadges(userID string) ([]types.Badge, error) {
 		SELECT
 			coindrop_badges.id,
 			coindrop_badges.name,
-			coindrop_badges.description
+			coindrop_badges.description,
+			coindrop_badges.logo_url
 		FROM
 			coindrop_badges
 		JOIN
@@ -89,6 +92,7 @@ func (db *DB) GetUserBadges(userID string) ([]types.Badge, error) {
 			&badge.ID,
 			&badge.Name,
 			&badge.Description,
+			&badge.LogoURL,
 		)
 		if err != nil {
 			return nil, err
@@ -119,12 +123,14 @@ func (db *DB) AddBadge(badge *types.Badge) error {
 			coindrop_badges
 			(
 				name,
-				description
+				description,
+				logo_url
 			)
 		VALUES
 			(
 				$1,
-				$2	
+				$2,
+				$3
 			)
 	`
 
@@ -140,6 +146,7 @@ func (db *DB) AddBadge(badge *types.Badge) error {
 	_, err = stmt.Exec(
 		badge.Name,
 		badge.Description,
+		badge.LogoURL,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
