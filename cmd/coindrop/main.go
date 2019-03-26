@@ -118,8 +118,11 @@ func main() {
 	stackOverflowHarvestCtrlr := controllers.NewStackoverflowharvestController(service, dbs)
 	app.MountStackoverflowharvestController(service, stackOverflowHarvestCtrlr)
 
-	// webhooksCtrlr := controllers.NewWebhooksController(service, dbs)
-	// app.MountWebhooksController(service, webhooksCtrlr)
+	badgesCtrlr := controllers.NewBadgesController(service, dbs)
+	app.MountBadgesController(service, badgesCtrlr)
+
+	webhooksCtrlr := controllers.NewWebhooksController(service, dbs)
+	app.MountWebhooksController(service, webhooksCtrlr)
 
 	// goa handler
 	goaHandler := c.Handler(mw.RateLimitHandler(service.Server.Handler))
