@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"github.com/goadesign/goa"
+	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
 	"github.com/waymobetta/go-coindrop-api/types"
-	"google.golang.org/appengine/log"
 )
 
 // BadgesController implements the badges resource.
