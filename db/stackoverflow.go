@@ -18,7 +18,6 @@ func (db *DB) AddStackUser(u *types.User) (*types.User, error) {
 		INSERT INTO 
 			coindrop_stackoverflow 
 			(
-				user_id, 
 				exchange_account_id,
 				stack_user_id,
 				display_name,
@@ -33,8 +32,7 @@ func (db *DB) AddStackUser(u *types.User) (*types.User, error) {
 				$3,
 				$4,
 				$5,
-				$6,
-				$7
+				$6
 			)
 	`
 
@@ -48,7 +46,6 @@ func (db *DB) AddStackUser(u *types.User) (*types.User, error) {
 
 	// execute db write using unique seller info hash to access data
 	_, err = stmt.Exec(
-		&u.CognitoAuthUserID,
 		&u.Social.StackOverflow.ExchangeAccountID,
 		&u.Social.StackOverflow.StackUserID,
 		&u.Social.StackOverflow.DisplayName,
