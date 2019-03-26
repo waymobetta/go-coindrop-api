@@ -15,8 +15,12 @@ var UserPayload = Type("UserPayload", func() {
 // CreateBadgePayload is the payload for creating a badge
 var CreateBadgePayload = Type("CreateBadgePayload", func() {
 	Description("Create Badge payload")
-	Attribute("badgeId", String, "Badge ID")
-	Required("badgeId")
+	Attribute("name", String, "Badge name")
+	Attribute("description", String, "Badge description")
+	Required(
+		"name",
+		"description",
+	)
 })
 
 // CreateTaskPayload is the payload for creating a task
