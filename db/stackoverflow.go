@@ -77,7 +77,8 @@ func (db *DB) AddStackUser(u *types.User) (*types.User, error) {
 func (db *DB) GetStackUser(u *types.User) (*types.User, error) {
 	// create SQL statement for db writes
 	sqlStatement := `
-		SELECT 
+		SELECT
+			coindrop_stackoverflow.id,
 			coindrop_stackoverflow.exchange_account_id,
 			coindrop_stackoverflow.stack_user_id,
 			coindrop_stackoverflow.display_name,
@@ -104,6 +105,7 @@ func (db *DB) GetStackUser(u *types.User) (*types.User, error) {
 
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
+		&u.Social.StackOverflow.ID,
 		&u.Social.StackOverflow.ExchangeAccountID,
 		&u.Social.StackOverflow.StackUserID,
 		&u.Social.StackOverflow.DisplayName,
