@@ -315,12 +315,12 @@ func (db *DB) UpdateRedditInfo(u *types.User) (*types.User, error) {
 		UPDATE
 			coindrop_reddit
 		SET
-			coindrop_reddit.comment_karma = $1,
-			coindrop_reddit.link_karma = $2,
-			coindrop_reddit.subreddits = $3,
-			coindrop_reddit.trophies = $4
+			comment_karma = $1,
+			link_karma = $2,
+			subreddits = $3,
+			trophies = $4
 		WHERE
-			coindrop_reddit.user_id = $5
+			user_id = $5
 	`
 
 	// prepare statement
@@ -371,10 +371,10 @@ func (db *DB) UpdateRedditVerificationCode(u *types.User) (*types.User, error) {
 		UPDATE
 			coindrop_reddit
 		SET
-			coindrop_reddit.posted_verification_code = $1,
-			coindrop_reddit.verified = $2
+			posted_verification_code = $1,
+			verified = $2
 		WHERE
-			coindrop_reddit.user_id = $3
+			user_id = $3
 	`
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
