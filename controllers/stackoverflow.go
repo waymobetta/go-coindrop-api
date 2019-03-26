@@ -123,7 +123,7 @@ func (c *StackoverflowController) Update(ctx *app.UpdateStackoverflowContext) er
 		},
 	}
 
-	_, err := c.db.UpdateStackAboutInfo(user)
+	_, err := c.db.AddStackUser(user)
 	if err != nil {
 		log.Errorf("[controller/stackoverflow] %v", err)
 		return ctx.NotFound(&app.StandardError{
@@ -193,7 +193,9 @@ func (c *StackoverflowController) Verify(ctx *app.VerifyStackoverflowContext) er
 	}
 
 	res := &app.Verification{
-		Verified: user.Social.StackOverflow.Verification.Verified,
+		PostedVerificationCode:    user.Social.StackOverflow.Verification.PostedVerificationCode,
+		ConfirmedVerificationCode: user.Social.StackOverflow.Verification.ConfirmedVerificationCode,
+		Verified:                  user.Social.StackOverflow.Verification.Verified,
 	}
 	return ctx.OK(res)
 	// StackoverflowController_Verify: end_implement
