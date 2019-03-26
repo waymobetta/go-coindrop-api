@@ -66,7 +66,7 @@ func (db *DB) AddTask(t *types.Task) (*types.Task, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
-		return t, err
+		return nil, err
 	}
 
 	// create SQL statement for db writes
@@ -96,7 +96,7 @@ func (db *DB) AddTask(t *types.Task) (*types.Task, error) {
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return t, err
+		return nil, err
 	}
 
 	defer stmt.Close()
@@ -113,19 +113,17 @@ func (db *DB) AddTask(t *types.Task) (*types.Task, error) {
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		tx.Rollback()
-		return t, err
+		return nil, tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaciton if error thrown
-		tx.Rollback()
-		return t, err
+		return nil, tx.Rollback()
 	}
 
-	return t, err
+	return t, nil
 }
 
 // GetUserTasks returns all info for specific quiz
