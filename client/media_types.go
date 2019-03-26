@@ -77,6 +77,56 @@ func (c *Client) DecodeBadge(resp *http.Response) (*Badge, error) {
 	return &decoded, err
 }
 
+// BadgeCollection is the media type for an array of Badge (default view)
+//
+// Identifier: application/vnd.badge+json; type=collection; view=default
+type BadgeCollection []*Badge
+
+// Validate validates the BadgeCollection media type instance.
+func (mt BadgeCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// DecodeBadgeCollection decodes the BadgeCollection instance encoded in resp body.
+func (c *Client) DecodeBadgeCollection(resp *http.Response) (BadgeCollection, error) {
+	var decoded BadgeCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
+}
+
+// Badges (default view)
+//
+// Identifier: application/vnd.badges+json; view=default
+type Badges struct {
+	// list of badges
+	Badges BadgeCollection `form:"badges" json:"badges" yaml:"badges" xml:"badges"`
+}
+
+// Validate validates the Badges media type instance.
+func (mt *Badges) Validate() (err error) {
+	if mt.Badges == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "badges"))
+	}
+	if err2 := mt.Badges.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
+	}
+	return
+}
+
+// DecodeBadges decodes the Badges instance encoded in resp body.
+func (c *Client) DecodeBadges(resp *http.Response) (*Badges, error) {
+	var decoded Badges
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // Health check (default view)
 //
 // Identifier: application/vnd.healthcheck+json; view=default

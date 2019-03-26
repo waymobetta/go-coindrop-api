@@ -14,6 +14,43 @@ import (
 	"github.com/goadesign/goa"
 )
 
+// Create Badge payload
+type createBadgePayload struct {
+	// Badge ID
+	BadgeID *string `form:"badgeId,omitempty" json:"badgeId,omitempty" yaml:"badgeId,omitempty" xml:"badgeId,omitempty"`
+}
+
+// Validate validates the createBadgePayload type instance.
+func (ut *createBadgePayload) Validate() (err error) {
+	if ut.BadgeID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "badgeId"))
+	}
+	return
+}
+
+// Publicize creates CreateBadgePayload from createBadgePayload
+func (ut *createBadgePayload) Publicize() *CreateBadgePayload {
+	var pub CreateBadgePayload
+	if ut.BadgeID != nil {
+		pub.BadgeID = *ut.BadgeID
+	}
+	return &pub
+}
+
+// Create Badge payload
+type CreateBadgePayload struct {
+	// Badge ID
+	BadgeID string `form:"badgeId" json:"badgeId" yaml:"badgeId" xml:"badgeId"`
+}
+
+// Validate validates the CreateBadgePayload type instance.
+func (ut *CreateBadgePayload) Validate() (err error) {
+	if ut.BadgeID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "badgeId"))
+	}
+	return
+}
+
 // Create Stack Overflow User payload
 type createStackOverflowUserPayload struct {
 	// Stack Overflow Community-Specific Account ID

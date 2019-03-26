@@ -62,6 +62,42 @@ func (mt *Badge) Validate() (err error) {
 	return
 }
 
+// BadgeCollection is the media type for an array of Badge (default view)
+//
+// Identifier: application/vnd.badge+json; type=collection; view=default
+type BadgeCollection []*Badge
+
+// Validate validates the BadgeCollection media type instance.
+func (mt BadgeCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// Badges (default view)
+//
+// Identifier: application/vnd.badges+json; view=default
+type Badges struct {
+	// list of badges
+	Badges BadgeCollection `form:"badges" json:"badges" yaml:"badges" xml:"badges"`
+}
+
+// Validate validates the Badges media type instance.
+func (mt *Badges) Validate() (err error) {
+	if mt.Badges == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "badges"))
+	}
+	if err2 := mt.Badges.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
+	}
+	return
+}
+
 // Health check (default view)
 //
 // Identifier: application/vnd.healthcheck+json; view=default

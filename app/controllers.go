@@ -32,6 +32,118 @@ func initService(service *goa.Service) {
 	service.Decoder.Register(goa.NewJSONDecoder, "*/*")
 }
 
+// BadgesController is the controller interface for the Badges actions.
+type BadgesController interface {
+	goa.Muxer
+	Create(*CreateBadgesContext) error
+	List(*ListBadgesContext) error
+	Show(*ShowBadgesContext) error
+}
+
+// MountBadgesController "mounts" a Badges resource controller on the given service.
+func MountBadgesController(service *goa.Service, ctrl BadgesController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/v1/badges", ctrl.MuxHandler("preflight", handleBadgesOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/badges/:userId", ctrl.MuxHandler("preflight", handleBadgesOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateBadgesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*CreateBadgePayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleBadgesOrigin(h)
+	service.Mux.Handle("POST", "/v1/badges", ctrl.MuxHandler("create", h, unmarshalCreateBadgesPayload))
+	service.LogInfo("mount", "ctrl", "Badges", "action", "Create", "route", "POST /v1/badges", "security", "JWTAuth")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListBadgesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleBadgesOrigin(h)
+	service.Mux.Handle("GET", "/v1/badges/:userId", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Badges", "action", "List", "route", "GET /v1/badges/:userId", "security", "JWTAuth")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowBadgesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleBadgesOrigin(h)
+	service.Mux.Handle("GET", "/v1/badges", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Badges", "action", "Show", "route", "GET /v1/badges", "security", "JWTAuth")
+}
+
+// handleBadgesOrigin applies the CORS response headers corresponding to the origin.
+func handleBadgesOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "*") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "OPTIONS, HEAD, POST, GET, UPDATE, DELETE, PATCH")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalCreateBadgesPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateBadgesPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &createBadgePayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
 // HealthcheckController is the controller interface for the Healthcheck actions.
 type HealthcheckController interface {
 	goa.Muxer

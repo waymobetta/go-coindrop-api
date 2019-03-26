@@ -15,6 +15,11 @@ import (
 	"strings"
 )
 
+// BadgesHref returns the resource href.
+func BadgesHref() string {
+	return "/v1/badges"
+}
+
 // HealthcheckHref returns the resource href.
 func HealthcheckHref() string {
 	return "/v1/health"
