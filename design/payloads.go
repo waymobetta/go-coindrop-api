@@ -12,6 +12,13 @@ var UserPayload = Type("UserPayload", func() {
 	Required("cognitoAuthUserId")
 })
 
+// CreateBadgePayload is the payload for creating a badge
+var CreateBadgePayload = Type("CreateBadgePayload", func() {
+	Description("Create Badge payload")
+	Attribute("badgeId", String, "Badge ID")
+	Required("badgeId")
+})
+
 // CreateTaskPayload is the payload for creating a task
 var CreateTaskPayload = Type("CreateTaskPayload", func() {
 	Description("Create Task payload")
