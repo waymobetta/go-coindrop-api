@@ -83,6 +83,7 @@ func (c *StackoverflowController) Show(ctx *app.ShowStackoverflowContext) error 
 	}
 
 	res := &app.Stackoverflowuser{
+		ID:                user.Social.StackOverflow.ID,
 		DisplayName:       user.Social.StackOverflow.DisplayName,
 		StackUserID:       user.Social.StackOverflow.StackUserID,
 		ExchangeAccountID: user.Social.StackOverflow.ExchangeAccountID,
@@ -191,10 +192,8 @@ func (c *StackoverflowController) Verify(ctx *app.VerifyStackoverflowContext) er
 		})
 	}
 
-	res := &app.Stackoverflowuser{
-		Verification: &app.Verification{
-			Verified: user.Social.StackOverflow.Verification.Verified,
-		},
+	res := &app.Verification{
+		Verified: user.Social.StackOverflow.Verification.Verified,
 	}
 	return ctx.OK(res)
 	// StackoverflowController_Verify: end_implement
