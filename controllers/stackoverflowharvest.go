@@ -40,7 +40,7 @@ func (c *StackoverflowharvestController) Update(ctx *app.UpdateStackoverflowharv
 	log.Println("[handler] retrieving Stack Overflow About info")
 	// get general about info for user
 
-	err := stackoverflow.GetProfileByUserID(user)
+	aboutProfile, err := stackoverflow.GetProfileByUserID(user)
 	if err != nil {
 		log.Errorf("[controller/stackoverflow] %v", err)
 		return ctx.NotFound(&app.StandardError{
@@ -48,6 +48,9 @@ func (c *StackoverflowharvestController) Update(ctx *app.UpdateStackoverflowharv
 			Message: "could not retrieve Stack Overflow About info",
 		})
 	}
+
+	// set accounts as empty slice
+	user.Social.StackOverflow.Accounts = []string{}
 
 	log.Println("[handler] retrieving Stack Overflow associated accounts info")
 	// get list of trophies user has been awarded
@@ -64,8 +67,8 @@ func (c *StackoverflowharvestController) Update(ctx *app.UpdateStackoverflowharv
 		CognitoAuthUserID: ctx.Payload.UserID,
 		Social: &types.Social{
 			StackOverflow: &types.StackOverflow{
-				DisplayName:       user.Social.StackOverflow.DisplayName,
-				ExchangeAccountID: user.Social.StackOverflow.ExchangeAccountID,
+				DisplayName:       aboutProfile.Items[0].DisplayName,
+				ExchangeAccountID: aboutProfile.Items[0].AccountID,
 				Accounts:          user.Social.StackOverflow.Accounts,
 				// Communities:       user.Social.StackOverflow.Communities,
 				Verification: &types.Verification{
