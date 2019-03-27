@@ -25,6 +25,8 @@ var CreateBadgePayload = Type("CreateBadgePayload", func() {
 	)
 })
 
+// TODO:
+// Need to add more data fields
 // CreateTaskPayload is the payload for creating a task
 var CreateTaskPayload = Type("CreateTaskPayload", func() {
 	Description("Create Task payload")
