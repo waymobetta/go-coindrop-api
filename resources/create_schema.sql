@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS coindrop_tasks (
   token_name text,
   token_allocation integer,
   badge_id uuid REFERENCES coindrop_badges(id),
+  quiz_id uuid REFERENCES coindrop_quizzes(id),
   logo_url text,
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone
