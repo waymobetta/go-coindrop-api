@@ -71,7 +71,7 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 		QuestionsIncorrect: incorrect,
 	}
 
-	log.Print("[controller/hooks] input data\n")
+	log.Print("[controller/webhooks] input data\n")
 	spew.Dump(results)
 
 	_, err := c.db.AddQuizResults(results)
