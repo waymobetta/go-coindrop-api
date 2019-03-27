@@ -131,11 +131,12 @@ func (db *DB) AddTask(t *types.Task) (*types.Task, error) {
 }
 
 // GetUserTasks returns all info for specific quiz
-func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
+func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, string, error) {
 	tasks := []types.Task{}
+	var quizURL string
 
 	sqlStatement := `
-	SELECT
+		SELECT
 		coindrop_tasks.id,
 		coindrop_tasks.title,
 		coindrop_tasks.type,
@@ -143,22 +144,35 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 		coindrop_tasks.description,
 		coindrop_tasks.token_name,
 		coindrop_tasks.token_allocation,
+		coindrop_badges.name,
+		coindrop_badges.description,
+		coindrop_badges.logo_url,
 		coindrop_tasks.badge_id,
 		coindrop_tasks.logo_url,
-		coindrop_tasks.quiz_id
+		coindrop_tasks.quiz_id,
+		coindrop_quizzes.typeform_form_url,
+		coindrop_user_tasks.completed
 	FROM
 		coindrop_tasks
 	JOIN
 		coindrop_user_tasks
 	ON
 		coindrop_tasks.id = coindrop_user_tasks.task_id
+	JOIN
+		coindrop_badges
+	ON
+		coindrop_tasks.badge_id = coindrop_badges.id
+	JOIN
+		coindrop_quizzes
+	ON
+		coindrop_quizzes.id = coindrop_tasks.quiz_id
 	WHERE
 		coindrop_user_tasks.user_id = $1
 	`
 
 	rows, err := db.client.Query(sqlStatement, t.UserID)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
 	defer rows.Close()
@@ -175,6 +189,7 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 			badgeID         sql.NullString
 			logoURL         sql.NullString
 			quizID          sql.NullString
+			typeformURL     sql.NullString
 		)
 
 		err = rows.Scan(
@@ -185,12 +200,17 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 			&taskDescription,
 			&tokenName,
 			&tokenAllocation,
+			&task.BadgeData.Name,
+			&task.BadgeData.Description,
+			&task.BadgeData.LogoURL,
 			&badgeID,
 			&logoURL,
 			&quizID,
+			&typeformURL,
+			&task.Completed,
 		)
 		if err != nil {
-			return nil, err
+			return nil, "", err
 		}
 
 		task.Description = taskDescription.String
@@ -199,6 +219,7 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 		task.BadgeData.ID = badgeID.String
 		task.LogoURL = logoURL.String
 		task.QuizID = quizID.String
+		quizURL = typeformURL.String
 
 		// append task object to slice of tasks
 		tasks = append(tasks, task)
@@ -206,14 +227,14 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 
 	err = rows.Err()
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
-	return tasks, nil
+	return tasks, quizURL, nil
 }
 
 // GetUserTask returns all info for specific quiz
-func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
+func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, string, error) {
 	sqlStatement := `
 	SELECT
 		coindrop_tasks.id,
@@ -223,15 +244,28 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 		coindrop_tasks.description,
 		coindrop_tasks.token_name,
 		coindrop_tasks.token_allocation,
+		coindrop_badges.name,
+		coindrop_badges.description,
+		coindrop_badges.logo_url,
 		coindrop_tasks.badge_id,
 		coindrop_tasks.logo_url,
-		coindrop_tasks.quiz_id
+		coindrop_tasks.quiz_id,
+		coindrop_quizzes.typeform_form_url,
+		coindrop_user_tasks.completed
 	FROM
 		coindrop_tasks
 	JOIN
 		coindrop_user_tasks
 	ON
 		coindrop_tasks.id = coindrop_user_tasks.task_id
+	JOIN
+		coindrop_badges
+	ON
+		coindrop_tasks.badge_id = coindrop_badges.id
+	JOIN
+		coindrop_quizzes
+	ON
+		coindrop_quizzes.id = coindrop_tasks.quiz_id
 	WHERE
 		coindrop_user_tasks.user_id $1
 	AND
@@ -242,7 +276,7 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 
 	rows, err := db.client.Query(sqlStatement, t.UserID, t.TaskID)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
 	defer rows.Close()
@@ -251,6 +285,7 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 	task := &types.Task{
 		BadgeData: new(types.Badge),
 	}
+	var quizURL string
 
 	// iterate over rows
 	for rows.Next() {
@@ -261,6 +296,7 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 			badgeID         sql.NullString
 			logoURL         sql.NullString
 			quizID          sql.NullString
+			typeformURL     sql.NullString
 		)
 
 		err = rows.Scan(
@@ -271,12 +307,17 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 			&taskDescription,
 			&tokenName,
 			&tokenAllocation,
+			&task.BadgeData.Name,
+			&task.BadgeData.Description,
+			&task.BadgeData.LogoURL,
 			&badgeID,
 			&logoURL,
 			&quizID,
+			&typeformURL,
+			&task.Completed,
 		)
 		if err != nil {
-			return nil, err
+			return nil, "", err
 		}
 
 		task.Description = taskDescription.String
@@ -285,14 +326,15 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 		task.BadgeData.ID = badgeID.String
 		task.LogoURL = logoURL.String
 		task.QuizID = quizID.String
+		quizURL = typeformURL.String
 	}
 
 	err = rows.Err()
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
-	return task, nil
+	return task, quizURL, nil
 }
 
 // AddUserTask adds the listing and associated task data of a specific user
