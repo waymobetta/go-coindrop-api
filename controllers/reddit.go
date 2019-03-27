@@ -29,8 +29,13 @@ func (c *RedditController) Show(ctx *app.ShowRedditContext) error {
 
 	// Put your logic here
 
+	userID := ctx.Params.Get("userId")
+	if userID == "" {
+		userID = ctx.Value("authUserID").(string)
+	}
+
 	user := &types.User{
-		UserID: ctx.Params.Get("userId"),
+		UserID: userID,
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Verification: &types.Verification{},
@@ -69,11 +74,6 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 	// RedditController_Create: start_implement
 
 	// Put your logic here
-
-	// userID := ctx.Value("authUserID").(string)
-
-	// TODO:
-	// fix to prevent creating duplicates
 
 	user := &types.User{
 		UserID: ctx.Payload.UserID,
@@ -116,8 +116,13 @@ func (c *RedditController) Display(ctx *app.DisplayRedditContext) error {
 
 	// Put your logic here
 
+	userID := ctx.Params.Get("userId")
+	if userID == "" {
+		userID = ctx.Value("authUserID").(string)
+	}
+
 	user := &types.User{
-		UserID: ctx.Params.Get("userId"),
+		UserID: userID,
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Verification: &types.Verification{},
