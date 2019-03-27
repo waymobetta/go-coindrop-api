@@ -29,6 +29,7 @@ func (c *StackoverflowharvestController) Update(ctx *app.UpdateStackoverflowharv
 
 	// Put your logic here
 	user := &types.User{
+		UserID: ctx.Payload.UserID,
 		Social: &types.Social{
 			StackOverflow: &types.StackOverflow{
 				StackUserID:  ctx.Payload.StackUserID,
@@ -37,7 +38,7 @@ func (c *StackoverflowharvestController) Update(ctx *app.UpdateStackoverflowharv
 		},
 	}
 
-	log.Println("[handler] retrieving Stack Overflow About info")
+	log.Println("[controller/stackoverflowharvest] retrieving Stack Overflow About info")
 	// get general about info for user
 
 	aboutProfile, err := stackoverflow.GetProfileByUserID(user)
@@ -52,11 +53,11 @@ func (c *StackoverflowharvestController) Update(ctx *app.UpdateStackoverflowharv
 	// set accounts as empty slice
 	user.Social.StackOverflow.Accounts = []string{}
 
-	log.Println("[handler] retrieving Stack Overflow associated accounts info")
+	log.Println("[controller/stackoverflowharvest] retrieving Stack Overflow associated accounts info")
 	// get list of trophies user has been awarded
 	err = stackoverflow.GetAssociatedAccounts(user)
 	if err != nil {
-		log.Errorf("[controller/stackoverflow] %v", err)
+		log.Errorf("[controller/stackoverflowharvest] %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
 			Message: "could not retrieve Stack Overflow Associated Account info",
@@ -64,7 +65,6 @@ func (c *StackoverflowharvestController) Update(ctx *app.UpdateStackoverflowharv
 	}
 
 	user = &types.User{
-		CognitoAuthUserID: ctx.Payload.UserID,
 		Social: &types.Social{
 			StackOverflow: &types.StackOverflow{
 				DisplayName:       aboutProfile.Items[0].DisplayName,
@@ -80,14 +80,17 @@ func (c *StackoverflowharvestController) Update(ctx *app.UpdateStackoverflowharv
 		},
 	}
 
+	log.Println("[controller/stackoverflowharvest] retrieving Stack Overflow associated accounts info")
 	_, err = c.db.UpdateStackAboutInfo(user)
 	if err != nil {
-		log.Errorf("[controller/stackoverflow] %v", err)
+		log.Errorf("[controller/stackoverflowharvest] %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
 			Message: "could not update Stack Overflow user listing in db",
 		})
 	}
+
+	log.Println("[controller/stackoverflowharvest] retrieving Stack Overflow associated accounts info")
 
 	res := &app.Stackoverflowuser{
 		DisplayName:       user.Social.StackOverflow.DisplayName,
