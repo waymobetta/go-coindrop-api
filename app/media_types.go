@@ -397,6 +397,8 @@ type Task struct {
 	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
 	// logo URL
 	LogoURL string `form:"logoURL" json:"logoURL" yaml:"logoURL" xml:"logoURL"`
+	// quiz ID
+	QuizID string `form:"quizId" json:"quizId" yaml:"quizId" xml:"quizId"`
 	// task title
 	Title string `form:"title" json:"title" yaml:"title" xml:"title"`
 	// task token
@@ -433,6 +435,9 @@ func (mt *Task) Validate() (err error) {
 	}
 	if mt.LogoURL == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "logoURL"))
+	}
+	if mt.QuizID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "quizId"))
 	}
 	if mt.Badge != nil {
 		if err2 := mt.Badge.Validate(); err2 != nil {
