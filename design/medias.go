@@ -73,6 +73,7 @@ var TaskMedia = MediaType("application/vnd.task+json", func() {
 		Attribute("logoURL", String, "logo URL")
 		Attribute("resourceId", String, "learning resource ID")
 		Attribute("resourceURL", String, "learning resource URL")
+		Attribute("completed", Boolean, "task completed flag")
 		Required(
 			"id",
 			"title",
@@ -85,6 +86,7 @@ var TaskMedia = MediaType("application/vnd.task+json", func() {
 			"logoURL",
 			"resourceId",
 			"resourceURL",
+			"completed",
 		)
 	})
 	View("default", func() {
@@ -99,6 +101,7 @@ var TaskMedia = MediaType("application/vnd.task+json", func() {
 		Attribute("logoURL")
 		Attribute("resourceId")
 		Attribute("resourceURL")
+		Attribute("completed")
 	})
 })
 
