@@ -71,6 +71,7 @@ var TaskMedia = MediaType("application/vnd.task+json", func() {
 		Attribute("tokenAllocation", Integer, "token allocation")
 		Attribute("badge", BadgeMedia, "task badge")
 		Attribute("logoURL", String, "logo URL")
+		Attribute("quizId", String, "quiz ID")
 		Required(
 			"id",
 			"title",
@@ -81,6 +82,7 @@ var TaskMedia = MediaType("application/vnd.task+json", func() {
 			"tokenAllocation",
 			"badge",
 			"logoURL",
+			"quizId",
 		)
 	})
 	View("default", func() {
@@ -93,6 +95,7 @@ var TaskMedia = MediaType("application/vnd.task+json", func() {
 		Attribute("tokenAllocation")
 		Attribute("badge")
 		Attribute("logoURL")
+		Attribute("quizId")
 	})
 })
 
