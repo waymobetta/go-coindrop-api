@@ -103,6 +103,7 @@ type Task struct {
 	TokenAllocation int    `json:"token_allocation"`
 	Type            string `json:"type"`
 	LogoURL         string `json:"logo_url"`
+	QuizID          string `json:"quiz_id"`
 }
 
 // UserTask struct contains info about tasks for a specific user
