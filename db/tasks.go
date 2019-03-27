@@ -18,7 +18,8 @@ func (db *DB) GetTasks(tasks *types.Tasks) (*types.Tasks, error) {
 		 description,
 		 token_name,
 		 token_allocation,
-		 badge_id
+		 badge_id,
+		 quiz_id
 	FROM
 		coindrop_tasks
 	`
@@ -45,6 +46,7 @@ func (db *DB) GetTasks(tasks *types.Tasks) (*types.Tasks, error) {
 			&task.Token,
 			&task.TokenAllocation,
 			&task.BadgeData.ID,
+			&task.QuizID,
 		)
 		if err != nil {
 			return tasks, err
@@ -78,7 +80,8 @@ func (db *DB) AddTask(t *types.Task) (*types.Task, error) {
 			description,
 			token_name,
 			token_allocation,
-			badge_id
+			badge_id,
+			quiz_id
 		)
 	VALUES
 		(
@@ -88,7 +91,8 @@ func (db *DB) AddTask(t *types.Task) (*types.Task, error) {
 			$4,
 			$5,
 			$6,
-			$7
+			$7,
+			$8
 		)
 	`
 
@@ -109,6 +113,7 @@ func (db *DB) AddTask(t *types.Task) (*types.Task, error) {
 		t.Token,
 		t.TokenAllocation,
 		t.BadgeData.ID,
+		t.QuizID,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
@@ -139,7 +144,8 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 		coindrop_tasks.token_name,
 		coindrop_tasks.token_allocation,
 		coindrop_tasks.badge_id,
-		coindrop_tasks.logo_url
+		coindrop_tasks.logo_url,
+		coindrop_tasks.quiz_id
 	FROM
 		coindrop_tasks
 	JOIN
@@ -168,6 +174,7 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 			tokenAllocation sql.NullInt64
 			badgeID         sql.NullString
 			logoURL         sql.NullString
+			quizID          sql.NullString
 		)
 
 		err = rows.Scan(
@@ -180,6 +187,7 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 			&tokenAllocation,
 			&badgeID,
 			&logoURL,
+			&quizID,
 		)
 		if err != nil {
 			return nil, err
@@ -190,6 +198,7 @@ func (db *DB) GetUserTasks(t *types.TaskUser) ([]types.Task, error) {
 		task.TokenAllocation = int(tokenAllocation.Int64)
 		task.BadgeData.ID = badgeID.String
 		task.LogoURL = logoURL.String
+		task.QuizID = quizID.String
 
 		// append task object to slice of tasks
 		tasks = append(tasks, task)
@@ -215,7 +224,8 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 		coindrop_tasks.token_name,
 		coindrop_tasks.token_allocation,
 		coindrop_tasks.badge_id,
-		coindrop_tasks.logo_url
+		coindrop_tasks.logo_url,
+		coindrop_tasks.quiz_id
 	FROM
 		coindrop_tasks
 	JOIN
@@ -250,6 +260,7 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 			tokenAllocation sql.NullInt64
 			badgeID         sql.NullString
 			logoURL         sql.NullString
+			quizID          sql.NullString
 		)
 
 		err = rows.Scan(
@@ -262,6 +273,7 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 			&tokenAllocation,
 			&badgeID,
 			&logoURL,
+			&quizID,
 		)
 		if err != nil {
 			return nil, err
@@ -272,6 +284,7 @@ func (db *DB) GetUserTask(t *types.TaskUser) (*types.Task, error) {
 		task.TokenAllocation = int(tokenAllocation.Int64)
 		task.BadgeData.ID = badgeID.String
 		task.LogoURL = logoURL.String
+		task.QuizID = quizID.String
 	}
 
 	err = rows.Err()
