@@ -490,14 +490,18 @@ type Task struct {
 	Author string `form:"author" json:"author" yaml:"author" xml:"author"`
 	// task badge
 	Badge *Badge `form:"badge" json:"badge" yaml:"badge" xml:"badge"`
+	// task completed flag
+	Completed bool `form:"completed" json:"completed" yaml:"completed" xml:"completed"`
 	// task description
 	Description string `form:"description" json:"description" yaml:"description" xml:"description"`
 	// task ID
 	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
 	// logo URL
 	LogoURL string `form:"logoURL" json:"logoURL" yaml:"logoURL" xml:"logoURL"`
-	// quiz ID
-	QuizID string `form:"quizId" json:"quizId" yaml:"quizId" xml:"quizId"`
+	// learning resource ID
+	ResourceID string `form:"resourceId" json:"resourceId" yaml:"resourceId" xml:"resourceId"`
+	// learning resource URL
+	ResourceURL string `form:"resourceURL" json:"resourceURL" yaml:"resourceURL" xml:"resourceURL"`
 	// task title
 	Title string `form:"title" json:"title" yaml:"title" xml:"title"`
 	// task token
@@ -535,9 +539,13 @@ func (mt *Task) Validate() (err error) {
 	if mt.LogoURL == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "logoURL"))
 	}
-	if mt.QuizID == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "quizId"))
+	if mt.ResourceID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "resourceId"))
 	}
+	if mt.ResourceURL == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "resourceURL"))
+	}
+
 	if mt.Badge != nil {
 		if err2 := mt.Badge.Validate(); err2 != nil {
 			err = goa.MergeErrors(err, err2)
