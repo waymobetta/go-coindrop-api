@@ -228,9 +228,10 @@ func (db *DB) GetQuizResults(quizID, userID string) (*types.QuizResults, error) 
 		FROM
 			coindrop_quiz_results
 		WHERE
-			typeform_form_id = $1
+			quiz_id = $1
 		AND
-			user_id = $2`
+			user_id = $2
+	`
 
 	// execute db query by passing in prepared SQL statement
 	stmt, err := db.client.Prepare(sqlStatement)
@@ -254,8 +255,9 @@ func (db *DB) GetQuizResults(quizID, userID string) (*types.QuizResults, error) 
 		&quizTaken,
 	)
 	if err == sql.ErrNoRows {
-		return nil, nil
+		return nil, err
 	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -274,6 +276,7 @@ func (db *DB) GetAllQuizResults(userID string) ([]*types.QuizResults, error) {
 	// create SQL statement for db query
 	sqlStatement := `
 		SELECT
+			quiz_id,
 			typeform_form_id,
 			questions_correct,
 			questions_incorrect,
@@ -295,6 +298,7 @@ func (db *DB) GetAllQuizResults(userID string) ([]*types.QuizResults, error) {
 
 	for rows.Next() {
 		var quizID sql.NullString
+		var typeformID sql.NullString
 		var questionsCorrect sql.NullInt64
 		var questionsIncorrect sql.NullInt64
 		var quizTaken sql.NullBool
@@ -302,6 +306,7 @@ func (db *DB) GetAllQuizResults(userID string) ([]*types.QuizResults, error) {
 		// iterate over row object to retrieve queried value
 		err = rows.Scan(
 			&quizID,
+			&typeformID,
 			&questionsCorrect,
 			&questionsIncorrect,
 			&quizTaken,
@@ -312,6 +317,7 @@ func (db *DB) GetAllQuizResults(userID string) ([]*types.QuizResults, error) {
 
 		results = append(results, &types.QuizResults{
 			QuizID:             quizID.String,
+			TypeformFormID:     typeformID.String,
 			UserID:             userID,
 			QuestionsCorrect:   int(questionsCorrect.Int64),
 			QuestionsIncorrect: int(questionsIncorrect.Int64),
