@@ -56,6 +56,9 @@ func (c *ResultsController) Show(ctx *app.ShowResultsContext) error {
 
 	quizID := ctx.QuizID
 	userID := ctx.Params.Get("userId")
+	if userID == "" {
+		userID = ctx.Value("authUserID").(string)
+	}
 
 	quizResults, err := c.db.GetQuizResults(quizID, userID)
 	if err != nil {
@@ -90,6 +93,10 @@ func (c *ResultsController) List(ctx *app.ListResultsContext) error {
 	// Put your logic here
 
 	userID := ctx.Params.Get("userId")
+	if userID == "" {
+		userID = ctx.Value("authUserID").(string)
+	}
+
 	quizResults, err := c.db.GetAllQuizResults(userID)
 	if err != nil {
 		log.Errorf("[controller/results] %v", err)
