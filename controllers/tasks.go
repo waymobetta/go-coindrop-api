@@ -37,7 +37,7 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 	taskUser.UserID = userID
 	taskUser.TaskID = ctx.TaskID
 
-	task, err := c.db.GetUserTask(taskUser)
+	task, quizURL, err := c.db.GetUserTask(taskUser)
 	if err != nil {
 		log.Errorf("[controller/tasks] failed to get user task: %v", err)
 		return ctx.InternalServerError(&app.StandardError{
@@ -56,14 +56,16 @@ func (c *TasksController) Show(ctx *app.ShowTasksContext) error {
 		Description:     task.Description,
 		Token:           task.Token,
 		TokenAllocation: task.TokenAllocation,
+		Completed:       task.Completed,
 		Badge: &app.Badge{
 			ID:          task.BadgeData.ID,
 			Name:        task.BadgeData.Name,
 			Description: task.BadgeData.Description,
 			LogoURL:     task.BadgeData.LogoURL,
 		},
-		LogoURL: task.LogoURL,
-		QuizID:  task.QuizID,
+		LogoURL:     task.LogoURL,
+		ResourceID:  task.QuizID,
+		ResourceURL: quizURL,
 	})
 	// TasksController_Show: end_implement
 }
@@ -84,7 +86,7 @@ func (c *TasksController) List(ctx *app.ListTasksContext) error {
 	taskUser := new(types.TaskUser)
 	taskUser.UserID = userID
 
-	tasks, err := c.db.GetUserTasks(taskUser)
+	tasks, quizURL, err := c.db.GetUserTasks(taskUser)
 	if err != nil {
 		log.Errorf("[controller/tasks] failed to get user tasks: %v", err)
 		return ctx.InternalServerError(&app.StandardError{
@@ -104,18 +106,20 @@ func (c *TasksController) List(ctx *app.ListTasksContext) error {
 			Description:     task.Description,
 			Token:           task.Token,
 			TokenAllocation: task.TokenAllocation,
+			Completed:       task.Completed,
 			Badge: &app.Badge{
 				ID:          task.BadgeData.ID,
 				Name:        task.BadgeData.Name,
 				Description: task.BadgeData.Description,
 				LogoURL:     task.BadgeData.LogoURL,
 			},
-			LogoURL: task.LogoURL,
-			QuizID:  task.QuizID,
+			LogoURL:     task.LogoURL,
+			ResourceID:  task.QuizID,
+			ResourceURL: quizURL,
 		})
 	}
 
-	log.Printf("[controller/tasks] returned tasks for coindrop user: %v\n", taskUser.UserID)
+	log.Printf("[controller/tasks] returned %d tasks for coindrop user: %v\n", len(tasks), taskUser.UserID)
 
 	return ctx.OK(&app.Tasks{
 		Tasks: t,
