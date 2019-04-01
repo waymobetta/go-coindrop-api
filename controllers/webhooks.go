@@ -1,7 +1,8 @@
 package controllers
 
 import (
-	"github.com/davecgh/go-spew/spew"
+	"fmt"
+
 	"github.com/goadesign/goa"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
@@ -69,10 +70,12 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 		UserID:             userID,
 		QuestionsCorrect:   correct,
 		QuestionsIncorrect: incorrect,
+		QuizTaken:          true,
 	}
 
 	log.Print("[controller/webhooks] input data\n")
-	spew.Dump(results)
+
+	fmt.Printf("Adding quiz results: \nQuiz ID: %s\nTypeformID: %s\nUserID: %s\nCorrect: %v\nIncorrect: %v\nTaken: %v", results.QuizID, results.TypeformFormID, results.UserID, results.QuestionsCorrect, results.QuestionsIncorrect, results.QuizTaken)
 
 	_, err := c.db.AddQuizResults(results)
 	if err != nil {
