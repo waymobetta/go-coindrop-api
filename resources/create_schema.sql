@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS coindrop_auth (
 );
 
 -- WALLETS
-CREATE TABLE coindrop_wallets (
+CREATE TABLE IF NOT EXISTS coindrop_wallets (
   id uuid DEFAULT uuid_generate_v4() UNIQUE,
   address text,
   user_id uuid REFERENCES coindrop_auth(id),
@@ -30,7 +30,7 @@ CREATE TABLE coindrop_wallets (
 );
 
 -- REDDIT
-CREATE TABLE coindrop_reddit (
+CREATE TABLE IF NOT EXISTS coindrop_reddit (
   id uuid DEFAULT uuid_generate_v4() UNIQUE,
   user_id uuid REFERENCES coindrop_auth(id) UNIQUE,
   username text NOT NULL UNIQUE,
