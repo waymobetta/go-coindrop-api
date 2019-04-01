@@ -27,7 +27,7 @@ func (db *DB) GetTasks(tasks *types.Tasks) (*types.Tasks, error) {
 	// execute db query by passing in prepared SQL statement
 	rows, err := db.client.Query(sqlStatement)
 	if err != nil {
-		return tasks, err
+		return nil, err
 	}
 
 	defer rows.Close()
@@ -49,14 +49,14 @@ func (db *DB) GetTasks(tasks *types.Tasks) (*types.Tasks, error) {
 			&task.QuizID,
 		)
 		if err != nil {
-			return tasks, err
+			return nil, err
 		}
 		// append task object to slice of tasks
 		tasks.Tasks = append(tasks.Tasks, task)
 	}
 	err = rows.Err()
 	if err != nil {
-		return tasks, err
+		return nil, err
 	}
 
 	return tasks, nil
@@ -377,19 +377,17 @@ func (db *DB) AddUserTask(u *types.UserTask) (*types.UserTask, error) {
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
+		return u, tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaciton if error thrown
-		tx.Rollback()
-		return u, err
+		return u, tx.Rollback()
 	}
 
-	return u, err
+	return u, nil
 }
 
 // MarkUserTaskCompleted adds a task to the user's list of completed tasks
@@ -428,17 +426,15 @@ func (db *DB) MarkUserTaskCompleted(u *types.UserTask) (*types.UserTask, error) 
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
+		return u, tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaciton if error thrown
-		tx.Rollback()
-		return u, err
+		return u, tx.Rollback()
 	}
 
-	return u, err
+	return u, nil
 }
