@@ -390,12 +390,74 @@ func (db *DB) AddUserTask(u *types.UserTask) (*types.UserTask, error) {
 	return u, nil
 }
 
+// MarkUserTaskCompletedFromQuiz adds a task to the user's list of completed tasks
+func (db *DB) MarkUserTaskCompletedFromQuiz(r *types.QuizResults) (*types.QuizResults, error) {
+	// initialize statement write to database
+	tx, err := db.client.Begin()
+	if err != nil {
+		return nil, err
+	}
+
+	// create SQL statement for db writes
+	sqlStatement := `
+		UPDATE
+			coindrop_user_tasks
+		SET
+			completed = $1
+		WHERE
+			task_id = (
+				SELECT
+					id
+				FROM
+					coindrop_tasks
+				WHERE
+					quiz_id = (
+						SELECT
+							id
+						FROM
+							coindrop_quizzes
+						WHERE typeform_form_id = $2
+					)
+				)
+				AND
+					user_id = $3
+`
+
+	// prepare statement
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return nil, err
+	}
+
+	defer stmt.Close()
+
+	// execute db write using unique user ID + associated data
+	_, err = stmt.Exec(
+		r.QuizTaken,
+		r.TypeformFormID,
+		r.UserID,
+	)
+	if err != nil {
+		// rollback transaction if error thrown
+		return nil, tx.Rollback()
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaciton if error thrown
+		return nil, tx.Rollback()
+	}
+
+	return r, nil
+}
+
 // MarkUserTaskCompleted adds a task to the user's list of completed tasks
 func (db *DB) MarkUserTaskCompleted(u *types.UserTask) (*types.UserTask, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	// create SQL statement for db writes
@@ -413,7 +475,7 @@ func (db *DB) MarkUserTaskCompleted(u *types.UserTask) (*types.UserTask, error) 
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	defer stmt.Close()
@@ -426,14 +488,14 @@ func (db *DB) MarkUserTaskCompleted(u *types.UserTask) (*types.UserTask, error) 
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		return nil, tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaciton if error thrown
-		return u, tx.Rollback()
+		return nil, tx.Rollback()
 	}
 
 	return u, nil
