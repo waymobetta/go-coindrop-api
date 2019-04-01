@@ -86,6 +86,9 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 		})
 	}
 
+	// TODO:
+	// add token send, badge grant, task completion, etc.
+
 	//fmt.Println(ctx.Payload.FormResponse)
 	return nil
 	// WebhooksController_Typeform: end_implement
