@@ -71,8 +71,6 @@ func SendEther(recipientAddress string, ethAmountInWei int64) (string, error) {
 
 	transaction := signedTx.Hash().Hex()
 
-	log.Printf("https://rinkeby.etherscan.io/tx/%s\n", transaction)
-
 	return transaction, nil
 }
 
@@ -157,6 +155,5 @@ func SendToken(tokenAmount, recipientAddress string) (string, error) {
 
 	transaction := signedTx.Hash().Hex()
 
-	log.Printf("https://rinkeby.etherscan.io/tx/%s\n", transaction)
 	return transaction, nil
 }
