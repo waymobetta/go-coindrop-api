@@ -202,19 +202,17 @@ func (db *DB) AddQuizResults(r *types.QuizResults) (*types.QuizResults, error) {
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		tx.Rollback()
-		return nil, err
+		return nil, tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaciton if error thrown
-		tx.Rollback()
-		return nil, err
+		return nil, tx.Rollback()
 	}
 
-	return r, err
+	return r, nil
 }
 
 // GetQuizResults returns all info for specific quiz
