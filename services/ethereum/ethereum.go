@@ -15,7 +15,7 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
-const (
+var (
 	PRIVATE_KEY            = os.Getenv("RINKEBY_PRIVATE_KEY")
 	TOKEN_CONTRACT_ADDRESS = ""
 )
