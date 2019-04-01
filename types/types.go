@@ -185,8 +185,8 @@ type TypeformWebHookResponse struct {
 		LandedAt    time.Time `json:"landed_at"`
 		SubmittedAt time.Time `json:"submitted_at"`
 		Hidden      struct {
-			Name          string `json:"name"`
-			Walletaddress string `json:"walletaddress"`
+			Name   string `json:"name"`
+			UserID string `json:"user_id"`
 		} `json:"hidden"`
 		Calculated struct {
 			Score int `json:"score"`
