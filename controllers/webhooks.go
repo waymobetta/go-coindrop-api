@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
+	ethsvc "github.com/waymobetta/go-coindrop-api/services/ethereum"
 	"github.com/waymobetta/go-coindrop-api/types"
 )
 
@@ -75,7 +76,7 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 
 	log.Print("[controller/webhooks] input data\n")
 
-	fmt.Printf("Adding quiz results: \nQuiz ID: %s\nTypeformID: %s\nUserID: %s\nCorrect: %v\nIncorrect: %v\nTaken: %v", results.QuizID, results.TypeformFormID, results.UserID, results.QuestionsCorrect, results.QuestionsIncorrect, results.QuizTaken)
+	fmt.Printf("Adding quiz results: \nQuiz ID: %s\nTypeformID: %s\nUserID: %s\nCorrect: %v\nIncorrect: %v\nTaken: %v\n", results.QuizID, results.TypeformFormID, results.UserID, results.QuestionsCorrect, results.QuestionsIncorrect, results.QuizTaken)
 
 	_, err := c.db.AddQuizResults(results)
 	if err != nil {
@@ -86,10 +87,59 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 		})
 	}
 
-	// TODO:
-	// add token send, badge grant, task completion, etc.
+	_, err = c.db.MarkUserTaskCompletedFromQuiz(results)
+	if err != nil {
+		log.Errorf("[controller/webhooks] %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could mark user task complete",
+		})
+	}
 
-	//fmt.Println(ctx.Payload.FormResponse)
+	// TODO:
+	// add badge grant, token send
+
+	wallet, err := c.db.GetWallet(results.UserID, "eth")
+	if err != nil {
+		log.Errorf("[controller/webhooks] %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could not get user wallet",
+		})
+	}
+
+	ethAmountInWei := int64(5000000000000000000)
+
+	tx, err := ethsvc.SendEther(wallet.Address, ethAmountInWei)
+	if err != nil {
+		log.Errorf("[controller/webhooks] %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could not send ether",
+		})
+	}
+
+	// // 1 correct answer = 100 token
+	// tokenMultiplier := 100
+	// tokenAmount := results.QuestionsCorrect * tokenMultiplier
+
+	// // if token 9 decimals
+	// // default: 18
+	// tokenAmountInWei := fmt.Sprintf("%v000000000", tokenAmount)
+	// recipientAddress := wallet.Address
+
+	// tx, err := ethsvc.SendToken()
+	// if err != nil {
+	// 	log.Errorf("[controller/webhooks] %v", err)
+	// 	return ctx.InternalServerError(&app.StandardError{
+	// 		Code:    500,
+	// 		Message: "could not send token",
+	// 	})
+	// }
+
+	// log.Printf("sent %v token to %s\n", tokenAmount, wallet.Address)
+	log.Printf("https://rinkeby.etherscan.io/tx/%s\n", tx)
+
 	return nil
 	// WebhooksController_Typeform: end_implement
 }
