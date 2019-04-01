@@ -5,6 +5,7 @@ import (
 	"crypto/ecdsa"
 	"log"
 	"math/big"
+	"os"
 
 	ethereum "github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
@@ -15,7 +16,7 @@ import (
 )
 
 const (
-	PRIVATE_KEY            = ""
+	PRIVATE_KEY            = os.Getenv("RINKEBY_PRIVATE_KEY")
 	TOKEN_CONTRACT_ADDRESS = ""
 )
 
