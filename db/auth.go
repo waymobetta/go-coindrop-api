@@ -85,7 +85,7 @@ func (db *DB) GetUser(userID string) (*types.User, error) {
 	user.CognitoAuthUserID = cognitoAuthUserID.String
 
 	if err == sql.ErrNoRows {
-		return nil, nil
+		return nil, err
 	}
 
 	if err != nil {
@@ -125,7 +125,7 @@ func (db *DB) GetUserIDByCognitoUserID(cognitoUserID string) (string, error) {
 	)
 
 	if err == sql.ErrNoRows {
-		return "", nil
+		return "", err
 	}
 
 	if err != nil {
