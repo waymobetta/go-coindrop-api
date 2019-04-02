@@ -83,7 +83,6 @@ func (c *UsersController) Show(ctx *app.ShowUsersContext) error {
 	res := &app.User{
 		ID:                user.ID,
 		CognitoAuthUserID: &user.CognitoAuthUserID,
-		WalletAddress:     &user.Wallet.Address,
 	}
 	return ctx.OK(res)
 	// UsersController_Show: end_implement
@@ -104,13 +103,9 @@ func (c *UsersController) List(ctx *app.ListUsersContext) error {
 		})
 	}
 
-	user, err := c.db.GetUser(userID)
-	if err != nil {
-		log.Errorf("[controller/user] failed to get user: %v", err)
-		return ctx.InternalServerError(&app.StandardError{
-			Code:    500,
-			Message: "could not retrieve user data",
-		})
+	user := &types.User{
+		ID:                userID,
+		CognitoAuthUserID: cognitoUserID,
 	}
 
 	if user == nil {
@@ -124,7 +119,6 @@ func (c *UsersController) List(ctx *app.ListUsersContext) error {
 	res := &app.User{
 		ID:                user.ID,
 		CognitoAuthUserID: &user.CognitoAuthUserID,
-		WalletAddress:     &user.Wallet.Address,
 	}
 	return ctx.OK(res)
 	// UsersController_List: end_implement
