@@ -97,7 +97,7 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 	}
 
 	// TODO:
-	// add badge grant, token send
+	// add badge grant
 
 	wallet, err := c.db.GetWallet(results.UserID, "eth")
 	if err != nil {
@@ -129,7 +129,7 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 	// default: 18
 	tokenAmountInWei := fmt.Sprintf("%v000000000", tokenAmount)
 
-	tx, err := ethsvc.SendToken(tokenAmountInWei, wallet.Address)
+	txHash, err := ethsvc.SendToken(tokenAmountInWei, wallet.Address)
 	if err != nil {
 		log.Errorf("[controller/webhooks] %v", err)
 		return ctx.InternalServerError(&app.StandardError{
@@ -138,8 +138,25 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 		})
 	}
 
-	// log.Printf("sent %v token to %s\n", tokenAmount, wallet.Address)
-	log.Printf("https://rinkeby.etherscan.io/tx/%s\n", tx)
+	log.Printf("https://rinkeby.etherscan.io/tx/%s\n", txHash)
+
+	// store transaction in db
+
+	resourceID := results.TypeformFormID
+
+	tx := &types.Transaction{
+		UserID: userID,
+		Hash:   txHash,
+	}
+
+	err = c.db.AddTransaction(tx, resourceID)
+	if err != nil {
+		log.Errorf("[controller/webhooks] %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could not store transaction",
+		})
+	}
 
 	return nil
 	// WebhooksController_Typeform: end_implement
