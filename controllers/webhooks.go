@@ -108,34 +108,35 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 		})
 	}
 
-	ethAmountInWei := int64(5000000000000000000)
+	// send ether
 
-	tx, err := ethsvc.SendEther(wallet.Address, ethAmountInWei)
-	if err != nil {
-		log.Errorf("[controller/webhooks] %v", err)
-		return ctx.InternalServerError(&app.StandardError{
-			Code:    500,
-			Message: "could not send ether",
-		})
-	}
+	// ethAmountInWei := int64(5000000000000000000)
 
-	// // 1 correct answer = 100 token
-	// tokenMultiplier := 100
-	// tokenAmount := results.QuestionsCorrect * tokenMultiplier
-
-	// // if token 9 decimals
-	// // default: 18
-	// tokenAmountInWei := fmt.Sprintf("%v000000000", tokenAmount)
-	// recipientAddress := wallet.Address
-
-	// tx, err := ethsvc.SendToken()
+	// tx, err := ethsvc.SendEther(wallet.Address, ethAmountInWei)
 	// if err != nil {
 	// 	log.Errorf("[controller/webhooks] %v", err)
 	// 	return ctx.InternalServerError(&app.StandardError{
 	// 		Code:    500,
-	// 		Message: "could not send token",
+	// 		Message: "could not send ether",
 	// 	})
 	// }
+
+	// 1 correct answer = 100 token
+	tokenMultiplier := 100
+	tokenAmount := results.QuestionsCorrect * tokenMultiplier
+
+	// if token 9 decimals
+	// default: 18
+	tokenAmountInWei := fmt.Sprintf("%v000000000", tokenAmount)
+
+	tx, err := ethsvc.SendToken(tokenAmountInWei, wallet.Address)
+	if err != nil {
+		log.Errorf("[controller/webhooks] %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could not send token",
+		})
+	}
 
 	// log.Printf("sent %v token to %s\n", tokenAmount, wallet.Address)
 	log.Printf("https://rinkeby.etherscan.io/tx/%s\n", tx)

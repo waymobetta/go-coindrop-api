@@ -16,8 +16,10 @@ import (
 )
 
 var (
-	PRIVATE_KEY            = os.Getenv("RINKEBY_PRIVATE_KEY")
-	TOKEN_CONTRACT_ADDRESS = ""
+	// Private key of funding wallet
+	PRIVATE_KEY = os.Getenv("RINKEBY_PRIVATE_KEY")
+	// Rinkeby adToken address
+	TOKEN_CONTRACT_ADDRESS = "0x2f9F1Bdc0EDa69853A91277D272FeaE608F3c1FB"
 )
 
 // SendEther ...
