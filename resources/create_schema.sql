@@ -118,6 +118,16 @@ CREATE TABLE IF NOT EXISTS coindrop_user_tasks (
 	updated_at timestamp with time zone
 );
 
+-- TRANSACTION HISTORY
+CREATE TABLE IF NOT EXISTS coindrop_transactions (
+	id uuid DEFAULT uuid_generate_v4() UNIQUE,
+	user_id uuid REFERENCES coindrop_auth(id),
+	task_id uuid REFERENCES coindrop_tasks(id),
+	hash TEXT NOT NULL,
+	created_at timestamp with time zone DEFAULT now(),
+	updated_at timestamp with time zone
+);
+
 CREATE UNIQUE INDEX coindrop_wallets_user_id_type_uniq_idx ON coindrop_wallets(user_id uuid_ops,type text_ops);
 
 -- NOT USED YET --
