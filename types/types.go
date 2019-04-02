@@ -175,6 +175,13 @@ type Badge struct {
 	LogoURL     string `json:"logo_url"`
 }
 
+type Transaction struct {
+	ID     string `json:"id"`
+	UserID string `json:"user_id"`
+	TaskID string `json:"task_id"`
+	Hash   string `json:"hash"`
+}
+
 // TypeformWebHookResponse struct contains info from the TypeformWebHook response
 type TypeformWebHookResponse struct {
 	EventID      string `json:"event_id"`
