@@ -1,15 +1,45 @@
+# github.com/allegro/bigcache v1.2.0
+github.com/allegro/bigcache
+github.com/allegro/bigcache/queue
+# github.com/aristanetworks/goarista v0.0.0-20190325233358-a123909ec740
+github.com/aristanetworks/goarista/monotime
 # github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da
 github.com/armon/go-metrics
 # github.com/beefsack/go-rate v0.0.0-20180408011153-efa7637bb9b6
 github.com/beefsack/go-rate
+# github.com/btcsuite/btcd v0.0.0-20190315201642-aa6e0f35703c
+github.com/btcsuite/btcd/btcec
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
+# github.com/deckarep/golang-set v1.7.1
+github.com/deckarep/golang-set
 # github.com/dgrijalva/jwt-go v3.2.0+incompatible
 github.com/dgrijalva/jwt-go
 # github.com/dimfeld/httppath v0.0.0-20170720192232-ee938bf73598
 github.com/dimfeld/httppath
 # github.com/dimfeld/httptreemux v5.0.1+incompatible
 github.com/dimfeld/httptreemux
+# github.com/ethereum/go-ethereum v1.8.23
+github.com/ethereum/go-ethereum
+github.com/ethereum/go-ethereum/common
+github.com/ethereum/go-ethereum/core/types
+github.com/ethereum/go-ethereum/crypto
+github.com/ethereum/go-ethereum/ethclient
+github.com/ethereum/go-ethereum/common/hexutil
+github.com/ethereum/go-ethereum/params
+github.com/ethereum/go-ethereum/rlp
+github.com/ethereum/go-ethereum/trie
+github.com/ethereum/go-ethereum/common/math
+github.com/ethereum/go-ethereum/crypto/secp256k1
+github.com/ethereum/go-ethereum/rpc
+github.com/ethereum/go-ethereum/common/prque
+github.com/ethereum/go-ethereum/ethdb
+github.com/ethereum/go-ethereum/log
+github.com/ethereum/go-ethereum/metrics
+github.com/ethereum/go-ethereum/p2p/netutil
+github.com/ethereum/go-ethereum/common/mclock
+# github.com/go-stack/stack v1.8.0
+github.com/go-stack/stack
 # github.com/goadesign/goa v1.4.1
 github.com/goadesign/goa
 github.com/goadesign/goa/cors
@@ -24,6 +54,8 @@ github.com/goadesign/goa/dslengine
 github.com/gofrs/uuid
 # github.com/golang/protobuf v1.2.0
 github.com/golang/protobuf/proto
+# github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db
+github.com/golang/snappy
 # github.com/google/go-querystring v1.0.0
 github.com/google/go-querystring/query
 # github.com/gorilla/mux v1.7.0
@@ -52,12 +84,26 @@ github.com/sirupsen/logrus
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.3
 github.com/spf13/pflag
+# github.com/syndtr/goleveldb v1.0.0
+github.com/syndtr/goleveldb/leveldb
+github.com/syndtr/goleveldb/leveldb/errors
+github.com/syndtr/goleveldb/leveldb/filter
+github.com/syndtr/goleveldb/leveldb/iterator
+github.com/syndtr/goleveldb/leveldb/opt
+github.com/syndtr/goleveldb/leveldb/util
+github.com/syndtr/goleveldb/leveldb/cache
+github.com/syndtr/goleveldb/leveldb/comparer
+github.com/syndtr/goleveldb/leveldb/journal
+github.com/syndtr/goleveldb/leveldb/memdb
+github.com/syndtr/goleveldb/leveldb/storage
+github.com/syndtr/goleveldb/leveldb/table
 # github.com/throttled/throttled v2.2.4+incompatible
 github.com/throttled/throttled
 github.com/throttled/throttled/store/memstore
 # github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea
 github.com/zach-klippenstein/goregen
 # golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
+golang.org/x/crypto/sha3
 golang.org/x/crypto/ssh/terminal
 # golang.org/x/net v0.0.0-20190311183353-d8887717615a
 golang.org/x/net/websocket
@@ -67,6 +113,7 @@ golang.org/x/net/context/ctxhttp
 golang.org/x/oauth2
 golang.org/x/oauth2/internal
 # golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a
+golang.org/x/sys/cpu
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 # google.golang.org/appengine v1.4.0
@@ -77,3 +124,5 @@ google.golang.org/appengine/internal/base
 google.golang.org/appengine/internal/datastore
 google.golang.org/appengine/internal/log
 google.golang.org/appengine/internal/remote_api
+# gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce
+gopkg.in/natefinch/npipe.v2
