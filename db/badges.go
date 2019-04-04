@@ -74,6 +74,8 @@ func (db *DB) GetUserBadges(userID string) ([]types.Badge, error) {
 			coindrop_user_tasks.task_id = coindrop_tasks.id
 		WHERE
 			coindrop_user_tasks.user_id = $1
+		AND
+			coindrop_user_tasks.completed = true
 	`
 
 	rows, err := db.client.Query(sqlStatement, userID)
