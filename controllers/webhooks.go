@@ -121,6 +121,15 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 	// 	})
 	// }
 
+	transaction, _ := c.db.GetTransactionByFormID(results.TypeformFormID)
+	if len(transaction.Hash) > 0 {
+		log.Errorf("[controller/webhooks] %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "token already paid to user",
+		})
+	}
+
 	// 1 correct answer = 100 token
 	tokenMultiplier := 100
 	tokenAmount := results.QuestionsCorrect * tokenMultiplier
