@@ -47,7 +47,7 @@ func (c *StackoverflowController) Display(ctx *app.DisplayStackoverflowContext) 
 		})
 	}
 
-	log.Printf("[controller/stackoverflow] returned verification information for coindrop user: %v\n", user.CognitoAuthUserID)
+	log.Printf("[controller/stackoverflow] returned verification information for coindrop user: %v\n", user.UserID)
 
 	res := &app.Verification{
 		PostedVerificationCode:    user.Social.StackOverflow.Verification.PostedVerificationCode,
@@ -81,6 +81,8 @@ func (c *StackoverflowController) Show(ctx *app.ShowStackoverflowContext) error 
 			Message: "could not get user stack overflow info from db",
 		})
 	}
+
+	log.Printf("[controller/stackoverflow] added Stack Overflow information for coindrop user: %v\n", user.UserID)
 
 	res := &app.Stackoverflowuser{
 		ID:                user.Social.StackOverflow.ID,
@@ -132,7 +134,7 @@ func (c *StackoverflowController) Update(ctx *app.UpdateStackoverflowContext) er
 		})
 	}
 
-	log.Printf("[controller/stackoverflow] successfully verified stack overflow account for coindrop user: %v\n", user.CognitoAuthUserID)
+	log.Printf("[controller/stackoverflow] successfully verified stack overflow account for coindrop user: %v\n", user.UserID)
 
 	res := &app.Stackoverflowuser{}
 	return ctx.OK(res)
