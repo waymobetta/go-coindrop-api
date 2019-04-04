@@ -105,9 +105,19 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 	log.Printf("[controller/reddit] added Reddit information for coindrop user: %v\n", user.UserID)
 
 	res := &app.Reddituser{
+		UserID:       user.UserID,
 		Username:     user.Social.Reddit.Username,
-		Verification: &app.Verification{},
+		LinkKarma:    user.Social.Reddit.LinkKarma,
+		CommentKarma: user.Social.Reddit.CommentKarma,
+		Trophies:     []string{},
+		Subreddits:   []string{},
+		Verification: &app.Verification{
+			PostedVerificationCode:    "",
+			ConfirmedVerificationCode: "",
+			Verified:                  false,
+		},
 	}
+
 	return ctx.OK(res)
 	// RedditController_Update: end_implement
 }
