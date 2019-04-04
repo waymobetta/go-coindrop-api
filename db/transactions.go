@@ -1,6 +1,8 @@
 package db
 
 import (
+	"database/sql"
+
 	"github.com/waymobetta/go-coindrop-api/types"
 )
 
@@ -49,6 +51,62 @@ func (db *DB) GetTransactions() ([]types.Transaction, error) {
 	}
 
 	return transactions, nil
+}
+
+// GetTransaction method returns transaction based off of typeform form ID recorded
+func (db *DB) GetTransactionByFormID(formID string) (*types.Transaction, error) {
+	sqlStatement := `
+		SELECT 
+			coindrop_transactions.id,
+			coindrop_transactions.user_id,
+			coindrop_transactions.task_id,
+			coindrop_transactions.hash
+		FROM
+			coindrop_transactions
+		WHERE
+			coindrop_transactions.task_id = (
+				SELECT
+					id
+				FROM
+					coindrop_tasks
+				WHERE
+					quiz_id = (
+						SELECT
+							id
+						FROM
+							coindrop_quizzes
+						WHERE typeform_form_id = $1
+					)
+			)
+	`
+
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return nil, err
+	}
+
+	defer stmt.Close()
+
+	row := stmt.QueryRow(formID)
+
+	transaction := new(types.Transaction)
+
+	err = row.Scan(
+		&transaction.ID,
+		&transaction.UserID,
+		&transaction.TaskID,
+		&transaction.Hash,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, err
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return transaction, nil
 }
 
 // GetUserTransaction method returns all transactions tied to a specific user
