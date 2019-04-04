@@ -70,6 +70,16 @@ CREATE TABLE IF NOT EXISTS coindrop_badges (
 	logo_url TEXT
 );
 
+-- QUIZZES
+CREATE TABLE IF NOT EXISTS coindrop_quizzes (
+	id uuid DEFAULT uuid_generate_v4() UNIQUE,
+	title TEXT NOT NULL,
+	typeform_form_url TEXT NOT NULL,
+	typeform_form_id TEXT NOT NULL,
+	created_at timestamp with time zone DEFAULT now(),
+	updated_at timestamp with time zone
+);
+
 -- TASKS
 CREATE TABLE IF NOT EXISTS coindrop_tasks (
   id uuid DEFAULT uuid_generate_v4() UNIQUE,
@@ -84,16 +94,6 @@ CREATE TABLE IF NOT EXISTS coindrop_tasks (
   logo_url text,
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone
-);
-
--- QUIZZES
-CREATE TABLE IF NOT EXISTS coindrop_quizzes (
-	id uuid DEFAULT uuid_generate_v4() UNIQUE,
-	title TEXT NOT NULL,
-	typeform_form_url TEXT NOT NULL,
-	typeform_form_id TEXT NOT NULL,
-	created_at timestamp with time zone DEFAULT now(),
-	updated_at timestamp with time zone
 );
 
 -- QUIZ RESULTS
