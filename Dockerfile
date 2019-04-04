@@ -1,11 +1,15 @@
 FROM golang:1.12rc1-alpine3.9 AS build
 
-RUN apk --no-cache add ca-certificates
+RUN apk --no-cache add ca-certificates git build-base
 COPY . /go/src/github.com/waymobetta/go-coindrop-api
+RUN rm -r /go/src/github.com/waymobetta/go-coindrop-api/vendor/github.com/ethereum/go-ethereum
+RUN go get -u github.com/ethereum/go-ethereum
 WORKDIR /go/src/github.com/waymobetta/go-coindrop-api
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o coindrop cmd/coindrop/main.go
+RUN apk del git
 
-FROM scratch
+RUN GOOS=linux go build -a -installsuffix cgo -o coindrop cmd/coindrop/main.go
+
+FROM alpine:latest
 
 WORKDIR /
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
