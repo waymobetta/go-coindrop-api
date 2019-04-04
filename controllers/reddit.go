@@ -102,6 +102,8 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 		})
 	}
 
+	log.Printf("[controller/reddit] added Reddit information for coindrop user: %v\n", user.UserID)
+
 	res := &app.Reddituser{
 		Username:     user.Social.Reddit.Username,
 		Verification: &app.Verification{},
@@ -139,7 +141,7 @@ func (c *RedditController) Display(ctx *app.DisplayRedditContext) error {
 		})
 	}
 
-	log.Printf("[controller/reddit] returned verification information for coindrop user: %v\n", user.CognitoAuthUserID)
+	log.Printf("[controller/reddit] returned verification information for coindrop user: %v\n", user.UserID)
 
 	res := &app.Verification{
 		PostedVerificationCode:    user.Social.Reddit.Verification.PostedVerificationCode,
@@ -206,7 +208,7 @@ func (c *RedditController) Verify(ctx *app.VerifyRedditContext) error {
 		})
 	}
 
-	log.Printf("[controller/reddit] successfully verified reddit account for coindrop user: %v\n", user.CognitoAuthUserID)
+	log.Printf("[controller/reddit] successfully verified reddit account for coindrop user: %v\n", user.UserID)
 
 	res := &app.Verification{
 		PostedVerificationCode:    user.Social.Reddit.Verification.PostedVerificationCode,
