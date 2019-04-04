@@ -121,6 +121,9 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 	// 	})
 	// }
 
+	// TODO:
+	// better error handling
+
 	transaction, _ := c.db.GetTransactionByFormID(results.TypeformFormID)
 	if len(transaction.Hash) > 0 {
 		log.Errorf("[controller/webhooks] %v", err)
