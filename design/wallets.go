@@ -33,4 +33,11 @@ var _ = Resource("wallets", func() {
 		Payload(WalletPayload)
 		Response(OK, WalletMedia)
 	})
+
+	// Action("verify", func() {
+	// 	Description("Verify signed message")
+	// 	Routing(POST(""))
+	// 	Payload(MessageVerificationPayload)
+	// 	Response(OK)
+	// })
 })
