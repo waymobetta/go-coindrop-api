@@ -54,7 +54,7 @@ func (db *DB) GetTransactions() ([]types.Transaction, error) {
 }
 
 // GetTransaction method returns transaction based off of typeform form ID recorded
-func (db *DB) GetTransactionByFormID(formID string) (*types.Transaction, error) {
+func (db *DB) GetTransactionByFormID(userID, formID string) (*types.Transaction, error) {
 	sqlStatement := `
 		SELECT 
 			coindrop_transactions.id,
@@ -64,6 +64,8 @@ func (db *DB) GetTransactionByFormID(formID string) (*types.Transaction, error) 
 		FROM
 			coindrop_transactions
 		WHERE
+			coindrop_transactions.user_id = $1
+		AND
 			coindrop_transactions.task_id = (
 				SELECT
 					id
@@ -75,7 +77,7 @@ func (db *DB) GetTransactionByFormID(formID string) (*types.Transaction, error) 
 							id
 						FROM
 							coindrop_quizzes
-						WHERE typeform_form_id = $1
+						WHERE typeform_form_id = $2
 					)
 			)
 	`
@@ -87,7 +89,7 @@ func (db *DB) GetTransactionByFormID(formID string) (*types.Transaction, error) 
 
 	defer stmt.Close()
 
-	row := stmt.QueryRow(formID)
+	row := stmt.QueryRow(userID, formID)
 
 	transaction := new(types.Transaction)
 	var id sql.NullString
