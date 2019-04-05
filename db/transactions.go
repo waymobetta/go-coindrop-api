@@ -90,13 +90,22 @@ func (db *DB) GetTransactionByFormID(formID string) (*types.Transaction, error) 
 	row := stmt.QueryRow(formID)
 
 	transaction := new(types.Transaction)
+	var id sql.NullString
+	var userId sql.NullString
+	var taskId sql.NullString
+	var hash sql.NullString
 
 	err = row.Scan(
-		&transaction.ID,
-		&transaction.UserID,
-		&transaction.TaskID,
-		&transaction.Hash,
+		&id,
+		&userId,
+		&taskId,
+		&hash,
 	)
+
+	transaction.ID = id.String
+	transaction.UserID = userId.String
+	transaction.TaskID = taskId.String
+	transaction.Hash = hash.String
 
 	if err == sql.ErrNoRows {
 		return nil, err
