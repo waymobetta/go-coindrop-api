@@ -1177,6 +1177,60 @@ func unmarshalUpdateTasksPayload(ctx context.Context, service *goa.Service, req 
 	return nil
 }
 
+// TransactionsController is the controller interface for the Transactions actions.
+type TransactionsController interface {
+	goa.Muxer
+	List(*ListTransactionsContext) error
+}
+
+// MountTransactionsController "mounts" a Transactions resource controller on the given service.
+func MountTransactionsController(service *goa.Service, ctrl TransactionsController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/v1/transactions/:userId", ctrl.MuxHandler("preflight", handleTransactionsOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListTransactionsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleTransactionsOrigin(h)
+	service.Mux.Handle("GET", "/v1/transactions/:userId", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Transactions", "action", "List", "route", "GET /v1/transactions/:userId", "security", "JWTAuth")
+}
+
+// handleTransactionsOrigin applies the CORS response headers corresponding to the origin.
+func handleTransactionsOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "*") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "OPTIONS, HEAD, POST, GET, UPDATE, DELETE, PATCH")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
 // UsersController is the controller interface for the Users actions.
 type UsersController interface {
 	goa.Muxer

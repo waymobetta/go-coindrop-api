@@ -611,6 +611,94 @@ func (c *Client) DecodeTasks(resp *http.Response) (*Tasks, error) {
 	return &decoded, err
 }
 
+// Transaction (default view)
+//
+// Identifier: application/vnd.transaction+json; view=default
+type Transaction struct {
+	// transaction hash
+	Hash string `form:"hash" json:"hash" yaml:"hash" xml:"hash"`
+	// transaction ID
+	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
+	// task ID
+	TaskID string `form:"taskId" json:"taskId" yaml:"taskId" xml:"taskId"`
+	// user ID
+	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+}
+
+// Validate validates the Transaction media type instance.
+func (mt *Transaction) Validate() (err error) {
+	if mt.ID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "id"))
+	}
+	if mt.UserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "userId"))
+	}
+	if mt.TaskID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "taskId"))
+	}
+	if mt.Hash == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "hash"))
+	}
+	return
+}
+
+// DecodeTransaction decodes the Transaction instance encoded in resp body.
+func (c *Client) DecodeTransaction(resp *http.Response) (*Transaction, error) {
+	var decoded Transaction
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// TransactionCollection is the media type for an array of Transaction (default view)
+//
+// Identifier: application/vnd.transaction+json; type=collection; view=default
+type TransactionCollection []*Transaction
+
+// Validate validates the TransactionCollection media type instance.
+func (mt TransactionCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// DecodeTransactionCollection decodes the TransactionCollection instance encoded in resp body.
+func (c *Client) DecodeTransactionCollection(resp *http.Response) (TransactionCollection, error) {
+	var decoded TransactionCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
+}
+
+// Transactions (default view)
+//
+// Identifier: application/vnd.transactions+json; view=default
+type Transactions struct {
+	// list of transactions
+	Transactions TransactionCollection `form:"transactions" json:"transactions" yaml:"transactions" xml:"transactions"`
+}
+
+// Validate validates the Transactions media type instance.
+func (mt *Transactions) Validate() (err error) {
+	if mt.Transactions == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "transactions"))
+	}
+	if err2 := mt.Transactions.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
+	}
+	return
+}
+
+// DecodeTransactions decodes the Transactions instance encoded in resp body.
+func (c *Client) DecodeTransactions(resp *http.Response) (*Transactions, error) {
+	var decoded Transactions
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // A user (default view)
 //
 // Identifier: application/vnd.user+json; view=default
