@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"fmt"
 
 	"github.com/goadesign/goa"
@@ -124,50 +125,61 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 	// TODO:
 	// better error handling
 
-	transaction, _ := c.db.GetTransactionByFormID(results.TypeformFormID)
-	if len(transaction.Hash) <= 0 {
+	var hasBeenPaid bool
+
+	transaction, err := c.db.GetTransactionByFormID(results.TypeformFormID)
+	if err == sql.ErrNoRows {
+		hasBeenPaid = false
+	}
+	if err != sql.ErrNoRows && err != nil {
 		log.Errorf("[controller/webhooks] %v", err)
 		return ctx.InternalServerError(&app.StandardError{
 			Code:    500,
-			Message: "token already paid to user",
+			Message: "could not get transaction by form ID",
 		})
 	}
 
-	// 1 correct answer = 100 token
-	tokenMultiplier := 100
-	tokenAmount := results.QuestionsCorrect * tokenMultiplier
-
-	// if token 9 decimals
-	// default: 18
-	tokenAmountInWei := fmt.Sprintf("%v000000000", tokenAmount)
-
-	txHash, err := ethsvc.SendToken(tokenAmountInWei, wallet.Address)
-	if err != nil {
-		log.Errorf("[controller/webhooks] %v", err)
-		return ctx.InternalServerError(&app.StandardError{
-			Code:    500,
-			Message: "could not send token",
-		})
+	if transaction != nil {
+		hasBeenPaid = true
 	}
 
-	log.Printf("https://rinkeby.etherscan.io/tx/%s\n", txHash)
+	if !hasBeenPaid {
+		// 1 correct answer = 100 token
+		tokenMultiplier := 100
+		tokenAmount := results.QuestionsCorrect * tokenMultiplier
 
-	// store transaction in db
+		// if token 9 decimals
+		// default: 18
+		tokenAmountInWei := fmt.Sprintf("%v000000000", tokenAmount)
 
-	resourceID := results.TypeformFormID
+		txHash, err := ethsvc.SendToken(tokenAmountInWei, wallet.Address)
+		if err != nil {
+			log.Errorf("[controller/webhooks] %v", err)
+			return ctx.InternalServerError(&app.StandardError{
+				Code:    500,
+				Message: "could not send token",
+			})
+		}
 
-	tx := &types.Transaction{
-		UserID: userID,
-		Hash:   txHash,
-	}
+		log.Printf("https://rinkeby.etherscan.io/tx/%s\n", txHash)
 
-	err = c.db.AddTransaction(tx, resourceID)
-	if err != nil {
-		log.Errorf("[controller/webhooks] %v", err)
-		return ctx.InternalServerError(&app.StandardError{
-			Code:    500,
-			Message: "could not store transaction",
-		})
+		// store transaction in db
+
+		resourceID := results.TypeformFormID
+
+		tx := &types.Transaction{
+			UserID: userID,
+			Hash:   txHash,
+		}
+
+		err = c.db.AddTransaction(tx, resourceID)
+		if err != nil {
+			log.Errorf("[controller/webhooks] %v", err)
+			return ctx.InternalServerError(&app.StandardError{
+				Code:    500,
+				Message: "could not store transaction",
+			})
+		}
 	}
 
 	return nil
