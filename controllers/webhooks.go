@@ -79,6 +79,9 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 
 	fmt.Printf("Adding quiz results: \nQuiz ID: %s\nTypeformID: %s\nUserID: %s\nCorrect: %v\nIncorrect: %v\nTaken: %v\n", results.QuizID, results.TypeformFormID, results.UserID, results.QuestionsCorrect, results.QuestionsIncorrect, results.QuizTaken)
 
+	// TODO:
+	// fix to prevent duplication quiz results for user
+
 	_, err := c.db.AddQuizResults(results)
 	if err != nil {
 		log.Errorf("[controller/webhooks] %v", err)
