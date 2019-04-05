@@ -124,6 +124,9 @@ func main() {
 	webhooksCtrlr := controllers.NewWebhooksController(service, dbs)
 	app.MountWebhooksController(service, webhooksCtrlr)
 
+	transactionsCtrlr := controllers.NewTransactionsController(service, dbs)
+	app.MountTransactionsController(service, transactionsCtrlr)
+
 	// goa handler
 	goaHandler := c.Handler(mw.RateLimitHandler(service.Server.Handler))
 
