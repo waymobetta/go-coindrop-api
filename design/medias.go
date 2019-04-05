@@ -321,3 +321,38 @@ var ProfileMedia = MediaType("application/vnd.profile+json", func() {
 		Attribute("username")
 	})
 })
+
+// TransactionMedia ...
+var TransactionMedia = MediaType("application/vnd.transaction+json", func() {
+	Description("Transaction")
+	Attributes(func() {
+		Attribute("id", String, "transaction ID")
+		Attribute("userId", String, "user ID")
+		Attribute("taskId", String, "task ID")
+		Attribute("hash", String, "transaction hash")
+		Required(
+			"id",
+			"userId",
+			"taskId",
+			"hash",
+		)
+	})
+	View("default", func() {
+		Attribute("id")
+		Attribute("userId")
+		Attribute("taskId")
+		Attribute("hash")
+	})
+})
+
+// TransactionsMedia ...
+var TransactionsMedia = MediaType("application/vnd.transactions+json", func() {
+	Description("Transactions")
+	Attributes(func() {
+		Attribute("transactions", CollectionOf(TransactionMedia), "list of transactions")
+		Required("transactions")
+	})
+	View("default", func() {
+		Attribute("transactions")
+	})
+})
