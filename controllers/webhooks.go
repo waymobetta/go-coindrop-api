@@ -130,7 +130,7 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 
 	var hasBeenPaid bool
 
-	transaction, err := c.db.GetTransactionByFormID(results.TypeformFormID)
+	transaction, err := c.db.GetTransactionByFormID(results.UserID, results.TypeformFormID)
 	if err == sql.ErrNoRows {
 		hasBeenPaid = false
 	}
