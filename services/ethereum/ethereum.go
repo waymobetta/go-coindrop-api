@@ -1,8 +1,10 @@
 package ethereum
 
 import (
+	"bytes"
 	"context"
 	"crypto/ecdsa"
+	"fmt"
 	"log"
 	"math/big"
 	"os"
@@ -159,4 +161,37 @@ func SendToken(tokenAmount, recipientAddress string) (string, error) {
 	transaction := signedTx.Hash().Hex()
 
 	return transaction, nil
+}
+
+// VerifyAccount ...
+func VerifyAccount(msg string, signature []byte) (bool, error) {
+	var verified bool
+
+	data := []byte(msg)
+
+	var prefixed []byte
+	prefixed = append(prefixed, []byte(fmt.Sprintf("\x19Ethereum Signed Message:\n%v", len(data)))...)
+	prefixed = append(prefixed, data...)
+
+	hash := crypto.Keccak256Hash(prefixed)
+
+	sigPublicKey, err := crypto.Ecrecover(hash.Bytes(), signature)
+	if err != nil {
+		return verified, err
+	}
+
+	sigPublicKeyECDSA, err := crypto.SigToPub(hash.Bytes(), signature)
+	if err != nil {
+		return verified, err
+	}
+
+	sigPublicKeyBytes := crypto.FromECDSAPub(sigPublicKeyECDSA)
+
+	matches := bytes.Equal(sigPublicKeyBytes, sigPublicKey)
+	fmt.Println(matches)
+
+	signatureNoRecoverID := signature[:len(signature)-1]
+	verified = crypto.VerifySignature(sigPublicKey, hash.Bytes(), signatureNoRecoverID)
+
+	return verified, nil
 }
