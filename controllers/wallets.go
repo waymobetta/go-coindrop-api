@@ -169,6 +169,21 @@ func (c *WalletsController) Verify(ctx *app.VerifyWalletsContext) error {
 		})
 	}
 
+	userTask := &types.userTask{
+		UserID:    ctx.Payload.UserID,
+		TaskID:    ctx.Payload.TaskID,
+		Completed: true,
+	}
+
+	_, err = c.db.MarkUserTaskCompleted(userTask)
+	if err != nil {
+		log.Errorf("[controller/wallet] %v", err)
+		return ctx.BadRequest(&app.StandardError{
+			Code:    400,
+			Message: "could not mark task as complete in db",
+		})
+	}
+
 	res := &app.Wallet{
 		Address:    walletVerification.Address,
 		Verified:   wallet.Verified,
