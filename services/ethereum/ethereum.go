@@ -165,24 +165,28 @@ func SendToken(tokenAmount, recipientAddress string) (string, error) {
 }
 
 // VerifyAddress ...
-func VerifyAddress(from, sigHex string, msg []byte) (bool, error) {
+func VerifyAddress(from, sigHex string, msg []byte) error {
 	fromAddr := common.HexToAddress(from)
 
 	sig := hexutil.MustDecode(sigHex)
 	if sig[64] != 27 && sig[64] != 28 {
 		err := errors.New("invalid signature")
-		return false, err
+		return err
 	}
 	sig[64] -= 27
 
 	pubKey, err := crypto.SigToPub(signHash(msg), sig)
 	if err != nil {
-		return false, err
+		return err
 	}
 
 	recoveredAddr := crypto.PubkeyToAddress(*pubKey)
 
-	return fromAddr == recoveredAddr, nil
+	if fromAddr != recoveredAddr {
+		return errors.New("from address and recovered address do not match")
+	}
+
+	return nil
 }
 
 func signHash(data []byte) []byte {
