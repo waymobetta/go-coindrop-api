@@ -1,9 +1,9 @@
 package ethereum
 
 import (
-	"bytes"
 	"context"
 	"crypto/ecdsa"
+	"errors"
 	"fmt"
 	"log"
 	"math/big"
@@ -11,6 +11,7 @@ import (
 
 	ethereum "github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -164,34 +165,27 @@ func SendToken(tokenAmount, recipientAddress string) (string, error) {
 }
 
 // VerifyAccount ...
-func VerifyAccount(msg string, signature []byte) (bool, error) {
-	var verified bool
+func VerifyAccount(from, sigHex string, msg []byte) (bool, error) {
+	fromAddr := common.HexToAddress(from)
 
-	data := []byte(msg)
+	sig := hexutil.MustDecode(sigHex)
+	if sig[64] != 27 && sig[64] != 28 {
+		err := errors.New("invalid signature")
+		return false, err
+	}
+	sig[64] -= 27
 
-	var prefixed []byte
-	prefixed = append(prefixed, []byte(fmt.Sprintf("\x19Ethereum Signed Message:\n%v", len(data)))...)
-	prefixed = append(prefixed, data...)
-
-	hash := crypto.Keccak256Hash(prefixed)
-
-	sigPublicKey, err := crypto.Ecrecover(hash.Bytes(), signature)
+	pubKey, err := crypto.SigToPub(signHash(msg), sig)
 	if err != nil {
-		return verified, err
+		return false, err
 	}
 
-	sigPublicKeyECDSA, err := crypto.SigToPub(hash.Bytes(), signature)
-	if err != nil {
-		return verified, err
-	}
+	recoveredAddr := crypto.PubkeyToAddress(*pubKey)
 
-	sigPublicKeyBytes := crypto.FromECDSAPub(sigPublicKeyECDSA)
+	return fromAddr == recoveredAddr, nil
+}
 
-	matches := bytes.Equal(sigPublicKeyBytes, sigPublicKey)
-	fmt.Println(matches)
-
-	signatureNoRecoverID := signature[:len(signature)-1]
-	verified = crypto.VerifySignature(sigPublicKey, hash.Bytes(), signatureNoRecoverID)
-
-	return verified, nil
+func signHash(data []byte) []byte {
+	msg := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(data), data)
+	return crypto.Keccak256([]byte(msg))
 }
