@@ -765,6 +765,8 @@ func (c *Client) DecodeVerification(resp *http.Response) (*Verification, error) 
 type Wallet struct {
 	// wallet address
 	Address string `form:"address" json:"address" yaml:"address" xml:"address"`
+	// wallet verified flag
+	Verified bool `form:"verified" json:"verified" yaml:"verified" xml:"verified"`
 	// wallet type
 	WalletType string `form:"walletType" json:"walletType" yaml:"walletType" xml:"walletType"`
 }
@@ -777,6 +779,7 @@ func (mt *Wallet) Validate() (err error) {
 	if mt.WalletType == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "walletType"))
 	}
+
 	return
 }
 

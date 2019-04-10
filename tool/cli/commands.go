@@ -324,9 +324,9 @@ Payload example:
 Payload example:
 
 {
-   "description": "Nostrum et est voluptas.",
-   "logoURL": "Pariatur autem dignissimos distinctio culpa earum.",
-   "name": "Modi cumque est architecto."
+   "description": "Qui eaque dolorem nostrum et est.",
+   "logoURL": "Temporibus pariatur autem dignissimos distinctio.",
+   "name": "Earum sed modi cumque est."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
@@ -342,8 +342,8 @@ Payload example:
 Payload example:
 
 {
-   "name": "Voluptatem doloribus.",
-   "username": "Animi quas dolore id repellat."
+   "name": "Aspernatur voluptatem.",
+   "username": "Voluptas animi."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
 	}
@@ -359,7 +359,7 @@ Payload example:
 Payload example:
 
 {
-   "title": "Et dolores error at."
+   "title": "Dolore id repellat quidem."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
 	}
@@ -375,10 +375,10 @@ Payload example:
 Payload example:
 
 {
-   "questionsCorrect": 7757229595323376392,
-   "questionsIncorrect": 9165687053581424699,
-   "quizId": "Dolor odio sunt sed culpa incidunt nobis.",
-   "userId": "Quis assumenda."
+   "questionsCorrect": 8195804794876402867,
+   "questionsIncorrect": 387564101472179070,
+   "quizId": "Aut accusantium labore.",
+   "userId": "Dolor odio sunt sed culpa incidunt nobis."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
 	}
@@ -394,7 +394,7 @@ Payload example:
 Payload example:
 
 {
-   "taskId": "Inventore iusto ducimus temporibus.",
+   "taskId": "In doloremque laborum inventore iusto ducimus temporibus.",
    "userId": "Delectus non tenetur dolores culpa recusandae."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp6.Run(c, args) },
@@ -654,8 +654,8 @@ Payload example:
 Payload example:
 
 {
-   "name": "Voluptatem doloribus.",
-   "username": "Animi quas dolore id repellat."
+   "name": "Aspernatur voluptatem.",
+   "username": "Voluptas animi."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp28.Run(c, args) },
 	}
@@ -672,7 +672,7 @@ Payload example:
 
 {
    "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
-   "username": "Eligendi consequuntur molestiae rerum eius omnis."
+   "username": "Dolores error at nemo eligendi."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp29.Run(c, args) },
 	}
@@ -689,7 +689,7 @@ Payload example:
 
 {
    "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
-   "username": "Sint reprehenderit repellendus ut aut."
+   "username": "Molestiae rerum eius omnis corporis sint."
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp30.Run(c, args) },
 	}
@@ -705,7 +705,7 @@ Payload example:
 Payload example:
 
 {
-   "stackUserId": 1693829049351308170,
+   "stackUserId": 7515845116221018403,
    "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp31.Run(c, args) },
@@ -722,7 +722,7 @@ Payload example:
 Payload example:
 
 {
-   "stackUserId": 3755744461832595497,
+   "stackUserId": 1255797209939205716,
    "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp32.Run(c, args) },

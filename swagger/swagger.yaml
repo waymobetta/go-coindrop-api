@@ -92,21 +92,21 @@ definitions:
   CreateBadgePayload:
     description: Create Badge payload
     example:
-      description: Nostrum et est voluptas.
-      logoURL: Pariatur autem dignissimos distinctio culpa earum.
-      name: Modi cumque est architecto.
+      description: Qui eaque dolorem nostrum et est.
+      logoURL: Temporibus pariatur autem dignissimos distinctio.
+      name: Earum sed modi cumque est.
     properties:
       description:
         description: Badge description
-        example: Nostrum et est voluptas.
+        example: Qui eaque dolorem nostrum et est.
         type: string
       logoURL:
         description: Badge logo URL
-        example: Pariatur autem dignissimos distinctio culpa earum.
+        example: Temporibus pariatur autem dignissimos distinctio.
         type: string
       name:
         description: Badge name
-        example: Modi cumque est architecto.
+        example: Earum sed modi cumque est.
         type: string
     required:
     - name
@@ -117,12 +117,12 @@ definitions:
   CreateStackOverflowUserPayload:
     description: Create Stack Overflow User payload
     example:
-      stackUserId: 1693829049351308170
+      stackUserId: 7515845116221018403
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
     properties:
       stackUserId:
         description: Stack Overflow Community-Specific Account ID
-        example: 1693829049351308170
+        example: 7515845116221018403
         format: int64
         type: integer
       userId:
@@ -138,12 +138,12 @@ definitions:
   CreateTaskPayload:
     description: Create Task payload
     example:
-      taskId: Inventore iusto ducimus temporibus.
+      taskId: In doloremque laborum inventore iusto ducimus temporibus.
       userId: Delectus non tenetur dolores culpa recusandae.
     properties:
       taskId:
         description: Task ID
-        example: Inventore iusto ducimus temporibus.
+        example: In doloremque laborum inventore iusto ducimus temporibus.
         type: string
       userId:
         description: User ID
@@ -158,7 +158,7 @@ definitions:
     description: Create Reddit User payload
     example:
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      username: Eligendi consequuntur molestiae rerum eius omnis.
+      username: Dolores error at nemo eligendi.
     properties:
       userId:
         description: User ID
@@ -167,7 +167,7 @@ definitions:
         type: string
       username:
         description: Username
-        example: Eligendi consequuntur molestiae rerum eius omnis.
+        example: Dolores error at nemo eligendi.
         type: string
     required:
     - userId
@@ -215,16 +215,16 @@ definitions:
   ProfilePayload:
     description: Profile payload
     example:
-      name: Voluptatem doloribus.
-      username: Animi quas dolore id repellat.
+      name: Aspernatur voluptatem.
+      username: Voluptas animi.
     properties:
       name:
         description: Name
-        example: Voluptatem doloribus.
+        example: Aspernatur voluptatem.
         type: string
       username:
         description: Username
-        example: Animi quas dolore id repellat.
+        example: Voluptas animi.
         type: string
     required:
     - name
@@ -316,11 +316,11 @@ definitions:
   QuizPayload:
     description: Quiz payload
     example:
-      title: Et dolores error at.
+      title: Dolore id repellat quidem.
     properties:
       title:
         description: Title
-        example: Et dolores error at.
+        example: Dolore id repellat quidem.
         type: string
     required:
     - title
@@ -329,28 +329,28 @@ definitions:
   QuizResultsPayload:
     description: Quiz results payload
     example:
-      questionsCorrect: 7757229595323376392
-      questionsIncorrect: 9165687053581424699
-      quizId: Dolor odio sunt sed culpa incidunt nobis.
-      userId: Quis assumenda.
+      questionsCorrect: 8195804794876402867
+      questionsIncorrect: 387564101472179070
+      quizId: Aut accusantium labore.
+      userId: Dolor odio sunt sed culpa incidunt nobis.
     properties:
       questionsCorrect:
         description: Number of questions that were answered correct
-        example: 7757229595323376392
+        example: 8195804794876402867
         format: int64
         type: integer
       questionsIncorrect:
         description: Number of questions that were answered incorrect
-        example: 9165687053581424699
+        example: 387564101472179070
         format: int64
         type: integer
       quizId:
         description: Quiz ID
-        example: Dolor odio sunt sed culpa incidunt nobis.
+        example: Aut accusantium labore.
         type: string
       userId:
         description: User ID
-        example: Quis assumenda.
+        example: Dolor odio sunt sed culpa incidunt nobis.
         type: string
     required:
     - quizId
@@ -877,7 +877,7 @@ definitions:
     description: Update Reddit User payload
     example:
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      username: Sint reprehenderit repellendus ut aut.
+      username: Molestiae rerum eius omnis corporis sint.
     properties:
       userId:
         description: User ID
@@ -886,7 +886,7 @@ definitions:
         type: string
       username:
         description: Reddit Username
-        example: Sint reprehenderit repellendus ut aut.
+        example: Molestiae rerum eius omnis corporis sint.
         type: string
     required:
     - userId
@@ -896,12 +896,12 @@ definitions:
   UpdateStackOverflowUserPayload:
     description: Update Stack Overflow User payload
     example:
-      stackUserId: 3755744461832595497
+      stackUserId: 1255797209939205716
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
     properties:
       stackUserId:
         description: Stack Overflow Community-Specific Account ID
-        example: 3755744461832595497
+        example: 1255797209939205716
         format: int64
         type: integer
       userId:
@@ -998,19 +998,25 @@ definitions:
     description: A wallet (default view)
     example:
       address: Quisquam sit facere qui praesentium.
-      walletType: Delectus sit eos error.
+      verified: false
+      walletType: Sit eos.
     properties:
       address:
         description: wallet address
         example: Quisquam sit facere qui praesentium.
         type: string
+      verified:
+        description: wallet verified flag
+        example: false
+        type: boolean
       walletType:
         description: wallet type
-        example: Delectus sit eos error.
+        example: Sit eos.
         type: string
     required:
     - address
     - walletType
+    - verified
     title: 'Mediatype identifier: application/vnd.wallet+json; view=default'
     type: object
   WalletCollection:
@@ -1018,11 +1024,14 @@ definitions:
       view)
     example:
     - address: Quisquam sit facere qui praesentium.
-      walletType: Delectus sit eos error.
+      verified: false
+      walletType: Sit eos.
     - address: Quisquam sit facere qui praesentium.
-      walletType: Delectus sit eos error.
+      verified: false
+      walletType: Sit eos.
     - address: Quisquam sit facere qui praesentium.
-      walletType: Delectus sit eos error.
+      verified: false
+      walletType: Sit eos.
     items:
       $ref: '#/definitions/Wallet'
     title: 'Mediatype identifier: application/vnd.wallet+json; type=collection; view=default'
@@ -1097,7 +1106,8 @@ definitions:
     example:
       wallets:
       - address: Quisquam sit facere qui praesentium.
-        walletType: Delectus sit eos error.
+        verified: false
+        walletType: Sit eos.
     properties:
       wallets:
         $ref: '#/definitions/WalletCollection'
