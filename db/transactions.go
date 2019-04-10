@@ -227,7 +227,7 @@ func (db *DB) AddTransaction(trx *types.Transaction, resourceID string) error {
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
-		// rollback transaciton if error thrown
+		// rollback transaction if error thrown
 		return tx.Rollback()
 	}
 
