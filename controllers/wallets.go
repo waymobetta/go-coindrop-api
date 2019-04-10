@@ -155,12 +155,24 @@ func (c *WalletsController) Verify(ctx *app.VerifyWalletsContext) error {
 			Message: "could not verify address",
 		})
 	}
-	if verified {
-		log.Printf("wallet verified for user: %s", userID)
+
+	log.Printf("[controller/wallet] wallet successfully verified for user: %s", userID)
+
+	wallet, err := c.db.UpdateWalletVerification(
+		userID, walletAddress,
+	)
+	if err != nil {
+		log.Errorf("[controller/wallet] %v", err)
+		return ctx.BadRequest(&app.StandardError{
+			Code:    400,
+			Message: "could not update wallet in db",
+		})
 	}
 
 	res := &app.Wallet{
-		Address: ctx.Payload.Address,
+		Address:    wallet.Address,
+		Verified:   wallet.Verified,
+		WalletType: wallet.Type,
 	}
 	return ctx.OK(res)
 	// WalletsController_Verify: end_implement
