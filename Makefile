@@ -77,6 +77,7 @@ goa:
 	@rm webhooks.go
 	@rm profiles.go
 	@rm badges.go
+# 	@rm transactions.go
 	@MAKE swagger
 
 .PHONY: swagger
