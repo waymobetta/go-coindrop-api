@@ -123,7 +123,7 @@ func (db *DB) AddTask(t *types.Task) (*types.Task, error) {
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
-		// rollback transaciton if error thrown
+		// rollback transaction if error thrown
 		return nil, tx.Rollback()
 	}
 
@@ -383,7 +383,7 @@ func (db *DB) AddUserTask(u *types.UserTask) (*types.UserTask, error) {
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
-		// rollback transaciton if error thrown
+		// rollback transaction if error thrown
 		return u, tx.Rollback()
 	}
 
@@ -445,7 +445,7 @@ func (db *DB) MarkUserTaskCompletedFromQuiz(r *types.QuizResults) (*types.QuizRe
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
-		// rollback transaciton if error thrown
+		// rollback transaction if error thrown
 		return nil, tx.Rollback()
 	}
 
@@ -494,7 +494,7 @@ func (db *DB) MarkUserTaskCompleted(u *types.UserTask) (*types.UserTask, error) 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
-		// rollback transaciton if error thrown
+		// rollback transaction if error thrown
 		return nil, tx.Rollback()
 	}
 
