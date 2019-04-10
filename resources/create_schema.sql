@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS coindrop_wallets (
   address text,
   user_id uuid REFERENCES coindrop_auth(id),
   type text,
+  verified boolean DEFAULT false,
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone
 );
