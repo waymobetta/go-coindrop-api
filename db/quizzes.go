@@ -139,7 +139,7 @@ func (db *DB) AddQuiz(quiz *types.Quiz) (*types.Quiz, error) {
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
-		// rollback transaciton if error thrown
+		// rollback transaction if error thrown
 		tx.Rollback()
 		return nil, err
 	}
@@ -208,7 +208,7 @@ func (db *DB) AddQuizResults(r *types.QuizResults) (*types.QuizResults, error) {
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
-		// rollback transaciton if error thrown
+		// rollback transaction if error thrown
 		return nil, tx.Rollback()
 	}
 
