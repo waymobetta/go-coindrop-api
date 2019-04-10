@@ -43,14 +43,6 @@ definitions:
       id: Quam quae aut cumque consequatur asperiores.
       logoURL: Hic illum veniam magni nam perferendis.
       name: Quis ut unde aliquam voluptatibus.
-    - description: Eaque facere voluptates consequatur nihil odit.
-      id: Quam quae aut cumque consequatur asperiores.
-      logoURL: Hic illum veniam magni nam perferendis.
-      name: Quis ut unde aliquam voluptatibus.
-    - description: Eaque facere voluptates consequatur nihil odit.
-      id: Quam quae aut cumque consequatur asperiores.
-      logoURL: Hic illum veniam magni nam perferendis.
-      name: Quis ut unde aliquam voluptatibus.
     items:
       $ref: '#/definitions/Badge'
     title: 'Mediatype identifier: application/vnd.badge+json; type=collection; view=default'
@@ -67,12 +59,35 @@ definitions:
         id: Quam quae aut cumque consequatur asperiores.
         logoURL: Hic illum veniam magni nam perferendis.
         name: Quis ut unde aliquam voluptatibus.
+      - description: Eaque facere voluptates consequatur nihil odit.
+        id: Quam quae aut cumque consequatur asperiores.
+        logoURL: Hic illum veniam magni nam perferendis.
+        name: Quis ut unde aliquam voluptatibus.
     properties:
       badges:
         $ref: '#/definitions/BadgeCollection'
     required:
     - badges
     title: 'Mediatype identifier: application/vnd.badges+json; view=default'
+    type: object
+  ClaimPayload:
+    description: Claim payload
+    example:
+      taskId: Culpa dignissimos facilis dolore.
+      userId: Fuga ipsam.
+    properties:
+      taskId:
+        description: Task ID
+        example: Culpa dignissimos facilis dolore.
+        type: string
+      userId:
+        description: User ID
+        example: Fuga ipsam.
+        type: string
+    required:
+    - userId
+    - taskId
+    title: ClaimPayload
     type: object
   CreateBadgePayload:
     description: Create Badge payload
@@ -270,8 +285,6 @@ definitions:
     description: Quiz-FieldsCollection is the media type for an array of Quiz-Fields
       (default view)
     example:
-    - answer: Corporis aut ullam.
-      question: Officiis odit vero eum.
     - answer: Corporis aut ullam.
       question: Officiis odit vero eum.
     - answer: Corporis aut ullam.
@@ -734,6 +747,10 @@ definitions:
       id: Sit et molestias sed possimus enim et.
       taskId: Non quia aliquam voluptatem quibusdam ut.
       userId: Inventore ducimus fuga.
+    - hash: Non voluptatem id.
+      id: Sit et molestias sed possimus enim et.
+      taskId: Non quia aliquam voluptatem quibusdam ut.
+      userId: Inventore ducimus fuga.
     items:
       $ref: '#/definitions/Transaction'
     title: 'Mediatype identifier: application/vnd.transaction+json; type=collection;
@@ -743,6 +760,10 @@ definitions:
     description: Transactions (default view)
     example:
       transactions:
+      - hash: Non voluptatem id.
+        id: Sit et molestias sed possimus enim et.
+        taskId: Non quia aliquam voluptatem quibusdam ut.
+        userId: Inventore ducimus fuga.
       - hash: Non voluptatem id.
         id: Sit et molestias sed possimus enim et.
         taskId: Non quia aliquam voluptatem quibusdam ut.
@@ -761,11 +782,11 @@ definitions:
   TypeformCalculatedPayload:
     description: Typeform calculatd data
     example:
-      score: 4349942782431219031
+      score: 8090806073172937238
     properties:
       score:
         description: Score
-        example: 4349942782431219031
+        example: 8090806073172937238
         format: int64
         type: integer
     title: TypeformCalculatedPayload
@@ -773,80 +794,80 @@ definitions:
   TypeformFormPayload:
     description: Typeform form data
     example:
-      answers: "1980-04-19T22:48:47Z"
+      answers: true
       calculated:
-        score: 4349942782431219031
-      definition: 0.9350399742160251
-      form_id: Porro et itaque.
+        score: 8090806073172937238
+      definition: "2002-08-19T05:06:24Z"
+      form_id: Rerum cum iste.
       hidden:
-        user_id: Sit ad commodi omnis omnis exercitationem consectetur.
-      landed_at: Modi fuga cum in ut officiis similique.
-      submitted_at: Molestiae eligendi iusto doloremque quia sequi in.
-      token: Neque sunt repellendus ullam ut magni.
+        user_id: Ut enim vel illum vero non beatae.
+      landed_at: Aliquid accusamus quia est itaque maxime.
+      submitted_at: Est iusto.
+      token: Non possimus voluptatem molestiae nam asperiores.
     properties:
       answers:
         description: Answers
-        example: "1980-04-19T22:48:47Z"
+        example: true
       calculated:
         $ref: '#/definitions/TypeformCalculatedPayload'
       definition:
         description: Definition
-        example: 0.9350399742160251
+        example: "2002-08-19T05:06:24Z"
       form_id:
         description: Form ID
-        example: Porro et itaque.
+        example: Rerum cum iste.
         type: string
       hidden:
         $ref: '#/definitions/TypeformHiddenPayload'
       landed_at:
         description: Form ID
-        example: Modi fuga cum in ut officiis similique.
+        example: Aliquid accusamus quia est itaque maxime.
         type: string
       submitted_at:
         description: Form ID
-        example: Molestiae eligendi iusto doloremque quia sequi in.
+        example: Est iusto.
         type: string
       token:
         description: Form ID
-        example: Neque sunt repellendus ullam ut magni.
+        example: Non possimus voluptatem molestiae nam asperiores.
         type: string
     title: TypeformFormPayload
     type: object
   TypeformHiddenPayload:
     description: Typeform hidden data
     example:
-      user_id: Sit ad commodi omnis omnis exercitationem consectetur.
+      user_id: Ut enim vel illum vero non beatae.
     properties:
       user_id:
         description: User ID
-        example: Sit ad commodi omnis omnis exercitationem consectetur.
+        example: Ut enim vel illum vero non beatae.
         type: string
     title: TypeformHiddenPayload
     type: object
   TypeformPayload:
     description: Typeform payload
     example:
-      event_id: Iste non aut.
-      event_type: Atque fugit.
+      event_id: Molestiae eligendi iusto doloremque quia sequi in.
+      event_type: Neque sunt repellendus ullam ut magni.
       form_response:
-        answers: "1980-04-19T22:48:47Z"
+        answers: true
         calculated:
-          score: 4349942782431219031
-        definition: 0.9350399742160251
-        form_id: Porro et itaque.
+          score: 8090806073172937238
+        definition: "2002-08-19T05:06:24Z"
+        form_id: Rerum cum iste.
         hidden:
-          user_id: Sit ad commodi omnis omnis exercitationem consectetur.
-        landed_at: Modi fuga cum in ut officiis similique.
-        submitted_at: Molestiae eligendi iusto doloremque quia sequi in.
-        token: Neque sunt repellendus ullam ut magni.
+          user_id: Ut enim vel illum vero non beatae.
+        landed_at: Aliquid accusamus quia est itaque maxime.
+        submitted_at: Est iusto.
+        token: Non possimus voluptatem molestiae nam asperiores.
     properties:
       event_id:
         description: Event ID
-        example: Iste non aut.
+        example: Molestiae eligendi iusto doloremque quia sequi in.
         type: string
       event_type:
         description: Event types
-        example: Atque fugit.
+        example: Neque sunt repellendus ullam ut magni.
         type: string
       form_response:
         $ref: '#/definitions/TypeformFormPayload'
@@ -924,11 +945,11 @@ definitions:
   UserPayload:
     description: User payload
     example:
-      cognitoAuthUserId: Culpa dignissimos facilis dolore.
+      cognitoAuthUserId: Iste non aut.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Culpa dignissimos facilis dolore.
+        example: Iste non aut.
         type: string
     required:
     - cognitoAuthUserId
@@ -1011,7 +1032,7 @@ definitions:
     example:
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
       walletAddress: 0x845fdD93Cca3aE9e380d5556818e6d0b902B977c
-      walletType: Fuga ipsam.
+      walletType: Atque fugit.
     properties:
       userId:
         description: User ID
@@ -1025,7 +1046,7 @@ definitions:
         type: string
       walletType:
         description: wallet type
-        example: Fuga ipsam.
+        example: Atque fugit.
         type: string
     required:
     - userId
@@ -1033,12 +1054,48 @@ definitions:
     - walletType
     title: WalletPayload
     type: object
+  WalletVerificationPayload:
+    description: Wallet verification payload
+    example:
+      address: Nisi temporibus minus aut temporibus porro et.
+      message: Voluptas sit ad commodi.
+      signature: Omnis exercitationem consectetur.
+      userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
+      version: Modi fuga cum in ut officiis similique.
+    properties:
+      address:
+        description: Wallet address
+        example: Nisi temporibus minus aut temporibus porro et.
+        type: string
+      message:
+        description: Message
+        example: Voluptas sit ad commodi.
+        type: string
+      signature:
+        description: Signature
+        example: Omnis exercitationem consectetur.
+        type: string
+      userId:
+        description: User ID
+        example: 9302608f-f6a4-4004-b088-63e5fb43cc26
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        type: string
+      version:
+        description: Version
+        example: Modi fuga cum in ut officiis similique.
+        type: string
+    required:
+    - userId
+    - address
+    - message
+    - signature
+    - version
+    title: WalletVerificationPayload
+    type: object
   Wallets:
     description: Wallets (default view)
     example:
       wallets:
-      - address: Quisquam sit facere qui praesentium.
-        walletType: Delectus sit eos error.
       - address: Quisquam sit facere qui praesentium.
         walletType: Delectus sit eos error.
     properties:
@@ -2242,6 +2299,52 @@ paths:
       summary: list transactions
       tags:
       - transactions
+  /v1/transactions/claim:
+    post:
+      description: Claim
+      operationId: transactions#claim
+      parameters:
+      - description: Task ID
+        in: query
+        name: taskId
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        required: false
+        type: string
+      - description: Claim payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/ClaimPayload'
+      produces:
+      - application/standard_error+json
+      - text/plain
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: claim transactions
+      tags:
+      - transactions
   /v1/users:
     get:
       description: Get user ID mapped to Cognito auth user ID
@@ -2442,6 +2545,48 @@ paths:
       security:
       - JWTAuth: []
       summary: update wallets
+      tags:
+      - wallets
+  /v1/wallets/verify:
+    post:
+      description: Verify signed message
+      operationId: wallets#verify
+      parameters:
+      - description: Wallet verification payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/WalletVerificationPayload'
+      produces:
+      - application/standard_error+json
+      - application/vnd.wallet+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Wallet'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: verify wallets
       tags:
       - wallets
   /v1/webhooks/typeform:

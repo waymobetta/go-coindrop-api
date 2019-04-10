@@ -14,6 +14,56 @@ import (
 	"github.com/goadesign/goa"
 )
 
+// Claim payload
+type claimPayload struct {
+	// Task ID
+	TaskID *string `form:"taskId,omitempty" json:"taskId,omitempty" yaml:"taskId,omitempty" xml:"taskId,omitempty"`
+	// User ID
+	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
+}
+
+// Validate validates the claimPayload type instance.
+func (ut *claimPayload) Validate() (err error) {
+	if ut.UserID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "userId"))
+	}
+	if ut.TaskID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "taskId"))
+	}
+	return
+}
+
+// Publicize creates ClaimPayload from claimPayload
+func (ut *claimPayload) Publicize() *ClaimPayload {
+	var pub ClaimPayload
+	if ut.TaskID != nil {
+		pub.TaskID = *ut.TaskID
+	}
+	if ut.UserID != nil {
+		pub.UserID = *ut.UserID
+	}
+	return &pub
+}
+
+// Claim payload
+type ClaimPayload struct {
+	// Task ID
+	TaskID string `form:"taskId" json:"taskId" yaml:"taskId" xml:"taskId"`
+	// User ID
+	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+}
+
+// Validate validates the ClaimPayload type instance.
+func (ut *ClaimPayload) Validate() (err error) {
+	if ut.UserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "userId"))
+	}
+	if ut.TaskID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "taskId"))
+	}
+	return
+}
+
 // Create Badge payload
 type createBadgePayload struct {
 	// Badge description
@@ -846,6 +896,103 @@ func (ut *WalletPayload) Validate() (err error) {
 	}
 	if ok := goa.ValidatePattern(`^0x[0-9a-fA-F]{40}$`, ut.WalletAddress); !ok {
 		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.walletAddress`, ut.WalletAddress, `^0x[0-9a-fA-F]{40}$`))
+	}
+	return
+}
+
+// Wallet verification payload
+type walletVerificationPayload struct {
+	// Wallet address
+	Address *string `form:"address,omitempty" json:"address,omitempty" yaml:"address,omitempty" xml:"address,omitempty"`
+	// Message
+	Message *string `form:"message,omitempty" json:"message,omitempty" yaml:"message,omitempty" xml:"message,omitempty"`
+	// Signature
+	Signature *string `form:"signature,omitempty" json:"signature,omitempty" yaml:"signature,omitempty" xml:"signature,omitempty"`
+	// User ID
+	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
+	// Version
+	Version *string `form:"version,omitempty" json:"version,omitempty" yaml:"version,omitempty" xml:"version,omitempty"`
+}
+
+// Validate validates the walletVerificationPayload type instance.
+func (ut *walletVerificationPayload) Validate() (err error) {
+	if ut.UserID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "userId"))
+	}
+	if ut.Address == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "address"))
+	}
+	if ut.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "message"))
+	}
+	if ut.Signature == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "signature"))
+	}
+	if ut.Version == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "version"))
+	}
+	if ut.UserID != nil {
+		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *ut.UserID); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`request.userId`, *ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+		}
+	}
+	return
+}
+
+// Publicize creates WalletVerificationPayload from walletVerificationPayload
+func (ut *walletVerificationPayload) Publicize() *WalletVerificationPayload {
+	var pub WalletVerificationPayload
+	if ut.Address != nil {
+		pub.Address = *ut.Address
+	}
+	if ut.Message != nil {
+		pub.Message = *ut.Message
+	}
+	if ut.Signature != nil {
+		pub.Signature = *ut.Signature
+	}
+	if ut.UserID != nil {
+		pub.UserID = *ut.UserID
+	}
+	if ut.Version != nil {
+		pub.Version = *ut.Version
+	}
+	return &pub
+}
+
+// Wallet verification payload
+type WalletVerificationPayload struct {
+	// Wallet address
+	Address string `form:"address" json:"address" yaml:"address" xml:"address"`
+	// Message
+	Message string `form:"message" json:"message" yaml:"message" xml:"message"`
+	// Signature
+	Signature string `form:"signature" json:"signature" yaml:"signature" xml:"signature"`
+	// User ID
+	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+	// Version
+	Version string `form:"version" json:"version" yaml:"version" xml:"version"`
+}
+
+// Validate validates the WalletVerificationPayload type instance.
+func (ut *WalletVerificationPayload) Validate() (err error) {
+	if ut.UserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "userId"))
+	}
+	if ut.Address == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "address"))
+	}
+	if ut.Message == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "message"))
+	}
+	if ut.Signature == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "signature"))
+	}
+	if ut.Version == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "version"))
+	}
+	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, ut.UserID); !ok {
+		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.userId`, ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
 	}
 	return
 }

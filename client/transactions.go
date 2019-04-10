@@ -11,11 +11,65 @@
 package client
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"net/http"
 	"net/url"
 )
+
+// ClaimTransactionsPath computes a request path to the claim action of transactions.
+func ClaimTransactionsPath() string {
+
+	return fmt.Sprintf("/v1/transactions/claim")
+}
+
+// Claim
+func (c *Client) ClaimTransactions(ctx context.Context, path string, payload *ClaimPayload, taskID *string, contentType string) (*http.Response, error) {
+	req, err := c.NewClaimTransactionsRequest(ctx, path, payload, taskID, contentType)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewClaimTransactionsRequest create the request corresponding to the claim action endpoint of the transactions resource.
+func (c *Client) NewClaimTransactionsRequest(ctx context.Context, path string, payload *ClaimPayload, taskID *string, contentType string) (*http.Request, error) {
+	var body bytes.Buffer
+	if contentType == "" {
+		contentType = "*/*" // Use default encoder
+	}
+	err := c.Encoder.Encode(payload, &body, contentType)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode body: %s", err)
+	}
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	values := u.Query()
+	if taskID != nil {
+		values.Set("taskId", *taskID)
+	}
+	u.RawQuery = values.Encode()
+	req, err := http.NewRequest("POST", u.String(), &body)
+	if err != nil {
+		return nil, err
+	}
+	header := req.Header
+	if contentType == "*/*" {
+		header.Set("Content-Type", "application/json")
+	} else {
+		header.Set("Content-Type", contentType)
+	}
+	if c.JWTAuthSigner != nil {
+		if err := c.JWTAuthSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
 
 // ListTransactionsPath computes a request path to the list action of transactions.
 func ListTransactionsPath(userID string) string {

@@ -1180,6 +1180,7 @@ func unmarshalUpdateTasksPayload(ctx context.Context, service *goa.Service, req 
 // TransactionsController is the controller interface for the Transactions actions.
 type TransactionsController interface {
 	goa.Muxer
+	Claim(*ClaimTransactionsContext) error
 	List(*ListTransactionsContext) error
 }
 
@@ -1187,7 +1188,31 @@ type TransactionsController interface {
 func MountTransactionsController(service *goa.Service, ctrl TransactionsController) {
 	initService(service)
 	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/v1/transactions/claim", ctrl.MuxHandler("preflight", handleTransactionsOrigin(cors.HandlePreflight()), nil))
 	service.Mux.Handle("OPTIONS", "/v1/transactions/:userId", ctrl.MuxHandler("preflight", handleTransactionsOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewClaimTransactionsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*ClaimPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Claim(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleTransactionsOrigin(h)
+	service.Mux.Handle("POST", "/v1/transactions/claim", ctrl.MuxHandler("claim", h, unmarshalClaimTransactionsPayload))
+	service.LogInfo("mount", "ctrl", "Transactions", "action", "Claim", "route", "POST /v1/transactions/claim", "security", "JWTAuth")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -1229,6 +1254,21 @@ func handleTransactionsOrigin(h goa.Handler) goa.Handler {
 
 		return h(ctx, rw, req)
 	}
+}
+
+// unmarshalClaimTransactionsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalClaimTransactionsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &claimPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
 }
 
 // UsersController is the controller interface for the Users actions.
@@ -1345,6 +1385,7 @@ type WalletsController interface {
 	goa.Muxer
 	Show(*ShowWalletsContext) error
 	Update(*UpdateWalletsContext) error
+	Verify(*VerifyWalletsContext) error
 }
 
 // MountWalletsController "mounts" a Wallets resource controller on the given service.
@@ -1352,6 +1393,7 @@ func MountWalletsController(service *goa.Service, ctrl WalletsController) {
 	initService(service)
 	var h goa.Handler
 	service.Mux.Handle("OPTIONS", "/v1/wallets", ctrl.MuxHandler("preflight", handleWalletsOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/wallets/verify", ctrl.MuxHandler("preflight", handleWalletsOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -1392,6 +1434,29 @@ func MountWalletsController(service *goa.Service, ctrl WalletsController) {
 	h = handleWalletsOrigin(h)
 	service.Mux.Handle("POST", "/v1/wallets", ctrl.MuxHandler("update", h, unmarshalUpdateWalletsPayload))
 	service.LogInfo("mount", "ctrl", "Wallets", "action", "Update", "route", "POST /v1/wallets", "security", "JWTAuth")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewVerifyWalletsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*WalletVerificationPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Verify(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleWalletsOrigin(h)
+	service.Mux.Handle("POST", "/v1/wallets/verify", ctrl.MuxHandler("verify", h, unmarshalVerifyWalletsPayload))
+	service.LogInfo("mount", "ctrl", "Wallets", "action", "Verify", "route", "POST /v1/wallets/verify", "security", "JWTAuth")
 }
 
 // handleWalletsOrigin applies the CORS response headers corresponding to the origin.
@@ -1421,6 +1486,21 @@ func handleWalletsOrigin(h goa.Handler) goa.Handler {
 // unmarshalUpdateWalletsPayload unmarshals the request body into the context request data Payload field.
 func unmarshalUpdateWalletsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
 	payload := &walletPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalVerifyWalletsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalVerifyWalletsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &walletVerificationPayload{}
 	if err := service.DecodeRequest(req, payload); err != nil {
 		return err
 	}

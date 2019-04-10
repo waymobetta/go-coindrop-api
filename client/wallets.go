@@ -104,3 +104,51 @@ func (c *Client) NewUpdateWalletsRequest(ctx context.Context, path string, paylo
 	}
 	return req, nil
 }
+
+// VerifyWalletsPath computes a request path to the verify action of wallets.
+func VerifyWalletsPath() string {
+
+	return fmt.Sprintf("/v1/wallets/verify")
+}
+
+// Verify signed message
+func (c *Client) VerifyWallets(ctx context.Context, path string, payload *WalletVerificationPayload, contentType string) (*http.Response, error) {
+	req, err := c.NewVerifyWalletsRequest(ctx, path, payload, contentType)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewVerifyWalletsRequest create the request corresponding to the verify action endpoint of the wallets resource.
+func (c *Client) NewVerifyWalletsRequest(ctx context.Context, path string, payload *WalletVerificationPayload, contentType string) (*http.Request, error) {
+	var body bytes.Buffer
+	if contentType == "" {
+		contentType = "*/*" // Use default encoder
+	}
+	err := c.Encoder.Encode(payload, &body, contentType)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode body: %s", err)
+	}
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("POST", u.String(), &body)
+	if err != nil {
+		return nil, err
+	}
+	header := req.Header
+	if contentType == "*/*" {
+		header.Set("Content-Type", "application/json")
+	} else {
+		header.Set("Content-Type", contentType)
+	}
+	if c.JWTAuthSigner != nil {
+		if err := c.JWTAuthSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
