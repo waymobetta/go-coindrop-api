@@ -183,8 +183,8 @@ type Transaction struct {
 	Hash   string `json:"hash"`
 }
 
-// VerifyPayload contains info used for Wallet verification purposes
-type VerifyPayload struct {
+// WalletVerification contains info used for Wallet verification purposes
+type WalletVerification struct {
 	Address   string `json:"address"`
 	Message   string `json:"msg"`
 	Signature string `json:"sig"`
