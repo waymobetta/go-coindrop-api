@@ -21,6 +21,16 @@ func NewTransactionsController(service *goa.Service, dbs *db.DB) *TransactionsCo
 	}
 }
 
+// Claim runs the claim action.
+func (c *TransactionsController) Claim(ctx *app.ClaimTransactionsContext) error {
+	// TransactionsController_Claim: start_implement
+
+	// Put your logic here
+
+	return nil
+	// TransactionsController_Claim: end_implement
+}
+
 // List runs the list action.
 func (c *TransactionsController) List(ctx *app.ListTransactionsContext) error {
 	// TransactionsController_List: start_implement
