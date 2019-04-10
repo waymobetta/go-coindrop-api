@@ -175,11 +175,20 @@ type Badge struct {
 	LogoURL     string `json:"logo_url"`
 }
 
+// Transaction struct contains info about a send tx based on task completion
 type Transaction struct {
 	ID     string `json:"id"`
 	UserID string `json:"user_id"`
 	TaskID string `json:"task_id"`
 	Hash   string `json:"hash"`
+}
+
+// VerifyPayload contains info used for Wallet verification purposes
+type VerifyPayload struct {
+	Address   string `json:"address"`
+	Message   string `json:"msg"`
+	Signature string `json:"sig"`
+	Version   string `json:"version"`
 }
 
 // TypeformWebHookResponse struct contains info from the TypeformWebHook response
