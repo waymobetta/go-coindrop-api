@@ -62,6 +62,65 @@ func (db *DB) UpdateWallet(userID, newWalletAddress, walletType string) (*types.
 	return wallet, nil
 }
 
+// UpdateWalletVerification updates the wallet verification of a single user
+func (db *DB) UpdateWalletVerification(userID, walletAddress string) (*types.Wallet, error) {
+	// for simplicity, update the listing rather than updating single value
+	tx, err := db.client.Begin()
+	if err != nil {
+		return nil, err
+	}
+
+	// create SQL statement for db update
+	sqlStatement := `
+		UPDATE 
+			coindrop_wallets
+		SET
+			verified = $1
+		WHERE
+			address = $2
+		AND
+			user_id = $3
+		AND
+			type = $4
+	`
+
+	// prepare statement
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return nil, err
+	}
+
+	defer stmt.Close()
+
+	wallet := &types.Wallet{
+		Address:  walletAddress,
+		UserID:   userID,
+		Verified: true,
+		Type:     "eth",
+	}
+
+	// execute db write using address and unique ID as the identifiers
+	_, err = stmt.Exec(
+		wallet.Verified,
+		wallet.Address,
+		wallet.UserID,
+		wallet.Type,
+	)
+	if err != nil {
+		// rollback transaction if error thrown
+		return nil, tx.Rollback()
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaction if error thrown
+		return nil, tx.Rollback()
+	}
+
+	return wallet, nil
+}
+
 // AddWallet adds a new wallet for the user
 func (db *DB) AddWallet(userID, newWalletAddress, walletType string) (*types.Wallet, error) {
 	// for simplicity, update the listing rather than updating single value
