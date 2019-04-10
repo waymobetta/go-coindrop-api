@@ -65,7 +65,7 @@ func (db *DB) AddStackUser(u *types.User) (*types.User, error) {
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
-		// rollback transaciton if error thrown
+		// rollback transaction if error thrown
 		tx.Rollback()
 		return u, err
 	}
