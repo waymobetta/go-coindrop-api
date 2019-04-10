@@ -205,12 +205,17 @@ var WalletVerificationPayload = Type("WalletVerificationPayload", func() {
 		Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
 		Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
 	})
+	Attribute("taskId", String, "Task ID", func() {
+		Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
+		Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
+	})
 	Attribute("address", String, "Wallet address")
 	Attribute("message", String, "Message")
 	Attribute("signature", String, "Signature")
 	Attribute("version", String, "Version")
 	Required(
 		"userId",
+		"taskId",
 		"address",
 		"message",
 		"signature",
