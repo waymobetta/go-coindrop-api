@@ -2,6 +2,8 @@
 
 > The CoinDrop API
 
+[![Go Report](https://goreportcard.com/badge/github.com/waymobetta/go-coindrop-api)](https://goreportcard.com/badge/github.com/waymobetta/go-coindrop-api)
+
 ## Getting started
 
 Start server
