@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
+	ethsvc "github.com/waymobetta/go-coindrop-api/services/ethereum"
 	"github.com/waymobetta/go-coindrop-api/types"
 )
 
@@ -122,4 +123,45 @@ func (c *WalletsController) Update(ctx *app.UpdateWalletsContext) error {
 
 	return ctx.OK(res)
 	// WalletsController_Update: end_implement
+}
+
+// Verify runs the verify action.
+func (c *WalletsController) Verify(ctx *app.VerifyWalletsContext) error {
+	// WalletsController_Verify: start_implement
+
+	// Put your logic here
+
+	userID := ctx.Payload.UserID
+	if userID == "" {
+		userID = ctx.Value("authUserID").(string)
+	}
+
+	walletVerification := &types.WalletVerification{
+		Address:   ctx.Payload.Address,
+		Message:   ctx.Payload.Message,
+		Signature: ctx.Payload.Signature,
+		Version:   ctx.Payload.Version,
+	}
+
+	verified, err := ethsvc.VerifyAddress(
+		walletVerification.Address,
+		walletVerification.Signature,
+		[]byte(walletVerification.Message),
+	)
+	if err != nil {
+		log.Errorf("[controller/wallet] %v", err)
+		return ctx.BadRequest(&app.StandardError{
+			Code:    400,
+			Message: "could not verify address",
+		})
+	}
+	if verified {
+		log.Printf("wallet verified for user: %s", userID)
+	}
+
+	res := &app.Wallet{
+		Address: ctx.Payload.Address,
+	}
+	return ctx.OK(res)
+	// WalletsController_Verify: end_implement
 }
