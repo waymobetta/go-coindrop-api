@@ -143,7 +143,7 @@ func (c *WalletsController) Verify(ctx *app.VerifyWalletsContext) error {
 		Version:   ctx.Payload.Version,
 	}
 
-	verified, err := ethsvc.VerifyAddress(
+	err := ethsvc.VerifyAddress(
 		walletVerification.Address,
 		walletVerification.Signature,
 		[]byte(walletVerification.Message),
@@ -159,7 +159,7 @@ func (c *WalletsController) Verify(ctx *app.VerifyWalletsContext) error {
 	log.Printf("[controller/wallet] wallet successfully verified for user: %s", userID)
 
 	wallet, err := c.db.UpdateWalletVerification(
-		userID, walletAddress,
+		userID, walletVerification.Address,
 	)
 	if err != nil {
 		log.Errorf("[controller/wallet] %v", err)
@@ -170,9 +170,9 @@ func (c *WalletsController) Verify(ctx *app.VerifyWalletsContext) error {
 	}
 
 	res := &app.Wallet{
-		Address:    wallet.Address,
+		Address:    walletVerification.Address,
 		Verified:   wallet.Verified,
-		WalletType: wallet.Type,
+		WalletType: "eth",
 	}
 	return ctx.OK(res)
 	// WalletsController_Verify: end_implement
