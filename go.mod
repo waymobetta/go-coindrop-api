@@ -15,6 +15,7 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/goadesign/goa v1.4.1
 	github.com/gofrs/uuid v3.2.0+incompatible // indirect
+	github.com/gojp/goreportcard v0.0.0-20190222063446-707d97b8bfa7 // indirect
 	github.com/gomodule/redigo v2.0.0+incompatible // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
 	github.com/google/gxui v0.0.0-20151028112939-f85e0a97b3a4 // indirect
