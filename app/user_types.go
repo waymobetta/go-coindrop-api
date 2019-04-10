@@ -908,6 +908,8 @@ type walletVerificationPayload struct {
 	Message *string `form:"message,omitempty" json:"message,omitempty" yaml:"message,omitempty" xml:"message,omitempty"`
 	// Signature
 	Signature *string `form:"signature,omitempty" json:"signature,omitempty" yaml:"signature,omitempty" xml:"signature,omitempty"`
+	// Task ID
+	TaskID *string `form:"taskId,omitempty" json:"taskId,omitempty" yaml:"taskId,omitempty" xml:"taskId,omitempty"`
 	// User ID
 	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
 	// Version
@@ -918,6 +920,9 @@ type walletVerificationPayload struct {
 func (ut *walletVerificationPayload) Validate() (err error) {
 	if ut.UserID == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "userId"))
+	}
+	if ut.TaskID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "taskId"))
 	}
 	if ut.Address == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "address"))
@@ -930,6 +935,11 @@ func (ut *walletVerificationPayload) Validate() (err error) {
 	}
 	if ut.Version == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "version"))
+	}
+	if ut.TaskID != nil {
+		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *ut.TaskID); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`request.taskId`, *ut.TaskID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+		}
 	}
 	if ut.UserID != nil {
 		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *ut.UserID); !ok {
@@ -951,6 +961,9 @@ func (ut *walletVerificationPayload) Publicize() *WalletVerificationPayload {
 	if ut.Signature != nil {
 		pub.Signature = *ut.Signature
 	}
+	if ut.TaskID != nil {
+		pub.TaskID = *ut.TaskID
+	}
 	if ut.UserID != nil {
 		pub.UserID = *ut.UserID
 	}
@@ -968,6 +981,8 @@ type WalletVerificationPayload struct {
 	Message string `form:"message" json:"message" yaml:"message" xml:"message"`
 	// Signature
 	Signature string `form:"signature" json:"signature" yaml:"signature" xml:"signature"`
+	// Task ID
+	TaskID string `form:"taskId" json:"taskId" yaml:"taskId" xml:"taskId"`
 	// User ID
 	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
 	// Version
@@ -978,6 +993,9 @@ type WalletVerificationPayload struct {
 func (ut *WalletVerificationPayload) Validate() (err error) {
 	if ut.UserID == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "userId"))
+	}
+	if ut.TaskID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "taskId"))
 	}
 	if ut.Address == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "address"))
@@ -990,6 +1008,9 @@ func (ut *WalletVerificationPayload) Validate() (err error) {
 	}
 	if ut.Version == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "version"))
+	}
+	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, ut.TaskID); !ok {
+		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.taskId`, ut.TaskID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
 	}
 	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, ut.UserID); !ok {
 		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.userId`, ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))

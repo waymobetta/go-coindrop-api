@@ -1069,6 +1069,7 @@ definitions:
       address: Nisi temporibus minus aut temporibus porro et.
       message: Voluptas sit ad commodi.
       signature: Omnis exercitationem consectetur.
+      taskId: 9302608f-f6a4-4004-b088-63e5fb43cc26
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
       version: Modi fuga cum in ut officiis similique.
     properties:
@@ -1084,6 +1085,11 @@ definitions:
         description: Signature
         example: Omnis exercitationem consectetur.
         type: string
+      taskId:
+        description: Task ID
+        example: 9302608f-f6a4-4004-b088-63e5fb43cc26
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        type: string
       userId:
         description: User ID
         example: 9302608f-f6a4-4004-b088-63e5fb43cc26
@@ -1095,6 +1101,7 @@ definitions:
         type: string
     required:
     - userId
+    - taskId
     - address
     - message
     - signature

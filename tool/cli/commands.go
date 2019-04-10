@@ -813,6 +813,7 @@ Payload example:
    "address": "Nisi temporibus minus aut temporibus porro et.",
    "message": "Voluptas sit ad commodi.",
    "signature": "Omnis exercitationem consectetur.",
+   "taskId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
    "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
    "version": "Modi fuga cum in ut officiis similique."
 }`,
