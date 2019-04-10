@@ -169,7 +169,7 @@ func (c *WalletsController) Verify(ctx *app.VerifyWalletsContext) error {
 		})
 	}
 
-	userTask := &types.userTask{
+	userTask := &types.UserTask{
 		UserID:    ctx.Payload.UserID,
 		TaskID:    ctx.Payload.TaskID,
 		Completed: true,
