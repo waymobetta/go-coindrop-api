@@ -2,6 +2,7 @@
 
 > The CoinDrop API
 
+[![Build Status](https://travis-ci.com/waymobetta/go-coindrop-api.svg?token=k4WaUgmdzJ2beTknNPs7&branch=master)](https://travis-ci.org/waymobetta/go-coindrop-api)
 [![Go Report](https://goreportcard.com/badge/github.com/waymobetta/go-coindrop-api)](https://goreportcard.com/badge/github.com/waymobetta/go-coindrop-api)
 
 ## Getting started
