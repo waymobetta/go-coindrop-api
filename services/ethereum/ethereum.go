@@ -164,8 +164,8 @@ func SendToken(tokenAmount, recipientAddress string) (string, error) {
 	return transaction, nil
 }
 
-// VerifyAccount ...
-func VerifyAccount(from, sigHex string, msg []byte) (bool, error) {
+// VerifyAddress ...
+func VerifyAddress(from, sigHex string, msg []byte) (bool, error) {
 	fromAddr := common.HexToAddress(from)
 
 	sig := hexutil.MustDecode(sigHex)
