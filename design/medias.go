@@ -132,15 +132,18 @@ var WalletMedia = MediaType("application/vnd.wallet+json", func() {
 		})
 		Attribute("address", String, "wallet address")
 		Attribute("walletType", String, "wallet type")
+		Attribute("verified", Boolean, "wallet verified flag")
 		Required(
 			"id",
 			"address",
 			"walletType",
+			"verified",
 		)
 	})
 	View("default", func() {
 		Attribute("address")
 		Attribute("walletType")
+		Attribute("verified")
 	})
 })
 
