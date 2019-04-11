@@ -184,7 +184,8 @@ func (db *DB) GetWallet(userID, walletType string) (*types.Wallet, error) {
 	sqlStatement := `
 		SELECT
 			address,
-			type
+			type,
+			verified
 		FROM
 			coindrop_wallets
 		WHERE
@@ -215,6 +216,7 @@ func (db *DB) GetWallet(userID, walletType string) (*types.Wallet, error) {
 	err = row.Scan(
 		&wallet.Address,
 		&wallet.Type,
+		&wallet.Verified,
 	)
 
 	if err == sql.ErrNoRows {
@@ -236,7 +238,8 @@ func (db *DB) GetWallets(userID string) ([]types.Wallet, error) {
 	sqlStatement := `
 		SELECT
 			coindrop_wallets.address,
-			coindrop_wallets.type
+			coindrop_wallets.type,
+			coindrop_wallets.verified
 		FROM
 			coindrop_wallets
 		WHERE
@@ -268,6 +271,7 @@ func (db *DB) GetWallets(userID string) ([]types.Wallet, error) {
 		err = rows.Scan(
 			&wallet.Address,
 			&wallet.Type,
+			&wallet.Verified,
 		)
 		if err != nil {
 			return nil, err
