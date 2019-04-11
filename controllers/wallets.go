@@ -49,6 +49,7 @@ func (c *WalletsController) Show(ctx *app.ShowWalletsContext) error {
 		w = append(w, &app.Wallet{
 			Address:    wallet.Address,
 			WalletType: wallet.Type,
+			Verified:   wallet.Verified,
 		})
 	}
 
@@ -119,6 +120,7 @@ func (c *WalletsController) Update(ctx *app.UpdateWalletsContext) error {
 	res := &app.Wallet{
 		Address:    wallet.Address,
 		WalletType: wallet.Type,
+		Verified:   wallet.Verified,
 	}
 
 	return ctx.OK(res)
