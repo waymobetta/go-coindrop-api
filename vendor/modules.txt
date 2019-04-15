@@ -22,10 +22,10 @@ github.com/dimfeld/httptreemux
 # github.com/ethereum/go-ethereum v1.8.23
 github.com/ethereum/go-ethereum
 github.com/ethereum/go-ethereum/common
+github.com/ethereum/go-ethereum/common/hexutil
 github.com/ethereum/go-ethereum/core/types
 github.com/ethereum/go-ethereum/crypto
 github.com/ethereum/go-ethereum/ethclient
-github.com/ethereum/go-ethereum/common/hexutil
 github.com/ethereum/go-ethereum/params
 github.com/ethereum/go-ethereum/rlp
 github.com/ethereum/go-ethereum/trie
