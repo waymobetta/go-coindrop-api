@@ -119,10 +119,6 @@ func (a *AuthSessions) GetSubmittedInfo(user *types.User) error {
 		return err
 	}
 
-	// TODO:
-	// initialize new map to store subreddits and associated score
-	// var subredditMap map[string]int
-
 	// initialize new slice to store subreddit names user has submitted to
 	var subredditSlice []string
 
@@ -138,6 +134,28 @@ func (a *AuthSessions) GetSubmittedInfo(user *types.User) error {
 	user.Social.Reddit.Subreddits = uniqueSubredditSlice
 
 	return nil
+}
+
+// GetSubmittedInfo method to retrieve slice of user's submitted posts
+func (a *AuthSessions) GetRawSubmittedInfo(user *types.User) ([]*geddit.Submission, error) {
+	// get submissions of reddit user
+	// max limit: 100
+	// https://www.reddit.com/dev/api/oauth#GET_user_{username}_submitted
+	submissions, err := a.NoAuthSession.RedditorSubmissions(
+		user.Social.Reddit.Username,
+		geddit.ListingOptions{
+			Count: 100,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	// store sub/karma in mapping
+	// subreddit => karma
+	// subMap := make(map[string]int)
+
+	return submissions, nil
 }
 
 // GetOverview method to retrieve overview of user account
