@@ -1,6 +1,7 @@
 TODO
 
+. replace VerificationSubredditName (services/reddit/reddit.go) with cd sub
 . add subreddits/communities table
 . add postgres col to hold top/most recent subreddit submissions for user
 . add resources table
-	- links to quizzes or could replace	
+	- links to quizzes or could replace
