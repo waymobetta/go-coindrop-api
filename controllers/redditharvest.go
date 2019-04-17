@@ -59,21 +59,16 @@ func (c *RedditharvestController) UpdateAbout(ctx *app.UpdateAboutRedditharvestC
 	}
 
 	user = &types.User{
-		CognitoAuthUserID: ctx.Payload.UserID,
+		UserID: ctx.Payload.UserID,
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				LinkKarma:    user.Social.Reddit.LinkKarma,
 				CommentKarma: user.Social.Reddit.CommentKarma,
-				Verification: &types.Verification{
-					PostedVerificationCode:    "",
-					ConfirmedVerificationCode: "",
-					Verified:                  false,
-				},
 			},
 		},
 	}
 
-	_, err = c.db.UpdateRedditInfo(user)
+	_, err = c.db.UpdateRedditKarmaInfo(user)
 	if err != nil {
 		log.Errorf("[controller/reddit] %v", err)
 		return ctx.NotFound(&app.StandardError{
@@ -133,16 +128,11 @@ func (c *RedditharvestController) UpdateTrophies(ctx *app.UpdateTrophiesRedditha
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Trophies: user.Social.Reddit.Trophies,
-				Verification: &types.Verification{
-					PostedVerificationCode:    "",
-					ConfirmedVerificationCode: "",
-					Verified:                  false,
-				},
 			},
 		},
 	}
 
-	_, err = c.db.UpdateRedditInfo(user)
+	_, err = c.db.UpdateRedditTrophyInfo(user)
 	if err != nil {
 		log.Errorf("[controller/reddit] %v", err)
 		return ctx.NotFound(&app.StandardError{
@@ -197,20 +187,15 @@ func (c *RedditharvestController) UpdateSubmittedInfo(ctx *app.UpdateSubmittedIn
 	}
 
 	user = &types.User{
-		CognitoAuthUserID: ctx.Payload.UserID,
+		UserID: ctx.Payload.UserID,
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Subreddits: user.Social.Reddit.Subreddits,
-				Verification: &types.Verification{
-					PostedVerificationCode:    "",
-					ConfirmedVerificationCode: "",
-					Verified:                  false,
-				},
 			},
 		},
 	}
 
-	_, err = c.db.UpdateRedditInfo(user)
+	_, err = c.db.UpdateRedditSubInfo(user)
 	if err != nil {
 		log.Errorf("[controller/reddit] %v", err)
 		return ctx.NotFound(&app.StandardError{
