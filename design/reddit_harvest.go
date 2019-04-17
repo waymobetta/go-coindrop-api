@@ -15,9 +15,23 @@ var _ = Resource("redditharvest", func() {
 	Response(Gone, StandardErrorMedia)
 	Response(InternalServerError, StandardErrorMedia)
 
-	Action("update", func() {
-		Description("Update Reddit User Info")
-		Routing(POST(""))
+	Action("updateAbout", func() {
+		Description("Update Reddit User About Info")
+		Routing(POST("/about"))
+		Payload(UpdateRedditUserPayload)
+		Response(OK, RedditUserMedia)
+	})
+
+	Action("updateTrophies", func() {
+		Description("Update Reddit User Trophy Info")
+		Routing(POST("/trophies"))
+		Payload(UpdateRedditUserPayload)
+		Response(OK, RedditUserMedia)
+	})
+
+	Action("updateSubmittedInfo", func() {
+		Description("Update Reddit User Submitted Info")
+		Routing(POST("/submitted"))
 		Payload(UpdateRedditUserPayload)
 		Response(OK, RedditUserMedia)
 	})
