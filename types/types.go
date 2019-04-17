@@ -48,13 +48,13 @@ type Social struct {
 
 // Reddit info
 type Reddit struct {
-	ID           string        `json:"id"`
-	Username     string        `json:"username"`
-	LinkKarma    int           `json:"link_karma"`
-	CommentKarma int           `json:"comment_karma"`
-	Trophies     []string      `json:"trophies"`
-	Subreddits   []string      `json:"subreddits"`
-	Verification *Verification `json:"verification"`
+	ID           string         `json:"id"`
+	Username     string         `json:"username"`
+	LinkKarma    int            `json:"link_karma"`
+	CommentKarma int            `json:"comment_karma"`
+	Trophies     []string       `json:"trophies"`
+	Subreddits   map[string]int `json:"subreddits"`
+	Verification *Verification  `json:"verification"`
 }
 
 /// STACK OVERFLOW
