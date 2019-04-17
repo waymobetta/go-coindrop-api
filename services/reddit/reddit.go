@@ -151,10 +151,6 @@ func (a *AuthSessions) GetRawSubmittedInfo(user *types.User) ([]*geddit.Submissi
 		return nil, err
 	}
 
-	// store sub/karma in mapping
-	// subreddit => karma
-	// subMap := make(map[string]int)
-
 	return submissions, nil
 }
 
