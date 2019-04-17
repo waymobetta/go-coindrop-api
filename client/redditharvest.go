@@ -18,23 +18,119 @@ import (
 	"net/url"
 )
 
-// UpdateRedditharvestPath computes a request path to the update action of redditharvest.
-func UpdateRedditharvestPath() string {
+// UpdateAboutRedditharvestPath computes a request path to the updateAbout action of redditharvest.
+func UpdateAboutRedditharvestPath() string {
 
-	return fmt.Sprintf("/v1/social/reddit/harvest")
+	return fmt.Sprintf("/v1/social/reddit/harvest/about")
 }
 
-// Update Reddit User Info
-func (c *Client) UpdateRedditharvest(ctx context.Context, path string, payload *UpdateRedditUserPayload, contentType string) (*http.Response, error) {
-	req, err := c.NewUpdateRedditharvestRequest(ctx, path, payload, contentType)
+// Update Reddit User About Info
+func (c *Client) UpdateAboutRedditharvest(ctx context.Context, path string, payload *UpdateRedditUserPayload, contentType string) (*http.Response, error) {
+	req, err := c.NewUpdateAboutRedditharvestRequest(ctx, path, payload, contentType)
 	if err != nil {
 		return nil, err
 	}
 	return c.Client.Do(ctx, req)
 }
 
-// NewUpdateRedditharvestRequest create the request corresponding to the update action endpoint of the redditharvest resource.
-func (c *Client) NewUpdateRedditharvestRequest(ctx context.Context, path string, payload *UpdateRedditUserPayload, contentType string) (*http.Request, error) {
+// NewUpdateAboutRedditharvestRequest create the request corresponding to the updateAbout action endpoint of the redditharvest resource.
+func (c *Client) NewUpdateAboutRedditharvestRequest(ctx context.Context, path string, payload *UpdateRedditUserPayload, contentType string) (*http.Request, error) {
+	var body bytes.Buffer
+	if contentType == "" {
+		contentType = "*/*" // Use default encoder
+	}
+	err := c.Encoder.Encode(payload, &body, contentType)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode body: %s", err)
+	}
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("POST", u.String(), &body)
+	if err != nil {
+		return nil, err
+	}
+	header := req.Header
+	if contentType == "*/*" {
+		header.Set("Content-Type", "application/json")
+	} else {
+		header.Set("Content-Type", contentType)
+	}
+	if c.JWTAuthSigner != nil {
+		if err := c.JWTAuthSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
+
+// UpdateSubmittedInfoRedditharvestPath computes a request path to the updateSubmittedInfo action of redditharvest.
+func UpdateSubmittedInfoRedditharvestPath() string {
+
+	return fmt.Sprintf("/v1/social/reddit/harvest/submitted")
+}
+
+// Update Reddit User Submitted Info
+func (c *Client) UpdateSubmittedInfoRedditharvest(ctx context.Context, path string, payload *UpdateRedditUserPayload, contentType string) (*http.Response, error) {
+	req, err := c.NewUpdateSubmittedInfoRedditharvestRequest(ctx, path, payload, contentType)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewUpdateSubmittedInfoRedditharvestRequest create the request corresponding to the updateSubmittedInfo action endpoint of the redditharvest resource.
+func (c *Client) NewUpdateSubmittedInfoRedditharvestRequest(ctx context.Context, path string, payload *UpdateRedditUserPayload, contentType string) (*http.Request, error) {
+	var body bytes.Buffer
+	if contentType == "" {
+		contentType = "*/*" // Use default encoder
+	}
+	err := c.Encoder.Encode(payload, &body, contentType)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode body: %s", err)
+	}
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("POST", u.String(), &body)
+	if err != nil {
+		return nil, err
+	}
+	header := req.Header
+	if contentType == "*/*" {
+		header.Set("Content-Type", "application/json")
+	} else {
+		header.Set("Content-Type", contentType)
+	}
+	if c.JWTAuthSigner != nil {
+		if err := c.JWTAuthSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
+
+// UpdateTrophiesRedditharvestPath computes a request path to the updateTrophies action of redditharvest.
+func UpdateTrophiesRedditharvestPath() string {
+
+	return fmt.Sprintf("/v1/social/reddit/harvest/trophies")
+}
+
+// Update Reddit User Trophy Info
+func (c *Client) UpdateTrophiesRedditharvest(ctx context.Context, path string, payload *UpdateRedditUserPayload, contentType string) (*http.Response, error) {
+	req, err := c.NewUpdateTrophiesRedditharvestRequest(ctx, path, payload, contentType)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewUpdateTrophiesRedditharvestRequest create the request corresponding to the updateTrophies action endpoint of the redditharvest resource.
+func (c *Client) NewUpdateTrophiesRedditharvestRequest(ctx context.Context, path string, payload *UpdateRedditUserPayload, contentType string) (*http.Request, error) {
 	var body bytes.Buffer
 	if contentType == "" {
 		contentType = "*/*" // Use default encoder

@@ -24,11 +24,11 @@ import (
 	"net/url"
 )
 
-// UpdateRedditharvestBadRequest runs the method Update of the given controller with the given parameters and payload.
+// UpdateAboutRedditharvestBadRequest runs the method UpdateAbout of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateRedditharvestBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateAboutRedditharvestBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -60,7 +60,7 @@ func UpdateRedditharvestBadRequest(t goatest.TInterface, ctx context.Context, se
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest"),
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/about"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -71,7 +71,7 @@ func UpdateRedditharvestBadRequest(t goatest.TInterface, ctx context.Context, se
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
-	updateCtx, __err := app.NewUpdateRedditharvestContext(goaCtx, req, service)
+	updateAboutCtx, __err := app.NewUpdateAboutRedditharvestContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -80,10 +80,10 @@ func UpdateRedditharvestBadRequest(t goatest.TInterface, ctx context.Context, se
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil, nil
 	}
-	updateCtx.Payload = payload
+	updateAboutCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Update(updateCtx)
+	__err = ctrl.UpdateAbout(updateAboutCtx)
 
 	// Validate response
 	if __err != nil {
@@ -109,11 +109,11 @@ func UpdateRedditharvestBadRequest(t goatest.TInterface, ctx context.Context, se
 	return rw, mt
 }
 
-// UpdateRedditharvestGone runs the method Update of the given controller with the given parameters and payload.
+// UpdateAboutRedditharvestGone runs the method UpdateAbout of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateRedditharvestGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateAboutRedditharvestGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -145,7 +145,7 @@ func UpdateRedditharvestGone(t goatest.TInterface, ctx context.Context, service 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest"),
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/about"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -156,7 +156,7 @@ func UpdateRedditharvestGone(t goatest.TInterface, ctx context.Context, service 
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
-	updateCtx, __err := app.NewUpdateRedditharvestContext(goaCtx, req, service)
+	updateAboutCtx, __err := app.NewUpdateAboutRedditharvestContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -165,10 +165,10 @@ func UpdateRedditharvestGone(t goatest.TInterface, ctx context.Context, service 
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil, nil
 	}
-	updateCtx.Payload = payload
+	updateAboutCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Update(updateCtx)
+	__err = ctrl.UpdateAbout(updateAboutCtx)
 
 	// Validate response
 	if __err != nil {
@@ -194,11 +194,11 @@ func UpdateRedditharvestGone(t goatest.TInterface, ctx context.Context, service 
 	return rw, mt
 }
 
-// UpdateRedditharvestInternalServerError runs the method Update of the given controller with the given parameters and payload.
+// UpdateAboutRedditharvestInternalServerError runs the method UpdateAbout of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateRedditharvestInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateAboutRedditharvestInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -230,7 +230,7 @@ func UpdateRedditharvestInternalServerError(t goatest.TInterface, ctx context.Co
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest"),
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/about"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -241,7 +241,7 @@ func UpdateRedditharvestInternalServerError(t goatest.TInterface, ctx context.Co
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
-	updateCtx, __err := app.NewUpdateRedditharvestContext(goaCtx, req, service)
+	updateAboutCtx, __err := app.NewUpdateAboutRedditharvestContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -250,10 +250,10 @@ func UpdateRedditharvestInternalServerError(t goatest.TInterface, ctx context.Co
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil, nil
 	}
-	updateCtx.Payload = payload
+	updateAboutCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Update(updateCtx)
+	__err = ctrl.UpdateAbout(updateAboutCtx)
 
 	// Validate response
 	if __err != nil {
@@ -279,11 +279,11 @@ func UpdateRedditharvestInternalServerError(t goatest.TInterface, ctx context.Co
 	return rw, mt
 }
 
-// UpdateRedditharvestNotFound runs the method Update of the given controller with the given parameters and payload.
+// UpdateAboutRedditharvestNotFound runs the method UpdateAbout of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateRedditharvestNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateAboutRedditharvestNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -315,7 +315,7 @@ func UpdateRedditharvestNotFound(t goatest.TInterface, ctx context.Context, serv
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest"),
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/about"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -326,7 +326,7 @@ func UpdateRedditharvestNotFound(t goatest.TInterface, ctx context.Context, serv
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
-	updateCtx, __err := app.NewUpdateRedditharvestContext(goaCtx, req, service)
+	updateAboutCtx, __err := app.NewUpdateAboutRedditharvestContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -335,10 +335,10 @@ func UpdateRedditharvestNotFound(t goatest.TInterface, ctx context.Context, serv
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil, nil
 	}
-	updateCtx.Payload = payload
+	updateAboutCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Update(updateCtx)
+	__err = ctrl.UpdateAbout(updateAboutCtx)
 
 	// Validate response
 	if __err != nil {
@@ -364,11 +364,11 @@ func UpdateRedditharvestNotFound(t goatest.TInterface, ctx context.Context, serv
 	return rw, mt
 }
 
-// UpdateRedditharvestOK runs the method Update of the given controller with the given parameters and payload.
+// UpdateAboutRedditharvestOK runs the method UpdateAbout of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateRedditharvestOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.Reddituser) {
+func UpdateAboutRedditharvestOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.Reddituser) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -400,7 +400,7 @@ func UpdateRedditharvestOK(t goatest.TInterface, ctx context.Context, service *g
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest"),
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/about"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -411,7 +411,7 @@ func UpdateRedditharvestOK(t goatest.TInterface, ctx context.Context, service *g
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
-	updateCtx, __err := app.NewUpdateRedditharvestContext(goaCtx, req, service)
+	updateAboutCtx, __err := app.NewUpdateAboutRedditharvestContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -420,10 +420,860 @@ func UpdateRedditharvestOK(t goatest.TInterface, ctx context.Context, service *g
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil, nil
 	}
-	updateCtx.Payload = payload
+	updateAboutCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Update(updateCtx)
+	__err = ctrl.UpdateAbout(updateAboutCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 200 {
+		t.Errorf("invalid response status code: got %+v, expected 200", rw.Code)
+	}
+	var mt *app.Reddituser
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.Reddituser)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Reddituser", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateSubmittedInfoRedditharvestBadRequest runs the method UpdateSubmittedInfo of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateSubmittedInfoRedditharvestBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/submitted"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
+	updateSubmittedInfoCtx, __err := app.NewUpdateSubmittedInfoRedditharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateSubmittedInfoCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateSubmittedInfo(updateSubmittedInfoCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 400 {
+		t.Errorf("invalid response status code: got %+v, expected 400", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.StandardError)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateSubmittedInfoRedditharvestGone runs the method UpdateSubmittedInfo of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateSubmittedInfoRedditharvestGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/submitted"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
+	updateSubmittedInfoCtx, __err := app.NewUpdateSubmittedInfoRedditharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateSubmittedInfoCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateSubmittedInfo(updateSubmittedInfoCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 410 {
+		t.Errorf("invalid response status code: got %+v, expected 410", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.StandardError)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateSubmittedInfoRedditharvestInternalServerError runs the method UpdateSubmittedInfo of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateSubmittedInfoRedditharvestInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/submitted"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
+	updateSubmittedInfoCtx, __err := app.NewUpdateSubmittedInfoRedditharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateSubmittedInfoCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateSubmittedInfo(updateSubmittedInfoCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 500 {
+		t.Errorf("invalid response status code: got %+v, expected 500", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.StandardError)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateSubmittedInfoRedditharvestNotFound runs the method UpdateSubmittedInfo of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateSubmittedInfoRedditharvestNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/submitted"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
+	updateSubmittedInfoCtx, __err := app.NewUpdateSubmittedInfoRedditharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateSubmittedInfoCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateSubmittedInfo(updateSubmittedInfoCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 404 {
+		t.Errorf("invalid response status code: got %+v, expected 404", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.StandardError)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateSubmittedInfoRedditharvestOK runs the method UpdateSubmittedInfo of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateSubmittedInfoRedditharvestOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.Reddituser) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/submitted"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
+	updateSubmittedInfoCtx, __err := app.NewUpdateSubmittedInfoRedditharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateSubmittedInfoCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateSubmittedInfo(updateSubmittedInfoCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 200 {
+		t.Errorf("invalid response status code: got %+v, expected 200", rw.Code)
+	}
+	var mt *app.Reddituser
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.Reddituser)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Reddituser", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateTrophiesRedditharvestBadRequest runs the method UpdateTrophies of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateTrophiesRedditharvestBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/trophies"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
+	updateTrophiesCtx, __err := app.NewUpdateTrophiesRedditharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateTrophiesCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateTrophies(updateTrophiesCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 400 {
+		t.Errorf("invalid response status code: got %+v, expected 400", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.StandardError)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateTrophiesRedditharvestGone runs the method UpdateTrophies of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateTrophiesRedditharvestGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/trophies"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
+	updateTrophiesCtx, __err := app.NewUpdateTrophiesRedditharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateTrophiesCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateTrophies(updateTrophiesCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 410 {
+		t.Errorf("invalid response status code: got %+v, expected 410", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.StandardError)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateTrophiesRedditharvestInternalServerError runs the method UpdateTrophies of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateTrophiesRedditharvestInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/trophies"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
+	updateTrophiesCtx, __err := app.NewUpdateTrophiesRedditharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateTrophiesCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateTrophies(updateTrophiesCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 500 {
+		t.Errorf("invalid response status code: got %+v, expected 500", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.StandardError)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateTrophiesRedditharvestNotFound runs the method UpdateTrophies of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateTrophiesRedditharvestNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/trophies"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
+	updateTrophiesCtx, __err := app.NewUpdateTrophiesRedditharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateTrophiesCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateTrophies(updateTrophiesCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 404 {
+		t.Errorf("invalid response status code: got %+v, expected 404", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.StandardError)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateTrophiesRedditharvestOK runs the method UpdateTrophies of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateTrophiesRedditharvestOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RedditharvestController, payload *app.UpdateRedditUserPayload) (http.ResponseWriter, *app.Reddituser) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/reddit/harvest/trophies"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "RedditharvestTest"), rw, req, prms)
+	updateTrophiesCtx, __err := app.NewUpdateTrophiesRedditharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateTrophiesCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateTrophies(updateTrophiesCtx)
 
 	// Validate response
 	if __err != nil {

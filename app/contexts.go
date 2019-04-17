@@ -970,28 +970,28 @@ func (ctx *VerifyRedditContext) InternalServerError(r *StandardError) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
-// UpdateRedditharvestContext provides the redditharvest update action context.
-type UpdateRedditharvestContext struct {
+// UpdateAboutRedditharvestContext provides the redditharvest updateAbout action context.
+type UpdateAboutRedditharvestContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
 	Payload *UpdateRedditUserPayload
 }
 
-// NewUpdateRedditharvestContext parses the incoming request URL and body, performs validations and creates the
-// context used by the redditharvest controller update action.
-func NewUpdateRedditharvestContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateRedditharvestContext, error) {
+// NewUpdateAboutRedditharvestContext parses the incoming request URL and body, performs validations and creates the
+// context used by the redditharvest controller updateAbout action.
+func NewUpdateAboutRedditharvestContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateAboutRedditharvestContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := UpdateRedditharvestContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := UpdateAboutRedditharvestContext{Context: ctx, ResponseData: resp, RequestData: req}
 	return &rctx, err
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *UpdateRedditharvestContext) OK(r *Reddituser) error {
+func (ctx *UpdateAboutRedditharvestContext) OK(r *Reddituser) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.reddituser+json")
 	}
@@ -999,7 +999,7 @@ func (ctx *UpdateRedditharvestContext) OK(r *Reddituser) error {
 }
 
 // BadRequest sends a HTTP response with status code 400.
-func (ctx *UpdateRedditharvestContext) BadRequest(r *StandardError) error {
+func (ctx *UpdateAboutRedditharvestContext) BadRequest(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -1007,7 +1007,7 @@ func (ctx *UpdateRedditharvestContext) BadRequest(r *StandardError) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *UpdateRedditharvestContext) NotFound(r *StandardError) error {
+func (ctx *UpdateAboutRedditharvestContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -1015,7 +1015,7 @@ func (ctx *UpdateRedditharvestContext) NotFound(r *StandardError) error {
 }
 
 // Gone sends a HTTP response with status code 410.
-func (ctx *UpdateRedditharvestContext) Gone(r *StandardError) error {
+func (ctx *UpdateAboutRedditharvestContext) Gone(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -1023,7 +1023,127 @@ func (ctx *UpdateRedditharvestContext) Gone(r *StandardError) error {
 }
 
 // InternalServerError sends a HTTP response with status code 500.
-func (ctx *UpdateRedditharvestContext) InternalServerError(r *StandardError) error {
+func (ctx *UpdateAboutRedditharvestContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
+// UpdateSubmittedInfoRedditharvestContext provides the redditharvest updateSubmittedInfo action context.
+type UpdateSubmittedInfoRedditharvestContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Payload *UpdateRedditUserPayload
+}
+
+// NewUpdateSubmittedInfoRedditharvestContext parses the incoming request URL and body, performs validations and creates the
+// context used by the redditharvest controller updateSubmittedInfo action.
+func NewUpdateSubmittedInfoRedditharvestContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateSubmittedInfoRedditharvestContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := UpdateSubmittedInfoRedditharvestContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *UpdateSubmittedInfoRedditharvestContext) OK(r *Reddituser) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.reddituser+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *UpdateSubmittedInfoRedditharvestContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *UpdateSubmittedInfoRedditharvestContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *UpdateSubmittedInfoRedditharvestContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *UpdateSubmittedInfoRedditharvestContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
+// UpdateTrophiesRedditharvestContext provides the redditharvest updateTrophies action context.
+type UpdateTrophiesRedditharvestContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Payload *UpdateRedditUserPayload
+}
+
+// NewUpdateTrophiesRedditharvestContext parses the incoming request URL and body, performs validations and creates the
+// context used by the redditharvest controller updateTrophies action.
+func NewUpdateTrophiesRedditharvestContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateTrophiesRedditharvestContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := UpdateTrophiesRedditharvestContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *UpdateTrophiesRedditharvestContext) OK(r *Reddituser) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.reddituser+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *UpdateTrophiesRedditharvestContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *UpdateTrophiesRedditharvestContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *UpdateTrophiesRedditharvestContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *UpdateTrophiesRedditharvestContext) InternalServerError(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}

@@ -1849,10 +1849,10 @@ paths:
       summary: verify reddit
       tags:
       - reddit
-  /v1/social/reddit/harvest:
+  /v1/social/reddit/harvest/about:
     post:
-      description: Update Reddit User Info
-      operationId: redditharvest#update
+      description: Update Reddit User About Info
+      operationId: redditharvest#updateAbout
       parameters:
       - description: Update Reddit User payload
         in: body
@@ -1888,7 +1888,91 @@ paths:
       - http
       security:
       - JWTAuth: []
-      summary: update redditharvest
+      summary: updateAbout redditharvest
+      tags:
+      - redditharvest
+  /v1/social/reddit/harvest/submitted:
+    post:
+      description: Update Reddit User Submitted Info
+      operationId: redditharvest#updateSubmittedInfo
+      parameters:
+      - description: Update Reddit User payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateRedditUserPayload'
+      produces:
+      - application/standard_error+json
+      - application/vnd.reddituser+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Reddituser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: updateSubmittedInfo redditharvest
+      tags:
+      - redditharvest
+  /v1/social/reddit/harvest/trophies:
+    post:
+      description: Update Reddit User Trophy Info
+      operationId: redditharvest#updateTrophies
+      parameters:
+      - description: Update Reddit User payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateRedditUserPayload'
+      produces:
+      - application/standard_error+json
+      - application/vnd.reddituser+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Reddituser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: updateTrophies redditharvest
       tags:
       - redditharvest
   /v1/social/stackoverflow:
