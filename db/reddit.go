@@ -356,6 +356,143 @@ func (db *DB) UpdateRedditInfo(u *types.User) (*types.User, error) {
 	return u, nil
 }
 
+// UpdateRedditKarmaInfo updates the listing and Reddit karma data of a single user
+func (db *DB) UpdateRedditKarmaInfo(u *types.User) (*types.User, error) {
+	tx, err := db.client.Begin()
+	if err != nil {
+		return u, err
+	}
+
+	// create SQL statement for db update
+	sqlStatement := `
+		UPDATE
+			coindrop_reddit
+		SET
+			comment_karma = $1,
+			link_karma = $2
+		WHERE
+			user_id = $3
+	`
+
+	// prepare statement
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return u, err
+	}
+
+	defer stmt.Close()
+
+	// execute db write using unique ID as the identifier
+	_, err = stmt.Exec(
+		u.Social.Reddit.CommentKarma,
+		u.Social.Reddit.LinkKarma,
+		u.UserID,
+	)
+	if err != nil {
+		// rollback transaction if error thrown
+		return u, tx.Rollback()
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaction if error thrown
+		return u, tx.Rollback()
+	}
+
+	return u, nil
+}
+
+// UpdateRedditSubInfo updates the listing and Reddit submission data of a single user
+func (db *DB) UpdateRedditSubInfo(u *types.User) (*types.User, error) {
+	tx, err := db.client.Begin()
+	if err != nil {
+		return u, err
+	}
+
+	// create SQL statement for db update
+	sqlStatement := `
+		UPDATE
+			coindrop_reddit
+		SET
+			subreddits = $1
+		WHERE
+			user_id = $2
+	`
+
+	// prepare statement
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return u, err
+	}
+
+	defer stmt.Close()
+
+	// execute db write using unique ID as the identifier
+	_, err = stmt.Exec(
+		pq.Array(u.Social.Reddit.Subreddits),
+		u.UserID,
+	)
+	if err != nil {
+		// rollback transaction if error thrown
+		return u, tx.Rollback()
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaction if error thrown
+		return u, tx.Rollback()
+	}
+
+	return u, nil
+}
+
+// UpdateRedditTrophyInfo updates the listing and Reddit trophy data of a single user
+func (db *DB) UpdateRedditTrophyInfo(u *types.User) (*types.User, error) {
+	tx, err := db.client.Begin()
+	if err != nil {
+		return u, err
+	}
+
+	// create SQL statement for db update
+	sqlStatement := `
+		UPDATE
+			coindrop_reddit
+		SET
+			trophies = $1
+		WHERE
+			user_id = $2
+	`
+
+	// prepare statement
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return u, err
+	}
+
+	defer stmt.Close()
+
+	// execute db write using unique ID as the identifier
+	_, err = stmt.Exec(
+		pq.Array(u.Social.Reddit.Trophies),
+		u.UserID,
+	)
+	if err != nil {
+		// rollback transaction if error thrown
+		return u, tx.Rollback()
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaction if error thrown
+		return u, tx.Rollback()
+	}
+
+	return u, nil
+}
+
 /// VERIFICATION
 
 // UpdateRedditVerificationCode ...
