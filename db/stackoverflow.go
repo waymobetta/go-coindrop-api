@@ -52,7 +52,7 @@ func (db *DB) AddStackUser(u *types.User) (*types.User, error) {
 		&u.Social.StackOverflow.ExchangeAccountID,
 		&u.Social.StackOverflow.StackUserID,
 		&u.Social.StackOverflow.DisplayName,
-		pq.Array(&u.Social.StackOverflow.Accounts),
+		&u.Social.StackOverflow.Accounts,
 		&u.Social.StackOverflow.Verification.PostedVerificationCode,
 		&u.Social.StackOverflow.Verification.Verified,
 	)
@@ -153,7 +153,7 @@ func (db *DB) UpdateStackAboutInfo(u *types.User) (*types.User, error) {
 	_, err = stmt.Exec(
 		u.Social.StackOverflow.ExchangeAccountID,
 		u.Social.StackOverflow.DisplayName,
-		pq.Array(u.Social.StackOverflow.Accounts),
+		u.Social.StackOverflow.Accounts,
 		u.UserID,
 	)
 	if err != nil {
@@ -171,6 +171,100 @@ func (db *DB) UpdateStackAboutInfo(u *types.User) (*types.User, error) {
 	}
 
 	return u, nil
+}
+
+// UpdateStackProfileInfo updates the listing and associated Reddit data of a single user
+func (db *DB) UpdateStackProfileInfo(u *types.User) (*types.User, error) {
+	// for simplicity, update the listing rather than updating single value
+	tx, err := db.client.Begin()
+	if err != nil {
+		return u, err
+	}
+
+	// create SQL statement for db update
+	sqlStatement := `
+		UPDATE 
+			coindrop_stackoverflow
+		SET 
+			exchange_account_id = $1,
+			display_name = $2
+		WHERE
+			user_id = $4
+	`
+
+	// prepare statement
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return u, err
+	}
+
+	defer stmt.Close()
+
+	// execute db write using unique reddit username as the identifier
+	_, err = stmt.Exec(
+		u.Social.StackOverflow.ExchangeAccountID,
+		u.Social.StackOverflow.DisplayName,
+		u.UserID,
+	)
+	if err != nil {
+		// rollback transaction if error thrown
+		return u, tx.Rollback()
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaction if error thrown
+		return u, tx.Rollback()
+	}
+
+	return u, nil
+}
+
+// UpdateStackCommunityInfo updates the listing and associated Reddit data of a single user
+func (db *DB) UpdateStackCommunityInfo(communityMap, userID string) error {
+	// for simplicity, update the listing rather than updating single value
+	tx, err := db.client.Begin()
+	if err != nil {
+		return err
+	}
+
+	// create SQL statement for db update
+	sqlStatement := `
+		UPDATE 
+			coindrop_stackoverflow
+		SET 
+			accounts = $1
+		WHERE
+			user_id = $2
+	`
+
+	// prepare statement
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	// execute db write using unique reddit username as the identifier
+	_, err = stmt.Exec(
+		communityMap,
+		userID,
+	)
+	if err != nil {
+		// rollback transaction if error thrown
+		return tx.Rollback()
+	}
+
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaction if error thrown
+		return tx.Rollback()
+	}
+
+	return nil
 }
 
 // UpdateStackVerificationCode updates the verification code of a single user
