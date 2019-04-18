@@ -15,9 +15,15 @@ var _ = Resource("stackoverflowharvest", func() {
 	Response(Gone, StandardErrorMedia)
 	Response(InternalServerError, StandardErrorMedia)
 
-	Action("update", func() {
+	Action("updateProfile", func() {
 		Description("Update Stack Overflow User Info")
-		Routing(POST(""))
+		Routing(POST("/profile"))
+		Payload(UpdateStackOverflowUserPayload)
+		Response(OK, StackOverflowUserMedia)
+	})
+	Action("updateCommunities", func() {
+		Description("Update Stack Overflow User Communities Info")
+		Routing(POST("/communities"))
 		Payload(UpdateStackOverflowUserPayload)
 		Response(OK, StackOverflowUserMedia)
 	})
