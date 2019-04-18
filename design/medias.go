@@ -176,7 +176,7 @@ var RedditUserMedia = MediaType("application/vnd.reddituser+json", func() {
 		Attribute("linkKarma", Integer, "Link Karma")
 		Attribute("commentKarma", Integer, "Comment Karma")
 		Attribute("trophies", ArrayOf(String), "User trophies")
-		Attribute("subreddits", ArrayOf(String), "User subreddits")
+		Attribute("subreddits", String, "User subreddits")
 		Attribute("verification", VerificationMedia, "Social Account Verification")
 		Required(
 			"id",
