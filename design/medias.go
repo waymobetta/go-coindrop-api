@@ -216,7 +216,7 @@ var StackOverflowUserMedia = MediaType("application/vnd.stackoverflowuser+json",
 		Attribute("exchangeAccountId", Integer, "Stack Exchange Account ID")
 		Attribute("stackUserId", Integer, "Stack Overflow Community-Specific Account ID")
 		Attribute("displayName", String, "Display Name")
-		Attribute("accounts", ArrayOf(String), "Stack Exchange Accounts")
+		Attribute("accounts", String, "Stack Exchange Accounts")
 		Attribute("verification", VerificationMedia, "Social Account Verification")
 		Required(
 			"id",
