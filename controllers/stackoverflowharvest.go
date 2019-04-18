@@ -49,27 +49,14 @@ func (c *StackoverflowharvestController) UpdateProfile(ctx *app.UpdateProfileSta
 		log.Errorf("[controller/stackoverflow] %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
-			Message: "could not retrieve Stack Overflow About info",
+			Message: "could not retrieve Stack Overflow Profile info",
 		})
 	}
 
-	user = &types.User{
-		Social: &types.Social{
-			StackOverflow: &types.StackOverflow{
-				DisplayName:       aboutProfile.Items[0].DisplayName,
-				ExchangeAccountID: aboutProfile.Items[0].AccountID,
-				Accounts:          user.Social.StackOverflow.Accounts,
-				Verification: &types.Verification{
-					PostedVerificationCode:    "",
-					ConfirmedVerificationCode: "",
-					Verified:                  false,
-				},
-			},
-		},
-	}
+	user.Social.StackOverflow.DisplayName = aboutProfile.Items[0].DisplayName
+	user.Social.StackOverflow.ExchangeAccountID = aboutProfile.Items[0].AccountID
 
-	log.Println("[controller/stackoverflowharvest] retrieving Stack Overflow associated accounts info")
-	_, err = c.db.UpdateStackAboutInfo(user)
+	err = c.db.UpdateStackProfileInfo(user)
 	if err != nil {
 		log.Errorf("[controller/stackoverflowharvest] %v", err)
 		return ctx.NotFound(&app.StandardError{
@@ -78,9 +65,12 @@ func (c *StackoverflowharvestController) UpdateProfile(ctx *app.UpdateProfileSta
 		})
 	}
 
+	log.Println("[controller/stackoverflowharvest] successfully retrieved Stack Overflow profile info")
+
 	res := &app.Stackoverflowuser{
 		DisplayName:       user.Social.StackOverflow.DisplayName,
 		ExchangeAccountID: user.Social.StackOverflow.ExchangeAccountID,
+		StackUserID:       user.Social.StackOverflow.StackUserID,
 	}
 	return ctx.OK(res)
 	// StackoverflowharvestController_UpdateProfile: end_implement
@@ -102,6 +92,21 @@ func (c *StackoverflowharvestController) UpdateCommunities(ctx *app.UpdateCommun
 		},
 	}
 
+	log.Println("[controller/stackoverflowharvest] retrieving Stack Overflow exchange account id")
+	stackExchangeId, err := c.db.GetExchangeIdByStackId(
+		user.Social.StackOverflow.StackUserID,
+		user.UserID,
+	)
+	if err != nil {
+		log.Errorf("[controller/stackoverflowharvest] %v", err)
+		return ctx.NotFound(&app.StandardError{
+			Code:    400,
+			Message: "could not retrieve Stack Overflow Associated Account info",
+		})
+	}
+
+	user.Social.StackOverflow.ExchangeAccountID = stackExchangeId
+
 	log.Println("[controller/stackoverflowharvest] retrieving Stack Overflow associated accounts info")
 	// get list of trophies user has been awarded
 	accounts, err := stackoverflow.GetAssociatedAccounts(user)
@@ -116,7 +121,6 @@ func (c *StackoverflowharvestController) UpdateCommunities(ctx *app.UpdateCommun
 	communityMap := make(map[string]int)
 
 	for _, community := range accounts {
-		// accounts[community] =
 		communityMap[community.Name] = community.Reputation
 	}
 
@@ -143,7 +147,6 @@ func (c *StackoverflowharvestController) UpdateCommunities(ctx *app.UpdateCommun
 	log.Println("[controller/stackoverflowharvest] successfully retrieved Stack Overflow associated accounts info")
 
 	res := &app.Stackoverflowuser{
-		UserID:      user.UserID,
 		StackUserID: user.Social.StackOverflow.StackUserID,
 		Accounts:    communityMapString,
 	}
