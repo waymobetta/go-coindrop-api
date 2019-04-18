@@ -130,10 +130,3 @@ func (a *AuthSessions) GetRawSubmittedInfo(user *types.User) ([]*geddit.Submissi
 
 	return submissions, nil
 }
-
-// GetOverview method to retrieve overview of user account
-// TODO:
-// func (u *User) GetOverview() *User {
-// 	overviewURL := fmt.Sprintf("https://www.reddit.com/user/%s/overview.json", u.Reddit.Username)
-// 	return u
-// }
