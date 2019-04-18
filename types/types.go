@@ -61,13 +61,13 @@ type Reddit struct {
 
 // StackOverflow struct contains all essential info for Stack User
 type StackOverflow struct {
-	ID                string        `json:"id"`
-	ExchangeAccountID int           `json:"exchange_account_id"`
-	StackUserID       int           `json:"stack_user_id"`
-	DisplayName       string        `json:"display_name"`
-	Accounts          []string      `json:"accounts"`
-	Communities       []Community   `json:"communities"`
-	Verification      *Verification `json:"verification"`
+	ID                string         `json:"id"`
+	ExchangeAccountID int            `json:"exchange_account_id"`
+	StackUserID       int            `json:"stack_user_id"`
+	DisplayName       string         `json:"display_name"`
+	Accounts          map[string]int `json:"accounts"`
+	Communities       []Community    `json:"communities"`
+	Verification      *Verification  `json:"verification"`
 }
 
 // Verification struct contains all info for validation of account
