@@ -336,7 +336,7 @@ func (mt ResultsCollection) Validate() (err error) {
 // Identifier: application/vnd.stackoverflowuser+json; view=default
 type Stackoverflowuser struct {
 	// Stack Exchange Accounts
-	Accounts []string `form:"accounts" json:"accounts" yaml:"accounts" xml:"accounts"`
+	Accounts string `form:"accounts" json:"accounts" yaml:"accounts" xml:"accounts"`
 	// Display Name
 	DisplayName string `form:"displayName" json:"displayName" yaml:"displayName" xml:"displayName"`
 	// Stack Exchange Account ID
@@ -363,7 +363,7 @@ func (mt *Stackoverflowuser) Validate() (err error) {
 	if mt.DisplayName == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "displayName"))
 	}
-	if mt.Accounts == nil {
+	if mt.Accounts == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "accounts"))
 	}
 	if mt.Verification == nil {

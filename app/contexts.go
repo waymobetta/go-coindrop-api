@@ -1605,28 +1605,28 @@ func (ctx *VerifyStackoverflowContext) InternalServerError(r *StandardError) err
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
-// UpdateStackoverflowharvestContext provides the stackoverflowharvest update action context.
-type UpdateStackoverflowharvestContext struct {
+// UpdateCommunitiesStackoverflowharvestContext provides the stackoverflowharvest updateCommunities action context.
+type UpdateCommunitiesStackoverflowharvestContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
 	Payload *UpdateStackOverflowUserPayload
 }
 
-// NewUpdateStackoverflowharvestContext parses the incoming request URL and body, performs validations and creates the
-// context used by the stackoverflowharvest controller update action.
-func NewUpdateStackoverflowharvestContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateStackoverflowharvestContext, error) {
+// NewUpdateCommunitiesStackoverflowharvestContext parses the incoming request URL and body, performs validations and creates the
+// context used by the stackoverflowharvest controller updateCommunities action.
+func NewUpdateCommunitiesStackoverflowharvestContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateCommunitiesStackoverflowharvestContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := UpdateStackoverflowharvestContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := UpdateCommunitiesStackoverflowharvestContext{Context: ctx, ResponseData: resp, RequestData: req}
 	return &rctx, err
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *UpdateStackoverflowharvestContext) OK(r *Stackoverflowuser) error {
+func (ctx *UpdateCommunitiesStackoverflowharvestContext) OK(r *Stackoverflowuser) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.stackoverflowuser+json")
 	}
@@ -1634,7 +1634,7 @@ func (ctx *UpdateStackoverflowharvestContext) OK(r *Stackoverflowuser) error {
 }
 
 // BadRequest sends a HTTP response with status code 400.
-func (ctx *UpdateStackoverflowharvestContext) BadRequest(r *StandardError) error {
+func (ctx *UpdateCommunitiesStackoverflowharvestContext) BadRequest(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -1642,7 +1642,7 @@ func (ctx *UpdateStackoverflowharvestContext) BadRequest(r *StandardError) error
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *UpdateStackoverflowharvestContext) NotFound(r *StandardError) error {
+func (ctx *UpdateCommunitiesStackoverflowharvestContext) NotFound(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -1650,7 +1650,7 @@ func (ctx *UpdateStackoverflowharvestContext) NotFound(r *StandardError) error {
 }
 
 // Gone sends a HTTP response with status code 410.
-func (ctx *UpdateStackoverflowharvestContext) Gone(r *StandardError) error {
+func (ctx *UpdateCommunitiesStackoverflowharvestContext) Gone(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}
@@ -1658,7 +1658,67 @@ func (ctx *UpdateStackoverflowharvestContext) Gone(r *StandardError) error {
 }
 
 // InternalServerError sends a HTTP response with status code 500.
-func (ctx *UpdateStackoverflowharvestContext) InternalServerError(r *StandardError) error {
+func (ctx *UpdateCommunitiesStackoverflowharvestContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
+// UpdateProfileStackoverflowharvestContext provides the stackoverflowharvest updateProfile action context.
+type UpdateProfileStackoverflowharvestContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Payload *UpdateStackOverflowUserPayload
+}
+
+// NewUpdateProfileStackoverflowharvestContext parses the incoming request URL and body, performs validations and creates the
+// context used by the stackoverflowharvest controller updateProfile action.
+func NewUpdateProfileStackoverflowharvestContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateProfileStackoverflowharvestContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := UpdateProfileStackoverflowharvestContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *UpdateProfileStackoverflowharvestContext) OK(r *Stackoverflowuser) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.stackoverflowuser+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *UpdateProfileStackoverflowharvestContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *UpdateProfileStackoverflowharvestContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *UpdateProfileStackoverflowharvestContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *UpdateProfileStackoverflowharvestContext) InternalServerError(r *StandardError) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
 	}

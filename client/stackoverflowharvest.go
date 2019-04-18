@@ -18,23 +18,71 @@ import (
 	"net/url"
 )
 
-// UpdateStackoverflowharvestPath computes a request path to the update action of stackoverflowharvest.
-func UpdateStackoverflowharvestPath() string {
+// UpdateCommunitiesStackoverflowharvestPath computes a request path to the updateCommunities action of stackoverflowharvest.
+func UpdateCommunitiesStackoverflowharvestPath() string {
 
-	return fmt.Sprintf("/v1/social/stackoverflow/harvest")
+	return fmt.Sprintf("/v1/social/stackoverflow/harvest/communities")
 }
 
-// Update Stack Overflow User Info
-func (c *Client) UpdateStackoverflowharvest(ctx context.Context, path string, payload *UpdateStackOverflowUserPayload, contentType string) (*http.Response, error) {
-	req, err := c.NewUpdateStackoverflowharvestRequest(ctx, path, payload, contentType)
+// Update Stack Overflow User Communities Info
+func (c *Client) UpdateCommunitiesStackoverflowharvest(ctx context.Context, path string, payload *UpdateStackOverflowUserPayload, contentType string) (*http.Response, error) {
+	req, err := c.NewUpdateCommunitiesStackoverflowharvestRequest(ctx, path, payload, contentType)
 	if err != nil {
 		return nil, err
 	}
 	return c.Client.Do(ctx, req)
 }
 
-// NewUpdateStackoverflowharvestRequest create the request corresponding to the update action endpoint of the stackoverflowharvest resource.
-func (c *Client) NewUpdateStackoverflowharvestRequest(ctx context.Context, path string, payload *UpdateStackOverflowUserPayload, contentType string) (*http.Request, error) {
+// NewUpdateCommunitiesStackoverflowharvestRequest create the request corresponding to the updateCommunities action endpoint of the stackoverflowharvest resource.
+func (c *Client) NewUpdateCommunitiesStackoverflowharvestRequest(ctx context.Context, path string, payload *UpdateStackOverflowUserPayload, contentType string) (*http.Request, error) {
+	var body bytes.Buffer
+	if contentType == "" {
+		contentType = "*/*" // Use default encoder
+	}
+	err := c.Encoder.Encode(payload, &body, contentType)
+	if err != nil {
+		return nil, fmt.Errorf("failed to encode body: %s", err)
+	}
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("POST", u.String(), &body)
+	if err != nil {
+		return nil, err
+	}
+	header := req.Header
+	if contentType == "*/*" {
+		header.Set("Content-Type", "application/json")
+	} else {
+		header.Set("Content-Type", contentType)
+	}
+	if c.JWTAuthSigner != nil {
+		if err := c.JWTAuthSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
+
+// UpdateProfileStackoverflowharvestPath computes a request path to the updateProfile action of stackoverflowharvest.
+func UpdateProfileStackoverflowharvestPath() string {
+
+	return fmt.Sprintf("/v1/social/stackoverflow/harvest/profile")
+}
+
+// Update Stack Overflow User Info
+func (c *Client) UpdateProfileStackoverflowharvest(ctx context.Context, path string, payload *UpdateStackOverflowUserPayload, contentType string) (*http.Response, error) {
+	req, err := c.NewUpdateProfileStackoverflowharvestRequest(ctx, path, payload, contentType)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewUpdateProfileStackoverflowharvestRequest create the request corresponding to the updateProfile action endpoint of the stackoverflowharvest resource.
+func (c *Client) NewUpdateProfileStackoverflowharvestRequest(ctx context.Context, path string, payload *UpdateStackOverflowUserPayload, contentType string) (*http.Request, error) {
 	var body bytes.Buffer
 	if contentType == "" {
 		contentType = "*/*" // Use default encoder

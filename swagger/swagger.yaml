@@ -476,10 +476,8 @@ definitions:
   Stackoverflowuser:
     description: Stack Overflow User Info (default view)
     example:
-      accounts:
-      - Sunt voluptatum recusandae facilis perferendis.
-      - Sunt voluptatum recusandae facilis perferendis.
-      displayName: Ut et non enim.
+      accounts: Sint sunt voluptatum recusandae facilis perferendis consectetur.
+      displayName: Et non enim.
       exchangeAccountId: 2705176086150453601
       id: 9302608f-f6a4-4004-b088-63e5fb43cc26
       stackUserId: 2536360989989349945
@@ -491,16 +489,11 @@ definitions:
     properties:
       accounts:
         description: Stack Exchange Accounts
-        example:
-        - Sunt voluptatum recusandae facilis perferendis.
-        - Sunt voluptatum recusandae facilis perferendis.
-        items:
-          example: Sunt voluptatum recusandae facilis perferendis.
-          type: string
-        type: array
+        example: Sint sunt voluptatum recusandae facilis perferendis consectetur.
+        type: string
       displayName:
         description: Display Name
-        example: Ut et non enim.
+        example: Et non enim.
         type: string
       exchangeAccountId:
         description: Stack Exchange Account ID
@@ -2184,10 +2177,10 @@ paths:
       summary: verify stackoverflow
       tags:
       - stackoverflow
-  /v1/social/stackoverflow/harvest:
+  /v1/social/stackoverflow/harvest/communities:
     post:
-      description: Update Stack Overflow User Info
-      operationId: stackoverflowharvest#update
+      description: Update Stack Overflow User Communities Info
+      operationId: stackoverflowharvest#updateCommunities
       parameters:
       - description: Update Stack Overflow User payload
         in: body
@@ -2223,7 +2216,49 @@ paths:
       - http
       security:
       - JWTAuth: []
-      summary: update stackoverflowharvest
+      summary: updateCommunities stackoverflowharvest
+      tags:
+      - stackoverflowharvest
+  /v1/social/stackoverflow/harvest/profile:
+    post:
+      description: Update Stack Overflow User Info
+      operationId: stackoverflowharvest#updateProfile
+      parameters:
+      - description: Update Stack Overflow User payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateStackOverflowUserPayload'
+      produces:
+      - application/standard_error+json
+      - application/vnd.stackoverflowuser+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Stackoverflowuser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: updateProfile stackoverflowharvest
       tags:
       - stackoverflowharvest
   /v1/tasks:

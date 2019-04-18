@@ -1034,14 +1034,16 @@ func unmarshalVerifyStackoverflowPayload(ctx context.Context, service *goa.Servi
 // StackoverflowharvestController is the controller interface for the Stackoverflowharvest actions.
 type StackoverflowharvestController interface {
 	goa.Muxer
-	Update(*UpdateStackoverflowharvestContext) error
+	UpdateCommunities(*UpdateCommunitiesStackoverflowharvestContext) error
+	UpdateProfile(*UpdateProfileStackoverflowharvestContext) error
 }
 
 // MountStackoverflowharvestController "mounts" a Stackoverflowharvest resource controller on the given service.
 func MountStackoverflowharvestController(service *goa.Service, ctrl StackoverflowharvestController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/v1/social/stackoverflow/harvest", ctrl.MuxHandler("preflight", handleStackoverflowharvestOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/social/stackoverflow/harvest/communities", ctrl.MuxHandler("preflight", handleStackoverflowharvestOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/social/stackoverflow/harvest/profile", ctrl.MuxHandler("preflight", handleStackoverflowharvestOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -1049,7 +1051,7 @@ func MountStackoverflowharvestController(service *goa.Service, ctrl Stackoverflo
 			return err
 		}
 		// Build the context
-		rctx, err := NewUpdateStackoverflowharvestContext(ctx, req, service)
+		rctx, err := NewUpdateCommunitiesStackoverflowharvestContext(ctx, req, service)
 		if err != nil {
 			return err
 		}
@@ -1059,12 +1061,35 @@ func MountStackoverflowharvestController(service *goa.Service, ctrl Stackoverflo
 		} else {
 			return goa.MissingPayloadError()
 		}
-		return ctrl.Update(rctx)
+		return ctrl.UpdateCommunities(rctx)
 	}
 	h = handleSecurity("JWTAuth", h)
 	h = handleStackoverflowharvestOrigin(h)
-	service.Mux.Handle("POST", "/v1/social/stackoverflow/harvest", ctrl.MuxHandler("update", h, unmarshalUpdateStackoverflowharvestPayload))
-	service.LogInfo("mount", "ctrl", "Stackoverflowharvest", "action", "Update", "route", "POST /v1/social/stackoverflow/harvest", "security", "JWTAuth")
+	service.Mux.Handle("POST", "/v1/social/stackoverflow/harvest/communities", ctrl.MuxHandler("updateCommunities", h, unmarshalUpdateCommunitiesStackoverflowharvestPayload))
+	service.LogInfo("mount", "ctrl", "Stackoverflowharvest", "action", "UpdateCommunities", "route", "POST /v1/social/stackoverflow/harvest/communities", "security", "JWTAuth")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateProfileStackoverflowharvestContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UpdateStackOverflowUserPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.UpdateProfile(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleStackoverflowharvestOrigin(h)
+	service.Mux.Handle("POST", "/v1/social/stackoverflow/harvest/profile", ctrl.MuxHandler("updateProfile", h, unmarshalUpdateProfileStackoverflowharvestPayload))
+	service.LogInfo("mount", "ctrl", "Stackoverflowharvest", "action", "UpdateProfile", "route", "POST /v1/social/stackoverflow/harvest/profile", "security", "JWTAuth")
 }
 
 // handleStackoverflowharvestOrigin applies the CORS response headers corresponding to the origin.
@@ -1091,8 +1116,23 @@ func handleStackoverflowharvestOrigin(h goa.Handler) goa.Handler {
 	}
 }
 
-// unmarshalUpdateStackoverflowharvestPayload unmarshals the request body into the context request data Payload field.
-func unmarshalUpdateStackoverflowharvestPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+// unmarshalUpdateCommunitiesStackoverflowharvestPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateCommunitiesStackoverflowharvestPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &updateStackOverflowUserPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalUpdateProfileStackoverflowharvestPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateProfileStackoverflowharvestPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
 	payload := &updateStackOverflowUserPayload{}
 	if err := service.DecodeRequest(req, payload); err != nil {
 		return err

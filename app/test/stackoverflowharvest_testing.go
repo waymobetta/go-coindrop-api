@@ -24,11 +24,11 @@ import (
 	"net/url"
 )
 
-// UpdateStackoverflowharvestBadRequest runs the method Update of the given controller with the given parameters and payload.
+// UpdateCommunitiesStackoverflowharvestBadRequest runs the method UpdateCommunities of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateStackoverflowharvestBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateCommunitiesStackoverflowharvestBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -60,7 +60,7 @@ func UpdateStackoverflowharvestBadRequest(t goatest.TInterface, ctx context.Cont
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest"),
+		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/communities"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -71,7 +71,7 @@ func UpdateStackoverflowharvestBadRequest(t goatest.TInterface, ctx context.Cont
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "StackoverflowharvestTest"), rw, req, prms)
-	updateCtx, __err := app.NewUpdateStackoverflowharvestContext(goaCtx, req, service)
+	updateCommunitiesCtx, __err := app.NewUpdateCommunitiesStackoverflowharvestContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -80,10 +80,10 @@ func UpdateStackoverflowharvestBadRequest(t goatest.TInterface, ctx context.Cont
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil, nil
 	}
-	updateCtx.Payload = payload
+	updateCommunitiesCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Update(updateCtx)
+	__err = ctrl.UpdateCommunities(updateCommunitiesCtx)
 
 	// Validate response
 	if __err != nil {
@@ -109,11 +109,11 @@ func UpdateStackoverflowharvestBadRequest(t goatest.TInterface, ctx context.Cont
 	return rw, mt
 }
 
-// UpdateStackoverflowharvestGone runs the method Update of the given controller with the given parameters and payload.
+// UpdateCommunitiesStackoverflowharvestGone runs the method UpdateCommunities of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateStackoverflowharvestGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateCommunitiesStackoverflowharvestGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -145,7 +145,7 @@ func UpdateStackoverflowharvestGone(t goatest.TInterface, ctx context.Context, s
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest"),
+		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/communities"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -156,7 +156,7 @@ func UpdateStackoverflowharvestGone(t goatest.TInterface, ctx context.Context, s
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "StackoverflowharvestTest"), rw, req, prms)
-	updateCtx, __err := app.NewUpdateStackoverflowharvestContext(goaCtx, req, service)
+	updateCommunitiesCtx, __err := app.NewUpdateCommunitiesStackoverflowharvestContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -165,10 +165,10 @@ func UpdateStackoverflowharvestGone(t goatest.TInterface, ctx context.Context, s
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil, nil
 	}
-	updateCtx.Payload = payload
+	updateCommunitiesCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Update(updateCtx)
+	__err = ctrl.UpdateCommunities(updateCommunitiesCtx)
 
 	// Validate response
 	if __err != nil {
@@ -194,11 +194,11 @@ func UpdateStackoverflowharvestGone(t goatest.TInterface, ctx context.Context, s
 	return rw, mt
 }
 
-// UpdateStackoverflowharvestInternalServerError runs the method Update of the given controller with the given parameters and payload.
+// UpdateCommunitiesStackoverflowharvestInternalServerError runs the method UpdateCommunities of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateStackoverflowharvestInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateCommunitiesStackoverflowharvestInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -230,7 +230,7 @@ func UpdateStackoverflowharvestInternalServerError(t goatest.TInterface, ctx con
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest"),
+		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/communities"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -241,7 +241,7 @@ func UpdateStackoverflowharvestInternalServerError(t goatest.TInterface, ctx con
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "StackoverflowharvestTest"), rw, req, prms)
-	updateCtx, __err := app.NewUpdateStackoverflowharvestContext(goaCtx, req, service)
+	updateCommunitiesCtx, __err := app.NewUpdateCommunitiesStackoverflowharvestContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -250,10 +250,10 @@ func UpdateStackoverflowharvestInternalServerError(t goatest.TInterface, ctx con
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil, nil
 	}
-	updateCtx.Payload = payload
+	updateCommunitiesCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Update(updateCtx)
+	__err = ctrl.UpdateCommunities(updateCommunitiesCtx)
 
 	// Validate response
 	if __err != nil {
@@ -279,11 +279,11 @@ func UpdateStackoverflowharvestInternalServerError(t goatest.TInterface, ctx con
 	return rw, mt
 }
 
-// UpdateStackoverflowharvestNotFound runs the method Update of the given controller with the given parameters and payload.
+// UpdateCommunitiesStackoverflowharvestNotFound runs the method UpdateCommunities of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateStackoverflowharvestNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
+func UpdateCommunitiesStackoverflowharvestNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -315,7 +315,7 @@ func UpdateStackoverflowharvestNotFound(t goatest.TInterface, ctx context.Contex
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest"),
+		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/communities"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -326,7 +326,7 @@ func UpdateStackoverflowharvestNotFound(t goatest.TInterface, ctx context.Contex
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "StackoverflowharvestTest"), rw, req, prms)
-	updateCtx, __err := app.NewUpdateStackoverflowharvestContext(goaCtx, req, service)
+	updateCommunitiesCtx, __err := app.NewUpdateCommunitiesStackoverflowharvestContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -335,10 +335,10 @@ func UpdateStackoverflowharvestNotFound(t goatest.TInterface, ctx context.Contex
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil, nil
 	}
-	updateCtx.Payload = payload
+	updateCommunitiesCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Update(updateCtx)
+	__err = ctrl.UpdateCommunities(updateCommunitiesCtx)
 
 	// Validate response
 	if __err != nil {
@@ -364,11 +364,11 @@ func UpdateStackoverflowharvestNotFound(t goatest.TInterface, ctx context.Contex
 	return rw, mt
 }
 
-// UpdateStackoverflowharvestOK runs the method Update of the given controller with the given parameters and payload.
+// UpdateCommunitiesStackoverflowharvestOK runs the method UpdateCommunities of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateStackoverflowharvestOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.Stackoverflowuser) {
+func UpdateCommunitiesStackoverflowharvestOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.Stackoverflowuser) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -400,7 +400,7 @@ func UpdateStackoverflowharvestOK(t goatest.TInterface, ctx context.Context, ser
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest"),
+		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/communities"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -411,7 +411,7 @@ func UpdateStackoverflowharvestOK(t goatest.TInterface, ctx context.Context, ser
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "StackoverflowharvestTest"), rw, req, prms)
-	updateCtx, __err := app.NewUpdateStackoverflowharvestContext(goaCtx, req, service)
+	updateCommunitiesCtx, __err := app.NewUpdateCommunitiesStackoverflowharvestContext(goaCtx, req, service)
 	if __err != nil {
 		_e, _ok := __err.(goa.ServiceError)
 		if !_ok {
@@ -420,10 +420,435 @@ func UpdateStackoverflowharvestOK(t goatest.TInterface, ctx context.Context, ser
 		t.Errorf("unexpected parameter validation error: %+v", _e)
 		return nil, nil
 	}
-	updateCtx.Payload = payload
+	updateCommunitiesCtx.Payload = payload
 
 	// Perform action
-	__err = ctrl.Update(updateCtx)
+	__err = ctrl.UpdateCommunities(updateCommunitiesCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 200 {
+		t.Errorf("invalid response status code: got %+v, expected 200", rw.Code)
+	}
+	var mt *app.Stackoverflowuser
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.Stackoverflowuser)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Stackoverflowuser", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateProfileStackoverflowharvestBadRequest runs the method UpdateProfile of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateProfileStackoverflowharvestBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/profile"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "StackoverflowharvestTest"), rw, req, prms)
+	updateProfileCtx, __err := app.NewUpdateProfileStackoverflowharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateProfileCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateProfile(updateProfileCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 400 {
+		t.Errorf("invalid response status code: got %+v, expected 400", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.StandardError)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateProfileStackoverflowharvestGone runs the method UpdateProfile of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateProfileStackoverflowharvestGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/profile"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "StackoverflowharvestTest"), rw, req, prms)
+	updateProfileCtx, __err := app.NewUpdateProfileStackoverflowharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateProfileCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateProfile(updateProfileCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 410 {
+		t.Errorf("invalid response status code: got %+v, expected 410", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.StandardError)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateProfileStackoverflowharvestInternalServerError runs the method UpdateProfile of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateProfileStackoverflowharvestInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/profile"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "StackoverflowharvestTest"), rw, req, prms)
+	updateProfileCtx, __err := app.NewUpdateProfileStackoverflowharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateProfileCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateProfile(updateProfileCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 500 {
+		t.Errorf("invalid response status code: got %+v, expected 500", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.StandardError)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateProfileStackoverflowharvestNotFound runs the method UpdateProfile of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateProfileStackoverflowharvestNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/profile"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "StackoverflowharvestTest"), rw, req, prms)
+	updateProfileCtx, __err := app.NewUpdateProfileStackoverflowharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateProfileCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateProfile(updateProfileCtx)
+
+	// Validate response
+	if __err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", __err, logBuf.String())
+	}
+	if rw.Code != 404 {
+		t.Errorf("invalid response status code: got %+v, expected 404", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(*app.StandardError)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		__err = mt.Validate()
+		if __err != nil {
+			t.Errorf("invalid response media type: %s", __err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// UpdateProfileStackoverflowharvestOK runs the method UpdateProfile of the given controller with the given parameters and payload.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func UpdateProfileStackoverflowharvestOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.StackoverflowharvestController, payload *app.UpdateStackOverflowUserPayload) (http.ResponseWriter, *app.Stackoverflowuser) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Validate payload
+	err := payload.Validate()
+	if err != nil {
+		e, ok := err.(goa.ServiceError)
+		if !ok {
+			panic(err) // bug
+		}
+		t.Errorf("unexpected payload validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/profile"),
+	}
+	req, _err := http.NewRequest("POST", u.String(), nil)
+	if _err != nil {
+		panic("invalid test " + _err.Error()) // bug
+	}
+	prms := url.Values{}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "StackoverflowharvestTest"), rw, req, prms)
+	updateProfileCtx, __err := app.NewUpdateProfileStackoverflowharvestContext(goaCtx, req, service)
+	if __err != nil {
+		_e, _ok := __err.(goa.ServiceError)
+		if !_ok {
+			panic("invalid test data " + __err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", _e)
+		return nil, nil
+	}
+	updateProfileCtx.Payload = payload
+
+	// Perform action
+	__err = ctrl.UpdateProfile(updateProfileCtx)
 
 	// Validate response
 	if __err != nil {
