@@ -242,7 +242,7 @@ type Reddituser struct {
 	// Link Karma
 	LinkKarma int `form:"linkKarma" json:"linkKarma" yaml:"linkKarma" xml:"linkKarma"`
 	// User subreddits
-	Subreddits []string `form:"subreddits" json:"subreddits" yaml:"subreddits" xml:"subreddits"`
+	Subreddits string `form:"subreddits" json:"subreddits" yaml:"subreddits" xml:"subreddits"`
 	// User trophies
 	Trophies []string `form:"trophies" json:"trophies" yaml:"trophies" xml:"trophies"`
 	// User ID
@@ -268,7 +268,7 @@ func (mt *Reddituser) Validate() (err error) {
 	if mt.Trophies == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "trophies"))
 	}
-	if mt.Subreddits == nil {
+	if mt.Subreddits == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "subreddits"))
 	}
 	if mt.Verification == nil {
