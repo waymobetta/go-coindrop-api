@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"encoding/json"
+	"fmt"
+
 	"github.com/goadesign/goa"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
@@ -52,12 +55,23 @@ func (c *RedditController) Show(ctx *app.ShowRedditContext) error {
 		})
 	}
 
+	mapString, err := json.Marshal(user.Social.Reddit.Subreddits)
+	if err != nil {
+		log.Errorf("[controller/reddit/harvest] error: %v", err)
+		return ctx.NotFound(&app.StandardError{
+			Code:    400,
+			Message: "error marshalling community map",
+		})
+	}
+
+	specMapString := fmt.Sprintf("%s", mapString)
+
 	res := &app.Reddituser{
 		ID:           user.Social.Reddit.ID,
 		Username:     user.Social.Reddit.Username,
 		LinkKarma:    user.Social.Reddit.LinkKarma,
 		CommentKarma: user.Social.Reddit.CommentKarma,
-		Subreddits:   user.Social.Reddit.Subreddits,
+		Subreddits:   specMapString,
 		Trophies:     user.Social.Reddit.Trophies,
 		Verification: &app.Verification{
 			PostedVerificationCode:    user.Social.Reddit.Verification.PostedVerificationCode,
@@ -82,7 +96,7 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 				Username:     ctx.Payload.Username,
 				LinkKarma:    0,
 				CommentKarma: 0,
-				Subreddits:   []string{},
+				Subreddits:   map[string]int{},
 				Trophies:     []string{},
 				Verification: &types.Verification{
 					PostedVerificationCode:    "",
@@ -110,7 +124,7 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 		LinkKarma:    user.Social.Reddit.LinkKarma,
 		CommentKarma: user.Social.Reddit.CommentKarma,
 		Trophies:     []string{},
-		Subreddits:   []string{},
+		Subreddits:   "",
 		Verification: &app.Verification{
 			PostedVerificationCode:    "",
 			ConfirmedVerificationCode: "",
