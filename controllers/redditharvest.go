@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"encoding/json"
+	"fmt"
+
 	"github.com/goadesign/goa"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
@@ -41,17 +44,17 @@ func (c *RedditharvestController) UpdateAbout(ctx *app.UpdateAboutRedditharvestC
 	// initializes reddit OAuth sessions
 	authSession, err := reddit.NewRedditAuth()
 	if err != nil {
-		log.Errorf("[controller/reddit] error: %v", err)
+		log.Errorf("[controller/reddit/harvest] error: %v", err)
 		return ctx.InternalServerError(&app.StandardError{
 			Code:    500,
 			Message: "could not start reddit auth session",
 		})
 	}
 
-	log.Println("[controllers/reddit] retrieving Reddit About info")
+	log.Println("[controllers/reddit/harvest] retrieving Reddit About info")
 	// get general about info for user
 	if err := authSession.GetAboutInfo(user); err != nil {
-		log.Errorf("[controller/reddit] %v", err)
+		log.Errorf("[controller/reddit/harvest] error: %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
 			Message: "could not retrieve Reddit About info",
@@ -70,14 +73,14 @@ func (c *RedditharvestController) UpdateAbout(ctx *app.UpdateAboutRedditharvestC
 
 	_, err = c.db.UpdateRedditKarmaInfo(user)
 	if err != nil {
-		log.Errorf("[controller/reddit] %v", err)
+		log.Errorf("[controller/reddit/harvest] error: %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
 			Message: "could not update Reddit user listing in db",
 		})
 	}
 
-	log.Printf("[controllers/reddit] successfully harvested Reddit About info for user: %s", user.UserID)
+	log.Printf("[controllers/reddit/harvest] successfully harvested Reddit About info for user: %s", user.UserID)
 
 	res := &app.Reddituser{
 		Username:     ctx.Payload.Username,
@@ -106,17 +109,17 @@ func (c *RedditharvestController) UpdateTrophies(ctx *app.UpdateTrophiesRedditha
 	// initializes reddit OAuth sessions
 	authSession, err := reddit.NewRedditAuth()
 	if err != nil {
-		log.Errorf("[controller/reddit] error: %v", err)
+		log.Errorf("[controller/reddit/harvest] error: %v", err)
 		return ctx.InternalServerError(&app.StandardError{
 			Code:    500,
 			Message: "could not start reddit auth session",
 		})
 	}
 
-	log.Println("[controllers/reddit] retrieving Reddit Trophy info")
+	log.Println("[controllers/reddit/harvest] retrieving Reddit Trophy info")
 	// get list of trophies user has been awarded
 	if err := authSession.GetRedditUserTrophies(user); err != nil {
-		log.Errorf("[controller/reddit] %v", err)
+		log.Errorf("[controller/reddit/harvest] error: %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
 			Message: "could not retrieve Reddit Trophy info",
@@ -134,14 +137,14 @@ func (c *RedditharvestController) UpdateTrophies(ctx *app.UpdateTrophiesRedditha
 
 	_, err = c.db.UpdateRedditTrophyInfo(user)
 	if err != nil {
-		log.Errorf("[controller/reddit] %v", err)
+		log.Errorf("[controller/reddit/harvest] error: %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
 			Message: "could not update Reddit user listing in db",
 		})
 	}
 
-	log.Printf("[controllers/reddit] successfully harvested Reddit Trophy info for user: %s", user.UserID)
+	log.Printf("[controllers/reddit/harvest] successfully harvested Reddit Trophy info for user: %s", user.UserID)
 
 	res := &app.Reddituser{
 		Username: ctx.Payload.Username,
@@ -158,6 +161,7 @@ func (c *RedditharvestController) UpdateSubmittedInfo(ctx *app.UpdateSubmittedIn
 	// Put your logic here
 
 	user := &types.User{
+		UserID: ctx.Payload.UserID,
 		Social: &types.Social{
 			Reddit: &types.Reddit{
 				Username:     ctx.Payload.Username,
@@ -169,46 +173,55 @@ func (c *RedditharvestController) UpdateSubmittedInfo(ctx *app.UpdateSubmittedIn
 	// initializes reddit OAuth sessions
 	authSession, err := reddit.NewRedditAuth()
 	if err != nil {
-		log.Errorf("[controller/reddit] error: %v", err)
+		log.Errorf("[controller/reddit/harvest] error: %v", err)
 		return ctx.InternalServerError(&app.StandardError{
 			Code:    500,
 			Message: "could not start reddit auth session",
 		})
 	}
 
-	log.Println("[controllers/reddit] retrieving Reddit Submitted info")
+	log.Println("[controllers/reddit/harvest] retrieving Reddit Submitted info")
 	// get slice of subreddits user is subscribed to based on activity
-	if err := authSession.GetSubmittedInfo(user); err != nil {
-		log.Errorf("[controller/reddit] %v", err)
+	subs, err := authSession.GetRawSubmittedInfo(user)
+	if err != nil {
+		log.Errorf("[controller/reddit/harvest] error: %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
 			Message: "could not retrieve Reddit Submitted info",
 		})
 	}
 
-	user = &types.User{
-		UserID: ctx.Payload.UserID,
-		Social: &types.Social{
-			Reddit: &types.Reddit{
-				Subreddits: user.Social.Reddit.Subreddits,
-			},
-		},
+	specMap := make(map[string]int)
+
+	for _, sub := range subs {
+		specMap[sub.Subreddit] = sub.Ups * 10
 	}
 
-	_, err = c.db.UpdateRedditSubInfo(user)
+	mapString, err := json.Marshal(specMap)
 	if err != nil {
-		log.Errorf("[controller/reddit] %v", err)
+		log.Errorf("[controller/reddit/harvest] error: %v", err)
+		return ctx.NotFound(&app.StandardError{
+			Code:    400,
+			Message: "error marshalling community map",
+		})
+	}
+
+	specMapString := fmt.Sprintf("%s", mapString)
+
+	err = c.db.UpdateRedditSubInfo(specMapString, user.UserID)
+	if err != nil {
+		log.Errorf("[controller/reddit/harvest] error: %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
 			Message: "could not update Reddit user listing in db",
 		})
 	}
 
-	log.Printf("[controllers/reddit] successfully harvested Reddit Submitted info for user: %s", user.UserID)
+	log.Printf("[controllers/reddit/harvest] successfully harvested Reddit Submitted info for user: %s", user.UserID)
 
 	res := &app.Reddituser{
 		Username:   ctx.Payload.Username,
-		Subreddits: user.Social.Reddit.Subreddits,
+		Subreddits: specMapString,
 	}
 	return ctx.OK(res)
 	// RedditharvestController_UpdateSubmittedInfo: end_implement
