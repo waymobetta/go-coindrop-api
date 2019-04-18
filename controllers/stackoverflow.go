@@ -89,7 +89,7 @@ func (c *StackoverflowController) Show(ctx *app.ShowStackoverflowContext) error 
 		DisplayName:       user.Social.StackOverflow.DisplayName,
 		StackUserID:       user.Social.StackOverflow.StackUserID,
 		ExchangeAccountID: user.Social.StackOverflow.ExchangeAccountID,
-		Accounts:          user.Social.StackOverflow.Accounts,
+		Accounts:          "",
 		Verification: &app.Verification{
 			PostedVerificationCode:    user.Social.StackOverflow.Verification.PostedVerificationCode,
 			ConfirmedVerificationCode: user.Social.StackOverflow.Verification.ConfirmedVerificationCode,
@@ -115,7 +115,7 @@ func (c *StackoverflowController) Update(ctx *app.UpdateStackoverflowContext) er
 				StackUserID:       ctx.Payload.StackUserID,
 				ExchangeAccountID: 0,
 				DisplayName:       "",
-				Accounts:          []string{},
+				Accounts:          map[string]int{},
 				Verification: &types.Verification{
 					PostedVerificationCode:    "",
 					ConfirmedVerificationCode: "",
@@ -177,7 +177,7 @@ func (c *StackoverflowController) Verify(ctx *app.VerifyStackoverflowContext) er
 
 	user.Social.StackOverflow.DisplayName = aboutProfile.Items[0].DisplayName
 	user.Social.StackOverflow.ExchangeAccountID = aboutProfile.Items[0].AccountID
-	user.Social.StackOverflow.Accounts = []string{}
+	user.Social.StackOverflow.Accounts = map[string]int{}
 	user.Social.StackOverflow.Verification.PostedVerificationCode = aboutProfile.Items[0].AboutMe
 
 	// check to see if posted verification code matches that which is stored
