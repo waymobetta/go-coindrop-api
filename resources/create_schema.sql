@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS coindrop_wallets (
 CREATE TABLE IF NOT EXISTS coindrop_reddit (
   id uuid DEFAULT uuid_generate_v4() UNIQUE,
   user_id uuid REFERENCES coindrop_auth(id) UNIQUE,
-  username text NOT NULL UNIQUE,
+  username text NOT NULL,
   comment_karma integer,
   link_karma integer,
   subreddits text[],
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS coindrop_stackoverflow (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
 	user_id uuid REFERENCES coindrop_auth(id) UNIQUE,
 	exchange_account_id INTEGER,
-	stack_user_id INTEGER NOT NULL UNIQUE,
+	stack_user_id INTEGER NOT NULL,
 	display_name TEXT,
 	accounts TEXT text[],
 	posted_verification_code TEXT,
