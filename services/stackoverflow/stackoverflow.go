@@ -75,7 +75,7 @@ func GetProfileByUserID(u *types.User) (*types.AboutProfileResponse, error) {
 }
 
 // GetAssociatedAccounts method fetches associated communities of user
-func GetAssociatedAccounts(u *types.User) error {
+func GetAssociatedAccounts(u *types.User) ([]types.Community, error) {
 	log.Printf("[services/stackoverflow] collecting associated account information for user: %s\n", u.Social.StackOverflow.DisplayName)
 
 	associatedAccountsEndpoint := fmt.Sprintf("/users/%v/associated", u.Social.StackOverflow.ExchangeAccountID)
@@ -87,7 +87,7 @@ func GetAssociatedAccounts(u *types.User) error {
 	req, err := http.NewRequest("GET", associatedAccountsURL, nil)
 	if err != nil {
 		log.Errorf("[services/stackoverflow] Error preparing GET request for user associated accounts info; %v\n", err)
-		return err
+		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
 
@@ -99,20 +99,20 @@ func GetAssociatedAccounts(u *types.User) error {
 	res, err := client.Do(req)
 	if err != nil {
 		log.Errorf("[services/stackoverflow] Error fetching user profile info; %v\n", err)
-		return err
+		return nil, err
 	}
 	defer res.Body.Close()
 
 	// return if not 200
 	if res.StatusCode != http.StatusOK {
-		return err
+		return nil, err
 	}
 
 	// read result of GET request
 	byteArr, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		log.Errorf("[services/stackoverflow] Error reading response body\n%v", err)
-		return err
+		return nil, err
 	}
 
 	// initialize new struct to contain AssociatedCommunitiesResponse
@@ -121,19 +121,19 @@ func GetAssociatedAccounts(u *types.User) error {
 	// unmarshal JSON into AssociatedCommunitiesResponse struct
 	if err := json.Unmarshal(byteArr, &associatedCommunitiesStruct); err != nil {
 		log.Errorf("[services/stackoverflow] Error unmarshalling JSON; %v\n", err)
-		return err
+		return nil, err
 	}
 
 	log.Printf("[services/stackoverflow] Found associated account info for user: %s!\n", u.Social.StackOverflow.DisplayName)
 
 	// initialize new struct object to hold Community data
-	communityObj := types.Community{}
+	communities := []types.Community{}
 
 	// iterate over number of items in the response
 	// NOTE: there could be multiple items
 	for _, item := range associatedCommunitiesStruct.Items {
 		// for each item, overwrite struct object to hold updated data
-		communityObj = types.Community{
+		communityObj := types.Community{
 			Name:          item.SiteName,
 			Reputation:    item.Reputation,
 			QuestionCount: item.QuestionCount,
@@ -145,14 +145,11 @@ func GetAssociatedAccounts(u *types.User) error {
 			},
 		}
 
-		// append community name to account slice
-		u.Social.StackOverflow.Accounts = append(u.Social.StackOverflow.Accounts, item.SiteName)
-
 		// append updated struct data to slice of objects
-		u.Social.StackOverflow.Communities = append(u.Social.StackOverflow.Communities, communityObj)
+		communities = append(communities, communityObj)
 	}
 
-	return nil
+	return communities, nil
 }
 
 // VerificationCheck checks posted verif. code against that which is stored
