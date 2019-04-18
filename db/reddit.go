@@ -54,7 +54,7 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 		u.Social.Reddit.Username,
 		u.Social.Reddit.LinkKarma,
 		u.Social.Reddit.CommentKarma,
-		pq.Array(u.Social.Reddit.Subreddits),
+		u.Social.Reddit.Subreddits,
 		pq.Array(u.Social.Reddit.Trophies),
 		u.Social.Reddit.Verification.PostedVerificationCode,
 		u.Social.Reddit.Verification.Verified,
@@ -124,7 +124,7 @@ func (db *DB) UpdateRedditUser(u *types.User) (*types.User, error) {
 		u.Social.Reddit.Username,
 		u.Social.Reddit.LinkKarma,
 		u.Social.Reddit.CommentKarma,
-		pq.Array(u.Social.Reddit.Subreddits),
+		u.Social.Reddit.Subreddits,
 		pq.Array(u.Social.Reddit.Trophies),
 		u.Social.Reddit.Verification.PostedVerificationCode,
 		u.Social.Reddit.Verification.Verified,
@@ -184,7 +184,7 @@ func (db *DB) GetUsers(users *types.Users) (*types.Users, error) {
 			&user.Social.Reddit.Username,
 			&user.Social.Reddit.CommentKarma,
 			&user.Social.Reddit.LinkKarma,
-			pq.Array(&user.Social.Reddit.Subreddits),
+			&user.Social.Reddit.Subreddits,
 			pq.Array(&user.Social.Reddit.Trophies),
 			&user.Social.Reddit.Verification.Verified,
 			// stack overflow
@@ -246,7 +246,7 @@ func (db *DB) GetRedditUser(u *types.User) (*types.User, error) {
 		&u.Social.Reddit.Username,
 		&u.Social.Reddit.CommentKarma,
 		&u.Social.Reddit.LinkKarma,
-		pq.Array(&u.Social.Reddit.Subreddits),
+		&u.Social.Reddit.Subreddits,
 		pq.Array(&u.Social.Reddit.Trophies),
 		&u.Social.Reddit.Verification.PostedVerificationCode,
 		&u.Social.Reddit.Verification.ConfirmedVerificationCode,
@@ -335,7 +335,7 @@ func (db *DB) UpdateRedditInfo(u *types.User) (*types.User, error) {
 	_, err = stmt.Exec(
 		u.Social.Reddit.CommentKarma,
 		u.Social.Reddit.LinkKarma,
-		pq.Array(u.Social.Reddit.Subreddits),
+		u.Social.Reddit.Subreddits,
 		pq.Array(u.Social.Reddit.Trophies),
 		u.UserID,
 	)
@@ -404,10 +404,10 @@ func (db *DB) UpdateRedditKarmaInfo(u *types.User) (*types.User, error) {
 }
 
 // UpdateRedditSubInfo updates the listing and Reddit submission data of a single user
-func (db *DB) UpdateRedditSubInfo(u *types.User) (*types.User, error) {
+func (db *DB) UpdateRedditSubInfo(subMap, userID string) error {
 	tx, err := db.client.Begin()
 	if err != nil {
-		return u, err
+		return err
 	}
 
 	// create SQL statement for db update
@@ -423,29 +423,29 @@ func (db *DB) UpdateRedditSubInfo(u *types.User) (*types.User, error) {
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return u, err
+		return err
 	}
 
 	defer stmt.Close()
 
 	// execute db write using unique ID as the identifier
 	_, err = stmt.Exec(
-		pq.Array(u.Social.Reddit.Subreddits),
-		u.UserID,
+		subMap,
+		userID,
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		return tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		return tx.Rollback()
 	}
 
-	return u, nil
+	return nil
 }
 
 // UpdateRedditTrophyInfo updates the listing and Reddit trophy data of a single user
