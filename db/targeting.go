@@ -5,7 +5,10 @@ import (
 )
 
 // GetEligibleRedditUsersAcrossSingleSub returns info for all users
-func (db *DB) GetEligibleRedditUsersAcrossSingleSub(sub string, threshold int) (*types.Users, error) {
+func (db *DB) GetEligibleRedditUsersAcrossSingleSub(sub string, threshold int) ([]types.User, error) {
+
+	users := []types.User{}
+
 	// create SQL statement for db query
 	// pulls a list of all user_id who are above or equal to the eligibility threshold of a single subreddits
 	sqlStatement := `
@@ -42,7 +45,7 @@ func (db *DB) GetEligibleRedditUsersAcrossSingleSub(sub string, threshold int) (
 			return users, err
 		}
 		// append user object to slice of users
-		users.Users = append(users.Users, user)
+		users = append(users, user)
 	}
 
 	err = rows.Err()
@@ -54,7 +57,10 @@ func (db *DB) GetEligibleRedditUsersAcrossSingleSub(sub string, threshold int) (
 }
 
 // GetEligibleRedditUsersAcrossMultipleSubs returns info for all users
-func (db *DB) GetEligibleRedditUsersAcrossMultipleSubs(sub1, sub2 string, threshold int) (*types.Users, error) {
+func (db *DB) GetEligibleRedditUsersAcrossMultipleSubs(sub1, sub2 string, threshold int) ([]types.User, error) {
+
+	users := []types.User{}
+
 	// create SQL statement for db query
 	// pulls a list of all user_id who are above or equal to the eligibility threshold of multiple subreddits
 	sqlStatement := `
@@ -96,7 +102,7 @@ func (db *DB) GetEligibleRedditUsersAcrossMultipleSubs(sub1, sub2 string, thresh
 			return users, err
 		}
 		// append user object to slice of users
-		users.Users = append(users.Users, user)
+		users = append(users, user)
 	}
 
 	err = rows.Err()
