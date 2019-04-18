@@ -62,8 +62,10 @@ func (a *AuthSessions) GetRedditUserTrophies(user *types.User) error {
 		trophySlice = []string{""}
 	}
 
+	uniqueTrophySlice := removeDuplicates(trophySlice)
+
 	// assign trophySlice to User struct
-	user.Social.Reddit.Trophies = trophySlice
+	user.Social.Reddit.Trophies = uniqueTrophySlice
 
 	return nil
 }
@@ -110,31 +112,6 @@ func (a *AuthSessions) GetAboutInfo(user *types.User) error {
 
 	return nil
 }
-
-// // GetSubmittedInfo method to retrieve slice of user's submitted posts
-// func (a *AuthSessions) GetSubmittedInfo(user *types.User) error {
-// 	// get submissions of reddit user
-// 	submissions, err := a.NoAuthSession.RedditorSubmissions(user.Social.Reddit.Username, geddit.ListingOptions{Count: 25})
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	// initialize new slice to store subreddit names user has submitted to
-// 	var subredditSlice []string
-
-// 	// iterate over submissions object to add subreddit name to subredditSlice
-// 	for _, submission := range submissions {
-// 		subredditSlice = append(subredditSlice, submission.Subreddit)
-// 	}
-
-// 	// return a unique slice version of the subredditSlice
-// 	uniqueSubredditSlice := removeDuplicates(subredditSlice)
-
-// 	// assign uniqueSubredditSlice to user struct
-// 	user.Social.Reddit.Subreddits = uniqueSubredditSlice
-
-// 	return nil
-// }
 
 // GetSubmittedInfo method to retrieve slice of user's submitted posts
 func (a *AuthSessions) GetRawSubmittedInfo(user *types.User) ([]*geddit.Submission, error) {
