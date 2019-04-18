@@ -177,7 +177,6 @@ func (c *StackoverflowController) Verify(ctx *app.VerifyStackoverflowContext) er
 
 	user.Social.StackOverflow.DisplayName = aboutProfile.Items[0].DisplayName
 	user.Social.StackOverflow.ExchangeAccountID = aboutProfile.Items[0].AccountID
-	user.Social.StackOverflow.Accounts = map[string]int{}
 	user.Social.StackOverflow.Verification.PostedVerificationCode = aboutProfile.Items[0].AboutMe
 
 	// check to see if posted verification code matches that which is stored
