@@ -135,6 +135,15 @@ func (c *StackoverflowharvestController) UpdateCommunities(ctx *app.UpdateCommun
 
 	communityMapString := fmt.Sprintf("%s", mapString)
 
+	var communityCollection app.CommunityCollection
+
+	for _, community := range accounts {
+		communityCollection = append(communityCollection, &app.Community{
+			Name:       community.Name,
+			Reputation: community.Reputation,
+		})
+	}
+
 	err = c.db.UpdateStackCommunityInfo(communityMapString, user.UserID)
 	if err != nil {
 		log.Errorf("[controller/stackoverflowharvest] %v", err)
@@ -148,7 +157,7 @@ func (c *StackoverflowharvestController) UpdateCommunities(ctx *app.UpdateCommun
 
 	res := &app.Stackoverflowuser{
 		StackUserID: user.Social.StackOverflow.StackUserID,
-		Accounts:    communityMapString,
+		Accounts:    communityCollection,
 	}
 	return ctx.OK(res)
 	// StackoverflowharvestController_UpdateCommunities: end_implement
