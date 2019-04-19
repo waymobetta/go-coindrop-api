@@ -278,7 +278,7 @@ type Reddituser struct {
 	// Link Karma
 	LinkKarma int `form:"linkKarma" json:"linkKarma" yaml:"linkKarma" xml:"linkKarma"`
 	// User subreddits
-	Subreddits string `form:"subreddits" json:"subreddits" yaml:"subreddits" xml:"subreddits"`
+	Subreddits CommunityCollection `form:"subreddits" json:"subreddits" yaml:"subreddits" xml:"subreddits"`
 	// User trophies
 	Trophies []string `form:"trophies" json:"trophies" yaml:"trophies" xml:"trophies"`
 	// User ID
@@ -304,7 +304,7 @@ func (mt *Reddituser) Validate() (err error) {
 	if mt.Trophies == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "trophies"))
 	}
-	if mt.Subreddits == "" {
+	if mt.Subreddits == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "subreddits"))
 	}
 	if mt.Verification == nil {
@@ -312,6 +312,9 @@ func (mt *Reddituser) Validate() (err error) {
 	}
 	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, mt.ID); !ok {
 		err = goa.MergeErrors(err, goa.InvalidPatternError(`response.id`, mt.ID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+	}
+	if err2 := mt.Subreddits.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
 	}
 	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, mt.UserID); !ok {
 		err = goa.MergeErrors(err, goa.InvalidPatternError(`response.userId`, mt.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
