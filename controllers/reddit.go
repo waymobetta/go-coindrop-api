@@ -1,9 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
-	"fmt"
-
 	"github.com/goadesign/goa"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
@@ -55,23 +52,21 @@ func (c *RedditController) Show(ctx *app.ShowRedditContext) error {
 		})
 	}
 
-	mapString, err := json.Marshal(user.Social.Reddit.Subreddits)
-	if err != nil {
-		log.Errorf("[controller/reddit/harvest] error: %v", err)
-		return ctx.NotFound(&app.StandardError{
-			Code:    400,
-			Message: "error marshalling community map",
+	var communityCollection app.CommunityCollection
+
+	for name, rep := range user.Social.Reddit.Subreddits {
+		communityCollection = append(communityCollection, &app.Community{
+			Name:       name,
+			Reputation: rep,
 		})
 	}
-
-	specMapString := fmt.Sprintf("%s", mapString)
 
 	res := &app.Reddituser{
 		ID:           user.Social.Reddit.ID,
 		Username:     user.Social.Reddit.Username,
 		LinkKarma:    user.Social.Reddit.LinkKarma,
 		CommentKarma: user.Social.Reddit.CommentKarma,
-		Subreddits:   specMapString,
+		Subreddits:   communityCollection,
 		Trophies:     user.Social.Reddit.Trophies,
 		Verification: &app.Verification{
 			PostedVerificationCode:    user.Social.Reddit.Verification.PostedVerificationCode,
@@ -116,6 +111,8 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 		})
 	}
 
+	var communityCollection app.CommunityCollection
+
 	log.Printf("[controller/reddit] added Reddit information for coindrop user: %v\n", user.UserID)
 
 	res := &app.Reddituser{
@@ -124,7 +121,7 @@ func (c *RedditController) Update(ctx *app.UpdateRedditContext) error {
 		LinkKarma:    user.Social.Reddit.LinkKarma,
 		CommentKarma: user.Social.Reddit.CommentKarma,
 		Trophies:     []string{},
-		Subreddits:   "",
+		Subreddits:   communityCollection,
 		Verification: &app.Verification{
 			PostedVerificationCode:    "",
 			ConfirmedVerificationCode: "",
