@@ -29,8 +29,13 @@ func (c *StackoverflowController) Display(ctx *app.DisplayStackoverflowContext) 
 
 	// Put your logic here
 
+	userID := ctx.Params.Get("userId")
+	if userID == "" {
+		userID = ctx.Value("authUserID").(string)
+	}
+
 	user := &types.User{
-		UserID: ctx.Params.Get("userId"),
+		UserID: userID,
 		Social: &types.Social{
 			StackOverflow: &types.StackOverflow{
 				Verification: &types.Verification{},
@@ -64,8 +69,13 @@ func (c *StackoverflowController) Show(ctx *app.ShowStackoverflowContext) error 
 
 	// Put your logic here
 
+	userID := ctx.Params.Get("userId")
+	if userID == "" {
+		userID = ctx.Value("authUserID").(string)
+	}
+
 	user := &types.User{
-		UserID: ctx.Params.Get("userId"),
+		UserID: userID,
 		Social: &types.Social{
 			StackOverflow: &types.StackOverflow{
 				Verification: &types.Verification{},
