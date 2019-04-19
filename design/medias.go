@@ -160,6 +160,22 @@ var WalletsMedia = MediaType("application/vnd.wallets+json", func() {
 	})
 })
 
+var CommunityMedia = MediaType("application/vnd.community+json", func() {
+	Description("Community Object")
+	Attributes(func() {
+		Attribute("name", String, "Community name")
+		Attribute("reputation", Integer, "Calculated reputation/karma")
+		Required(
+			"name",
+			"reputation",
+		)
+	})
+	View("default", func() {
+		Attribute("name")
+		Attribute("reputation")
+	})
+})
+
 // RedditUserMedia ...
 var RedditUserMedia = MediaType("application/vnd.reddituser+json", func() {
 	Description("A Reddit User")
@@ -216,7 +232,7 @@ var StackOverflowUserMedia = MediaType("application/vnd.stackoverflowuser+json",
 		Attribute("exchangeAccountId", Integer, "Stack Exchange Account ID")
 		Attribute("stackUserId", Integer, "Stack Overflow Community-Specific Account ID")
 		Attribute("displayName", String, "Display Name")
-		Attribute("accounts", String, "Stack Exchange Accounts")
+		Attribute("accounts", CollectionOf(CommunityMedia), "Stack Exchange Accounts")
 		Attribute("verification", VerificationMedia, "Social Account Verification")
 		Required(
 			"id",
