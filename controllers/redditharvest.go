@@ -208,6 +208,15 @@ func (c *RedditharvestController) UpdateSubmittedInfo(ctx *app.UpdateSubmittedIn
 
 	specMapString := fmt.Sprintf("%s", mapString)
 
+	var communityCollection app.CommunityCollection
+
+	for name, rep := range specMap {
+		communityCollection = append(communityCollection, &app.Community{
+			Name:       name,
+			Reputation: rep,
+		})
+	}
+
 	err = c.db.UpdateRedditSubInfo(specMapString, user.UserID)
 	if err != nil {
 		log.Errorf("[controller/reddit/harvest] error: %v", err)
@@ -221,7 +230,7 @@ func (c *RedditharvestController) UpdateSubmittedInfo(ctx *app.UpdateSubmittedIn
 
 	res := &app.Reddituser{
 		Username:   ctx.Payload.Username,
-		Subreddits: specMapString,
+		Subreddits: communityCollection,
 	}
 	return ctx.OK(res)
 	// RedditharvestController_UpdateSubmittedInfo: end_implement
