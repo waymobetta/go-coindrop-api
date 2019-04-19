@@ -100,6 +100,42 @@ func (mt *Badges) Validate() (err error) {
 	return
 }
 
+// Community Object (default view)
+//
+// Identifier: application/vnd.community+json; view=default
+type Community struct {
+	// Community name
+	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Calculated reputation/karma
+	Reputation int `form:"reputation" json:"reputation" yaml:"reputation" xml:"reputation"`
+}
+
+// Validate validates the Community media type instance.
+func (mt *Community) Validate() (err error) {
+	if mt.Name == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "name"))
+	}
+
+	return
+}
+
+// CommunityCollection is the media type for an array of Community (default view)
+//
+// Identifier: application/vnd.community+json; type=collection; view=default
+type CommunityCollection []*Community
+
+// Validate validates the CommunityCollection media type instance.
+func (mt CommunityCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
 // Health check (default view)
 //
 // Identifier: application/vnd.healthcheck+json; view=default
@@ -336,7 +372,7 @@ func (mt ResultsCollection) Validate() (err error) {
 // Identifier: application/vnd.stackoverflowuser+json; view=default
 type Stackoverflowuser struct {
 	// Stack Exchange Accounts
-	Accounts string `form:"accounts" json:"accounts" yaml:"accounts" xml:"accounts"`
+	Accounts CommunityCollection `form:"accounts" json:"accounts" yaml:"accounts" xml:"accounts"`
 	// Display Name
 	DisplayName string `form:"displayName" json:"displayName" yaml:"displayName" xml:"displayName"`
 	// Stack Exchange Account ID
@@ -363,11 +399,14 @@ func (mt *Stackoverflowuser) Validate() (err error) {
 	if mt.DisplayName == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "displayName"))
 	}
-	if mt.Accounts == "" {
+	if mt.Accounts == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "accounts"))
 	}
 	if mt.Verification == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "verification"))
+	}
+	if err2 := mt.Accounts.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
 	}
 	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, mt.ID); !ok {
 		err = goa.MergeErrors(err, goa.InvalidPatternError(`response.id`, mt.ID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
