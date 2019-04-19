@@ -73,12 +73,21 @@ func (c *StackoverflowController) Show(ctx *app.ShowStackoverflowContext) error 
 		},
 	}
 
-	_, err := c.db.AddStackUser(user)
+	_, err := c.db.GetStackUser(user)
 	if err != nil {
 		log.Errorf("[controller/stackoverflow] %v", err)
 		return ctx.NotFound(&app.StandardError{
 			Code:    400,
 			Message: "could not get user stack overflow info from db",
+		})
+	}
+
+	var communityCollection app.CommunityCollection
+
+	for name, rep := range user.Social.StackOverflow.Accounts {
+		communityCollection = append(communityCollection, &app.Community{
+			Name:       name,
+			Reputation: rep,
 		})
 	}
 
@@ -89,7 +98,7 @@ func (c *StackoverflowController) Show(ctx *app.ShowStackoverflowContext) error 
 		DisplayName:       user.Social.StackOverflow.DisplayName,
 		StackUserID:       user.Social.StackOverflow.StackUserID,
 		ExchangeAccountID: user.Social.StackOverflow.ExchangeAccountID,
-		Accounts:          "",
+		Accounts:          communityCollection,
 		Verification: &app.Verification{
 			PostedVerificationCode:    user.Social.StackOverflow.Verification.PostedVerificationCode,
 			ConfirmedVerificationCode: user.Social.StackOverflow.Verification.ConfirmedVerificationCode,
