@@ -1,6 +1,9 @@
 package db
 
 import (
+	"database/sql"
+	"encoding/json"
+
 	"github.com/lib/pq"
 	"github.com/waymobetta/go-coindrop-api/types"
 )
@@ -48,13 +51,15 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 
 	defer stmt.Close()
 
+	var accountsString sql.NullString
+
 	// execute db write using unique user ID + associated data
 	_, err = stmt.Exec(
 		u.UserID,
 		u.Social.Reddit.Username,
 		u.Social.Reddit.LinkKarma,
 		u.Social.Reddit.CommentKarma,
-		u.Social.Reddit.Subreddits,
+		&accountsString,
 		pq.Array(u.Social.Reddit.Trophies),
 		u.Social.Reddit.Verification.PostedVerificationCode,
 		u.Social.Reddit.Verification.Verified,
@@ -62,6 +67,13 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 	if err != nil {
 		// rollback transaction if error throw
 		return nil, tx.Rollback()
+	}
+
+	byteArr := []byte(accountsString.String)
+
+	err = json.Unmarshal(byteArr, &u.Social.Reddit.Subreddits)
+	if err != nil {
+		return nil, err
 	}
 
 	// commit db write
@@ -142,71 +154,6 @@ func (db *DB) UpdateRedditUser(u *types.User) (*types.User, error) {
 	return u, nil
 }
 
-// GetUsers returns info for all users
-func (db *DB) GetUsers(users *types.Users) (*types.Users, error) {
-	// create SQL statement for db query
-	sqlStatement := `
-		SELECT
-			coindrop_reddit.user_id,
-			coindrop_reddit.username,
-			coindrop_reddit.comment_karma,
-			coindrop_reddit.link_karma,
-			coindrop_reddit.subreddits,
-			coindrop_reddit.trophies,
-			coindrop_reddit.verified,
-			coindrop_stackoverflow.user_id,
-			coindrop_stackoverflow.exchange_account_id,
-			coindrop_stackoverflow.stack_user_id,
-			coindrop_stackoverflow.display_name,
-			coindrop_stackoverflow.accounts,
-			coindrop_stackoverflow.verified
-		FROM
-			coindrop_reddit,
-			coindrop_stackoverflow
-	`
-
-	// execute db query by passing in prepared SQL statement
-	rows, err := db.client.Query(sqlStatement)
-	if err != nil {
-		return nil, err
-	}
-
-	defer rows.Close()
-
-	// iterate over rows
-	for rows.Next() {
-		// initialize new struct per user in db to hold user info
-		user := types.User{}
-		err = rows.Scan(
-			// reddit
-			&user.Social.Reddit.Username,
-			&user.Social.Reddit.CommentKarma,
-			&user.Social.Reddit.LinkKarma,
-			&user.Social.Reddit.Subreddits,
-			pq.Array(&user.Social.Reddit.Trophies),
-			&user.Social.Reddit.Verification.Verified,
-			// stack overflow
-			&user.Social.StackOverflow.StackUserID,
-			&user.Social.StackOverflow.ExchangeAccountID,
-			&user.Social.StackOverflow.DisplayName,
-			pq.Array(&user.Social.StackOverflow.Accounts),
-			&user.Social.StackOverflow.Verification.Verified,
-		)
-		if err != nil {
-			return nil, err
-		}
-		// append user object to slice of users
-		users.Users = append(users.Users, user)
-	}
-
-	err = rows.Err()
-	if err != nil {
-		return nil, err
-	}
-
-	return users, nil
-}
-
 // GetRedditUser ...
 func (db *DB) GetRedditUser(u *types.User) (*types.User, error) {
 	// create SQL statement for db writes
@@ -238,21 +185,38 @@ func (db *DB) GetRedditUser(u *types.User) (*types.User, error) {
 	// initialize row object
 	row := stmt.QueryRow(u.UserID)
 
+	var accountsString sql.NullString
+	var accountsMap map[string]int
+
 	// iterate over row object to retrieve queried value
 	err = row.Scan(
 		&u.Social.Reddit.ID,
 		&u.Social.Reddit.Username,
 		&u.Social.Reddit.CommentKarma,
 		&u.Social.Reddit.LinkKarma,
-		&u.Social.Reddit.Subreddits,
+		&accountsString,
 		pq.Array(&u.Social.Reddit.Trophies),
 		&u.Social.Reddit.Verification.PostedVerificationCode,
 		&u.Social.Reddit.Verification.ConfirmedVerificationCode,
 		&u.Social.Reddit.Verification.Verified,
 	)
 	if err != nil {
-		return u, err
+		return nil, err
 	}
+
+	if accountsString.String == "" {
+		u.Social.Reddit.Subreddits = accountsMap
+		return u, nil
+	}
+
+	byteArr := []byte(accountsString.String)
+
+	err = json.Unmarshal(byteArr, &accountsMap)
+	if err != nil {
+		return nil, err
+	}
+
+	u.Social.Reddit.Subreddits = accountsMap
 
 	return u, nil
 }
