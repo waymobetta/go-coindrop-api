@@ -4,6 +4,50 @@ import (
 	"github.com/waymobetta/go-coindrop-api/types"
 )
 
+// subreddits
+var subreddits = []string{
+	"ethereum",
+	"bitcoin",
+	"ethtrader",
+	"adchain",
+	"cryptocurrency",
+	"ethdev",
+	"BATProject",
+	"makerdao",
+	"0xproject",
+	"cryptoeconomics",
+	"consensys",
+	"ethereumclassic",
+	"omise_go",
+	"cardano",
+	"dogecoin",
+	"litecoin",
+	"ripple",
+	"monero",
+	"augur",
+	"maidsafe",
+	"decentraland",
+	"district0x",
+	"spankchain",
+	"joincolony",
+	"everex",
+	"maecenas",
+	"storj",
+	"IPFS",
+	"loomnetwork",
+	"dashpay",
+	"bitcoincash",
+	"eos",
+	"binance",
+	"stellar",
+	"tezos",
+	"iota",
+	"zilliqa",
+	"dfinity",
+	"cosmosnetwork",
+	"chainlink",
+}
+
 // GetEligibleRedditUsersAcrossSingleSub returns info for all users
 func (db *DB) GetEligibleRedditUsersAcrossSingleSub(sub string, threshold int) ([]types.User, error) {
 
