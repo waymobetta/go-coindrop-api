@@ -10,7 +10,7 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	// create SQL statement for db writes
@@ -43,7 +43,7 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	defer stmt.Close()
@@ -61,16 +61,14 @@ func (db *DB) AddRedditUser(u *types.User) (*types.User, error) {
 	)
 	if err != nil {
 		// rollback transaction if error throw
-		tx.Rollback()
-		return u, err
+		return nil, tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
+		return nil, tx.Rollback()
 	}
 
 	return u, nil
@@ -81,7 +79,7 @@ func (db *DB) UpdateRedditUser(u *types.User) (*types.User, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	// create SQL statement for db writes
@@ -113,7 +111,7 @@ func (db *DB) UpdateRedditUser(u *types.User) (*types.User, error) {
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	defer stmt.Close()
@@ -131,14 +129,14 @@ func (db *DB) UpdateRedditUser(u *types.User) (*types.User, error) {
 	)
 	if err != nil {
 		// rollback transaction if error throw
-		return u, tx.Rollback()
+		return nil, tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		return nil, tx.Rollback()
 	}
 
 	return u, nil
@@ -170,7 +168,7 @@ func (db *DB) GetUsers(users *types.Users) (*types.Users, error) {
 	// execute db query by passing in prepared SQL statement
 	rows, err := db.client.Query(sqlStatement)
 	if err != nil {
-		return users, err
+		return nil, err
 	}
 
 	defer rows.Close()
@@ -195,7 +193,7 @@ func (db *DB) GetUsers(users *types.Users) (*types.Users, error) {
 			&user.Social.StackOverflow.Verification.Verified,
 		)
 		if err != nil {
-			return users, err
+			return nil, err
 		}
 		// append user object to slice of users
 		users.Users = append(users.Users, user)
@@ -203,7 +201,7 @@ func (db *DB) GetUsers(users *types.Users) (*types.Users, error) {
 
 	err = rows.Err()
 	if err != nil {
-		return users, err
+		return nil, err
 	}
 
 	return users, nil
@@ -264,7 +262,7 @@ func (db *DB) RemoveRedditUser(u *types.User) (*types.User, error) {
 	// initialize statement write to database
 	tx, err := db.client.Begin()
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	// create SQL statement for db writes
@@ -278,7 +276,7 @@ func (db *DB) RemoveRedditUser(u *types.User) (*types.User, error) {
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	defer stmt.Close()
@@ -287,16 +285,14 @@ func (db *DB) RemoveRedditUser(u *types.User) (*types.User, error) {
 	_, err = stmt.Exec(u.UserID)
 	if err != nil {
 		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
+		return nil, tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
+		return nil, tx.Rollback()
 	}
 
 	return u, nil
@@ -307,7 +303,7 @@ func (db *DB) UpdateRedditInfo(u *types.User) (*types.User, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := db.client.Begin()
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	// create SQL statement for db update
@@ -326,7 +322,7 @@ func (db *DB) UpdateRedditInfo(u *types.User) (*types.User, error) {
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	defer stmt.Close()
@@ -341,16 +337,14 @@ func (db *DB) UpdateRedditInfo(u *types.User) (*types.User, error) {
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
+		return nil, tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
+		return nil, tx.Rollback()
 	}
 
 	return u, nil
@@ -360,7 +354,7 @@ func (db *DB) UpdateRedditInfo(u *types.User) (*types.User, error) {
 func (db *DB) UpdateRedditKarmaInfo(u *types.User) (*types.User, error) {
 	tx, err := db.client.Begin()
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	// create SQL statement for db update
@@ -377,7 +371,7 @@ func (db *DB) UpdateRedditKarmaInfo(u *types.User) (*types.User, error) {
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	defer stmt.Close()
@@ -390,14 +384,14 @@ func (db *DB) UpdateRedditKarmaInfo(u *types.User) (*types.User, error) {
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		return nil, tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		return nil, tx.Rollback()
 	}
 
 	return u, nil
@@ -452,7 +446,7 @@ func (db *DB) UpdateRedditSubInfo(subMap, userID string) error {
 func (db *DB) UpdateRedditTrophyInfo(u *types.User) (*types.User, error) {
 	tx, err := db.client.Begin()
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	// create SQL statement for db update
@@ -468,7 +462,7 @@ func (db *DB) UpdateRedditTrophyInfo(u *types.User) (*types.User, error) {
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	defer stmt.Close()
@@ -480,14 +474,14 @@ func (db *DB) UpdateRedditTrophyInfo(u *types.User) (*types.User, error) {
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		return nil, tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaction if error thrown
-		return u, tx.Rollback()
+		return nil, tx.Rollback()
 	}
 
 	return u, nil
@@ -500,7 +494,7 @@ func (db *DB) UpdateRedditVerificationCode(u *types.User) (*types.User, error) {
 	// for simplicity, update the listing rather than updating single value
 	tx, err := db.client.Begin()
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	// create SQL statement for db update
@@ -516,7 +510,7 @@ func (db *DB) UpdateRedditVerificationCode(u *types.User) (*types.User, error) {
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	defer stmt.Close()
@@ -529,16 +523,14 @@ func (db *DB) UpdateRedditVerificationCode(u *types.User) (*types.User, error) {
 	)
 	if err != nil {
 		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
+		return nil, tx.Rollback()
 	}
 
 	// commit db write
 	err = tx.Commit()
 	if err != nil {
 		// rollback transaction if error thrown
-		tx.Rollback()
-		return u, err
+		return nil, tx.Rollback()
 	}
 
 	return u, nil
@@ -562,7 +554,7 @@ func (db *DB) GetUserRedditVerification(u *types.User) (*types.User, error) {
 	// prepare statement
 	stmt, err := db.client.Prepare(sqlStatement)
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	defer stmt.Close()
@@ -578,7 +570,7 @@ func (db *DB) GetUserRedditVerification(u *types.User) (*types.User, error) {
 		&u.Social.Reddit.Verification.Verified,
 	)
 	if err != nil {
-		return u, err
+		return nil, err
 	}
 
 	return u, nil
