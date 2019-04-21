@@ -134,16 +134,11 @@ var TargetingMedia = MediaType("application/vnd.targeting+json", func() {
 var RedditTargetingMedia = MediaType("application/vnd.reddittargeting+json", func() {
 	Description("Reddit Targeting")
 	Attributes(func() {
-		Attribute("userId", String, "User ID", func() {
-			Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
-			Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
-		})
-		Attribute("subreddits", CollectionOf(CommunityMedia), "User subreddits")
-		Required("userId", "subreddits")
+		Attribute("users", CollectionOf(RedditUserMedia), "Users")
+		Required("users")
 	})
 	View("default", func() {
-		Attribute("userId")
-		Attribute("subreddits")
+		Attribute("users")
 	})
 })
 
