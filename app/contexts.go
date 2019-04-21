@@ -1725,6 +1725,133 @@ func (ctx *UpdateProfileStackoverflowharvestContext) InternalServerError(r *Stan
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
+// DisplayTargetingContext provides the targeting display action context.
+type DisplayTargetingContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Project string
+}
+
+// NewDisplayTargetingContext parses the incoming request URL and body, performs validations and creates the
+// context used by the targeting controller display action.
+func NewDisplayTargetingContext(ctx context.Context, r *http.Request, service *goa.Service) (*DisplayTargetingContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := DisplayTargetingContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramProject := req.Params["project"]
+	if len(paramProject) > 0 {
+		rawProject := paramProject[0]
+		rctx.Project = rawProject
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *DisplayTargetingContext) OK(r *Targeting) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.targeting+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *DisplayTargetingContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *DisplayTargetingContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *DisplayTargetingContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *DisplayTargetingContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
+// SetTargetingContext provides the targeting set action context.
+type SetTargetingContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Payload *SetTargetingPayload
+}
+
+// NewSetTargetingContext parses the incoming request URL and body, performs validations and creates the
+// context used by the targeting controller set action.
+func NewSetTargetingContext(ctx context.Context, r *http.Request, service *goa.Service) (*SetTargetingContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := SetTargetingContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *SetTargetingContext) OK(resp []byte) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "text/plain")
+	}
+	ctx.ResponseData.WriteHeader(200)
+	_, err := ctx.ResponseData.Write(resp)
+	return err
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *SetTargetingContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *SetTargetingContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *SetTargetingContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *SetTargetingContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
 // CreateTasksContext provides the tasks create action context.
 type CreateTasksContext struct {
 	context.Context

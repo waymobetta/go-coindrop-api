@@ -425,6 +425,22 @@ func (mt *Stackoverflowuser) Validate() (err error) {
 	return
 }
 
+// Targeting (default view)
+//
+// Identifier: application/vnd.targeting+json; view=default
+type Targeting struct {
+	// List of users
+	Users string `form:"users" json:"users" yaml:"users" xml:"users"`
+}
+
+// Validate validates the Targeting media type instance.
+func (mt *Targeting) Validate() (err error) {
+	if mt.Users == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "users"))
+	}
+	return
+}
+
 // Task (default view)
 //
 // Identifier: application/vnd.task+json; view=default

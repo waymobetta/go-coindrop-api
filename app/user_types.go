@@ -449,6 +449,56 @@ func (ut *QuizResultsPayload) Validate() (err error) {
 	return
 }
 
+// Set Targeting payload
+type setTargetingPayload struct {
+	// Task ID
+	TaskID *string `form:"taskId,omitempty" json:"taskId,omitempty" yaml:"taskId,omitempty" xml:"taskId,omitempty"`
+	// List of users
+	Users *string `form:"users,omitempty" json:"users,omitempty" yaml:"users,omitempty" xml:"users,omitempty"`
+}
+
+// Validate validates the setTargetingPayload type instance.
+func (ut *setTargetingPayload) Validate() (err error) {
+	if ut.TaskID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "taskId"))
+	}
+	if ut.Users == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "users"))
+	}
+	return
+}
+
+// Publicize creates SetTargetingPayload from setTargetingPayload
+func (ut *setTargetingPayload) Publicize() *SetTargetingPayload {
+	var pub SetTargetingPayload
+	if ut.TaskID != nil {
+		pub.TaskID = *ut.TaskID
+	}
+	if ut.Users != nil {
+		pub.Users = *ut.Users
+	}
+	return &pub
+}
+
+// Set Targeting payload
+type SetTargetingPayload struct {
+	// Task ID
+	TaskID string `form:"taskId" json:"taskId" yaml:"taskId" xml:"taskId"`
+	// List of users
+	Users string `form:"users" json:"users" yaml:"users" xml:"users"`
+}
+
+// Validate validates the SetTargetingPayload type instance.
+func (ut *SetTargetingPayload) Validate() (err error) {
+	if ut.TaskID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "taskId"))
+	}
+	if ut.Users == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "users"))
+	}
+	return
+}
+
 // Task payload
 type taskPayload struct {
 	// Task completed

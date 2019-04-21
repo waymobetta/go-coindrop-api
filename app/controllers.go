@@ -1146,6 +1146,100 @@ func unmarshalUpdateProfileStackoverflowharvestPayload(ctx context.Context, serv
 	return nil
 }
 
+// TargetingController is the controller interface for the Targeting actions.
+type TargetingController interface {
+	goa.Muxer
+	Display(*DisplayTargetingContext) error
+	Set(*SetTargetingContext) error
+}
+
+// MountTargetingController "mounts" a Targeting resource controller on the given service.
+func MountTargetingController(service *goa.Service, ctrl TargetingController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/v1/targeting/users/:project", ctrl.MuxHandler("preflight", handleTargetingOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/targeting/tasks/set", ctrl.MuxHandler("preflight", handleTargetingOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewDisplayTargetingContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Display(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleTargetingOrigin(h)
+	service.Mux.Handle("GET", "/v1/targeting/users/:project", ctrl.MuxHandler("display", h, nil))
+	service.LogInfo("mount", "ctrl", "Targeting", "action", "Display", "route", "GET /v1/targeting/users/:project", "security", "JWTAuth")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewSetTargetingContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*SetTargetingPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Set(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleTargetingOrigin(h)
+	service.Mux.Handle("POST", "/v1/targeting/tasks/set", ctrl.MuxHandler("set", h, unmarshalSetTargetingPayload))
+	service.LogInfo("mount", "ctrl", "Targeting", "action", "Set", "route", "POST /v1/targeting/tasks/set", "security", "JWTAuth")
+}
+
+// handleTargetingOrigin applies the CORS response headers corresponding to the origin.
+func handleTargetingOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "*") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "OPTIONS, HEAD, POST, GET, UPDATE, DELETE, PATCH")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalSetTargetingPayload unmarshals the request body into the context request data Payload field.
+func unmarshalSetTargetingPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &setTargetingPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
 // TasksController is the controller interface for the Tasks actions.
 type TasksController interface {
 	goa.Muxer

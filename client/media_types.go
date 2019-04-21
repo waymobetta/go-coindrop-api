@@ -538,6 +538,29 @@ func (c *Client) DecodeStackoverflowuser(resp *http.Response) (*Stackoverflowuse
 	return &decoded, err
 }
 
+// Targeting (default view)
+//
+// Identifier: application/vnd.targeting+json; view=default
+type Targeting struct {
+	// List of users
+	Users string `form:"users" json:"users" yaml:"users" xml:"users"`
+}
+
+// Validate validates the Targeting media type instance.
+func (mt *Targeting) Validate() (err error) {
+	if mt.Users == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "users"))
+	}
+	return
+}
+
+// DecodeTargeting decodes the Targeting instance encoded in resp body.
+func (c *Client) DecodeTargeting(resp *http.Response) (*Targeting, error) {
+	var decoded Targeting
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // Task (default view)
 //
 // Identifier: application/vnd.task+json; view=default
