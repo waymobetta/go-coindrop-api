@@ -62,6 +62,45 @@ func (c *TargetingController) Display(ctx *app.DisplayTargetingContext) error {
 	// TargetingController_Display: end_implement
 }
 
+// List runs the list action.
+func (c *TargetingController) List(ctx *app.ListTargetingContext) error {
+	// TargetingController_List: start_implement
+
+	// Put your logic here
+
+	var r app.ReddituserCollection
+
+	var s app.CommunityCollection
+
+	userSlice, err := c.db.GetRedditUsersAndSubs()
+	if err != nil {
+		log.Errorf("[controller/targeting] error: %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could not get list of reddit users and subs",
+		})
+	}
+
+	for _, user := range userSlice {
+		for name, rep := range user.Social.Reddit.Subreddits {
+			s = append(s, &app.Community{
+				Name:       name,
+				Reputation: rep,
+			})
+		}
+		r = append(r, &app.Reddituser{
+			UserID:     user.UserID,
+			Subreddits: s,
+		})
+	}
+
+	res := &app.Reddittargeting{
+		Users: r,
+	}
+	return ctx.OK(res)
+	// TargetingController_List: end_implement
+}
+
 // Set runs the set action.
 func (c *TargetingController) Set(ctx *app.SetTargetingContext) error {
 	// TargetingController_Set: start_implement
