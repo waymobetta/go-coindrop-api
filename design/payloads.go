@@ -42,6 +42,17 @@ var TaskPayload = Type("TaskPayload", func() {
 	Required("completed")
 })
 
+// SetTargetingPayload is for assigning a task to eligible users
+var SetTargetingPayload = Type("SetTargetingPayload", func() {
+	Description("Set Targeting payload")
+	Attribute("taskId", String, "Task ID")
+	Attribute("users", String, "List of users")
+	Required(
+		"taskId",
+		"users",
+	)
+})
+
 // WalletPayload is the payload for updating a user's wallet
 var WalletPayload = Type("WalletPayload", func() {
 	Description("Wallet payload")
