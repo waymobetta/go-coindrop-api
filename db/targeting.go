@@ -189,14 +189,18 @@ func (db *DB) GetRedditUsersAndSubs() ([]types.User, error) {
 
 	// iterate over rows
 	for rows.Next() {
-		user := types.User{}
+		user := types.User{
+			Social: &types.Social{
+				Reddit: &types.Reddit{},
+			},
+		}
 
 		var userID sql.NullString
 		var accountsString sql.NullString
 		var accountsMap map[string]int
 
 		err = rows.Scan(
-			&user.UserID,
+			&userID,
 			&accountsString,
 		)
 		if err != nil {
