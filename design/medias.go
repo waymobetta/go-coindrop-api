@@ -118,6 +118,18 @@ var TasksMedia = MediaType("application/vnd.tasks+json", func() {
 	})
 })
 
+// TargetingMedia ...
+var TargetingMedia = MediaType("application/vnd.targeting+json", func() {
+	Description("Targeting")
+	Attributes(func() {
+		Attribute("users", String, "List of users")
+		Required("users")
+	})
+	View("default", func() {
+		Attribute("users")
+	})
+})
+
 // WalletMedia ...
 var WalletMedia = MediaType("application/vnd.wallet+json", func() {
 	Description("A wallet")
