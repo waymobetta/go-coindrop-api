@@ -1,7 +1,7 @@
 TODO
 
-. [db/reddit] fix returning string into type map[string]int for all Gets
-. [db/stackoverflow] fix returning string into type map[string]int for all Gets
+. [ENTIRE] replace task author string with UUID referencing project table
+. [schema] add table projects (project id, name, description, etc.)
 . [design] replace community accounts (String) for reddit/stack overflow medias with their own medias to perform collection of
 . replace VerificationSubredditName (services/reddit/reddit.go) with cd sub
 . add resources table
