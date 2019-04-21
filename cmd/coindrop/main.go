@@ -127,6 +127,9 @@ func main() {
 	transactionsCtrlr := controllers.NewTransactionsController(service, dbs)
 	app.MountTransactionsController(service, transactionsCtrlr)
 
+	targetingCtrlr := controllers.NewTargetingController(service, dbs)
+	app.MountTargetingController(service, targetingCtrlr)
+
 	// goa handler
 	goaHandler := c.Handler(mw.RateLimitHandler(service.Server.Handler))
 
