@@ -1,11 +1,11 @@
 package db
 
 import (
-	"github.com/waymobetta/go-coindrop-api/types"
+	"database/sql"
 )
 
-// subreddits
-var subreddits = []string{
+// Subreddits is a list of approved subreddits used for targeting
+var Subreddits = []string{
 	"ethereum",
 	"bitcoin",
 	"ethtrader",
@@ -49,9 +49,9 @@ var subreddits = []string{
 }
 
 // GetEligibleRedditUsersAcrossSingleSub returns info for all users
-func (db *DB) GetEligibleRedditUsersAcrossSingleSub(sub string, threshold int) ([]types.User, error) {
+func (db *DB) GetEligibleRedditUsersAcrossSingleSub(sub string, threshold int) ([]string, error) {
 
-	users := []types.User{}
+	var usersSlice []string
 
 	// create SQL statement for db query
 	// pulls a list of all user_id who are above or equal to the eligibility threshold of a single subreddits
@@ -73,7 +73,7 @@ func (db *DB) GetEligibleRedditUsersAcrossSingleSub(sub string, threshold int) (
 		threshold,
 	)
 	if err != nil {
-		return users, err
+		return nil, err
 	}
 
 	defer rows.Close()
@@ -81,29 +81,31 @@ func (db *DB) GetEligibleRedditUsersAcrossSingleSub(sub string, threshold int) (
 	// iterate over rows
 	for rows.Next() {
 		// initialize new struct per user in db to hold user info
-		user := types.User{}
+
+		var user sql.NullString
+
 		err = rows.Scan(
-			user.UserID,
+			&user,
 		)
 		if err != nil {
-			return users, err
+			return nil, err
 		}
-		// append user object to slice of users
-		users = append(users, user)
+		// append user string to slice of users
+		usersSlice = append(usersSlice, user.String)
 	}
 
 	err = rows.Err()
 	if err != nil {
-		return users, err
+		return nil, err
 	}
 
-	return users, nil
+	return usersSlice, nil
 }
 
 // GetEligibleRedditUsersAcrossMultipleSubs returns info for all users
-func (db *DB) GetEligibleRedditUsersAcrossMultipleSubs(sub1, sub2 string, threshold int) ([]types.User, error) {
+func (db *DB) GetEligibleRedditUsersAcrossMultipleSubs(sub1, sub2 string, threshold int) ([]string, error) {
 
-	users := []types.User{}
+	var usersSlice []string
 
 	// create SQL statement for db query
 	// pulls a list of all user_id who are above or equal to the eligibility threshold of multiple subreddits
@@ -130,29 +132,30 @@ func (db *DB) GetEligibleRedditUsersAcrossMultipleSubs(sub1, sub2 string, thresh
 		threshold,
 	)
 	if err != nil {
-		return users, err
+		return nil, err
 	}
 
 	defer rows.Close()
 
 	// iterate over rows
 	for rows.Next() {
-		// initialize new struct per user in db to hold user info
-		user := types.User{}
+
+		var user sql.NullString
+
 		err = rows.Scan(
-			user.UserID,
+			&user,
 		)
 		if err != nil {
-			return users, err
+			return nil, err
 		}
-		// append user object to slice of users
-		users = append(users, user)
+		// append user ID to slice of users
+		usersSlice = append(usersSlice, user.String)
 	}
 
 	err = rows.Err()
 	if err != nil {
-		return users, err
+		return nil, err
 	}
 
-	return users, nil
+	return usersSlice, nil
 }
