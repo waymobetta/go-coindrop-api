@@ -70,8 +70,6 @@ func (c *TargetingController) List(ctx *app.ListTargetingContext) error {
 
 	var r app.ReddituserCollection
 
-	var s app.CommunityCollection
-
 	userSlice, err := c.db.GetRedditUsersAndSubs()
 	if err != nil {
 		log.Errorf("[controller/targeting] error: %v", err)
@@ -82,6 +80,7 @@ func (c *TargetingController) List(ctx *app.ListTargetingContext) error {
 	}
 
 	for _, user := range userSlice {
+		var s app.CommunityCollection
 		for name, rep := range user.Social.Reddit.Subreddits {
 			s = append(s, &app.Community{
 				Name:       name,
