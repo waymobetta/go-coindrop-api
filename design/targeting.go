@@ -24,6 +24,12 @@ var _ = Resource("targeting", func() {
 		Response(OK, TargetingMedia)
 	})
 
+	Action("list", func() {
+		Description("Get list of all reddit users and their subreddits")
+		Routing(GET("/users/reddit"))
+		Response(OK, RedditTargetingMedia)
+	})
+
 	Action("set", func() {
 		Description("Set users as eligible")
 		Routing(POST("/tasks/set"))
