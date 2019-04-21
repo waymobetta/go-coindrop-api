@@ -388,12 +388,34 @@ definitions:
     - questionsIncorrect
     title: QuizResultsPayload
     type: object
+  Reddittargeting:
+    description: Reddit Targeting (default view)
+    example:
+      subreddits:
+      - name: Amet tenetur.
+        reputation: 6882505379150310037
+      - name: Amet tenetur.
+        reputation: 6882505379150310037
+      userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
+    properties:
+      subreddits:
+        $ref: '#/definitions/CommunityCollection'
+      userId:
+        description: User ID
+        example: 9302608f-f6a4-4004-b088-63e5fb43cc26
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        type: string
+    required:
+    - userId
+    - subreddits
+    title: 'Mediatype identifier: application/vnd.reddittargeting+json; view=default'
+    type: object
   Reddituser:
     description: A Reddit User (default view)
     example:
-      commentKarma: 7845310732658946328
+      commentKarma: 8223200910020865789
       id: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      linkKarma: 8223200910020865789
+      linkKarma: 5901712439413529429
       subreddits:
       - name: Amet tenetur.
         reputation: 6882505379150310037
@@ -402,19 +424,19 @@ definitions:
       - name: Amet tenetur.
         reputation: 6882505379150310037
       trophies:
-      - Et eos eos quia.
-      - Et eos eos quia.
-      - Et eos eos quia.
+      - Eos eos.
+      - Eos eos.
+      - Eos eos.
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      username: Optio nam voluptatem quibusdam.
+      username: Repellat optio nam.
       verification:
-        confirmedVerificationCode: Qui dolores expedita est voluptatem.
-        postedVerificationCode: Ipsum iusto ad quia autem sed et.
+        confirmedVerificationCode: Quibusdam ut qui dolores expedita est.
+        postedVerificationCode: Animi ipsum iusto.
         verified: false
     properties:
       commentKarma:
         description: Comment Karma
-        example: 7845310732658946328
+        example: 8223200910020865789
         format: int64
         type: integer
       id:
@@ -424,7 +446,7 @@ definitions:
         type: string
       linkKarma:
         description: Link Karma
-        example: 8223200910020865789
+        example: 5901712439413529429
         format: int64
         type: integer
       subreddits:
@@ -432,11 +454,11 @@ definitions:
       trophies:
         description: User trophies
         example:
-        - Et eos eos quia.
-        - Et eos eos quia.
-        - Et eos eos quia.
+        - Eos eos.
+        - Eos eos.
+        - Eos eos.
         items:
-          example: Et eos eos quia.
+          example: Eos eos.
           type: string
         type: array
       userId:
@@ -446,7 +468,7 @@ definitions:
         type: string
       username:
         description: Username
-        example: Optio nam voluptatem quibusdam.
+        example: Repellat optio nam.
         type: string
       verification:
         $ref: '#/definitions/Verification'
@@ -464,28 +486,28 @@ definitions:
   Results:
     description: Quiz results (default view)
     example:
-      questionsCorrect: 7214463837781782967
-      questionsIncorrect: 5198673775077004861
-      quizId: Modi eos possimus aliquam.
-      userId: Magni necessitatibus debitis qui quos atque.
+      questionsCorrect: 3274364288701861333
+      questionsIncorrect: 655195948941630872
+      quizId: Et facilis earum deserunt.
+      userId: Modi eos possimus aliquam.
     properties:
       questionsCorrect:
         description: Count of correct quiz answers
-        example: 7214463837781782967
+        example: 3274364288701861333
         format: int64
         type: integer
       questionsIncorrect:
         description: Count of incorrect quiz answers
-        example: 5198673775077004861
+        example: 655195948941630872
         format: int64
         type: integer
       quizId:
         description: Quiz ID
-        example: Modi eos possimus aliquam.
+        example: Et facilis earum deserunt.
         type: string
       userId:
         description: User ID
-        example: Magni necessitatibus debitis qui quos atque.
+        example: Modi eos possimus aliquam.
         type: string
     required:
     - userId
@@ -498,14 +520,14 @@ definitions:
     description: ResultsCollection is the media type for an array of Results (default
       view)
     example:
-    - questionsCorrect: 7214463837781782967
-      questionsIncorrect: 5198673775077004861
-      quizId: Modi eos possimus aliquam.
-      userId: Magni necessitatibus debitis qui quos atque.
-    - questionsCorrect: 7214463837781782967
-      questionsIncorrect: 5198673775077004861
-      quizId: Modi eos possimus aliquam.
-      userId: Magni necessitatibus debitis qui quos atque.
+    - questionsCorrect: 3274364288701861333
+      questionsIncorrect: 655195948941630872
+      quizId: Et facilis earum deserunt.
+      userId: Modi eos possimus aliquam.
+    - questionsCorrect: 3274364288701861333
+      questionsIncorrect: 655195948941630872
+      quizId: Et facilis earum deserunt.
+      userId: Modi eos possimus aliquam.
     items:
       $ref: '#/definitions/Results'
     title: 'Mediatype identifier: application/vnd.results+json; type=collection; view=default'
@@ -539,25 +561,25 @@ definitions:
         reputation: 6882505379150310037
       - name: Amet tenetur.
         reputation: 6882505379150310037
-      displayName: Voluptas dolor eligendi ipsum eius repellat.
-      exchangeAccountId: 4463294319792730909
+      displayName: Debitis qui quos atque.
+      exchangeAccountId: 7060377002336781561
       id: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      stackUserId: 7617107343752005501
+      stackUserId: 3594113056780993143
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
       verification:
-        confirmedVerificationCode: Qui dolores expedita est voluptatem.
-        postedVerificationCode: Ipsum iusto ad quia autem sed et.
+        confirmedVerificationCode: Quibusdam ut qui dolores expedita est.
+        postedVerificationCode: Animi ipsum iusto.
         verified: false
     properties:
       accounts:
         $ref: '#/definitions/CommunityCollection'
       displayName:
         description: Display Name
-        example: Voluptas dolor eligendi ipsum eius repellat.
+        example: Debitis qui quos atque.
         type: string
       exchangeAccountId:
         description: Stack Exchange Account ID
-        example: 4463294319792730909
+        example: 7060377002336781561
         format: int64
         type: integer
       id:
@@ -567,7 +589,7 @@ definitions:
         type: string
       stackUserId:
         description: Stack Overflow Community-Specific Account ID
-        example: 7617107343752005501
+        example: 3594113056780993143
         format: int64
         type: integer
       userId:
@@ -610,11 +632,11 @@ definitions:
   Targeting:
     description: Targeting (default view)
     example:
-      users: Voluptatum recusandae facilis perferendis consectetur ut.
+      users: Voluptas dolor eligendi ipsum eius repellat.
     properties:
       users:
         description: List of users
-        example: Voluptatum recusandae facilis perferendis consectetur ut.
+        example: Voluptas dolor eligendi ipsum eius repellat.
         type: string
     required:
     - users
@@ -623,69 +645,69 @@ definitions:
   Task:
     description: Task (default view)
     example:
-      author: Non enim.
+      author: Sint sunt voluptatum recusandae facilis perferendis consectetur.
       badge:
         description: Eaque facere voluptates consequatur nihil odit.
         id: Quam quae aut cumque consequatur asperiores.
         logoURL: Hic illum veniam magni nam perferendis.
         name: Quis ut unde aliquam voluptatibus.
-      completed: false
-      description: Ad quis sit.
-      id: Dignissimos est dolores sequi cumque fugiat.
-      logoURL: Accusantium eos accusantium.
-      resourceId: At eligendi sit sed nobis.
-      resourceURL: Non suscipit error ea incidunt aut qui.
-      title: Dolore ipsa et.
-      token: Porro sunt facilis alias blanditiis qui.
-      tokenAllocation: 2047959331536151946
-      type: Quia amet reiciendis velit.
+      completed: true
+      description: Non enim.
+      id: Officiis ad quis.
+      logoURL: Exercitationem dignissimos est dolores sequi cumque.
+      resourceId: Dolorum accusantium eos accusantium molestias.
+      resourceURL: Eligendi sit sed nobis.
+      title: Non suscipit error ea incidunt aut qui.
+      token: Dolore ipsa et.
+      tokenAllocation: 1718548056836214617
+      type: Sunt facilis alias.
     properties:
       author:
         description: task author
-        example: Non enim.
+        example: Sint sunt voluptatum recusandae facilis perferendis consectetur.
         type: string
       badge:
         $ref: '#/definitions/Badge'
       completed:
         description: task completed flag
-        example: false
+        example: true
         type: boolean
       description:
         description: task description
-        example: Ad quis sit.
+        example: Non enim.
         type: string
       id:
         description: task ID
-        example: Dignissimos est dolores sequi cumque fugiat.
+        example: Officiis ad quis.
         type: string
       logoURL:
         description: logo URL
-        example: Accusantium eos accusantium.
+        example: Exercitationem dignissimos est dolores sequi cumque.
         type: string
       resourceId:
         description: learning resource ID
-        example: At eligendi sit sed nobis.
+        example: Dolorum accusantium eos accusantium molestias.
         type: string
       resourceURL:
         description: learning resource URL
-        example: Non suscipit error ea incidunt aut qui.
+        example: Eligendi sit sed nobis.
         type: string
       title:
         description: task title
-        example: Dolore ipsa et.
+        example: Non suscipit error ea incidunt aut qui.
         type: string
       token:
         description: task token
-        example: Porro sunt facilis alias blanditiis qui.
+        example: Dolore ipsa et.
         type: string
       tokenAllocation:
         description: token allocation
-        example: 2047959331536151946
+        example: 1718548056836214617
         format: int64
         type: integer
       type:
         description: task type
-        example: Quia amet reiciendis velit.
+        example: Sunt facilis alias.
         type: string
     required:
     - id
@@ -705,38 +727,38 @@ definitions:
   TaskCollection:
     description: TaskCollection is the media type for an array of Task (default view)
     example:
-    - author: Non enim.
+    - author: Sint sunt voluptatum recusandae facilis perferendis consectetur.
       badge:
         description: Eaque facere voluptates consequatur nihil odit.
         id: Quam quae aut cumque consequatur asperiores.
         logoURL: Hic illum veniam magni nam perferendis.
         name: Quis ut unde aliquam voluptatibus.
-      completed: false
-      description: Ad quis sit.
-      id: Dignissimos est dolores sequi cumque fugiat.
-      logoURL: Accusantium eos accusantium.
-      resourceId: At eligendi sit sed nobis.
-      resourceURL: Non suscipit error ea incidunt aut qui.
-      title: Dolore ipsa et.
-      token: Porro sunt facilis alias blanditiis qui.
-      tokenAllocation: 2047959331536151946
-      type: Quia amet reiciendis velit.
-    - author: Non enim.
+      completed: true
+      description: Non enim.
+      id: Officiis ad quis.
+      logoURL: Exercitationem dignissimos est dolores sequi cumque.
+      resourceId: Dolorum accusantium eos accusantium molestias.
+      resourceURL: Eligendi sit sed nobis.
+      title: Non suscipit error ea incidunt aut qui.
+      token: Dolore ipsa et.
+      tokenAllocation: 1718548056836214617
+      type: Sunt facilis alias.
+    - author: Sint sunt voluptatum recusandae facilis perferendis consectetur.
       badge:
         description: Eaque facere voluptates consequatur nihil odit.
         id: Quam quae aut cumque consequatur asperiores.
         logoURL: Hic illum veniam magni nam perferendis.
         name: Quis ut unde aliquam voluptatibus.
-      completed: false
-      description: Ad quis sit.
-      id: Dignissimos est dolores sequi cumque fugiat.
-      logoURL: Accusantium eos accusantium.
-      resourceId: At eligendi sit sed nobis.
-      resourceURL: Non suscipit error ea incidunt aut qui.
-      title: Dolore ipsa et.
-      token: Porro sunt facilis alias blanditiis qui.
-      tokenAllocation: 2047959331536151946
-      type: Quia amet reiciendis velit.
+      completed: true
+      description: Non enim.
+      id: Officiis ad quis.
+      logoURL: Exercitationem dignissimos est dolores sequi cumque.
+      resourceId: Dolorum accusantium eos accusantium molestias.
+      resourceURL: Eligendi sit sed nobis.
+      title: Non suscipit error ea incidunt aut qui.
+      token: Dolore ipsa et.
+      tokenAllocation: 1718548056836214617
+      type: Sunt facilis alias.
     items:
       $ref: '#/definitions/Task'
     title: 'Mediatype identifier: application/vnd.task+json; type=collection; view=default'
@@ -758,38 +780,22 @@ definitions:
     description: Tasks (default view)
     example:
       tasks:
-      - author: Non enim.
+      - author: Sint sunt voluptatum recusandae facilis perferendis consectetur.
         badge:
           description: Eaque facere voluptates consequatur nihil odit.
           id: Quam quae aut cumque consequatur asperiores.
           logoURL: Hic illum veniam magni nam perferendis.
           name: Quis ut unde aliquam voluptatibus.
-        completed: false
-        description: Ad quis sit.
-        id: Dignissimos est dolores sequi cumque fugiat.
-        logoURL: Accusantium eos accusantium.
-        resourceId: At eligendi sit sed nobis.
-        resourceURL: Non suscipit error ea incidunt aut qui.
-        title: Dolore ipsa et.
-        token: Porro sunt facilis alias blanditiis qui.
-        tokenAllocation: 2047959331536151946
-        type: Quia amet reiciendis velit.
-      - author: Non enim.
-        badge:
-          description: Eaque facere voluptates consequatur nihil odit.
-          id: Quam quae aut cumque consequatur asperiores.
-          logoURL: Hic illum veniam magni nam perferendis.
-          name: Quis ut unde aliquam voluptatibus.
-        completed: false
-        description: Ad quis sit.
-        id: Dignissimos est dolores sequi cumque fugiat.
-        logoURL: Accusantium eos accusantium.
-        resourceId: At eligendi sit sed nobis.
-        resourceURL: Non suscipit error ea incidunt aut qui.
-        title: Dolore ipsa et.
-        token: Porro sunt facilis alias blanditiis qui.
-        tokenAllocation: 2047959331536151946
-        type: Quia amet reiciendis velit.
+        completed: true
+        description: Non enim.
+        id: Officiis ad quis.
+        logoURL: Exercitationem dignissimos est dolores sequi cumque.
+        resourceId: Dolorum accusantium eos accusantium molestias.
+        resourceURL: Eligendi sit sed nobis.
+        title: Non suscipit error ea incidunt aut qui.
+        token: Dolore ipsa et.
+        tokenAllocation: 1718548056836214617
+        type: Sunt facilis alias.
     properties:
       tasks:
         $ref: '#/definitions/TaskCollection'
@@ -800,26 +806,26 @@ definitions:
   Transaction:
     description: Transaction (default view)
     example:
-      hash: Non voluptatem id.
-      id: Sit et molestias sed possimus enim et.
-      taskId: Non quia aliquam voluptatem quibusdam ut.
-      userId: Inventore ducimus fuga.
+      hash: Natus neque pariatur reprehenderit officiis eos.
+      id: Sit amet non voluptatem id.
+      taskId: Sit et molestias sed possimus enim et.
+      userId: Non quia aliquam voluptatem quibusdam ut.
     properties:
       hash:
         description: transaction hash
-        example: Non voluptatem id.
+        example: Natus neque pariatur reprehenderit officiis eos.
         type: string
       id:
         description: transaction ID
-        example: Sit et molestias sed possimus enim et.
+        example: Sit amet non voluptatem id.
         type: string
       taskId:
         description: task ID
-        example: Non quia aliquam voluptatem quibusdam ut.
+        example: Sit et molestias sed possimus enim et.
         type: string
       userId:
         description: user ID
-        example: Inventore ducimus fuga.
+        example: Non quia aliquam voluptatem quibusdam ut.
         type: string
     required:
     - id
@@ -832,10 +838,18 @@ definitions:
     description: TransactionCollection is the media type for an array of Transaction
       (default view)
     example:
-    - hash: Non voluptatem id.
-      id: Sit et molestias sed possimus enim et.
-      taskId: Non quia aliquam voluptatem quibusdam ut.
-      userId: Inventore ducimus fuga.
+    - hash: Natus neque pariatur reprehenderit officiis eos.
+      id: Sit amet non voluptatem id.
+      taskId: Sit et molestias sed possimus enim et.
+      userId: Non quia aliquam voluptatem quibusdam ut.
+    - hash: Natus neque pariatur reprehenderit officiis eos.
+      id: Sit amet non voluptatem id.
+      taskId: Sit et molestias sed possimus enim et.
+      userId: Non quia aliquam voluptatem quibusdam ut.
+    - hash: Natus neque pariatur reprehenderit officiis eos.
+      id: Sit amet non voluptatem id.
+      taskId: Sit et molestias sed possimus enim et.
+      userId: Non quia aliquam voluptatem quibusdam ut.
     items:
       $ref: '#/definitions/Transaction'
     title: 'Mediatype identifier: application/vnd.transaction+json; type=collection;
@@ -845,18 +859,10 @@ definitions:
     description: Transactions (default view)
     example:
       transactions:
-      - hash: Non voluptatem id.
-        id: Sit et molestias sed possimus enim et.
-        taskId: Non quia aliquam voluptatem quibusdam ut.
-        userId: Inventore ducimus fuga.
-      - hash: Non voluptatem id.
-        id: Sit et molestias sed possimus enim et.
-        taskId: Non quia aliquam voluptatem quibusdam ut.
-        userId: Inventore ducimus fuga.
-      - hash: Non voluptatem id.
-        id: Sit et molestias sed possimus enim et.
-        taskId: Non quia aliquam voluptatem quibusdam ut.
-        userId: Inventore ducimus fuga.
+      - hash: Natus neque pariatur reprehenderit officiis eos.
+        id: Sit amet non voluptatem id.
+        taskId: Sit et molestias sed possimus enim et.
+        userId: Non quia aliquam voluptatem quibusdam ut.
     properties:
       transactions:
         $ref: '#/definitions/TransactionCollection'
@@ -1002,26 +1008,26 @@ definitions:
   User:
     description: A user (default view)
     example:
-      cognitoAuthUserId: Assumenda animi distinctio quo.
-      id: Perferendis et facilis aspernatur non eos expedita.
-      name: Aut molestiae praesentium.
-      walletAddress: Ut aliquam iusto et.
+      cognitoAuthUserId: Fuga natus tempora maiores assumenda.
+      id: Distinctio quo blanditiis perferendis et facilis aspernatur.
+      name: Eos expedita unde.
+      walletAddress: Molestiae praesentium debitis ut aliquam iusto et.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Assumenda animi distinctio quo.
+        example: Fuga natus tempora maiores assumenda.
         type: string
       id:
         description: Unique user ID
-        example: Perferendis et facilis aspernatur non eos expedita.
+        example: Distinctio quo blanditiis perferendis et facilis aspernatur.
         type: string
       name:
         description: Name of user
-        example: Aut molestiae praesentium.
+        example: Eos expedita unde.
         type: string
       walletAddress:
         description: Wallet address
-        example: Ut aliquam iusto et.
+        example: Molestiae praesentium debitis ut aliquam iusto et.
         type: string
     required:
     - id
@@ -1043,17 +1049,17 @@ definitions:
   Verification:
     description: Account Verification (default view)
     example:
-      confirmedVerificationCode: Qui dolores expedita est voluptatem.
-      postedVerificationCode: Ipsum iusto ad quia autem sed et.
+      confirmedVerificationCode: Quibusdam ut qui dolores expedita est.
+      postedVerificationCode: Animi ipsum iusto.
       verified: false
     properties:
       confirmedVerificationCode:
         description: Confirmed Verification Code
-        example: Qui dolores expedita est voluptatem.
+        example: Quibusdam ut qui dolores expedita est.
         type: string
       postedVerificationCode:
         description: Posted Verification Code
-        example: Ipsum iusto ad quia autem sed et.
+        example: Animi ipsum iusto.
         type: string
       verified:
         description: Account Verified Flag
@@ -1108,6 +1114,12 @@ definitions:
     description: WalletCollection is the media type for an array of Wallet (default
       view)
     example:
+    - address: Quisquam sit facere qui praesentium.
+      verified: false
+      walletType: Sit eos.
+    - address: Quisquam sit facere qui praesentium.
+      verified: false
+      walletType: Sit eos.
     - address: Quisquam sit facere qui praesentium.
       verified: false
       walletType: Sit eos.
@@ -1191,9 +1203,6 @@ definitions:
     description: Wallets (default view)
     example:
       wallets:
-      - address: Quisquam sit facere qui praesentium.
-        verified: false
-        walletType: Sit eos.
       - address: Quisquam sit facere qui praesentium.
         verified: false
         walletType: Sit eos.
@@ -2396,6 +2405,41 @@ paths:
       security:
       - JWTAuth: []
       summary: display targeting
+      tags:
+      - targeting
+  /v1/targeting/users/reddit:
+    get:
+      description: Get list of all reddit users and their subreddits
+      operationId: targeting#list
+      produces:
+      - application/standard_error+json
+      - application/vnd.reddittargeting+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Reddittargeting'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: list targeting
       tags:
       - targeting
   /v1/tasks:

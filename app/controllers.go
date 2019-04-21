@@ -1150,6 +1150,7 @@ func unmarshalUpdateProfileStackoverflowharvestPayload(ctx context.Context, serv
 type TargetingController interface {
 	goa.Muxer
 	Display(*DisplayTargetingContext) error
+	List(*ListTargetingContext) error
 	Set(*SetTargetingContext) error
 }
 
@@ -1158,6 +1159,7 @@ func MountTargetingController(service *goa.Service, ctrl TargetingController) {
 	initService(service)
 	var h goa.Handler
 	service.Mux.Handle("OPTIONS", "/v1/targeting/users/:project", ctrl.MuxHandler("preflight", handleTargetingOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/targeting/users/reddit", ctrl.MuxHandler("preflight", handleTargetingOrigin(cors.HandlePreflight()), nil))
 	service.Mux.Handle("OPTIONS", "/v1/targeting/tasks/set", ctrl.MuxHandler("preflight", handleTargetingOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
@@ -1176,6 +1178,23 @@ func MountTargetingController(service *goa.Service, ctrl TargetingController) {
 	h = handleTargetingOrigin(h)
 	service.Mux.Handle("GET", "/v1/targeting/users/:project", ctrl.MuxHandler("display", h, nil))
 	service.LogInfo("mount", "ctrl", "Targeting", "action", "Display", "route", "GET /v1/targeting/users/:project", "security", "JWTAuth")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListTargetingContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleTargetingOrigin(h)
+	service.Mux.Handle("GET", "/v1/targeting/users/reddit", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Targeting", "action", "List", "route", "GET /v1/targeting/users/reddit", "security", "JWTAuth")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request

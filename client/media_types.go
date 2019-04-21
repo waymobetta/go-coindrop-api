@@ -352,6 +352,40 @@ func (c *Client) DecodeQuizCollection(resp *http.Response) (QuizCollection, erro
 	return decoded, err
 }
 
+// Reddit Targeting (default view)
+//
+// Identifier: application/vnd.reddittargeting+json; view=default
+type Reddittargeting struct {
+	// User subreddits
+	Subreddits CommunityCollection `form:"subreddits" json:"subreddits" yaml:"subreddits" xml:"subreddits"`
+	// User ID
+	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+}
+
+// Validate validates the Reddittargeting media type instance.
+func (mt *Reddittargeting) Validate() (err error) {
+	if mt.UserID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "userId"))
+	}
+	if mt.Subreddits == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "subreddits"))
+	}
+	if err2 := mt.Subreddits.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
+	}
+	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, mt.UserID); !ok {
+		err = goa.MergeErrors(err, goa.InvalidPatternError(`response.userId`, mt.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+	}
+	return
+}
+
+// DecodeReddittargeting decodes the Reddittargeting instance encoded in resp body.
+func (c *Client) DecodeReddittargeting(resp *http.Response) (*Reddittargeting, error) {
+	var decoded Reddittargeting
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // A Reddit User (default view)
 //
 // Identifier: application/vnd.reddituser+json; view=default

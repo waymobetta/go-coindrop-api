@@ -1790,6 +1790,65 @@ func (ctx *DisplayTargetingContext) InternalServerError(r *StandardError) error 
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
+// ListTargetingContext provides the targeting list action context.
+type ListTargetingContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+}
+
+// NewListTargetingContext parses the incoming request URL and body, performs validations and creates the
+// context used by the targeting controller list action.
+func NewListTargetingContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListTargetingContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListTargetingContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListTargetingContext) OK(r *Reddittargeting) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.reddittargeting+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ListTargetingContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListTargetingContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *ListTargetingContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListTargetingContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
 // SetTargetingContext provides the targeting set action context.
 type SetTargetingContext struct {
 	context.Context

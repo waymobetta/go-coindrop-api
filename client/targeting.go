@@ -53,6 +53,40 @@ func (c *Client) NewDisplayTargetingRequest(ctx context.Context, path string) (*
 	return req, nil
 }
 
+// ListTargetingPath computes a request path to the list action of targeting.
+func ListTargetingPath() string {
+
+	return fmt.Sprintf("/v1/targeting/users/reddit")
+}
+
+// Get list of all reddit users and their subreddits
+func (c *Client) ListTargeting(ctx context.Context, path string) (*http.Response, error) {
+	req, err := c.NewListTargetingRequest(ctx, path)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewListTargetingRequest create the request corresponding to the list action endpoint of the targeting resource.
+func (c *Client) NewListTargetingRequest(ctx context.Context, path string) (*http.Request, error) {
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+	if c.JWTAuthSigner != nil {
+		if err := c.JWTAuthSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
+	return req, nil
+}
+
 // SetTargetingPath computes a request path to the set action of targeting.
 func SetTargetingPath() string {
 
