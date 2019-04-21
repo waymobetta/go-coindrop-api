@@ -8,6 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // TargetingController implements the targeting resource.
@@ -106,13 +107,36 @@ func (c *TargetingController) Set(ctx *app.SetTargetingContext) error {
 
 	// Put your logic here
 
-	// POST
-	type setTargetingPayload struct {
-		// Task ID
-		TaskID *string `form:"taskId,omitempty" json:"taskId,omitempty" yaml:"taskId,omitempty" xml:"taskId,omitempty"`
-		// List of users
-		Users *string `form:"users,omitempty" json:"users,omitempty" yaml:"users,omitempty" xml:"users,omitempty"`
+	taskId := ctx.Payload.TaskID
+	users := ctx.Payload.Users
+
+	var userSlice []string
+
+	err := json.Unmarshal([]byte(users), &userSlice)
+	if err != nil {
+		log.Errorf("[controller/targeting] error: %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could not unmarshal users string payload",
+		})
 	}
+
+	for _, user := range userSlice {
+		userTask := &types.UserTask{
+			UserID: user,
+			TaskID: taskId,
+		}
+		_, err := c.db.AddUserTask(userTask)
+		if err != nil {
+			log.Errorf("[controller/targeting] error: %v", err)
+			return ctx.InternalServerError(&app.StandardError{
+				Code:    500,
+				Message: "could not assign task to user",
+			})
+		}
+	}
+
+	log.Printf("[controller/targeting] successfully assigned %v coindrop users to task id: %v\n", len(userSlice), taskId)
 
 	return nil
 	// TargetingController_Set: end_implement
