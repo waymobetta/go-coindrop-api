@@ -356,25 +356,17 @@ func (c *Client) DecodeQuizCollection(resp *http.Response) (QuizCollection, erro
 //
 // Identifier: application/vnd.reddittargeting+json; view=default
 type Reddittargeting struct {
-	// User subreddits
-	Subreddits CommunityCollection `form:"subreddits" json:"subreddits" yaml:"subreddits" xml:"subreddits"`
-	// User ID
-	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+	// Users
+	Users ReddituserCollection `form:"users" json:"users" yaml:"users" xml:"users"`
 }
 
 // Validate validates the Reddittargeting media type instance.
 func (mt *Reddittargeting) Validate() (err error) {
-	if mt.UserID == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "userId"))
+	if mt.Users == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "users"))
 	}
-	if mt.Subreddits == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "subreddits"))
-	}
-	if err2 := mt.Subreddits.Validate(); err2 != nil {
+	if err2 := mt.Users.Validate(); err2 != nil {
 		err = goa.MergeErrors(err, err2)
-	}
-	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, mt.UserID); !ok {
-		err = goa.MergeErrors(err, goa.InvalidPatternError(`response.userId`, mt.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
 	}
 	return
 }
@@ -451,6 +443,30 @@ func (c *Client) DecodeReddituser(resp *http.Response) (*Reddituser, error) {
 	var decoded Reddituser
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
+}
+
+// ReddituserCollection is the media type for an array of Reddituser (default view)
+//
+// Identifier: application/vnd.reddituser+json; type=collection; view=default
+type ReddituserCollection []*Reddituser
+
+// Validate validates the ReddituserCollection media type instance.
+func (mt ReddituserCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// DecodeReddituserCollection decodes the ReddituserCollection instance encoded in resp body.
+func (c *Client) DecodeReddituserCollection(resp *http.Response) (ReddituserCollection, error) {
+	var decoded ReddituserCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
 }
 
 // Quiz results (default view)
