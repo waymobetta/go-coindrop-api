@@ -183,11 +183,22 @@ func (mt *Profile) Validate() (err error) {
 // Identifier: application/vnd.public+json; view=default
 type Public struct {
 	// list of badges
-	Badges BadgeCollection `form:"badges,omitempty" json:"badges,omitempty" yaml:"badges,omitempty" xml:"badges,omitempty"`
+	Badges BadgeCollection `form:"badges" json:"badges" yaml:"badges" xml:"badges"`
+	// Reddit username
+	RedditUsername string `form:"redditUsername" json:"redditUsername" yaml:"redditUsername" xml:"redditUsername"`
+	// Stack Overflow user ID
+	StackUserID int `form:"stackUserId" json:"stackUserId" yaml:"stackUserId" xml:"stackUserId"`
 }
 
 // Validate validates the Public media type instance.
 func (mt *Public) Validate() (err error) {
+	if mt.RedditUsername == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "redditUsername"))
+	}
+
+	if mt.Badges == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "badges"))
+	}
 	if err2 := mt.Badges.Validate(); err2 != nil {
 		err = goa.MergeErrors(err, err2)
 	}
