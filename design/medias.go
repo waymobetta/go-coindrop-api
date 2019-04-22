@@ -23,6 +23,17 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 	})
 })
 
+// PublicMedia ...
+var PublicMedia = MediaType("application/vnd.public+json", func() {
+	Description("Public")
+	Attributes(func() {
+		Attribute("badges", CollectionOf(BadgeMedia), "list of badges")
+	})
+	View("default", func() {
+		Attribute("badges")
+	})
+})
+
 // BadgeMedia ...
 var BadgeMedia = MediaType("application/vnd.badge+json", func() {
 	Description("Badge")
