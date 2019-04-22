@@ -27,9 +27,18 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 var PublicMedia = MediaType("application/vnd.public+json", func() {
 	Description("Public")
 	Attributes(func() {
+		Attribute("redditUsername", String, "Reddit username")
+		Attribute("stackUserId", Integer, "Stack Overflow user ID")
 		Attribute("badges", CollectionOf(BadgeMedia), "list of badges")
+		Required(
+			"redditUsername",
+			"stackUserId",
+			"badges",
+		)
 	})
 	View("default", func() {
+		Attribute("redditUsername")
+		Attribute("stackUserId")
 		Attribute("badges")
 	})
 })
