@@ -130,6 +130,9 @@ func main() {
 	targetingCtrlr := controllers.NewTargetingController(service, dbs)
 	app.MountTargetingController(service, targetingCtrlr)
 
+	publicCtrlr := controllers.NewPublicController(service, dbs)
+	app.MountPublicController(service, publicCtrlr)
+
 	// goa handler
 	goaHandler := c.Handler(mw.RateLimitHandler(service.Server.Handler))
 
