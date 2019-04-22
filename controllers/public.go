@@ -5,6 +5,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
+	"github.com/waymobetta/go-coindrop-api/types"
 )
 
 // PublicController implements the public resource.
@@ -27,11 +28,13 @@ func (c *PublicController) Show(ctx *app.ShowPublicContext) error {
 
 	// Put your logic here
 
-	redditUsername := ctx.RedditUsername
+	publicUser := &types.Public{
+		RedditUsername: ctx.RedditUsername,
+	}
 
 	var badgeCollection app.BadgeCollection
 
-	badges, err := c.db.GetBadgesByRedditUsername(redditUsername)
+	badges, err := c.db.GetBadgesByRedditUsername(publicUser.RedditUsername)
 	if err != nil {
 		log.Errorf("[controller/public] error: %v", err)
 		return ctx.InternalServerError(&app.StandardError{
@@ -49,10 +52,11 @@ func (c *PublicController) Show(ctx *app.ShowPublicContext) error {
 		})
 	}
 
-	log.Printf("[controller/public] returned badges for Reddit user: %v\n", redditUsername)
+	log.Printf("[controller/public] returned badges for Reddit user: %v\n", publicUser.RedditUsername)
 
 	res := &app.Public{
-		Badges: badgeCollection,
+		RedditUsername: publicUser.RedditUsername,
+		Badges:         badgeCollection,
 	}
 	return ctx.OK(res)
 	// PublicController_Show: end_implement
