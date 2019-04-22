@@ -27,7 +27,6 @@ func (c *PublicController) Show(ctx *app.ShowPublicContext) error {
 
 	// Put your logic here
 
-	// redditUsername := ctx.Params.Get("redditUsername")
 	redditUsername := ctx.RedditUsername
 
 	var badgeCollection app.BadgeCollection
