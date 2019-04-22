@@ -28,6 +28,13 @@ type Profile struct {
 	Username string `json:"username"`
 }
 
+// Public info
+type Public struct {
+	RedditUsername  string   `json:"reddit_username"`
+	StackOverflowID int      `json:"stack_overflow_id"`
+	Badges          []*Badge `json:"badges"`
+}
+
 // Wallet ...
 type Wallet struct {
 	ID       string `json:"id"`
