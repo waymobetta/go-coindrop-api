@@ -42,9 +42,14 @@ func (c *PublicController) Show(ctx *app.ShowPublicContext) error {
 
 	for _, badge := range badges {
 		badgeCollection = append(badgeCollection, &app.Badge{
-			ID: badge.ID,
+			Name:        badge.Name,
+			Description: badge.Description,
+			LogoURL:     badge.LogoURL,
+			// ID: badge.ID,
 		})
 	}
+
+	log.Printf("[controller/public] returned badges for Reddit user: %v\n", redditUsername)
 
 	res := &app.Public{
 		Badges: badgeCollection,
