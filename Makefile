@@ -78,6 +78,8 @@ goa:
 	@rm profiles.go
 	@rm badges.go
 	@rm transactions.go
+	@rm targeting.go
+	@rm public.go
 	@MAKE swagger
 
 .PHONY: swagger
