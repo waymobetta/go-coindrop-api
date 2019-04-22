@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/goadesign/goa"
 	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
@@ -43,13 +41,9 @@ func (c *PublicController) Show(ctx *app.ShowPublicContext) error {
 		})
 	}
 
-	fmt.Println("BADGES: ", badges)
-
 	for _, badge := range badges {
 		badgeCollection = append(badgeCollection, &app.Badge{
-			Name:        badge.Name,
-			Description: badge.Description,
-			LogoURL:     badge.LogoURL,
+			ID: badge.ID,
 		})
 	}
 
