@@ -235,6 +235,29 @@ func (c *Client) DecodeProfile(resp *http.Response) (*Profile, error) {
 	return &decoded, err
 }
 
+// Public (default view)
+//
+// Identifier: application/vnd.public+json; view=default
+type Public struct {
+	// list of badges
+	Badges BadgeCollection `form:"badges,omitempty" json:"badges,omitempty" yaml:"badges,omitempty" xml:"badges,omitempty"`
+}
+
+// Validate validates the Public media type instance.
+func (mt *Public) Validate() (err error) {
+	if err2 := mt.Badges.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
+	}
+	return
+}
+
+// DecodePublic decodes the Public instance encoded in resp body.
+func (c *Client) DecodePublic(resp *http.Response) (*Public, error) {
+	var decoded Public
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
 // Quiz (default view)
 //
 // Identifier: application/vnd.quiz+json; view=default
