@@ -29,7 +29,7 @@ var PublicMedia = MediaType("application/vnd.public+json", func() {
 	Attributes(func() {
 		Attribute("redditUsername", String, "Reddit username")
 		Attribute("stackUserId", Integer, "Stack Overflow user ID")
-		Attribute("badges", CollectionOf(BadgeMedia), "list of badges")
+		Attribute("badges", CollectionOf(PublicBadgeMedia), "list of badges")
 		Required(
 			"redditUsername",
 			"stackUserId",
@@ -63,6 +63,35 @@ var BadgeMedia = MediaType("application/vnd.badge+json", func() {
 		Attribute("name")
 		Attribute("description")
 		Attribute("logoURL")
+	})
+})
+
+// PublicBadgeMedia ...
+var PublicBadgeMedia = MediaType("application/vnd.publicbadge+json", func() {
+	Description("Badge")
+	Attributes(func() {
+		Attribute("id", String, "badge ID")
+		Attribute("name", String, "badge name")
+		Attribute("description", String, "badge description")
+		Attribute("logoURL", String, "badge logo")
+		Attribute("project", String, "project")
+		Attribute("erc721Id", String, "ERC-721 ID")
+		Required(
+			"id",
+			"name",
+			"description",
+			"logoURL",
+			"project",
+			"erc721Id",
+		)
+	})
+	View("default", func() {
+		Attribute("id")
+		Attribute("name")
+		Attribute("description")
+		Attribute("logoURL")
+		Attribute("project")
+		Attribute("erc721Id")
 	})
 })
 
