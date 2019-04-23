@@ -48,7 +48,8 @@ func (c *PublicController) Show(ctx *app.ShowPublicContext) error {
 			Name:        badge.Name,
 			Description: badge.Description,
 			LogoURL:     badge.LogoURL,
-			// ID: badge.ID,
+			Project:     badge.Project,
+			Erc721Id:    badge.ERC721Id,
 		})
 	}
 
