@@ -7,9 +7,9 @@ import (
 )
 
 // GetBadgesByRedditUsername returns info for all users
-func (db *DB) GetBadgesByRedditUsername(redditUsername string) ([]*types.Badge, error) {
+func (db *DB) GetBadgesByRedditUsername(redditUsername string) ([]*types.PublicBadge, error) {
 
-	var badgeSlice []*types.Badge
+	var publicBadgeSlice []*types.PublicBadge
 
 	// create SQL statement for db query
 	sqlStatement := `
@@ -54,7 +54,7 @@ func (db *DB) GetBadgesByRedditUsername(redditUsername string) ([]*types.Badge, 
 	// iterate over rows
 	for rows.Next() {
 		// initialize new struct per user in db to hold user info
-		badge := new(types.Badge)
+		publicBadge := new(types.PublicBadge)
 
 		var (
 			name        sql.NullString
@@ -73,13 +73,13 @@ func (db *DB) GetBadgesByRedditUsername(redditUsername string) ([]*types.Badge, 
 			return nil, err
 		}
 
-		badge.Name = name.String
-		badge.Description = description.String
-		badge.LogoURL = logoURL.String
-		// badge.ID = badgeId.String
+		publicBadge.Name = name.String
+		publicBadge.Description = description.String
+		publicBadge.LogoURL = logoURL.String
+		// publicBadge.ID = badgeId.String
 
 		// append badge struct to slice of badges
-		badgeSlice = append(badgeSlice, badge)
+		publicBadgeSlice = append(publicBadgeSlice, publicBadge)
 	}
 
 	err = rows.Err()
@@ -87,5 +87,5 @@ func (db *DB) GetBadgesByRedditUsername(redditUsername string) ([]*types.Badge, 
 		return nil, err
 	}
 
-	return badgeSlice, nil
+	return publicBadgeSlice, nil
 }
