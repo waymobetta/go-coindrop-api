@@ -240,7 +240,7 @@ func (c *Client) DecodeProfile(resp *http.Response) (*Profile, error) {
 // Identifier: application/vnd.public+json; view=default
 type Public struct {
 	// list of badges
-	Badges BadgeCollection `form:"badges" json:"badges" yaml:"badges" xml:"badges"`
+	Badges PublicbadgeCollection `form:"badges" json:"badges" yaml:"badges" xml:"badges"`
 	// Reddit username
 	RedditUsername string `form:"redditUsername" json:"redditUsername" yaml:"redditUsername" xml:"redditUsername"`
 	// Stack Overflow user ID
@@ -267,6 +267,78 @@ func (c *Client) DecodePublic(resp *http.Response) (*Public, error) {
 	var decoded Public
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
+}
+
+// Badge (default view)
+//
+// Identifier: application/vnd.publicbadge+json; view=default
+type Publicbadge struct {
+	// badge description
+	Description string `form:"description" json:"description" yaml:"description" xml:"description"`
+	// ERC-721 ID
+	Erc721Id string `form:"erc721Id" json:"erc721Id" yaml:"erc721Id" xml:"erc721Id"`
+	// badge ID
+	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
+	// badge logo
+	LogoURL string `form:"logoURL" json:"logoURL" yaml:"logoURL" xml:"logoURL"`
+	// badge name
+	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// project
+	Project string `form:"project" json:"project" yaml:"project" xml:"project"`
+}
+
+// Validate validates the Publicbadge media type instance.
+func (mt *Publicbadge) Validate() (err error) {
+	if mt.ID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "id"))
+	}
+	if mt.Name == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "name"))
+	}
+	if mt.Description == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "description"))
+	}
+	if mt.LogoURL == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "logoURL"))
+	}
+	if mt.Project == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "project"))
+	}
+	if mt.Erc721Id == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "erc721Id"))
+	}
+	return
+}
+
+// DecodePublicbadge decodes the Publicbadge instance encoded in resp body.
+func (c *Client) DecodePublicbadge(resp *http.Response) (*Publicbadge, error) {
+	var decoded Publicbadge
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// PublicbadgeCollection is the media type for an array of Publicbadge (default view)
+//
+// Identifier: application/vnd.publicbadge+json; type=collection; view=default
+type PublicbadgeCollection []*Publicbadge
+
+// Validate validates the PublicbadgeCollection media type instance.
+func (mt PublicbadgeCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// DecodePublicbadgeCollection decodes the PublicbadgeCollection instance encoded in resp body.
+func (c *Client) DecodePublicbadgeCollection(resp *http.Response) (PublicbadgeCollection, error) {
+	var decoded PublicbadgeCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
 }
 
 // Quiz (default view)
