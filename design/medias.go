@@ -43,6 +43,29 @@ var PublicMedia = MediaType("application/vnd.public+json", func() {
 	})
 })
 
+// ERC721Media ...
+var ERC721Media = MediaType("application/vnd.erc721+json", func() {
+	Description("ERC721")
+	Attributes(func() {
+		Attribute("id", String, "table ID")
+		Attribute("tokenId", String, "token ID")
+		Attribute("contractId", String, "contract ID")
+		Attribute("totalMinted", Integer, "total number minted")
+		Required(
+			"id",
+			"tokenId",
+			"contractId",
+			"totalMinted",
+		)
+	})
+	View("default", func() {
+		Attribute("id")
+		Attribute("tokenId")
+		Attribute("contractId")
+		Attribute("totalMinted")
+	})
+})
+
 // BadgeMedia ...
 var BadgeMedia = MediaType("application/vnd.badge+json", func() {
 	Description("Badge")
@@ -74,13 +97,13 @@ var PublicBadgeMedia = MediaType("application/vnd.publicbadge+json", func() {
 		Attribute("description", String, "badge description")
 		Attribute("logoURL", String, "badge logo")
 		Attribute("project", String, "project")
-		Attribute("erc721Id", String, "ERC-721 ID")
+		Attribute("erc721", ERC721Media, "ERC-721")
 		Required(
 			"name",
 			"description",
 			"logoURL",
 			"project",
-			"erc721Id",
+			"erc721",
 		)
 	})
 	View("default", func() {
@@ -88,7 +111,7 @@ var PublicBadgeMedia = MediaType("application/vnd.publicbadge+json", func() {
 		Attribute("description")
 		Attribute("logoURL")
 		Attribute("project")
-		Attribute("erc721Id")
+		Attribute("erc721")
 	})
 })
 
