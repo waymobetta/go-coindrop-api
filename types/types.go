@@ -185,12 +185,20 @@ type Badge struct {
 
 // PublicBadge struct contains info about a badge for public profiles
 type PublicBadge struct {
-	Description string `json:"description"`
+	Description string  `json:"description"`
+	ID          string  `json:"id"`
+	Name        string  `json:"name"`
+	LogoURL     string  `json:"logo_url"`
+	Project     string  `json:"project"`
+	ERC721      *ERC721 `json:"erc721"`
+}
+
+// ERC721 struct contains info about an ERC721
+type ERC721 struct {
 	ID          string `json:"id"`
-	Name        string `json:"name"`
-	LogoURL     string `json:"logo_url"`
-	Project     string `json:"project"`
-	ERC721Id    string `json:"erc721_id"`
+	TokenID     string `json:"token_id"`
+	ContractID  string `json:"contract_id"`
+	TotalMinted int    `json:"total_minted"`
 }
 
 // Transaction struct contains info about a send tx based on task completion
