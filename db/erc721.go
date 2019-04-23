@@ -7,8 +7,8 @@ import (
 )
 
 // GetUserERC721s method returns all ERC721s tied to a specific user
-func (db *DB) GetUserERC721s(userID string) ([]types.PublicBadge, error) {
-	publicBadgeSlice := []types.PublicBadge{}
+func (db *DB) GetUserERC721s(userID string) ([]*types.PublicBadge, error) {
+	publicBadgeSlice := []*types.PublicBadge{}
 
 	sqlStatement := `
 		SELECT
@@ -78,7 +78,7 @@ func (db *DB) GetUserERC721s(userID string) ([]types.PublicBadge, error) {
 		publicBadge.Project = badgeProject.String
 		publicBadge.Description = badgeDescription.String
 		publicBadge.LogoURL = badgeLogoURL.String
-		publicBadge.ERC721.ContractID = contractAddress.String
+		publicBadge.ERC721.ContractAddress = contractAddress.String
 		publicBadge.ERC721.TokenID = tokenId.String
 
 		// append publicBadge object to slice of publicBadgeSlice
