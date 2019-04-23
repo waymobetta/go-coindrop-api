@@ -183,8 +183,8 @@ func (c *Client) DecodeCommunityCollection(resp *http.Response) (CommunityCollec
 //
 // Identifier: application/vnd.erc721+json; view=default
 type Erc721 struct {
-	// contract ID
-	ContractID string `form:"contractId" json:"contractId" yaml:"contractId" xml:"contractId"`
+	// contract address
+	ContractAddress string `form:"contractAddress" json:"contractAddress" yaml:"contractAddress" xml:"contractAddress"`
 	// table ID
 	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
 	// token ID
@@ -201,8 +201,8 @@ func (mt *Erc721) Validate() (err error) {
 	if mt.TokenID == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "tokenId"))
 	}
-	if mt.ContractID == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "contractId"))
+	if mt.ContractAddress == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "contractAddress"))
 	}
 
 	return

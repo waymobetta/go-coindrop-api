@@ -210,13 +210,13 @@ definitions:
   Erc721:
     description: ERC721 (default view)
     example:
-      contractId: Corrupti eum fugit eaque.
+      contractAddress: Corrupti eum fugit eaque.
       id: Autem est.
       tokenId: Omnis labore.
       totalMinted: 5075895697223241069
     properties:
-      contractId:
-        description: contract ID
+      contractAddress:
+        description: contract address
         example: Corrupti eum fugit eaque.
         type: string
       id:
@@ -235,7 +235,7 @@ definitions:
     required:
     - id
     - tokenId
-    - contractId
+    - contractAddress
     - totalMinted
     title: 'Mediatype identifier: application/vnd.erc721+json; view=default'
     type: object
@@ -302,7 +302,7 @@ definitions:
       badges:
       - description: Et natus est et harum labore.
         erc721:
-          contractId: Corrupti eum fugit eaque.
+          contractAddress: Corrupti eum fugit eaque.
           id: Autem est.
           tokenId: Omnis labore.
           totalMinted: 5075895697223241069
@@ -311,7 +311,7 @@ definitions:
         project: Quam sit nihil deleniti.
       - description: Et natus est et harum labore.
         erc721:
-          contractId: Corrupti eum fugit eaque.
+          contractAddress: Corrupti eum fugit eaque.
           id: Autem est.
           tokenId: Omnis labore.
           totalMinted: 5075895697223241069
@@ -320,7 +320,7 @@ definitions:
         project: Quam sit nihil deleniti.
       - description: Et natus est et harum labore.
         erc721:
-          contractId: Corrupti eum fugit eaque.
+          contractAddress: Corrupti eum fugit eaque.
           id: Autem est.
           tokenId: Omnis labore.
           totalMinted: 5075895697223241069
@@ -352,7 +352,7 @@ definitions:
     example:
       description: Et natus est et harum labore.
       erc721:
-        contractId: Corrupti eum fugit eaque.
+        contractAddress: Corrupti eum fugit eaque.
         id: Autem est.
         tokenId: Omnis labore.
         totalMinted: 5075895697223241069
@@ -392,7 +392,7 @@ definitions:
     example:
     - description: Et natus est et harum labore.
       erc721:
-        contractId: Corrupti eum fugit eaque.
+        contractAddress: Corrupti eum fugit eaque.
         id: Autem est.
         tokenId: Omnis labore.
         totalMinted: 5075895697223241069
@@ -1118,7 +1118,7 @@ definitions:
       answers: false
       calculated:
         score: 2975702392294002126
-      definition: 07ef19c1-1886-44e5-aed9-3b149cefb066
+      definition: 6dba227b-8b0f-4e7c-8fdd-1ef583663a62
       form_id: Qui sit ipsam sed.
       hidden:
         user_id: Cupiditate atque quia.
@@ -1133,7 +1133,7 @@ definitions:
         $ref: '#/definitions/TypeformCalculatedPayload'
       definition:
         description: Definition
-        example: 07ef19c1-1886-44e5-aed9-3b149cefb066
+        example: 6dba227b-8b0f-4e7c-8fdd-1ef583663a62
       form_id:
         description: Form ID
         example: Qui sit ipsam sed.
@@ -1174,7 +1174,7 @@ definitions:
         answers: false
         calculated:
           score: 2975702392294002126
-        definition: 07ef19c1-1886-44e5-aed9-3b149cefb066
+        definition: 6dba227b-8b0f-4e7c-8fdd-1ef583663a62
         form_id: Qui sit ipsam sed.
         hidden:
           user_id: Cupiditate atque quia.
