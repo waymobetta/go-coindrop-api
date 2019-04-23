@@ -195,10 +195,10 @@ type PublicBadge struct {
 
 // ERC721 struct contains info about an ERC721
 type ERC721 struct {
-	ID          string `json:"id"`
-	TokenID     string `json:"token_id"`
-	ContractID  string `json:"contract_id"`
-	TotalMinted int    `json:"total_minted"`
+	ID              string `json:"id"`
+	TokenID         string `json:"token_id"`
+	ContractAddress string `json:"contract_address"`
+	TotalMinted     int    `json:"total_minted"`
 }
 
 // Transaction struct contains info about a send tx based on task completion
