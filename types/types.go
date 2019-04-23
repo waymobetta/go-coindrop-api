@@ -183,6 +183,16 @@ type Badge struct {
 	LogoURL     string `json:"logo_url"`
 }
 
+// PublicBadge struct contains info about a badge for public profiles
+type PublicBadge struct {
+	Description string `json:"description"`
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	LogoURL     string `json:"logo_url"`
+	Project     string `json:"project"`
+	ERC721Id    string `json:"erc721_id"`
+}
+
 // Transaction struct contains info about a send tx based on task completion
 type Transaction struct {
 	ID     string `json:"id"`
