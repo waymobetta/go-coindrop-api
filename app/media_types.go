@@ -213,8 +213,6 @@ type Publicbadge struct {
 	Description string `form:"description" json:"description" yaml:"description" xml:"description"`
 	// ERC-721 ID
 	Erc721Id string `form:"erc721Id" json:"erc721Id" yaml:"erc721Id" xml:"erc721Id"`
-	// badge ID
-	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
 	// badge logo
 	LogoURL string `form:"logoURL" json:"logoURL" yaml:"logoURL" xml:"logoURL"`
 	// badge name
@@ -225,9 +223,6 @@ type Publicbadge struct {
 
 // Validate validates the Publicbadge media type instance.
 func (mt *Publicbadge) Validate() (err error) {
-	if mt.ID == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "id"))
-	}
 	if mt.Name == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "name"))
 	}
