@@ -71,6 +71,17 @@ CREATE TABLE IF NOT EXISTS coindrop_badges (
 	logo_url TEXT
 );
 
+-- ERC721s
+CREATE TABLE IF NOT EXISTS coindrop_erc721s (
+  id uuid DEFAULT uuid_generate_v4() UNIQUE,
+	user_id uuid REFERENCES coindrop_auth(id),
+	badge_id uuid REFERENCES coindrop_badges(id),
+  token_id TEXT NOT NULL,
+	contract_id TEXT NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone
+);
+
 -- QUIZZES
 CREATE TABLE IF NOT EXISTS coindrop_quizzes (
 	id uuid DEFAULT uuid_generate_v4() UNIQUE,
