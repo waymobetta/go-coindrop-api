@@ -49,7 +49,11 @@ func (c *PublicController) Show(ctx *app.ShowPublicContext) error {
 			Description: badge.Description,
 			LogoURL:     badge.LogoURL,
 			Project:     badge.Project,
-			Erc721Id:    badge.ERC721Id,
+			Erc721: &app.Erc721{
+				ContractID:  badge.ERC721.ContractID,
+				TokenID:     badge.ERC721.TokenID,
+				TotalMinted: badge.ERC721.TotalMinted,
+			},
 		})
 	}
 
