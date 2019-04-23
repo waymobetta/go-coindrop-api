@@ -49,19 +49,19 @@ var ERC721Media = MediaType("application/vnd.erc721+json", func() {
 	Attributes(func() {
 		Attribute("id", String, "table ID")
 		Attribute("tokenId", String, "token ID")
-		Attribute("contractId", String, "contract ID")
+		Attribute("contractAddress", String, "contract address")
 		Attribute("totalMinted", Integer, "total number minted")
 		Required(
 			"id",
 			"tokenId",
-			"contractId",
+			"contractAddress",
 			"totalMinted",
 		)
 	})
 	View("default", func() {
 		Attribute("id")
 		Attribute("tokenId")
-		Attribute("contractId")
+		Attribute("contractAddress")
 		Attribute("totalMinted")
 	})
 })
