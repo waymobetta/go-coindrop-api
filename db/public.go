@@ -14,6 +14,8 @@ func (db *DB) GetBadgesByRedditUsername(redditUsername string) ([]*types.PublicB
 	// create SQL statement for db query
 	sqlStatement := `
 		SELECT
+			coindrop_tasks.author,
+			coindrop_user_tasks.erc721_id,
 			coindrop_badges.name,
 			coindrop_badges.description,
 			coindrop_badges.logo_url
@@ -57,26 +59,29 @@ func (db *DB) GetBadgesByRedditUsername(redditUsername string) ([]*types.PublicB
 		publicBadge := new(types.PublicBadge)
 
 		var (
+			project     sql.NullString
+			erc721Id    sql.NullString
 			name        sql.NullString
 			description sql.NullString
 			logoURL     sql.NullString
-			// badgeId sql.NullString
 		)
 
 		err = rows.Scan(
+			&project,
+			&erc721Id,
 			&name,
 			&description,
 			&logoURL,
-			// &badgeId,
 		)
 		if err != nil {
 			return nil, err
 		}
 
+		publicBadge.Project = project.String
+		publicBadge.ERC721Id = erc721Id.String
 		publicBadge.Name = name.String
 		publicBadge.Description = description.String
 		publicBadge.LogoURL = logoURL.String
-		// publicBadge.ID = badgeId.String
 
 		// append badge struct to slice of badges
 		publicBadgeSlice = append(publicBadgeSlice, publicBadge)
