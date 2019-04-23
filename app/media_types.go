@@ -136,6 +136,35 @@ func (mt CommunityCollection) Validate() (err error) {
 	return
 }
 
+// ERC721 (default view)
+//
+// Identifier: application/vnd.erc721+json; view=default
+type Erc721 struct {
+	// contract ID
+	ContractID string `form:"contractId" json:"contractId" yaml:"contractId" xml:"contractId"`
+	// table ID
+	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
+	// token ID
+	TokenID string `form:"tokenId" json:"tokenId" yaml:"tokenId" xml:"tokenId"`
+	// total number minted
+	TotalMinted int `form:"totalMinted" json:"totalMinted" yaml:"totalMinted" xml:"totalMinted"`
+}
+
+// Validate validates the Erc721 media type instance.
+func (mt *Erc721) Validate() (err error) {
+	if mt.ID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "id"))
+	}
+	if mt.TokenID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "tokenId"))
+	}
+	if mt.ContractID == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "contractId"))
+	}
+
+	return
+}
+
 // Health check (default view)
 //
 // Identifier: application/vnd.healthcheck+json; view=default
@@ -211,8 +240,8 @@ func (mt *Public) Validate() (err error) {
 type Publicbadge struct {
 	// badge description
 	Description string `form:"description" json:"description" yaml:"description" xml:"description"`
-	// ERC-721 ID
-	Erc721Id string `form:"erc721Id" json:"erc721Id" yaml:"erc721Id" xml:"erc721Id"`
+	// ERC-721
+	Erc721 *Erc721 `form:"erc721" json:"erc721" yaml:"erc721" xml:"erc721"`
 	// badge logo
 	LogoURL string `form:"logoURL" json:"logoURL" yaml:"logoURL" xml:"logoURL"`
 	// badge name
@@ -235,8 +264,13 @@ func (mt *Publicbadge) Validate() (err error) {
 	if mt.Project == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "project"))
 	}
-	if mt.Erc721Id == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "erc721Id"))
+	if mt.Erc721 == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "erc721"))
+	}
+	if mt.Erc721 != nil {
+		if err2 := mt.Erc721.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
 	}
 	return
 }

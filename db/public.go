@@ -56,14 +56,19 @@ func (db *DB) GetBadgesByRedditUsername(redditUsername string) ([]*types.PublicB
 	// iterate over rows
 	for rows.Next() {
 		// initialize new struct per user in db to hold user info
-		publicBadge := new(types.PublicBadge)
+		publicBadge := &types.PublicBadge{
+			ERC721: new(types.ERC721),
+		}
 
 		var (
-			project     sql.NullString
-			erc721Id    sql.NullString
-			name        sql.NullString
-			description sql.NullString
-			logoURL     sql.NullString
+			project           sql.NullString
+			name              sql.NullString
+			description       sql.NullString
+			logoURL           sql.NullString
+			erc721Id          sql.NullString
+			erc721TokenId     sql.NullString
+			erc721ContractId  sql.NullString
+			erc721TotalMinted sql.NullInt64
 		)
 
 		err = rows.Scan(
@@ -78,10 +83,13 @@ func (db *DB) GetBadgesByRedditUsername(redditUsername string) ([]*types.PublicB
 		}
 
 		publicBadge.Project = project.String
-		publicBadge.ERC721Id = erc721Id.String
 		publicBadge.Name = name.String
 		publicBadge.Description = description.String
 		publicBadge.LogoURL = logoURL.String
+		publicBadge.ERC721.ID = erc721Id.String
+		publicBadge.ERC721.TokenID = erc721TokenId.String
+		publicBadge.ERC721.ContractID = erc721ContractId.String
+		publicBadge.ERC721.TotalMinted = int(erc721TotalMinted.Int64)
 
 		// append badge struct to slice of badges
 		publicBadgeSlice = append(publicBadgeSlice, publicBadge)
