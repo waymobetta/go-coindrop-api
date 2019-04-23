@@ -185,8 +185,6 @@ func (c *Client) DecodeCommunityCollection(resp *http.Response) (CommunityCollec
 type Erc721 struct {
 	// contract address
 	ContractAddress string `form:"contractAddress" json:"contractAddress" yaml:"contractAddress" xml:"contractAddress"`
-	// table ID
-	ID string `form:"id" json:"id" yaml:"id" xml:"id"`
 	// token ID
 	TokenID string `form:"tokenId" json:"tokenId" yaml:"tokenId" xml:"tokenId"`
 	// total number minted
@@ -195,9 +193,6 @@ type Erc721 struct {
 
 // Validate validates the Erc721 media type instance.
 func (mt *Erc721) Validate() (err error) {
-	if mt.ID == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "id"))
-	}
 	if mt.TokenID == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "tokenId"))
 	}

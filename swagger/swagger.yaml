@@ -211,17 +211,12 @@ definitions:
     description: ERC721 (default view)
     example:
       contractAddress: Corrupti eum fugit eaque.
-      id: Autem est.
       tokenId: Omnis labore.
       totalMinted: 5075895697223241069
     properties:
       contractAddress:
         description: contract address
         example: Corrupti eum fugit eaque.
-        type: string
-      id:
-        description: table ID
-        example: Autem est.
         type: string
       tokenId:
         description: token ID
@@ -233,7 +228,6 @@ definitions:
         format: int64
         type: integer
     required:
-    - id
     - tokenId
     - contractAddress
     - totalMinted
@@ -303,7 +297,6 @@ definitions:
       - description: Et natus est et harum labore.
         erc721:
           contractAddress: Corrupti eum fugit eaque.
-          id: Autem est.
           tokenId: Omnis labore.
           totalMinted: 5075895697223241069
         logoURL: Modi ut.
@@ -312,7 +305,6 @@ definitions:
       - description: Et natus est et harum labore.
         erc721:
           contractAddress: Corrupti eum fugit eaque.
-          id: Autem est.
           tokenId: Omnis labore.
           totalMinted: 5075895697223241069
         logoURL: Modi ut.
@@ -321,7 +313,6 @@ definitions:
       - description: Et natus est et harum labore.
         erc721:
           contractAddress: Corrupti eum fugit eaque.
-          id: Autem est.
           tokenId: Omnis labore.
           totalMinted: 5075895697223241069
         logoURL: Modi ut.
@@ -353,7 +344,6 @@ definitions:
       description: Et natus est et harum labore.
       erc721:
         contractAddress: Corrupti eum fugit eaque.
-        id: Autem est.
         tokenId: Omnis labore.
         totalMinted: 5075895697223241069
       logoURL: Modi ut.
@@ -393,7 +383,6 @@ definitions:
     - description: Et natus est et harum labore.
       erc721:
         contractAddress: Corrupti eum fugit eaque.
-        id: Autem est.
         tokenId: Omnis labore.
         totalMinted: 5075895697223241069
       logoURL: Modi ut.
@@ -1118,7 +1107,7 @@ definitions:
       answers: false
       calculated:
         score: 2975702392294002126
-      definition: 6dba227b-8b0f-4e7c-8fdd-1ef583663a62
+      definition: 7d7168b8-05b8-4b60-8c68-c4ce16956e94
       form_id: Qui sit ipsam sed.
       hidden:
         user_id: Cupiditate atque quia.
@@ -1133,7 +1122,7 @@ definitions:
         $ref: '#/definitions/TypeformCalculatedPayload'
       definition:
         description: Definition
-        example: 6dba227b-8b0f-4e7c-8fdd-1ef583663a62
+        example: 7d7168b8-05b8-4b60-8c68-c4ce16956e94
       form_id:
         description: Form ID
         example: Qui sit ipsam sed.
@@ -1174,7 +1163,7 @@ definitions:
         answers: false
         calculated:
           score: 2975702392294002126
-        definition: 6dba227b-8b0f-4e7c-8fdd-1ef583663a62
+        definition: 7d7168b8-05b8-4b60-8c68-c4ce16956e94
         form_id: Qui sit ipsam sed.
         hidden:
           user_id: Cupiditate atque quia.
