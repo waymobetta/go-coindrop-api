@@ -70,14 +70,12 @@ var BadgeMedia = MediaType("application/vnd.badge+json", func() {
 var PublicBadgeMedia = MediaType("application/vnd.publicbadge+json", func() {
 	Description("Badge")
 	Attributes(func() {
-		Attribute("id", String, "badge ID")
 		Attribute("name", String, "badge name")
 		Attribute("description", String, "badge description")
 		Attribute("logoURL", String, "badge logo")
 		Attribute("project", String, "project")
 		Attribute("erc721Id", String, "ERC-721 ID")
 		Required(
-			"id",
 			"name",
 			"description",
 			"logoURL",
@@ -86,7 +84,6 @@ var PublicBadgeMedia = MediaType("application/vnd.publicbadge+json", func() {
 		)
 	})
 	View("default", func() {
-		Attribute("id")
 		Attribute("name")
 		Attribute("description")
 		Attribute("logoURL")
