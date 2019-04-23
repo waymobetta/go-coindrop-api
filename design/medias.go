@@ -52,14 +52,12 @@ var ERC721Media = MediaType("application/vnd.erc721+json", func() {
 		Attribute("contractAddress", String, "contract address")
 		Attribute("totalMinted", Integer, "total number minted")
 		Required(
-			"id",
 			"tokenId",
 			"contractAddress",
 			"totalMinted",
 		)
 	})
 	View("default", func() {
-		Attribute("id")
 		Attribute("tokenId")
 		Attribute("contractAddress")
 		Attribute("totalMinted")
