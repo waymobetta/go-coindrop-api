@@ -133,6 +133,9 @@ func main() {
 	publicCtrlr := controllers.NewPublicController(service, dbs)
 	app.MountPublicController(service, publicCtrlr)
 
+	erc721Ctrlr := controllers.NewErc721Controller(service, dbs)
+	app.MountErc721Controller(service, erc721Ctrlr)
+
 	// goa handler
 	goaHandler := c.Handler(mw.RateLimitHandler(service.Server.Handler))
 
