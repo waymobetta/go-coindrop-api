@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"github.com/goadesign/goa"
+	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/go-coindrop-api/app"
 	"github.com/waymobetta/go-coindrop-api/db"
 	ethsvc "github.com/waymobetta/go-coindrop-api/services/ethereum"
-	"google.golang.org/appengine/log"
 )
 
 // Erc721Controller implements the erc721 resource.
@@ -31,16 +31,9 @@ func (c *Erc721Controller) Assign(ctx *app.AssignErc721Context) error {
 	badgeId := ctx.Payload.BadgeID
 	userId := ctx.Payload.UserID
 
-	tokenId, err := ethsvc.MintToken(badgeId)
-	if err != nil {
-		log.Errorf("[controller/erc721] failed to mint ERC721: %v", err)
-		return ctx.InternalServerError(&app.StandardError{
-			Code:    500,
-			Message: "could not mint ERC721",
-		})
-	}
+	tokenId := ethsvc.MintToken(badgeId)
 
-	err = c.db.AssignERC721ToUser(
+	err := c.db.AssignERC721ToUser(
 		tokenId,
 		badgeId,
 		userId,
