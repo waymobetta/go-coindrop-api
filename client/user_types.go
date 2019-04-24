@@ -18,17 +18,12 @@ import (
 type assignERC721Payload struct {
 	// Badge ID
 	BadgeID *string `form:"badgeId,omitempty" json:"badgeId,omitempty" yaml:"badgeId,omitempty" xml:"badgeId,omitempty"`
-	// Token ID
-	TokenID *string `form:"tokenId,omitempty" json:"tokenId,omitempty" yaml:"tokenId,omitempty" xml:"tokenId,omitempty"`
 	// User ID
 	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
 }
 
 // Validate validates the assignERC721Payload type instance.
 func (ut *assignERC721Payload) Validate() (err error) {
-	if ut.TokenID == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "tokenId"))
-	}
 	if ut.BadgeID == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "badgeId"))
 	}
@@ -54,9 +49,6 @@ func (ut *assignERC721Payload) Publicize() *AssignERC721Payload {
 	if ut.BadgeID != nil {
 		pub.BadgeID = *ut.BadgeID
 	}
-	if ut.TokenID != nil {
-		pub.TokenID = *ut.TokenID
-	}
 	if ut.UserID != nil {
 		pub.UserID = *ut.UserID
 	}
@@ -67,17 +59,12 @@ func (ut *assignERC721Payload) Publicize() *AssignERC721Payload {
 type AssignERC721Payload struct {
 	// Badge ID
 	BadgeID string `form:"badgeId" json:"badgeId" yaml:"badgeId" xml:"badgeId"`
-	// Token ID
-	TokenID string `form:"tokenId" json:"tokenId" yaml:"tokenId" xml:"tokenId"`
 	// User ID
 	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
 }
 
 // Validate validates the AssignERC721Payload type instance.
 func (ut *AssignERC721Payload) Validate() (err error) {
-	if ut.TokenID == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "tokenId"))
-	}
 	if ut.BadgeID == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "badgeId"))
 	}
