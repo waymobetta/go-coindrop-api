@@ -80,6 +80,7 @@ goa:
 	@rm transactions.go
 	@rm targeting.go
 	@rm public.go
+	@rm erc721.go
 	@MAKE swagger
 
 .PHONY: swagger
