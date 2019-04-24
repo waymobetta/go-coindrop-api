@@ -14,23 +14,17 @@ var (
 	}
 )
 
-func generateRandomId() (uuid.UUID, error) {
-	u2, err := uuid.NewV4()
-	if err != nil {
-		return "", err
-	}
-	return u2, nil
+func generateRandomId() uuid.UUID {
+	uuidString := uuid.NewV4()
+	return uuidString
 }
 
-func MintToken(badgeName string) (string, error) {
+func MintToken(badgeName string) string {
 	for _, badge := range badgesSlice {
 		if badge == badgeName {
-			str, err := generateRandomId()
-			if err != nil {
-				return "", err
-			}
-			return fmt.Sprintf("%s-%s", badge, str)
+			uuidString := generateRandomId()
+			return fmt.Sprintf("%s-%s", badge, uuidString)
 		}
 	}
-	return "", nil
+	return fmt.Sprintf("%v", uuid.UUID{})
 }
