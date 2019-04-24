@@ -56,7 +56,6 @@ var SetTargetingPayload = Type("SetTargetingPayload", func() {
 // AssignERC721Payload is the payload for assigning an ERC721 to a user
 var AssignERC721Payload = Type("AssignERC721Payload", func() {
 	Description("AssignERC721 payload")
-	Attribute("tokenId", String, "Token ID")
 	Attribute("badgeId", String, "Badge ID", func() {
 		Pattern("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$")
 		Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
@@ -66,7 +65,6 @@ var AssignERC721Payload = Type("AssignERC721Payload", func() {
 		Example("9302608f-f6a4-4004-b088-63e5fb43cc26")
 	})
 	Required(
-		"tokenId",
 		"badgeId",
 		"userId",
 	)
