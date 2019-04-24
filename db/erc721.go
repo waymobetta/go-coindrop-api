@@ -93,69 +93,58 @@ func (db *DB) GetUserERC721s(userID string) ([]*types.PublicBadge, error) {
 	return publicBadgeSlice, nil
 }
 
-// // AddTransaction method adds a new transaction to the db
-// func (db *DB) AddTransaction(trx *types.Transaction, resourceID string) error {
-// 	// initialize statement write to database
-// 	tx, err := db.client.Begin()
-// 	if err != nil {
-// 		return err
-// 	}
+// AssignERC721ToUser method adds a new transaction to the db
+func (db *DB) AssignERC721ToUser(
+	tokenId,
+	badgeId,
+	userId string,
+) error {
+	// initialize statement write to database
+	tx, err := db.client.Begin()
+	if err != nil {
+		return err
+	}
 
-// 	// create SQL statement for db writes
-// 	sqlStatement := `
-// 		INSERT INTO
-// 			coindrop_transactions
-// 			(
-// 				user_id,
-// 				task_id,
-// 				hash
-// 			)
-// 		VALUES
-// 			(
-// 				$1,
-// 				(
-// 				SELECT
-// 					id
-// 				FROM
-// 					coindrop_tasks
-// 				WHERE
-// 					quiz_id = (
-// 						SELECT
-// 							id
-// 						FROM
-// 							coindrop_quizzes
-// 						WHERE typeform_form_id = $2
-// 					)
-// 				),
-// 				$3
-// 			)
-// 	`
+	// create SQL statement for db writes
+	sqlStatement := `
+		INSERT INTO
+			coindrop_erc721s(
+				token_id,
+				badge_id,
+				user_id
+			)
+		VALUES (
+			$1,
+			$2,
+			$3
+		)
+	`
 
-// 	// prepare statement
-// 	stmt, err := db.client.Prepare(sqlStatement)
-// 	if err != nil {
-// 		return err
-// 	}
+	// prepare statement
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return err
+	}
 
-// 	defer stmt.Close()
+	defer stmt.Close()
 
-// 	// execute db write using task title + associated data
-// 	_, err = stmt.Exec(
-// 		trx.UserID,
-// 		resourceID,
-// 		trx.Hash,
-// 	)
-// 	if err != nil {
-// 		// rollback transaction if error thrown
-// 		return tx.Rollback()
-// 	}
+	// execute db write using task title + associated data
+	_, err = stmt.Exec(
+		tokenId,
+		badgeId,
+		userId,
+	)
+	if err != nil {
+		// rollback transaction if error thrown
+		return tx.Rollback()
+	}
 
-// 	// commit db write
-// 	err = tx.Commit()
-// 	if err != nil {
-// 		// rollback transaction if error thrown
-// 		return tx.Rollback()
-// 	}
+	// commit db write
+	err = tx.Commit()
+	if err != nil {
+		// rollback transaction if error thrown
+		return tx.Rollback()
+	}
 
-// 	return nil
-// }
+	return nil
+}
