@@ -21,7 +21,7 @@ import (
 // UpdateCommunitiesStackoverflowharvestPath computes a request path to the updateCommunities action of stackoverflowharvest.
 func UpdateCommunitiesStackoverflowharvestPath() string {
 
-	return fmt.Sprintf("/v1/social/stackoverflow/harvest/communities")
+	return fmt.Sprintf("/v1/internal/social/stackoverflow/harvest/communities")
 }
 
 // Update Stack Overflow User Communities Info
@@ -69,7 +69,7 @@ func (c *Client) NewUpdateCommunitiesStackoverflowharvestRequest(ctx context.Con
 // UpdateProfileStackoverflowharvestPath computes a request path to the updateProfile action of stackoverflowharvest.
 func UpdateProfileStackoverflowharvestPath() string {
 
-	return fmt.Sprintf("/v1/social/stackoverflow/harvest/profile")
+	return fmt.Sprintf("/v1/internal/social/stackoverflow/harvest/profile")
 }
 
 // Update Stack Overflow User Info

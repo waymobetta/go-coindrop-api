@@ -60,7 +60,7 @@ func UpdateAboutRedditharvestBadRequest(t goatest.TInterface, ctx context.Contex
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/about"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/about"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -145,7 +145,7 @@ func UpdateAboutRedditharvestGone(t goatest.TInterface, ctx context.Context, ser
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/about"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/about"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -230,7 +230,7 @@ func UpdateAboutRedditharvestInternalServerError(t goatest.TInterface, ctx conte
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/about"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/about"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -315,7 +315,7 @@ func UpdateAboutRedditharvestNotFound(t goatest.TInterface, ctx context.Context,
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/about"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/about"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -400,7 +400,7 @@ func UpdateAboutRedditharvestOK(t goatest.TInterface, ctx context.Context, servi
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/about"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/about"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -485,7 +485,7 @@ func UpdateSubmittedInfoRedditharvestBadRequest(t goatest.TInterface, ctx contex
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/submitted"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/submitted"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -570,7 +570,7 @@ func UpdateSubmittedInfoRedditharvestGone(t goatest.TInterface, ctx context.Cont
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/submitted"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/submitted"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -655,7 +655,7 @@ func UpdateSubmittedInfoRedditharvestInternalServerError(t goatest.TInterface, c
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/submitted"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/submitted"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -740,7 +740,7 @@ func UpdateSubmittedInfoRedditharvestNotFound(t goatest.TInterface, ctx context.
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/submitted"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/submitted"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -825,7 +825,7 @@ func UpdateSubmittedInfoRedditharvestOK(t goatest.TInterface, ctx context.Contex
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/submitted"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/submitted"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -910,7 +910,7 @@ func UpdateTrophiesRedditharvestBadRequest(t goatest.TInterface, ctx context.Con
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/trophies"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/trophies"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -995,7 +995,7 @@ func UpdateTrophiesRedditharvestGone(t goatest.TInterface, ctx context.Context, 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/trophies"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/trophies"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -1080,7 +1080,7 @@ func UpdateTrophiesRedditharvestInternalServerError(t goatest.TInterface, ctx co
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/trophies"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/trophies"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -1165,7 +1165,7 @@ func UpdateTrophiesRedditharvestNotFound(t goatest.TInterface, ctx context.Conte
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/trophies"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/trophies"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -1250,7 +1250,7 @@ func UpdateTrophiesRedditharvestOK(t goatest.TInterface, ctx context.Context, se
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/reddit/harvest/trophies"),
+		Path: fmt.Sprintf("/v1/internal/social/reddit/harvest/trophies"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {

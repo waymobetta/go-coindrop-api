@@ -4,6 +4,33 @@ consumes:
 - application/gob
 - application/x-gob
 definitions:
+  AssignERC721Payload:
+    description: AssignERC721 payload
+    example:
+      badgeId: 9302608f-f6a4-4004-b088-63e5fb43cc26
+      tokenId: Molestiae eligendi iusto doloremque quia sequi in.
+      userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
+    properties:
+      badgeId:
+        description: Badge ID
+        example: 9302608f-f6a4-4004-b088-63e5fb43cc26
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        type: string
+      tokenId:
+        description: Token ID
+        example: Molestiae eligendi iusto doloremque quia sequi in.
+        type: string
+      userId:
+        description: User ID
+        example: 9302608f-f6a4-4004-b088-63e5fb43cc26
+        pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        type: string
+    required:
+    - tokenId
+    - badgeId
+    - userId
+    title: AssignERC721Payload
+    type: object
   Badge:
     description: Badge (default view)
     example:
@@ -43,10 +70,6 @@ definitions:
       id: Quam quae aut cumque consequatur asperiores.
       logoURL: Hic illum veniam magni nam perferendis.
       name: Quis ut unde aliquam voluptatibus.
-    - description: Eaque facere voluptates consequatur nihil odit.
-      id: Quam quae aut cumque consequatur asperiores.
-      logoURL: Hic illum veniam magni nam perferendis.
-      name: Quis ut unde aliquam voluptatibus.
     items:
       $ref: '#/definitions/Badge'
     title: 'Mediatype identifier: application/vnd.badge+json; type=collection; view=default'
@@ -55,10 +78,6 @@ definitions:
     description: Badges (default view)
     example:
       badges:
-      - description: Eaque facere voluptates consequatur nihil odit.
-        id: Quam quae aut cumque consequatur asperiores.
-        logoURL: Hic illum veniam magni nam perferendis.
-        name: Quis ut unde aliquam voluptatibus.
       - description: Eaque facere voluptates consequatur nihil odit.
         id: Quam quae aut cumque consequatur asperiores.
         logoURL: Hic illum veniam magni nam perferendis.
@@ -73,16 +92,16 @@ definitions:
   ClaimPayload:
     description: Claim payload
     example:
-      taskId: Officiis maxime.
-      userId: Suscipit ab.
+      taskId: Sunt quas repudiandae.
+      userId: Similique dolorem repellendus quas eligendi ut est.
     properties:
       taskId:
         description: Task ID
-        example: Officiis maxime.
+        example: Sunt quas repudiandae.
         type: string
       userId:
         description: User ID
-        example: Suscipit ab.
+        example: Similique dolorem repellendus quas eligendi ut est.
         type: string
     required:
     - userId
@@ -113,8 +132,6 @@ definitions:
     description: CommunityCollection is the media type for an array of Community (default
       view)
     example:
-    - name: Amet tenetur.
-      reputation: 6882505379150310037
     - name: Amet tenetur.
       reputation: 6882505379150310037
     items:
@@ -150,12 +167,12 @@ definitions:
   CreateStackOverflowUserPayload:
     description: Create Stack Overflow User payload
     example:
-      stackUserId: 7067114288712034626
+      stackUserId: 2668369685922451484
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
     properties:
       stackUserId:
         description: Stack Overflow Community-Specific Account ID
-        example: 7067114288712034626
+        example: 2668369685922451484
         format: int64
         type: integer
       userId:
@@ -171,16 +188,16 @@ definitions:
   CreateTaskPayload:
     description: Create Task payload
     example:
-      taskId: Ullam assumenda enim.
-      userId: Asperiores et omnis est quaerat.
+      taskId: Assumenda ipsa laborum non quis.
+      userId: Aut quia totam esse illum earum eum.
     properties:
       taskId:
         description: Task ID
-        example: Ullam assumenda enim.
+        example: Assumenda ipsa laborum non quis.
         type: string
       userId:
         description: User ID
-        example: Asperiores et omnis est quaerat.
+        example: Aut quia totam esse illum earum eum.
         type: string
     required:
     - userId
@@ -191,7 +208,7 @@ definitions:
     description: Create Reddit User payload
     example:
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      username: Cum iste voluptas.
+      username: Enim vel.
     properties:
       userId:
         description: User ID
@@ -200,7 +217,7 @@ definitions:
         type: string
       username:
         description: Username
-        example: Cum iste voluptas.
+        example: Enim vel.
         type: string
     required:
     - userId
@@ -274,16 +291,16 @@ definitions:
   ProfilePayload:
     description: Profile payload
     example:
-      name: Molestiae eligendi iusto doloremque quia sequi in.
-      username: Neque sunt repellendus ullam ut magni.
+      name: Neque sunt repellendus ullam ut magni.
+      username: Voluptas doloribus molestiae unde unde.
     properties:
       name:
         description: Name
-        example: Molestiae eligendi iusto doloremque quia sequi in.
+        example: Neque sunt repellendus ullam ut magni.
         type: string
       username:
         description: Username
-        example: Neque sunt repellendus ullam ut magni.
+        example: Voluptas doloribus molestiae unde unde.
         type: string
     required:
     - name
@@ -294,14 +311,6 @@ definitions:
     description: Public (default view)
     example:
       badges:
-      - description: Et natus est et harum labore.
-        erc721:
-          contractAddress: Corrupti eum fugit eaque.
-          tokenId: Omnis labore.
-          totalMinted: 5075895697223241069
-        logoURL: Modi ut.
-        name: Deleniti qui aut exercitationem omnis illum nesciunt.
-        project: Quam sit nihil deleniti.
       - description: Et natus est et harum labore.
         erc721:
           contractAddress: Corrupti eum fugit eaque.
@@ -475,6 +484,14 @@ definitions:
       id: Ipsum eius repellat animi sint sunt.
       title: Recusandae facilis perferendis consectetur ut et.
       userId: Enim mollitia officiis.
+    - fields:
+      - answer: Necessitatibus debitis qui quos.
+        question: Quasi excepturi non voluptas dolor.
+      - answer: Necessitatibus debitis qui quos.
+        question: Quasi excepturi non voluptas dolor.
+      id: Ipsum eius repellat animi sint sunt.
+      title: Recusandae facilis perferendis consectetur ut et.
+      userId: Enim mollitia officiis.
     items:
       $ref: '#/definitions/Quiz'
     title: 'Mediatype identifier: application/vnd.quiz+json; type=collection; view=default'
@@ -482,11 +499,11 @@ definitions:
   QuizPayload:
     description: Quiz payload
     example:
-      title: Voluptas doloribus molestiae unde unde.
+      title: Cum iste voluptas.
     properties:
       title:
         description: Title
-        example: Voluptas doloribus molestiae unde unde.
+        example: Cum iste voluptas.
         type: string
     required:
     - title
@@ -495,28 +512,28 @@ definitions:
   QuizResultsPayload:
     description: Quiz results payload
     example:
-      questionsCorrect: 5636653145233229216
-      questionsIncorrect: 99774961680547069
-      quizId: Beatae ea.
-      userId: Accusamus quia est itaque maxime.
+      questionsCorrect: 9210673908046947456
+      questionsIncorrect: 870867620874812977
+      quizId: Vero est iusto sed.
+      userId: Possimus voluptatem molestiae nam asperiores enim.
     properties:
       questionsCorrect:
         description: Number of questions that were answered correct
-        example: 5636653145233229216
+        example: 9210673908046947456
         format: int64
         type: integer
       questionsIncorrect:
         description: Number of questions that were answered incorrect
-        example: 99774961680547069
+        example: 870867620874812977
         format: int64
         type: integer
       quizId:
         description: Quiz ID
-        example: Beatae ea.
+        example: Vero est iusto sed.
         type: string
       userId:
         description: User ID
-        example: Accusamus quia est itaque maxime.
+        example: Possimus voluptatem molestiae nam asperiores enim.
         type: string
     required:
     - quizId
@@ -673,6 +690,46 @@ definitions:
         confirmedVerificationCode: Dolore ipsa et.
         postedVerificationCode: Porro sunt facilis alias blanditiis qui.
         verified: true
+    - commentKarma: 1545750532842395835
+      id: 9302608f-f6a4-4004-b088-63e5fb43cc26
+      linkKarma: 2318915871255544606
+      subreddits:
+      - name: Amet tenetur.
+        reputation: 6882505379150310037
+      - name: Amet tenetur.
+        reputation: 6882505379150310037
+      - name: Amet tenetur.
+        reputation: 6882505379150310037
+      trophies:
+      - Sit sed nobis.
+      - Sit sed nobis.
+      - Sit sed nobis.
+      userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
+      username: Non suscipit error ea incidunt aut qui.
+      verification:
+        confirmedVerificationCode: Dolore ipsa et.
+        postedVerificationCode: Porro sunt facilis alias blanditiis qui.
+        verified: true
+    - commentKarma: 1545750532842395835
+      id: 9302608f-f6a4-4004-b088-63e5fb43cc26
+      linkKarma: 2318915871255544606
+      subreddits:
+      - name: Amet tenetur.
+        reputation: 6882505379150310037
+      - name: Amet tenetur.
+        reputation: 6882505379150310037
+      - name: Amet tenetur.
+        reputation: 6882505379150310037
+      trophies:
+      - Sit sed nobis.
+      - Sit sed nobis.
+      - Sit sed nobis.
+      userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
+      username: Non suscipit error ea incidunt aut qui.
+      verification:
+        confirmedVerificationCode: Dolore ipsa et.
+        postedVerificationCode: Porro sunt facilis alias blanditiis qui.
+        verified: true
     items:
       $ref: '#/definitions/Reddituser'
     title: 'Mediatype identifier: application/vnd.reddituser+json; type=collection;
@@ -719,6 +776,14 @@ definitions:
       questionsIncorrect: 3901860836045060093
       quizId: Non voluptatem id.
       userId: Sit et molestias sed possimus enim et.
+    - questionsCorrect: 1029121870343962906
+      questionsIncorrect: 3901860836045060093
+      quizId: Non voluptatem id.
+      userId: Sit et molestias sed possimus enim et.
+    - questionsCorrect: 1029121870343962906
+      questionsIncorrect: 3901860836045060093
+      quizId: Non voluptatem id.
+      userId: Sit et molestias sed possimus enim et.
     items:
       $ref: '#/definitions/Results'
     title: 'Mediatype identifier: application/vnd.results+json; type=collection; view=default'
@@ -726,16 +791,16 @@ definitions:
   SetTargetingPayload:
     description: Set Targeting payload
     example:
-      taskId: Sed non.
-      users: Voluptatem molestiae nam asperiores.
+      taskId: Ducimus asperiores et omnis est quaerat.
+      users: Corporis officiis maxime id suscipit.
     properties:
       taskId:
         description: Task ID
-        example: Sed non.
+        example: Ducimus asperiores et omnis est quaerat.
         type: string
       users:
         description: List of users
-        example: Voluptatem molestiae nam asperiores.
+        example: Corporis officiis maxime id suscipit.
         type: string
     required:
     - taskId
@@ -746,6 +811,10 @@ definitions:
     description: Stack Overflow User Info (default view)
     example:
       accounts:
+      - name: Amet tenetur.
+        reputation: 6882505379150310037
+      - name: Amet tenetur.
+        reputation: 6882505379150310037
       - name: Amet tenetur.
         reputation: 6882505379150310037
       displayName: Aliquam voluptatem quibusdam ut quia inventore.
@@ -946,22 +1015,6 @@ definitions:
       token: Delectus sit eos error.
       tokenAllocation: 3672372696100610420
       type: Est occaecati nihil ab laudantium qui.
-    - author: Distinctio quo blanditiis perferendis et facilis aspernatur.
-      badge:
-        description: Eaque facere voluptates consequatur nihil odit.
-        id: Quam quae aut cumque consequatur asperiores.
-        logoURL: Hic illum veniam magni nam perferendis.
-        name: Quis ut unde aliquam voluptatibus.
-      completed: false
-      description: Expedita unde aut.
-      id: Praesentium debitis ut.
-      logoURL: Iusto et.
-      resourceId: Qui consequatur.
-      resourceURL: Deserunt et est nesciunt.
-      title: Ducimus quisquam sit facere qui praesentium.
-      token: Delectus sit eos error.
-      tokenAllocation: 3672372696100610420
-      type: Est occaecati nihil ab laudantium qui.
     items:
       $ref: '#/definitions/Task'
     title: 'Mediatype identifier: application/vnd.task+json; type=collection; view=default'
@@ -969,11 +1022,11 @@ definitions:
   TaskPayload:
     description: Task payload
     example:
-      completed: false
+      completed: true
     properties:
       completed:
         description: Task completed
-        example: false
+        example: true
         type: boolean
     required:
     - completed
@@ -983,6 +1036,22 @@ definitions:
     description: Tasks (default view)
     example:
       tasks:
+      - author: Distinctio quo blanditiis perferendis et facilis aspernatur.
+        badge:
+          description: Eaque facere voluptates consequatur nihil odit.
+          id: Quam quae aut cumque consequatur asperiores.
+          logoURL: Hic illum veniam magni nam perferendis.
+          name: Quis ut unde aliquam voluptatibus.
+        completed: false
+        description: Expedita unde aut.
+        id: Praesentium debitis ut.
+        logoURL: Iusto et.
+        resourceId: Qui consequatur.
+        resourceURL: Deserunt et est nesciunt.
+        title: Ducimus quisquam sit facere qui praesentium.
+        token: Delectus sit eos error.
+        tokenAllocation: 3672372696100610420
+        type: Est occaecati nihil ab laudantium qui.
       - author: Distinctio quo blanditiis perferendis et facilis aspernatur.
         badge:
           description: Eaque facere voluptates consequatur nihil odit.
@@ -1065,6 +1134,10 @@ definitions:
       id: Modi cumque est architecto.
       taskId: Voluptatem doloribus.
       userId: Animi quas dolore id repellat.
+    - hash: Dignissimos distinctio culpa earum.
+      id: Modi cumque est architecto.
+      taskId: Voluptatem doloribus.
+      userId: Animi quas dolore id repellat.
     items:
       $ref: '#/definitions/Transaction'
     title: 'Mediatype identifier: application/vnd.transaction+json; type=collection;
@@ -1074,6 +1147,10 @@ definitions:
     description: Transactions (default view)
     example:
       transactions:
+      - hash: Dignissimos distinctio culpa earum.
+        id: Modi cumque est architecto.
+        taskId: Voluptatem doloribus.
+        userId: Animi quas dolore id repellat.
       - hash: Dignissimos distinctio culpa earum.
         id: Modi cumque est architecto.
         taskId: Voluptatem doloribus.
@@ -1092,11 +1169,11 @@ definitions:
   TypeformCalculatedPayload:
     description: Typeform calculatd data
     example:
-      score: 2975702392294002126
+      score: 1746822080599364554
     properties:
       score:
         description: Score
-        example: 2975702392294002126
+        example: 1746822080599364554
         format: int64
         type: integer
     title: TypeformCalculatedPayload
@@ -1104,80 +1181,80 @@ definitions:
   TypeformFormPayload:
     description: Typeform form data
     example:
-      answers: false
+      answers: 0.5980605041435555
       calculated:
-        score: 2975702392294002126
-      definition: 7d7168b8-05b8-4b60-8c68-c4ce16956e94
-      form_id: Qui sit ipsam sed.
+        score: 1746822080599364554
+      definition: 1263584531261615516
+      form_id: Iste dolores voluptatem ex delectus.
       hidden:
-        user_id: Cupiditate atque quia.
-      landed_at: Aut magni quam sit ut.
-      submitted_at: Accusantium nemo aliquid.
-      token: Praesentium enim.
+        user_id: Rerum similique rerum libero numquam neque accusantium.
+      landed_at: Aut est suscipit.
+      submitted_at: Velit sunt quis totam corrupti ut.
+      token: Aperiam labore voluptates inventore molestiae.
     properties:
       answers:
         description: Answers
-        example: false
+        example: 0.5980605041435555
       calculated:
         $ref: '#/definitions/TypeformCalculatedPayload'
       definition:
         description: Definition
-        example: 7d7168b8-05b8-4b60-8c68-c4ce16956e94
+        example: 1263584531261615516
       form_id:
         description: Form ID
-        example: Qui sit ipsam sed.
+        example: Iste dolores voluptatem ex delectus.
         type: string
       hidden:
         $ref: '#/definitions/TypeformHiddenPayload'
       landed_at:
         description: Form ID
-        example: Aut magni quam sit ut.
+        example: Aut est suscipit.
         type: string
       submitted_at:
         description: Form ID
-        example: Accusantium nemo aliquid.
+        example: Velit sunt quis totam corrupti ut.
         type: string
       token:
         description: Form ID
-        example: Praesentium enim.
+        example: Aperiam labore voluptates inventore molestiae.
         type: string
     title: TypeformFormPayload
     type: object
   TypeformHiddenPayload:
     description: Typeform hidden data
     example:
-      user_id: Cupiditate atque quia.
+      user_id: Rerum similique rerum libero numquam neque accusantium.
     properties:
       user_id:
         description: User ID
-        example: Cupiditate atque quia.
+        example: Rerum similique rerum libero numquam neque accusantium.
         type: string
     title: TypeformHiddenPayload
     type: object
   TypeformPayload:
     description: Typeform payload
     example:
-      event_id: Quia nulla delectus.
-      event_type: Sit aperiam et.
+      event_id: Magni quam sit ut eos accusantium.
+      event_type: Aliquid architecto praesentium.
       form_response:
-        answers: false
+        answers: 0.5980605041435555
         calculated:
-          score: 2975702392294002126
-        definition: 7d7168b8-05b8-4b60-8c68-c4ce16956e94
-        form_id: Qui sit ipsam sed.
+          score: 1746822080599364554
+        definition: 1263584531261615516
+        form_id: Iste dolores voluptatem ex delectus.
         hidden:
-          user_id: Cupiditate atque quia.
-        landed_at: Aut magni quam sit ut.
-        submitted_at: Accusantium nemo aliquid.
-        token: Praesentium enim.
+          user_id: Rerum similique rerum libero numquam neque accusantium.
+        landed_at: Aut est suscipit.
+        submitted_at: Velit sunt quis totam corrupti ut.
+        token: Aperiam labore voluptates inventore molestiae.
     properties:
       event_id:
         description: Event ID
-        example: Quia nulla delectus.
+        example: Magni quam sit ut eos accusantium.
         type: string
       event_type:
         description: Event types
-        example: Sit aperiam et.
+        example: Aliquid architecto praesentium.
         type: string
       form_response:
         $ref: '#/definitions/TypeformFormPayload'
@@ -1187,7 +1264,7 @@ definitions:
     description: Update Reddit User payload
     example:
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      username: Enim vel.
+      username: Vero non beatae ea aliquid accusamus quia.
     properties:
       userId:
         description: User ID
@@ -1196,7 +1273,7 @@ definitions:
         type: string
       username:
         description: Reddit Username
-        example: Enim vel.
+        example: Vero non beatae ea aliquid accusamus quia.
         type: string
     required:
     - userId
@@ -1206,12 +1283,12 @@ definitions:
   UpdateStackOverflowUserPayload:
     description: Update Stack Overflow User payload
     example:
-      stackUserId: 5326539124903331576
+      stackUserId: 1498526870389714648
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
     properties:
       stackUserId:
         description: Stack Overflow Community-Specific Account ID
-        example: 5326539124903331576
+        example: 1498526870389714648
         format: int64
         type: integer
       userId:
@@ -1255,11 +1332,11 @@ definitions:
   UserPayload:
     description: User payload
     example:
-      cognitoAuthUserId: Ipsa laborum non quis.
+      cognitoAuthUserId: Hic et quod placeat consequatur veritatis eveniet.
     properties:
       cognitoAuthUserId:
         description: Cognito auth user ID
-        example: Ipsa laborum non quis.
+        example: Hic et quod placeat consequatur veritatis eveniet.
         type: string
     required:
     - cognitoAuthUserId
@@ -1336,12 +1413,6 @@ definitions:
     - address: Tenetur dolores culpa recusandae unde dolor culpa.
       verified: false
       walletType: Dolore ipsum fuga ipsam et iste.
-    - address: Tenetur dolores culpa recusandae unde dolor culpa.
-      verified: false
-      walletType: Dolore ipsum fuga ipsam et iste.
-    - address: Tenetur dolores culpa recusandae unde dolor culpa.
-      verified: false
-      walletType: Dolore ipsum fuga ipsam et iste.
     items:
       $ref: '#/definitions/Wallet'
     title: 'Mediatype identifier: application/vnd.wallet+json; type=collection; view=default'
@@ -1351,7 +1422,7 @@ definitions:
     example:
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
       walletAddress: 0x845fdD93Cca3aE9e380d5556818e6d0b902B977c
-      walletType: Aut quia totam esse illum earum eum.
+      walletType: Nulla delectus.
     properties:
       userId:
         description: User ID
@@ -1365,7 +1436,7 @@ definitions:
         type: string
       walletType:
         description: wallet type
-        example: Aut quia totam esse illum earum eum.
+        example: Nulla delectus.
         type: string
     required:
     - userId
@@ -1376,24 +1447,24 @@ definitions:
   WalletVerificationPayload:
     description: Wallet verification payload
     example:
-      address: Expedita sunt quas repudiandae ut similique.
-      message: Repellendus quas eligendi ut.
-      signature: Ut hic et quod.
+      address: Sit aperiam et.
+      message: Maxime est dolor voluptate qui.
+      signature: Ipsam sed reprehenderit.
       taskId: 9302608f-f6a4-4004-b088-63e5fb43cc26
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      version: Consequatur veritatis.
+      version: Atque quia repellendus.
     properties:
       address:
         description: Wallet address
-        example: Expedita sunt quas repudiandae ut similique.
+        example: Sit aperiam et.
         type: string
       message:
         description: Message
-        example: Repellendus quas eligendi ut.
+        example: Maxime est dolor voluptate qui.
         type: string
       signature:
         description: Signature
-        example: Ut hic et quod.
+        example: Ipsam sed reprehenderit.
         type: string
       taskId:
         description: Task ID
@@ -1407,7 +1478,7 @@ definitions:
         type: string
       version:
         description: Version
-        example: Consequatur veritatis.
+        example: Atque quia repellendus.
         type: string
     required:
     - userId
@@ -1422,9 +1493,6 @@ definitions:
     description: Wallets (default view)
     example:
       wallets:
-      - address: Tenetur dolores culpa recusandae unde dolor culpa.
-        verified: false
-        walletType: Dolore ipsum fuga ipsam et iste.
       - address: Tenetur dolores culpa recusandae unde dolor culpa.
         verified: false
         walletType: Dolore ipsum fuga ipsam et iste.
@@ -1592,6 +1660,258 @@ paths:
       summary: show healthcheck
       tags:
       - healthcheck
+  /v1/internal/erc721/assign:
+    post:
+      description: Assign an ERC721 to a user
+      operationId: erc721#assign
+      parameters:
+      - description: AssignERC721 payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/AssignERC721Payload'
+      produces:
+      - application/standard_error+json
+      - application/vnd.erc721+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Erc721'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: assign erc721
+      tags:
+      - erc721
+  /v1/internal/social/reddit/harvest/about:
+    post:
+      description: Update Reddit User About Info
+      operationId: redditharvest#updateAbout
+      parameters:
+      - description: Update Reddit User payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateRedditUserPayload'
+      produces:
+      - application/standard_error+json
+      - application/vnd.reddituser+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Reddituser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: updateAbout redditharvest
+      tags:
+      - redditharvest
+  /v1/internal/social/reddit/harvest/submitted:
+    post:
+      description: Update Reddit User Submitted Info
+      operationId: redditharvest#updateSubmittedInfo
+      parameters:
+      - description: Update Reddit User payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateRedditUserPayload'
+      produces:
+      - application/standard_error+json
+      - application/vnd.reddituser+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Reddituser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: updateSubmittedInfo redditharvest
+      tags:
+      - redditharvest
+  /v1/internal/social/reddit/harvest/trophies:
+    post:
+      description: Update Reddit User Trophy Info
+      operationId: redditharvest#updateTrophies
+      parameters:
+      - description: Update Reddit User payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateRedditUserPayload'
+      produces:
+      - application/standard_error+json
+      - application/vnd.reddituser+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Reddituser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: updateTrophies redditharvest
+      tags:
+      - redditharvest
+  /v1/internal/social/stackoverflow/harvest/communities:
+    post:
+      description: Update Stack Overflow User Communities Info
+      operationId: stackoverflowharvest#updateCommunities
+      parameters:
+      - description: Update Stack Overflow User payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateStackOverflowUserPayload'
+      produces:
+      - application/standard_error+json
+      - application/vnd.stackoverflowuser+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Stackoverflowuser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: updateCommunities stackoverflowharvest
+      tags:
+      - stackoverflowharvest
+  /v1/internal/social/stackoverflow/harvest/profile:
+    post:
+      description: Update Stack Overflow User Info
+      operationId: stackoverflowharvest#updateProfile
+      parameters:
+      - description: Update Stack Overflow User payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateStackOverflowUserPayload'
+      produces:
+      - application/standard_error+json
+      - application/vnd.stackoverflowuser+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Stackoverflowuser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "410":
+          description: Gone
+          schema:
+            $ref: '#/definitions/Standard_error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Standard_error'
+      schemes:
+      - http
+      security:
+      - JWTAuth: []
+      summary: updateProfile stackoverflowharvest
+      tags:
+      - stackoverflowharvest
   /v1/profiles:
     get:
       description: Get user profile
@@ -2201,132 +2521,6 @@ paths:
       summary: verify reddit
       tags:
       - reddit
-  /v1/social/reddit/harvest/about:
-    post:
-      description: Update Reddit User About Info
-      operationId: redditharvest#updateAbout
-      parameters:
-      - description: Update Reddit User payload
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/UpdateRedditUserPayload'
-      produces:
-      - application/standard_error+json
-      - application/vnd.reddituser+json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/Reddituser'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "410":
-          description: Gone
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/Standard_error'
-      schemes:
-      - http
-      security:
-      - JWTAuth: []
-      summary: updateAbout redditharvest
-      tags:
-      - redditharvest
-  /v1/social/reddit/harvest/submitted:
-    post:
-      description: Update Reddit User Submitted Info
-      operationId: redditharvest#updateSubmittedInfo
-      parameters:
-      - description: Update Reddit User payload
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/UpdateRedditUserPayload'
-      produces:
-      - application/standard_error+json
-      - application/vnd.reddituser+json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/Reddituser'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "410":
-          description: Gone
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/Standard_error'
-      schemes:
-      - http
-      security:
-      - JWTAuth: []
-      summary: updateSubmittedInfo redditharvest
-      tags:
-      - redditharvest
-  /v1/social/reddit/harvest/trophies:
-    post:
-      description: Update Reddit User Trophy Info
-      operationId: redditharvest#updateTrophies
-      parameters:
-      - description: Update Reddit User payload
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/UpdateRedditUserPayload'
-      produces:
-      - application/standard_error+json
-      - application/vnd.reddituser+json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/Reddituser'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "410":
-          description: Gone
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/Standard_error'
-      schemes:
-      - http
-      security:
-      - JWTAuth: []
-      summary: updateTrophies redditharvest
-      tags:
-      - redditharvest
   /v1/social/stackoverflow:
     post:
       description: Update stack overflow user info
@@ -2500,90 +2694,6 @@ paths:
       summary: verify stackoverflow
       tags:
       - stackoverflow
-  /v1/social/stackoverflow/harvest/communities:
-    post:
-      description: Update Stack Overflow User Communities Info
-      operationId: stackoverflowharvest#updateCommunities
-      parameters:
-      - description: Update Stack Overflow User payload
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/UpdateStackOverflowUserPayload'
-      produces:
-      - application/standard_error+json
-      - application/vnd.stackoverflowuser+json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/Stackoverflowuser'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "410":
-          description: Gone
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/Standard_error'
-      schemes:
-      - http
-      security:
-      - JWTAuth: []
-      summary: updateCommunities stackoverflowharvest
-      tags:
-      - stackoverflowharvest
-  /v1/social/stackoverflow/harvest/profile:
-    post:
-      description: Update Stack Overflow User Info
-      operationId: stackoverflowharvest#updateProfile
-      parameters:
-      - description: Update Stack Overflow User payload
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/UpdateStackOverflowUserPayload'
-      produces:
-      - application/standard_error+json
-      - application/vnd.stackoverflowuser+json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/Stackoverflowuser'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "410":
-          description: Gone
-          schema:
-            $ref: '#/definitions/Standard_error'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/Standard_error'
-      schemes:
-      - http
-      security:
-      - JWTAuth: []
-      summary: updateProfile stackoverflowharvest
-      tags:
-      - stackoverflowharvest
   /v1/targeting/tasks/set:
     post:
       description: Set users as eligible

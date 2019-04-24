@@ -60,7 +60,7 @@ func UpdateCommunitiesStackoverflowharvestBadRequest(t goatest.TInterface, ctx c
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/communities"),
+		Path: fmt.Sprintf("/v1/internal/social/stackoverflow/harvest/communities"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -145,7 +145,7 @@ func UpdateCommunitiesStackoverflowharvestGone(t goatest.TInterface, ctx context
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/communities"),
+		Path: fmt.Sprintf("/v1/internal/social/stackoverflow/harvest/communities"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -230,7 +230,7 @@ func UpdateCommunitiesStackoverflowharvestInternalServerError(t goatest.TInterfa
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/communities"),
+		Path: fmt.Sprintf("/v1/internal/social/stackoverflow/harvest/communities"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -315,7 +315,7 @@ func UpdateCommunitiesStackoverflowharvestNotFound(t goatest.TInterface, ctx con
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/communities"),
+		Path: fmt.Sprintf("/v1/internal/social/stackoverflow/harvest/communities"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -400,7 +400,7 @@ func UpdateCommunitiesStackoverflowharvestOK(t goatest.TInterface, ctx context.C
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/communities"),
+		Path: fmt.Sprintf("/v1/internal/social/stackoverflow/harvest/communities"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -485,7 +485,7 @@ func UpdateProfileStackoverflowharvestBadRequest(t goatest.TInterface, ctx conte
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/profile"),
+		Path: fmt.Sprintf("/v1/internal/social/stackoverflow/harvest/profile"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -570,7 +570,7 @@ func UpdateProfileStackoverflowharvestGone(t goatest.TInterface, ctx context.Con
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/profile"),
+		Path: fmt.Sprintf("/v1/internal/social/stackoverflow/harvest/profile"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -655,7 +655,7 @@ func UpdateProfileStackoverflowharvestInternalServerError(t goatest.TInterface, 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/profile"),
+		Path: fmt.Sprintf("/v1/internal/social/stackoverflow/harvest/profile"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -740,7 +740,7 @@ func UpdateProfileStackoverflowharvestNotFound(t goatest.TInterface, ctx context
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/profile"),
+		Path: fmt.Sprintf("/v1/internal/social/stackoverflow/harvest/profile"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -825,7 +825,7 @@ func UpdateProfileStackoverflowharvestOK(t goatest.TInterface, ctx context.Conte
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/social/stackoverflow/harvest/profile"),
+		Path: fmt.Sprintf("/v1/internal/social/stackoverflow/harvest/profile"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {

@@ -206,6 +206,66 @@ func (ctx *ShowBadgesContext) InternalServerError(r *StandardError) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
+// AssignErc721Context provides the erc721 assign action context.
+type AssignErc721Context struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Payload *AssignERC721Payload
+}
+
+// NewAssignErc721Context parses the incoming request URL and body, performs validations and creates the
+// context used by the erc721 controller assign action.
+func NewAssignErc721Context(ctx context.Context, r *http.Request, service *goa.Service) (*AssignErc721Context, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := AssignErc721Context{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *AssignErc721Context) OK(r *Erc721) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.erc721+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *AssignErc721Context) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *AssignErc721Context) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *AssignErc721Context) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *AssignErc721Context) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
 // ShowHealthcheckContext provides the healthcheck show action context.
 type ShowHealthcheckContext struct {
 	context.Context

@@ -21,7 +21,7 @@ import (
 // UpdateAboutRedditharvestPath computes a request path to the updateAbout action of redditharvest.
 func UpdateAboutRedditharvestPath() string {
 
-	return fmt.Sprintf("/v1/social/reddit/harvest/about")
+	return fmt.Sprintf("/v1/internal/social/reddit/harvest/about")
 }
 
 // Update Reddit User About Info
@@ -69,7 +69,7 @@ func (c *Client) NewUpdateAboutRedditharvestRequest(ctx context.Context, path st
 // UpdateSubmittedInfoRedditharvestPath computes a request path to the updateSubmittedInfo action of redditharvest.
 func UpdateSubmittedInfoRedditharvestPath() string {
 
-	return fmt.Sprintf("/v1/social/reddit/harvest/submitted")
+	return fmt.Sprintf("/v1/internal/social/reddit/harvest/submitted")
 }
 
 // Update Reddit User Submitted Info
@@ -117,7 +117,7 @@ func (c *Client) NewUpdateSubmittedInfoRedditharvestRequest(ctx context.Context,
 // UpdateTrophiesRedditharvestPath computes a request path to the updateTrophies action of redditharvest.
 func UpdateTrophiesRedditharvestPath() string {
 
-	return fmt.Sprintf("/v1/social/reddit/harvest/trophies")
+	return fmt.Sprintf("/v1/internal/social/reddit/harvest/trophies")
 }
 
 // Update Reddit User Trophy Info

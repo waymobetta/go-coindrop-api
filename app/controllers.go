@@ -144,6 +144,81 @@ func unmarshalCreateBadgesPayload(ctx context.Context, service *goa.Service, req
 	return nil
 }
 
+// Erc721Controller is the controller interface for the Erc721 actions.
+type Erc721Controller interface {
+	goa.Muxer
+	Assign(*AssignErc721Context) error
+}
+
+// MountErc721Controller "mounts" a Erc721 resource controller on the given service.
+func MountErc721Controller(service *goa.Service, ctrl Erc721Controller) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/v1/internal/erc721/assign", ctrl.MuxHandler("preflight", handleErc721Origin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewAssignErc721Context(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*AssignERC721Payload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Assign(rctx)
+	}
+	h = handleSecurity("JWTAuth", h)
+	h = handleErc721Origin(h)
+	service.Mux.Handle("POST", "/v1/internal/erc721/assign", ctrl.MuxHandler("assign", h, unmarshalAssignErc721Payload))
+	service.LogInfo("mount", "ctrl", "Erc721", "action", "Assign", "route", "POST /v1/internal/erc721/assign", "security", "JWTAuth")
+}
+
+// handleErc721Origin applies the CORS response headers corresponding to the origin.
+func handleErc721Origin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "*") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "OPTIONS, HEAD, POST, GET, UPDATE, DELETE, PATCH")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalAssignErc721Payload unmarshals the request body into the context request data Payload field.
+func unmarshalAssignErc721Payload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &assignERC721Payload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
 // HealthcheckController is the controller interface for the Healthcheck actions.
 type HealthcheckController interface {
 	goa.Muxer
@@ -677,9 +752,9 @@ type RedditharvestController interface {
 func MountRedditharvestController(service *goa.Service, ctrl RedditharvestController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/v1/social/reddit/harvest/about", ctrl.MuxHandler("preflight", handleRedditharvestOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/v1/social/reddit/harvest/submitted", ctrl.MuxHandler("preflight", handleRedditharvestOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/v1/social/reddit/harvest/trophies", ctrl.MuxHandler("preflight", handleRedditharvestOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/internal/social/reddit/harvest/about", ctrl.MuxHandler("preflight", handleRedditharvestOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/internal/social/reddit/harvest/submitted", ctrl.MuxHandler("preflight", handleRedditharvestOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/internal/social/reddit/harvest/trophies", ctrl.MuxHandler("preflight", handleRedditharvestOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -701,8 +776,8 @@ func MountRedditharvestController(service *goa.Service, ctrl RedditharvestContro
 	}
 	h = handleSecurity("JWTAuth", h)
 	h = handleRedditharvestOrigin(h)
-	service.Mux.Handle("POST", "/v1/social/reddit/harvest/about", ctrl.MuxHandler("updateAbout", h, unmarshalUpdateAboutRedditharvestPayload))
-	service.LogInfo("mount", "ctrl", "Redditharvest", "action", "UpdateAbout", "route", "POST /v1/social/reddit/harvest/about", "security", "JWTAuth")
+	service.Mux.Handle("POST", "/v1/internal/social/reddit/harvest/about", ctrl.MuxHandler("updateAbout", h, unmarshalUpdateAboutRedditharvestPayload))
+	service.LogInfo("mount", "ctrl", "Redditharvest", "action", "UpdateAbout", "route", "POST /v1/internal/social/reddit/harvest/about", "security", "JWTAuth")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -724,8 +799,8 @@ func MountRedditharvestController(service *goa.Service, ctrl RedditharvestContro
 	}
 	h = handleSecurity("JWTAuth", h)
 	h = handleRedditharvestOrigin(h)
-	service.Mux.Handle("POST", "/v1/social/reddit/harvest/submitted", ctrl.MuxHandler("updateSubmittedInfo", h, unmarshalUpdateSubmittedInfoRedditharvestPayload))
-	service.LogInfo("mount", "ctrl", "Redditharvest", "action", "UpdateSubmittedInfo", "route", "POST /v1/social/reddit/harvest/submitted", "security", "JWTAuth")
+	service.Mux.Handle("POST", "/v1/internal/social/reddit/harvest/submitted", ctrl.MuxHandler("updateSubmittedInfo", h, unmarshalUpdateSubmittedInfoRedditharvestPayload))
+	service.LogInfo("mount", "ctrl", "Redditharvest", "action", "UpdateSubmittedInfo", "route", "POST /v1/internal/social/reddit/harvest/submitted", "security", "JWTAuth")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -747,8 +822,8 @@ func MountRedditharvestController(service *goa.Service, ctrl RedditharvestContro
 	}
 	h = handleSecurity("JWTAuth", h)
 	h = handleRedditharvestOrigin(h)
-	service.Mux.Handle("POST", "/v1/social/reddit/harvest/trophies", ctrl.MuxHandler("updateTrophies", h, unmarshalUpdateTrophiesRedditharvestPayload))
-	service.LogInfo("mount", "ctrl", "Redditharvest", "action", "UpdateTrophies", "route", "POST /v1/social/reddit/harvest/trophies", "security", "JWTAuth")
+	service.Mux.Handle("POST", "/v1/internal/social/reddit/harvest/trophies", ctrl.MuxHandler("updateTrophies", h, unmarshalUpdateTrophiesRedditharvestPayload))
+	service.LogInfo("mount", "ctrl", "Redditharvest", "action", "UpdateTrophies", "route", "POST /v1/internal/social/reddit/harvest/trophies", "security", "JWTAuth")
 }
 
 // handleRedditharvestOrigin applies the CORS response headers corresponding to the origin.
@@ -1095,8 +1170,8 @@ type StackoverflowharvestController interface {
 func MountStackoverflowharvestController(service *goa.Service, ctrl StackoverflowharvestController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/v1/social/stackoverflow/harvest/communities", ctrl.MuxHandler("preflight", handleStackoverflowharvestOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/v1/social/stackoverflow/harvest/profile", ctrl.MuxHandler("preflight", handleStackoverflowharvestOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/internal/social/stackoverflow/harvest/communities", ctrl.MuxHandler("preflight", handleStackoverflowharvestOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/internal/social/stackoverflow/harvest/profile", ctrl.MuxHandler("preflight", handleStackoverflowharvestOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -1118,8 +1193,8 @@ func MountStackoverflowharvestController(service *goa.Service, ctrl Stackoverflo
 	}
 	h = handleSecurity("JWTAuth", h)
 	h = handleStackoverflowharvestOrigin(h)
-	service.Mux.Handle("POST", "/v1/social/stackoverflow/harvest/communities", ctrl.MuxHandler("updateCommunities", h, unmarshalUpdateCommunitiesStackoverflowharvestPayload))
-	service.LogInfo("mount", "ctrl", "Stackoverflowharvest", "action", "UpdateCommunities", "route", "POST /v1/social/stackoverflow/harvest/communities", "security", "JWTAuth")
+	service.Mux.Handle("POST", "/v1/internal/social/stackoverflow/harvest/communities", ctrl.MuxHandler("updateCommunities", h, unmarshalUpdateCommunitiesStackoverflowharvestPayload))
+	service.LogInfo("mount", "ctrl", "Stackoverflowharvest", "action", "UpdateCommunities", "route", "POST /v1/internal/social/stackoverflow/harvest/communities", "security", "JWTAuth")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -1141,8 +1216,8 @@ func MountStackoverflowharvestController(service *goa.Service, ctrl Stackoverflo
 	}
 	h = handleSecurity("JWTAuth", h)
 	h = handleStackoverflowharvestOrigin(h)
-	service.Mux.Handle("POST", "/v1/social/stackoverflow/harvest/profile", ctrl.MuxHandler("updateProfile", h, unmarshalUpdateProfileStackoverflowharvestPayload))
-	service.LogInfo("mount", "ctrl", "Stackoverflowharvest", "action", "UpdateProfile", "route", "POST /v1/social/stackoverflow/harvest/profile", "security", "JWTAuth")
+	service.Mux.Handle("POST", "/v1/internal/social/stackoverflow/harvest/profile", ctrl.MuxHandler("updateProfile", h, unmarshalUpdateProfileStackoverflowharvestPayload))
+	service.LogInfo("mount", "ctrl", "Stackoverflowharvest", "action", "UpdateProfile", "route", "POST /v1/internal/social/stackoverflow/harvest/profile", "security", "JWTAuth")
 }
 
 // handleStackoverflowharvestOrigin applies the CORS response headers corresponding to the origin.
