@@ -6,7 +6,7 @@ import (
 )
 
 var _ = Resource("redditharvest", func() {
-	BasePath("/v1/social/reddit/harvest")
+	BasePath("/v1/internal/social/reddit/harvest")
 
 	Security(JWTAuth)
 
