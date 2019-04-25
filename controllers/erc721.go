@@ -30,6 +30,7 @@ func (c *Erc721Controller) Assign(ctx *app.AssignErc721Context) error {
 
 	badgeId := ctx.Payload.BadgeID
 	userId := ctx.Payload.UserID
+	walletAddress := ctx.Payload.WalletAddress
 
 	tokenId := ethsvc.MintToken(badgeId)
 
@@ -45,6 +46,8 @@ func (c *Erc721Controller) Assign(ctx *app.AssignErc721Context) error {
 			Message: "could not assign ERC721 to user in db",
 		})
 	}
+
+	log.Printf("[controllers/erc721] successfully assigned ERC721 to user wallet: %s", walletAddress)
 
 	res := &app.Erc721{
 		ContractAddress: "",
