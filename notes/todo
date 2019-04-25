@@ -1,8 +1,8 @@
 TODO
 
+. [services/ethereum/erc721] create erc721 contract and bindings
 . [ENTIRE] replace task author string with UUID referencing project table
 . [schema] add table projects (project id, name, description, etc.)
-. [design] replace community accounts (String) for reddit/stack overflow medias with their own medias to perform collection of
 . replace VerificationSubredditName (services/reddit/reddit.go) with cd sub
 . add resources table
 	- links to quizzes or could replace
