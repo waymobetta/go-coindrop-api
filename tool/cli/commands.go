@@ -357,7 +357,8 @@ Payload example:
 
 {
    "badgeId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
-   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26"
+   "userId": "9302608f-f6a4-4004-b088-63e5fb43cc26",
+   "walletAddress": "0x845fdD93Cca3aE9e380d5556818e6d0b902B977c"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp1.Run(c, args) },
 	}
@@ -750,7 +751,7 @@ Payload example:
       "calculated": {
          "score": 2975702392294002126
       },
-      "definition": "1702f28b-d79e-4068-872c-493907b564c8",
+      "definition": "ea4c5e5a-fd5b-4acf-b8ca-b51246a7e422",
       "form_id": "Qui sit ipsam sed.",
       "hidden": {
          "user_id": "Cupiditate atque quia."

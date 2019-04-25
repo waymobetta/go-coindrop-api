@@ -20,6 +20,8 @@ type assignERC721Payload struct {
 	BadgeID *string `form:"badgeId,omitempty" json:"badgeId,omitempty" yaml:"badgeId,omitempty" xml:"badgeId,omitempty"`
 	// User ID
 	UserID *string `form:"userId,omitempty" json:"userId,omitempty" yaml:"userId,omitempty" xml:"userId,omitempty"`
+	// Wallet address
+	WalletAddress *string `form:"walletAddress,omitempty" json:"walletAddress,omitempty" yaml:"walletAddress,omitempty" xml:"walletAddress,omitempty"`
 }
 
 // Validate validates the assignERC721Payload type instance.
@@ -30,6 +32,9 @@ func (ut *assignERC721Payload) Validate() (err error) {
 	if ut.UserID == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "userId"))
 	}
+	if ut.WalletAddress == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "walletAddress"))
+	}
 	if ut.BadgeID != nil {
 		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *ut.BadgeID); !ok {
 			err = goa.MergeErrors(err, goa.InvalidPatternError(`request.badgeId`, *ut.BadgeID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
@@ -38,6 +43,11 @@ func (ut *assignERC721Payload) Validate() (err error) {
 	if ut.UserID != nil {
 		if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, *ut.UserID); !ok {
 			err = goa.MergeErrors(err, goa.InvalidPatternError(`request.userId`, *ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+		}
+	}
+	if ut.WalletAddress != nil {
+		if ok := goa.ValidatePattern(`^0x[0-9a-fA-F]{40}$`, *ut.WalletAddress); !ok {
+			err = goa.MergeErrors(err, goa.InvalidPatternError(`request.walletAddress`, *ut.WalletAddress, `^0x[0-9a-fA-F]{40}$`))
 		}
 	}
 	return
@@ -52,6 +62,9 @@ func (ut *assignERC721Payload) Publicize() *AssignERC721Payload {
 	if ut.UserID != nil {
 		pub.UserID = *ut.UserID
 	}
+	if ut.WalletAddress != nil {
+		pub.WalletAddress = *ut.WalletAddress
+	}
 	return &pub
 }
 
@@ -61,6 +74,8 @@ type AssignERC721Payload struct {
 	BadgeID string `form:"badgeId" json:"badgeId" yaml:"badgeId" xml:"badgeId"`
 	// User ID
 	UserID string `form:"userId" json:"userId" yaml:"userId" xml:"userId"`
+	// Wallet address
+	WalletAddress string `form:"walletAddress" json:"walletAddress" yaml:"walletAddress" xml:"walletAddress"`
 }
 
 // Validate validates the AssignERC721Payload type instance.
@@ -71,11 +86,17 @@ func (ut *AssignERC721Payload) Validate() (err error) {
 	if ut.UserID == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "userId"))
 	}
+	if ut.WalletAddress == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "walletAddress"))
+	}
 	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, ut.BadgeID); !ok {
 		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.badgeId`, ut.BadgeID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
 	}
 	if ok := goa.ValidatePattern(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`, ut.UserID); !ok {
 		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.userId`, ut.UserID, `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$`))
+	}
+	if ok := goa.ValidatePattern(`^0x[0-9a-fA-F]{40}$`, ut.WalletAddress); !ok {
+		err = goa.MergeErrors(err, goa.InvalidPatternError(`type.walletAddress`, ut.WalletAddress, `^0x[0-9a-fA-F]{40}$`))
 	}
 	return
 }
