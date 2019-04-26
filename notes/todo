@@ -1,6 +1,5 @@
 TODO
 
-. [services/ethereum/erc721] reorganize contract directory and structure of erc721 package
 . [ENTIRE] replace task author string with UUID referencing project table
 . [schema] add table projects (project id, name, description, etc.)
 . replace VerificationSubredditName (services/reddit/reddit.go) with cd sub
