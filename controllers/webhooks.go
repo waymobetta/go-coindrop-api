@@ -155,7 +155,7 @@ func (c *WebhooksController) Typeform(ctx *app.TypeformWebhooksContext) error {
 		// default: 18
 		tokenAmountInWei := fmt.Sprintf("%v000000000", tokenAmount)
 
-		txHash, err := ethsvc.SendToken(tokenAmountInWei, wallet.Address)
+		txHash, err := ethsvc.SendERC20Token(tokenAmountInWei, wallet.Address)
 		if err != nil {
 			log.Errorf("[controller/webhooks] %v", err)
 			return ctx.InternalServerError(&app.StandardError{
