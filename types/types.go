@@ -201,6 +201,18 @@ type ERC721 struct {
 	TotalMinted     int    `json:"total_minted"`
 }
 
+// ERC721Lookup struct contains info about a task and user for a specific ERC721
+// TODO:
+// add additional accounts
+type ERC721Lookup struct {
+	ID      string  `json:"id"`
+	TokenID string  `json:"token_id"`
+	Task    *Task   `json:"task"`
+	Reddit  *Reddit `json:"reddit"`
+	// Stack Overflow
+	// Keybase
+}
+
 // Transaction struct contains info about a send tx based on task completion
 type Transaction struct {
 	ID     string `json:"id"`
