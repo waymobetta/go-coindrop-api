@@ -23,13 +23,13 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 	})
 })
 
-// PublicMedia ...
-var PublicMedia = MediaType("application/vnd.public+json", func() {
-	Description("Public")
+// PublicBadgesMedia ...
+var PublicBadgesMedia = MediaType("application/vnd.publicbadge+json", func() {
+	Description("Public Badges")
 	Attributes(func() {
 		Attribute("redditUsername", String, "Reddit username")
 		Attribute("stackUserId", Integer, "Stack Overflow user ID")
-		Attribute("badges", CollectionOf(PublicBadgeMedia), "list of badges")
+		Attribute("badges", CollectionOf(BadgeMedia), "list of badges")
 		Required(
 			"redditUsername",
 			"stackUserId",
@@ -40,6 +40,23 @@ var PublicMedia = MediaType("application/vnd.public+json", func() {
 		Attribute("redditUsername")
 		Attribute("stackUserId")
 		Attribute("badges")
+	})
+})
+
+// ERC721LookupMedia ...
+var ERC721LookupMedia = MediaType("application/vnd.erc721lookup+json", func() {
+	Description("ERC721 Lookup")
+	Attributes(func() {
+		Attribute("erc721", ERC721Media, "ERC-721")
+		Attribute("task", TaskMedia, "task")
+		Required(
+			"erc721",
+			"task",
+		)
+	})
+	View("default", func() {
+		Attribute("erc721")
+		Attribute("task")
 	})
 })
 
@@ -84,32 +101,6 @@ var BadgeMedia = MediaType("application/vnd.badge+json", func() {
 		Attribute("name")
 		Attribute("description")
 		Attribute("logoURL")
-	})
-})
-
-// PublicBadgeMedia ...
-var PublicBadgeMedia = MediaType("application/vnd.publicbadge+json", func() {
-	Description("Badge")
-	Attributes(func() {
-		Attribute("name", String, "badge name")
-		Attribute("description", String, "badge description")
-		Attribute("logoURL", String, "badge logo")
-		Attribute("project", String, "project")
-		Attribute("erc721", ERC721Media, "ERC-721")
-		Required(
-			"name",
-			"description",
-			"logoURL",
-			"project",
-			"erc721",
-		)
-	})
-	View("default", func() {
-		Attribute("name")
-		Attribute("description")
-		Attribute("logoURL")
-		Attribute("project")
-		Attribute("erc721")
 	})
 })
 
