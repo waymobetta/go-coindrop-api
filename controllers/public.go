@@ -93,7 +93,7 @@ func (c *PublicController) Show(ctx *app.ShowPublicContext) error {
 		})
 	}
 
-	log.Printf("[controller/public] returned badges for Reddit user: %v\n", publicUser.RedditUsername)
+	log.Printf("[controller/public] successfully returned badges for Reddit user: %v\n", publicUser.RedditUsername)
 
 	res := &app.Publicbadges{
 		RedditUsername: publicUser.RedditUsername,
