@@ -10,6 +10,7 @@ import (
 	"os"
 
 	ethereum "github.com/ethereum/go-ethereum"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -24,6 +25,32 @@ var (
 	// Rinkeby adToken address
 	TOKEN_CONTRACT_ADDRESS = "0x2f9F1Bdc0EDa69853A91277D272FeaE608F3c1FB"
 )
+
+// SendERC721Token
+func SendERC721Token(recipientAddress string) (string, error) {
+	client, err := ethclient.Dial("https://rinkeby.infura.io")
+	if err != nil {
+		return "", err
+	}
+
+	privateKey, err := crypto.HexToECDSA(PRIVATE_KEY)
+	if err != nil {
+		return "", err
+	}
+
+	auth := bind.NewKeyedTransactor(privateKey)
+	uth.Nonce = big.NewInt(int64(nonce))
+	auth.Value = big.NewInt(0)     // in wei
+	auth.GasLimit = uint64(300000) // in units
+	auth.GasPrice = gasPrice
+
+	address, tx, instance, err := ethsvc.DeployCoindroperc721(
+		auth,
+		client,
+	)
+	fmt.Println(address.Hex())
+	fmt.Println(tx.Hash().Hex())
+}
 
 // SendEther ...
 func SendEther(recipientAddress string, ethAmountInWei int64) (string, error) {
@@ -80,8 +107,8 @@ func SendEther(recipientAddress string, ethAmountInWei int64) (string, error) {
 	return transaction, nil
 }
 
-// SendToken ...
-func SendToken(tokenAmount, recipientAddress string) (string, error) {
+// SendERC20Token ...
+func SendERC20Token(tokenAmount, recipientAddress string) (string, error) {
 	client, err := ethclient.Dial("https://rinkeby.infura.io")
 	if err != nil {
 		return "", err
