@@ -1,5 +1,8 @@
 TODO
 
+. [services/ethereum] fix ERC721 package:
+	- not able to deploy (could be an issue with abigen)
+	- try to transact with pre-deployed contract yet
 . [ENTIRE] replace task author string with UUID referencing project table
 . [schema] add table projects (project id, name, description, etc.)
 . replace VerificationSubredditName (services/reddit/reddit.go) with cd sub
