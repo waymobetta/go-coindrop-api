@@ -34,7 +34,7 @@ func ProfilesHref(userID interface{}) string {
 // PublicHref returns the resource href.
 func PublicHref(redditUsername interface{}) string {
 	paramredditUsername := strings.TrimLeftFunc(fmt.Sprintf("%v", redditUsername), func(r rune) bool { return r == '/' })
-	return fmt.Sprintf("/v1/public/%v", paramredditUsername)
+	return fmt.Sprintf("/v1/public/badges/%v", paramredditUsername)
 }
 
 // QuizzesHref returns the resource href.

@@ -17,11 +17,41 @@ import (
 	"net/url"
 )
 
+// DisplayPublicPath computes a request path to the display action of public.
+func DisplayPublicPath(erc721TokenID string) string {
+	param0 := erc721TokenID
+
+	return fmt.Sprintf("/v1/public/tokens/%s", param0)
+}
+
+// Get profile by Reddit username
+func (c *Client) DisplayPublic(ctx context.Context, path string) (*http.Response, error) {
+	req, err := c.NewDisplayPublicRequest(ctx, path)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewDisplayPublicRequest create the request corresponding to the display action endpoint of the public resource.
+func (c *Client) NewDisplayPublicRequest(ctx context.Context, path string) (*http.Request, error) {
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // ShowPublicPath computes a request path to the show action of public.
 func ShowPublicPath(redditUsername string) string {
 	param0 := redditUsername
 
-	return fmt.Sprintf("/v1/public/%s", param0)
+	return fmt.Sprintf("/v1/public/badges/%s", param0)
 }
 
 // Get profile by Reddit username

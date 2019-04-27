@@ -426,6 +426,7 @@ func unmarshalUpdateProfilesPayload(ctx context.Context, service *goa.Service, r
 // PublicController is the controller interface for the Public actions.
 type PublicController interface {
 	goa.Muxer
+	Display(*DisplayPublicContext) error
 	Show(*ShowPublicContext) error
 }
 
@@ -433,7 +434,24 @@ type PublicController interface {
 func MountPublicController(service *goa.Service, ctrl PublicController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/v1/public/:redditUsername", ctrl.MuxHandler("preflight", handlePublicOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/public/tokens/:erc721TokenId", ctrl.MuxHandler("preflight", handlePublicOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/v1/public/badges/:redditUsername", ctrl.MuxHandler("preflight", handlePublicOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewDisplayPublicContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Display(rctx)
+	}
+	h = handlePublicOrigin(h)
+	service.Mux.Handle("GET", "/v1/public/tokens/:erc721TokenId", ctrl.MuxHandler("display", h, nil))
+	service.LogInfo("mount", "ctrl", "Public", "action", "Display", "route", "GET /v1/public/tokens/:erc721TokenId")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -448,8 +466,8 @@ func MountPublicController(service *goa.Service, ctrl PublicController) {
 		return ctrl.Show(rctx)
 	}
 	h = handlePublicOrigin(h)
-	service.Mux.Handle("GET", "/v1/public/:redditUsername", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Public", "action", "Show", "route", "GET /v1/public/:redditUsername")
+	service.Mux.Handle("GET", "/v1/public/badges/:redditUsername", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Public", "action", "Show", "route", "GET /v1/public/badges/:redditUsername")
 }
 
 // handlePublicOrigin applies the CORS response headers corresponding to the origin.

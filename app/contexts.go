@@ -575,6 +575,71 @@ func (ctx *UpdateProfilesContext) InternalServerError(r *StandardError) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
 }
 
+// DisplayPublicContext provides the public display action context.
+type DisplayPublicContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Erc721TokenID string
+}
+
+// NewDisplayPublicContext parses the incoming request URL and body, performs validations and creates the
+// context used by the public controller display action.
+func NewDisplayPublicContext(ctx context.Context, r *http.Request, service *goa.Service) (*DisplayPublicContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := DisplayPublicContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramErc721TokenID := req.Params["erc721TokenId"]
+	if len(paramErc721TokenID) > 0 {
+		rawErc721TokenID := paramErc721TokenID[0]
+		rctx.Erc721TokenID = rawErc721TokenID
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *DisplayPublicContext) OK(r *Erc721lookup) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.erc721lookup+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *DisplayPublicContext) BadRequest(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *DisplayPublicContext) NotFound(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 404, r)
+}
+
+// Gone sends a HTTP response with status code 410.
+func (ctx *DisplayPublicContext) Gone(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 410, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *DisplayPublicContext) InternalServerError(r *StandardError) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/standard_error+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 500, r)
+}
+
 // ShowPublicContext provides the public show action context.
 type ShowPublicContext struct {
 	context.Context
@@ -601,9 +666,9 @@ func NewShowPublicContext(ctx context.Context, r *http.Request, service *goa.Ser
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowPublicContext) OK(r *Public) error {
+func (ctx *ShowPublicContext) OK(r *Publicbadge) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.public+json")
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.publicbadge+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }

@@ -24,6 +24,376 @@ import (
 	"net/url"
 )
 
+// DisplayPublicBadRequest runs the method Display of the given controller with the given parameters.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func DisplayPublicBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PublicController, erc721TokenID string) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/public/tokens/%v", erc721TokenID),
+	}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		panic("invalid test " + err.Error()) // bug
+	}
+	prms := url.Values{}
+	prms["erc721TokenId"] = []string{fmt.Sprintf("%v", erc721TokenID)}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "PublicTest"), rw, req, prms)
+	displayCtx, _err := app.NewDisplayPublicContext(goaCtx, req, service)
+	if _err != nil {
+		e, ok := _err.(goa.ServiceError)
+		if !ok {
+			panic("invalid test data " + _err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Perform action
+	_err = ctrl.Display(displayCtx)
+
+	// Validate response
+	if _err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
+	}
+	if rw.Code != 400 {
+		t.Errorf("invalid response status code: got %+v, expected 400", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var _ok bool
+		mt, _ok = resp.(*app.StandardError)
+		if !_ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		_err = mt.Validate()
+		if _err != nil {
+			t.Errorf("invalid response media type: %s", _err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// DisplayPublicGone runs the method Display of the given controller with the given parameters.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func DisplayPublicGone(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PublicController, erc721TokenID string) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/public/tokens/%v", erc721TokenID),
+	}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		panic("invalid test " + err.Error()) // bug
+	}
+	prms := url.Values{}
+	prms["erc721TokenId"] = []string{fmt.Sprintf("%v", erc721TokenID)}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "PublicTest"), rw, req, prms)
+	displayCtx, _err := app.NewDisplayPublicContext(goaCtx, req, service)
+	if _err != nil {
+		e, ok := _err.(goa.ServiceError)
+		if !ok {
+			panic("invalid test data " + _err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Perform action
+	_err = ctrl.Display(displayCtx)
+
+	// Validate response
+	if _err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
+	}
+	if rw.Code != 410 {
+		t.Errorf("invalid response status code: got %+v, expected 410", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var _ok bool
+		mt, _ok = resp.(*app.StandardError)
+		if !_ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		_err = mt.Validate()
+		if _err != nil {
+			t.Errorf("invalid response media type: %s", _err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// DisplayPublicInternalServerError runs the method Display of the given controller with the given parameters.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func DisplayPublicInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PublicController, erc721TokenID string) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/public/tokens/%v", erc721TokenID),
+	}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		panic("invalid test " + err.Error()) // bug
+	}
+	prms := url.Values{}
+	prms["erc721TokenId"] = []string{fmt.Sprintf("%v", erc721TokenID)}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "PublicTest"), rw, req, prms)
+	displayCtx, _err := app.NewDisplayPublicContext(goaCtx, req, service)
+	if _err != nil {
+		e, ok := _err.(goa.ServiceError)
+		if !ok {
+			panic("invalid test data " + _err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Perform action
+	_err = ctrl.Display(displayCtx)
+
+	// Validate response
+	if _err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
+	}
+	if rw.Code != 500 {
+		t.Errorf("invalid response status code: got %+v, expected 500", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var _ok bool
+		mt, _ok = resp.(*app.StandardError)
+		if !_ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		_err = mt.Validate()
+		if _err != nil {
+			t.Errorf("invalid response media type: %s", _err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// DisplayPublicNotFound runs the method Display of the given controller with the given parameters.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func DisplayPublicNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PublicController, erc721TokenID string) (http.ResponseWriter, *app.StandardError) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/public/tokens/%v", erc721TokenID),
+	}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		panic("invalid test " + err.Error()) // bug
+	}
+	prms := url.Values{}
+	prms["erc721TokenId"] = []string{fmt.Sprintf("%v", erc721TokenID)}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "PublicTest"), rw, req, prms)
+	displayCtx, _err := app.NewDisplayPublicContext(goaCtx, req, service)
+	if _err != nil {
+		e, ok := _err.(goa.ServiceError)
+		if !ok {
+			panic("invalid test data " + _err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Perform action
+	_err = ctrl.Display(displayCtx)
+
+	// Validate response
+	if _err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
+	}
+	if rw.Code != 404 {
+		t.Errorf("invalid response status code: got %+v, expected 404", rw.Code)
+	}
+	var mt *app.StandardError
+	if resp != nil {
+		var _ok bool
+		mt, _ok = resp.(*app.StandardError)
+		if !_ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.StandardError", resp, resp)
+		}
+		_err = mt.Validate()
+		if _err != nil {
+			t.Errorf("invalid response media type: %s", _err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
+// DisplayPublicOK runs the method Display of the given controller with the given parameters.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
+// If ctx is nil then context.Background() is used.
+// If service is nil then a default service is created.
+func DisplayPublicOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PublicController, erc721TokenID string) (http.ResponseWriter, *app.Erc721lookup) {
+	// Setup service
+	var (
+		logBuf bytes.Buffer
+		resp   interface{}
+
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
+	)
+	if service == nil {
+		service = goatest.Service(&logBuf, respSetter)
+	} else {
+		logger := log.New(&logBuf, "", log.Ltime)
+		service.WithLogger(goa.NewLogger(logger))
+		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
+		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
+		service.Encoder.Register(newEncoder, "*/*")
+	}
+
+	// Setup request context
+	rw := httptest.NewRecorder()
+	u := &url.URL{
+		Path: fmt.Sprintf("/v1/public/tokens/%v", erc721TokenID),
+	}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		panic("invalid test " + err.Error()) // bug
+	}
+	prms := url.Values{}
+	prms["erc721TokenId"] = []string{fmt.Sprintf("%v", erc721TokenID)}
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	goaCtx := goa.NewContext(goa.WithAction(ctx, "PublicTest"), rw, req, prms)
+	displayCtx, _err := app.NewDisplayPublicContext(goaCtx, req, service)
+	if _err != nil {
+		e, ok := _err.(goa.ServiceError)
+		if !ok {
+			panic("invalid test data " + _err.Error()) // bug
+		}
+		t.Errorf("unexpected parameter validation error: %+v", e)
+		return nil, nil
+	}
+
+	// Perform action
+	_err = ctrl.Display(displayCtx)
+
+	// Validate response
+	if _err != nil {
+		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
+	}
+	if rw.Code != 200 {
+		t.Errorf("invalid response status code: got %+v, expected 200", rw.Code)
+	}
+	var mt *app.Erc721lookup
+	if resp != nil {
+		var _ok bool
+		mt, _ok = resp.(*app.Erc721lookup)
+		if !_ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Erc721lookup", resp, resp)
+		}
+		_err = mt.Validate()
+		if _err != nil {
+			t.Errorf("invalid response media type: %s", _err)
+		}
+	}
+
+	// Return results
+	return rw, mt
+}
+
 // ShowPublicBadRequest runs the method Show of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
@@ -49,7 +419,7 @@ func ShowPublicBadRequest(t goatest.TInterface, ctx context.Context, service *go
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/public/%v", redditUsername),
+		Path: fmt.Sprintf("/v1/public/badges/%v", redditUsername),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -123,7 +493,7 @@ func ShowPublicGone(t goatest.TInterface, ctx context.Context, service *goa.Serv
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/public/%v", redditUsername),
+		Path: fmt.Sprintf("/v1/public/badges/%v", redditUsername),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -197,7 +567,7 @@ func ShowPublicInternalServerError(t goatest.TInterface, ctx context.Context, se
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/public/%v", redditUsername),
+		Path: fmt.Sprintf("/v1/public/badges/%v", redditUsername),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -271,7 +641,7 @@ func ShowPublicNotFound(t goatest.TInterface, ctx context.Context, service *goa.
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/public/%v", redditUsername),
+		Path: fmt.Sprintf("/v1/public/badges/%v", redditUsername),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -324,7 +694,7 @@ func ShowPublicNotFound(t goatest.TInterface, ctx context.Context, service *goa.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ShowPublicOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PublicController, redditUsername string) (http.ResponseWriter, *app.Public) {
+func ShowPublicOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PublicController, redditUsername string) (http.ResponseWriter, *app.Publicbadge) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -345,7 +715,7 @@ func ShowPublicOK(t goatest.TInterface, ctx context.Context, service *goa.Servic
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/v1/public/%v", redditUsername),
+		Path: fmt.Sprintf("/v1/public/badges/%v", redditUsername),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -377,12 +747,12 @@ func ShowPublicOK(t goatest.TInterface, ctx context.Context, service *goa.Servic
 	if rw.Code != 200 {
 		t.Errorf("invalid response status code: got %+v, expected 200", rw.Code)
 	}
-	var mt *app.Public
+	var mt *app.Publicbadge
 	if resp != nil {
 		var _ok bool
-		mt, _ok = resp.(*app.Public)
+		mt, _ok = resp.(*app.Publicbadge)
 		if !_ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Public", resp, resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Publicbadge", resp, resp)
 		}
 		_err = mt.Validate()
 		if _err != nil {
