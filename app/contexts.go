@@ -666,9 +666,9 @@ func NewShowPublicContext(ctx context.Context, r *http.Request, service *goa.Ser
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ShowPublicContext) OK(r *Publicbadge) error {
+func (ctx *ShowPublicContext) OK(r *Publicbadges) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.publicbadge+json")
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.publicbadges+json")
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }

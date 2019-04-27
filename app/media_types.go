@@ -45,6 +45,8 @@ type Badge struct {
 	LogoURL string `form:"logoURL" json:"logoURL" yaml:"logoURL" xml:"logoURL"`
 	// badge name
 	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// badge project
+	Project string `form:"project" json:"project" yaml:"project" xml:"project"`
 }
 
 // Validate validates the Badge media type instance.
@@ -54,6 +56,9 @@ func (mt *Badge) Validate() (err error) {
 	}
 	if mt.Name == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "name"))
+	}
+	if mt.Project == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "project"))
 	}
 	if mt.Description == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "description"))
@@ -235,8 +240,8 @@ func (mt *Profile) Validate() (err error) {
 
 // Public Badges (default view)
 //
-// Identifier: application/vnd.publicbadge+json; view=default
-type Publicbadge struct {
+// Identifier: application/vnd.publicbadges+json; view=default
+type Publicbadges struct {
 	// list of badges
 	Badges BadgeCollection `form:"badges" json:"badges" yaml:"badges" xml:"badges"`
 	// Reddit username
@@ -245,8 +250,8 @@ type Publicbadge struct {
 	StackUserID int `form:"stackUserId" json:"stackUserId" yaml:"stackUserId" xml:"stackUserId"`
 }
 
-// Validate validates the Publicbadge media type instance.
-func (mt *Publicbadge) Validate() (err error) {
+// Validate validates the Publicbadges media type instance.
+func (mt *Publicbadges) Validate() (err error) {
 	if mt.RedditUsername == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "redditUsername"))
 	}

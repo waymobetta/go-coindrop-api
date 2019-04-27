@@ -694,7 +694,7 @@ func ShowPublicNotFound(t goatest.TInterface, ctx context.Context, service *goa.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ShowPublicOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PublicController, redditUsername string) (http.ResponseWriter, *app.Publicbadge) {
+func ShowPublicOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PublicController, redditUsername string) (http.ResponseWriter, *app.Publicbadges) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -747,12 +747,12 @@ func ShowPublicOK(t goatest.TInterface, ctx context.Context, service *goa.Servic
 	if rw.Code != 200 {
 		t.Errorf("invalid response status code: got %+v, expected 200", rw.Code)
 	}
-	var mt *app.Publicbadge
+	var mt *app.Publicbadges
 	if resp != nil {
 		var _ok bool
-		mt, _ok = resp.(*app.Publicbadge)
+		mt, _ok = resp.(*app.Publicbadges)
 		if !_ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Publicbadge", resp, resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Publicbadges", resp, resp)
 		}
 		_err = mt.Validate()
 		if _err != nil {
