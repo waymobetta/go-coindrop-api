@@ -203,8 +203,8 @@ type ERC721 struct {
 
 // ERC721Lookup struct contains info about a task and user for a specific ERC721
 type ERC721Lookup struct {
-	TokenID string `json:"token_id"`
-	Task    *Task  `json:"task"`
+	ERC721 *ERC721 `json:"erc721"`
+	Task   *Task   `json:"task"`
 }
 
 // Transaction struct contains info about a send tx based on task completion
