@@ -201,7 +201,7 @@ type ERC721 struct {
 	TotalMinted     int    `json:"total_minted"`
 }
 
-// ERC721Lookup struct contains info about a task and user for a specific ERC721
+// ERC721Lookup struct contains info about a task for a specific ERC721
 type ERC721Lookup struct {
 	ERC721 *ERC721 `json:"erc721"`
 	Task   *Task   `json:"task"`
