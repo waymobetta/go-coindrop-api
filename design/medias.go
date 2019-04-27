@@ -24,7 +24,7 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 })
 
 // PublicBadgesMedia ...
-var PublicBadgesMedia = MediaType("application/vnd.publicbadge+json", func() {
+var PublicBadgesMedia = MediaType("application/vnd.publicbadges+json", func() {
 	Description("Public Badges")
 	Attributes(func() {
 		Attribute("redditUsername", String, "Reddit username")
@@ -87,11 +87,13 @@ var BadgeMedia = MediaType("application/vnd.badge+json", func() {
 	Attributes(func() {
 		Attribute("id", String, "badge ID")
 		Attribute("name", String, "badge name")
+		Attribute("project", String, "badge project")
 		Attribute("description", String, "badge description")
 		Attribute("logoURL", String, "badge logo")
 		Required(
 			"id",
 			"name",
+			"project",
 			"description",
 			"logoURL",
 		)
@@ -99,6 +101,7 @@ var BadgeMedia = MediaType("application/vnd.badge+json", func() {
 	View("default", func() {
 		Attribute("id")
 		Attribute("name")
+		Attribute("project")
 		Attribute("description")
 		Attribute("logoURL")
 	})
