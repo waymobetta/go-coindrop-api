@@ -32,7 +32,7 @@ func (c *PublicController) Show(ctx *app.ShowPublicContext) error {
 		RedditUsername: ctx.RedditUsername,
 	}
 
-	var publicBadgeCollection app.PublicbadgeCollection
+	var badgeCollection app.BadgeCollection
 
 	badges, err := c.db.GetBadgesByRedditUsername(publicUser.RedditUsername)
 	if err != nil {
@@ -44,24 +44,19 @@ func (c *PublicController) Show(ctx *app.ShowPublicContext) error {
 	}
 
 	for _, badge := range badges {
-		publicBadgeCollection = append(publicBadgeCollection, &app.Publicbadge{
+		badgeCollection = append(badgeCollection, &app.Badge{
 			Name:        badge.Name,
+			Project:     badge.Project,
 			Description: badge.Description,
 			LogoURL:     badge.LogoURL,
-			Project:     badge.Project,
-			Erc721: &app.Erc721{
-				ContractAddress: badge.ERC721.ContractAddress,
-				TokenID:         badge.ERC721.TokenID,
-				TotalMinted:     badge.ERC721.TotalMinted,
-			},
 		})
 	}
 
 	log.Printf("[controller/public] returned badges for Reddit user: %v\n", publicUser.RedditUsername)
 
-	res := &app.Public{
+	res := &app.Publicbadges{
 		RedditUsername: publicUser.RedditUsername,
-		Badges:         publicBadgeCollection,
+		Badges:         badgeCollection,
 	}
 	return ctx.OK(res)
 	// PublicController_Show: end_implement
