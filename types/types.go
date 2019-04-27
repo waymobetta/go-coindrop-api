@@ -205,7 +205,6 @@ type ERC721 struct {
 // TODO:
 // add additional accounts
 type ERC721Lookup struct {
-	ID      string  `json:"id"`
 	TokenID string  `json:"token_id"`
 	Task    *Task   `json:"task"`
 	Reddit  *Reddit `json:"reddit"`
