@@ -22,6 +22,47 @@ func NewPublicController(service *goa.Service, dbs *db.DB) *PublicController {
 	}
 }
 
+// Display runs the display action.
+func (c *PublicController) Display(ctx *app.DisplayPublicContext) error {
+	// PublicController_Display: start_implement
+
+	// Put your logic here
+
+	tokenId := ctx.Erc721TokenID
+
+	erc721Lookup, err := c.db.GetTaskAndBadgeBy721Id(tokenId)
+	if err != nil {
+		log.Errorf("[controller/public] error: %v", err)
+		return ctx.InternalServerError(&app.StandardError{
+			Code:    500,
+			Message: "could not get task + badge info from the supplied ERC-721 token ID",
+		})
+	}
+
+	log.Printf("[controller/public] successfully returned task + badge info for ERC-721 token ID: %s", tokenId)
+
+	res := &app.Erc721lookup{
+		Task: &app.Task{
+			Author:      erc721Lookup.Task.Author,
+			Title:       erc721Lookup.Task.Title,
+			Type:        erc721Lookup.Task.Type,
+			Description: erc721Lookup.Task.Description,
+			LogoURL:     erc721Lookup.Task.LogoURL,
+			Badge: &app.Badge{
+				Name:        erc721Lookup.Task.BadgeData.Name,
+				Description: erc721Lookup.Task.BadgeData.Description,
+				LogoURL:     erc721Lookup.Task.BadgeData.LogoURL,
+			},
+		},
+		Erc721: &app.Erc721{
+			TokenID:         tokenId,
+			ContractAddress: erc721Lookup.ERC721.ContractAddress,
+		},
+	}
+	return ctx.OK(res)
+	// PublicController_Display: end_implement
+}
+
 // Show runs the show action.
 func (c *PublicController) Show(ctx *app.ShowPublicContext) error {
 	// PublicController_Show: start_implement
