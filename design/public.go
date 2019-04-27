@@ -28,10 +28,10 @@ var _ = Resource("public", func() { // Resources group related API endpoints
 	})
 
 	Action("display", func() { // Actions define a single API endpoint together
-		Description("Get profile by Reddit username") // with its path, parameters (both path
-		Routing(GET("/tokens/:erc721TokenId"))        // parameters and querystring values) and payload
+		Description("Get task information by ERC721 token ID") // with its path, parameters (both path
+		Routing(GET("/tokens/:erc721TokenId"))                 // parameters and querystring values) and payload
 		Params(func() {
-			Param("erc721TokenId", String, "Reddit Username")
+			Param("erc721TokenId", String, "ERC-721 token ID")
 		})
 		Response(OK, ERC721LookupMedia) // Responses define the shape and status code
 	})
