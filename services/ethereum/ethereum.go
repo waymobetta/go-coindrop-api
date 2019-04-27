@@ -16,6 +16,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/waymobetta/zzz/eth"
 	"golang.org/x/crypto/sha3"
 )
 
@@ -26,8 +27,8 @@ var (
 	TOKEN_CONTRACT_ADDRESS = "0x2f9F1Bdc0EDa69853A91277D272FeaE608F3c1FB"
 )
 
-// SendERC721Token
-func SendERC721Token(recipientAddress string) (string, error) {
+// DeployERC721Token
+func DeployERC721Token(tokenName, tokenSymbol string) (string, error) {
 	client, err := ethclient.Dial("https://rinkeby.infura.io")
 	if err != nil {
 		return "", err
@@ -38,18 +39,39 @@ func SendERC721Token(recipientAddress string) (string, error) {
 		return "", err
 	}
 
+	publicKey := privateKey.Public()
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		log.Fatal("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
+	}
+
+	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+
+	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
+	if err != nil {
+		return "", err
+	}
+
 	auth := bind.NewKeyedTransactor(privateKey)
-	uth.Nonce = big.NewInt(int64(nonce))
+
+	auth.Nonce = big.NewInt(int64(nonce))
 	auth.Value = big.NewInt(0)     // in wei
-	auth.GasLimit = uint64(300000) // in units
+	auth.GasLimit = uint64(200000) // in units
+	gasPrice := big.NewInt(41000000000)
 	auth.GasPrice = gasPrice
 
-	address, tx, instance, err := ethsvc.DeployCoindroperc721(
+	address, tx, _, err := eth.DeployErc721(
 		auth,
 		client,
+		tokenName,
+		tokenSymbol,
 	)
-	fmt.Println(address.Hex())
-	fmt.Println(tx.Hash().Hex())
+
+	if err != nil {
+		return "", err
+	}
+	fmt.Printf("https://rinkeby.etherscan.io/tx/%s\n", tx.Hash().Hex())
+	return address.Hex(), nil
 }
 
 // SendEther ...
