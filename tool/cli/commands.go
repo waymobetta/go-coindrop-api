@@ -87,7 +87,7 @@ type (
 
 	// DisplayPublicCommand is the command line data structure for the display action of public
 	DisplayPublicCommand struct {
-		// Reddit Username
+		// ERC-721 token ID
 		Erc721TokenID string
 		PrettyPrint   bool
 	}
@@ -1477,7 +1477,7 @@ func (cmd *DisplayPublicCommand) Run(c *client.Client, args []string) error {
 // RegisterFlags registers the command flags with the command line.
 func (cmd *DisplayPublicCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var erc721TokenID string
-	cc.Flags().StringVar(&cmd.Erc721TokenID, "erc721TokenId", erc721TokenID, `Reddit Username`)
+	cc.Flags().StringVar(&cmd.Erc721TokenID, "erc721TokenId", erc721TokenID, `ERC-721 token ID`)
 }
 
 // Run makes the HTTP request corresponding to the ShowPublicCommand command.

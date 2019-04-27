@@ -24,7 +24,7 @@ func DisplayPublicPath(erc721TokenID string) string {
 	return fmt.Sprintf("/v1/public/tokens/%s", param0)
 }
 
-// Get profile by Reddit username
+// Get task information by ERC721 token ID
 func (c *Client) DisplayPublic(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewDisplayPublicRequest(ctx, path)
 	if err != nil {

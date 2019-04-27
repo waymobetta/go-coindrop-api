@@ -2065,10 +2065,10 @@ paths:
       - public
   /v1/public/tokens/{erc721TokenId}:
     get:
-      description: Get profile by Reddit username
+      description: Get task information by ERC721 token ID
       operationId: public#display
       parameters:
-      - description: Reddit Username
+      - description: ERC-721 token ID
         in: path
         name: erc721TokenId
         required: true
