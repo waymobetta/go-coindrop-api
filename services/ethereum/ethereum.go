@@ -27,8 +27,8 @@ var (
 	TOKEN_CONTRACT_ADDRESS = "0x2f9F1Bdc0EDa69853A91277D272FeaE608F3c1FB"
 )
 
-// DeployERC721Token
-func DeployERC721Token(tokenName, tokenSymbol string) (string, error) {
+// DeployERC721Contract
+func DeployERC721Contract(tokenName, tokenSymbol string) (string, error) {
 	client, err := ethclient.Dial("https://rinkeby.infura.io")
 	if err != nil {
 		return "", err
