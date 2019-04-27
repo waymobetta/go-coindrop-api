@@ -13,11 +13,9 @@ func (db *DB) GetUserERC721s(userID string) ([]*types.PublicBadge, error) {
 	sqlStatement := `
 		SELECT
 			coindrop_badges.name,
-			coindrop_tasks.author,
 			coindrop_badges.description,
 			coindrop_badges.logo_url,
-			coindrop_badges.erc721_contract_address,
-			coindrop_erc721s.token_id
+			coindrop_tasks.author
 		FROM
 			coindrop_erc721s
 		JOIN
@@ -49,37 +47,29 @@ func (db *DB) GetUserERC721s(userID string) ([]*types.PublicBadge, error) {
 	// iterate over rows
 	for rows.Next() {
 		// initialize new struct per transaction in db to hold transaction info
-		publicBadge := &types.PublicBadge{
-			ERC721: new(types.ERC721),
-		}
+		publicBadge := new(types.PublicBadge)
 
 		var (
 			badgeName        sql.NullString
-			badgeProject     sql.NullString
 			badgeDescription sql.NullString
 			badgeLogoURL     sql.NullString
-			contractAddress  sql.NullString
-			tokenId          sql.NullString
+			badgeProject     sql.NullString
 		)
 
 		err = rows.Scan(
 			&badgeName,
-			&badgeProject,
 			&badgeDescription,
 			&badgeLogoURL,
-			&contractAddress,
-			&tokenId,
+			&badgeProject,
 		)
 		if err != nil {
 			return nil, err
 		}
 
 		publicBadge.Name = badgeName.String
-		publicBadge.Project = badgeProject.String
 		publicBadge.Description = badgeDescription.String
 		publicBadge.LogoURL = badgeLogoURL.String
-		publicBadge.ERC721.ContractAddress = contractAddress.String
-		publicBadge.ERC721.TokenID = tokenId.String
+		publicBadge.Project = badgeProject.String
 
 		// append publicBadge object to slice of publicBadgeSlice
 		publicBadgeSlice = append(publicBadgeSlice, publicBadge)
@@ -91,6 +81,91 @@ func (db *DB) GetUserERC721s(userID string) ([]*types.PublicBadge, error) {
 	}
 
 	return publicBadgeSlice, nil
+}
+
+// GetTaskAndBadgeBy721Id method returns the task details tied to the specific ERC721
+func (db *DB) GetTaskAndBadgeBy721Id(tokenId string) (*types.ERC721Lookup, error) {
+	sqlStatement := `
+		SELECT
+			coindrop_tasks.title,
+			coindrop_tasks.type,
+			coindrop_tasks.author,
+			coindrop_tasks.description,
+			coindrop_tasks.logo_url,
+			coindrop_badges.name,
+			coindrop_badges.description,
+			coindrop_badges.logo_url,
+			coindrop_badges.erc721_contract_address
+		FROM
+			coindrop_tasks
+		JOIN
+			coindrop_erc721s
+		ON
+			coindrop_erc721s.badge_id = coindrop_tasks.badge_id
+		JOIN
+			coindrop_badges
+		ON
+			coindrop_badges.id = coindrop_erc721s.badge_id
+		WHERE
+			coindrop_erc721s.token_id = $1
+	`
+
+	stmt, err := db.client.Prepare(sqlStatement)
+	if err != nil {
+		return nil, err
+	}
+
+	defer stmt.Close()
+
+	row := stmt.QueryRow(tokenId)
+
+	erc721Lookup := &types.ERC721Lookup{
+		Task: &types.Task{
+			BadgeData: new(types.Badge),
+		},
+		ERC721: new(types.ERC721),
+	}
+
+	var taskTitle sql.NullString
+	var taskType sql.NullString
+	var taskAuthor sql.NullString
+	var taskDescription sql.NullString
+	var taskLogoURL sql.NullString
+	var badgeName sql.NullString
+	var badgeDescription sql.NullString
+	var badgeLogoURL sql.NullString
+	var badgeERC721ContractAddress sql.NullString
+
+	err = row.Scan(
+		&taskTitle,
+		&taskType,
+		&taskAuthor,
+		&taskDescription,
+		&taskLogoURL,
+		&badgeName,
+		&badgeDescription,
+		&badgeLogoURL,
+		&badgeERC721ContractAddress,
+	)
+	if err == sql.ErrNoRows {
+		return erc721Lookup, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	erc721Lookup.Task.Title = taskTitle.String
+	erc721Lookup.Task.Type = taskType.String
+	erc721Lookup.Task.Author = taskAuthor.String
+	erc721Lookup.Task.Description = taskDescription.String
+	erc721Lookup.Task.LogoURL = taskLogoURL.String
+	erc721Lookup.Task.BadgeData.Name = badgeName.String
+	erc721Lookup.Task.BadgeData.Description = badgeDescription.String
+	erc721Lookup.Task.BadgeData.LogoURL = badgeLogoURL.String
+	erc721Lookup.ERC721.TokenID = tokenId
+	erc721Lookup.ERC721.ContractAddress = badgeERC721ContractAddress.String
+
+	return erc721Lookup, nil
 }
 
 // AssignERC721ToUser method adds a new transaction to the db
