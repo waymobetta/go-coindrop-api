@@ -16,7 +16,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/waymobetta/zzz/eth"
+	"github.com/waymobetta/go-coindrop-api/services/ethereum/erc721"
 	"golang.org/x/crypto/sha3"
 )
 
@@ -60,7 +60,7 @@ func DeployERC721Token(tokenName, tokenSymbol string) (string, error) {
 	gasPrice := big.NewInt(41000000000)
 	auth.GasPrice = gasPrice
 
-	address, tx, _, err := eth.DeployErc721(
+	address, tx, _, err := erc721.DeployErc721(
 		auth,
 		client,
 		tokenName,
