@@ -44,14 +44,12 @@ func (db *DB) UpsertProfile(p *types.Profile) (*types.Profile, error) {
 		p.Username,
 	)
 	if err != nil {
-		tx.Rollback()
-		return nil, err
+		return nil, tx.Rollback()
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		tx.Rollback()
-		return nil, err
+		return nil, tx.Rollback()
 	}
 
 	return p, nil
