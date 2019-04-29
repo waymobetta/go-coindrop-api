@@ -23,41 +23,56 @@ import (
 var (
 	// Private key of funding wallet
 	PRIVATE_KEY = os.Getenv("RINKEBY_PRIVATE_KEY")
+	// Infura API key
+	INFURA_API_KEY = os.Getenv("INFURA_API_KEY")
+	// Infura Rinkeby URL
+	INFURA_RINKEBY = fmt.Sprintf("https://rinkeby.infura.io/v3/%s", INFURA_API_KEY)
+	// Infura Mainnet URL
+	INFURA_MAINNET = fmt.Sprintf("https://mainnet.infura.io/v3/%s", INFURA_API_KEY)
+	// Ethereum Client endpoint
+	ETHEREUM_CLIENT_URL = INFURA_RINKEBY
 	// Rinkeby adToken address
 	TOKEN_CONTRACT_ADDRESS = "0x2f9F1Bdc0EDa69853A91277D272FeaE608F3c1FB"
+	// Custom Errors
+	publicKeyError = errors.New("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
 )
 
 // DeployERC721Contract
-func DeployERC721Contract(tokenName, tokenSymbol string) (string, error) {
-	client, err := ethclient.Dial("https://rinkeby.infura.io")
+func DeployERC721Contract(tokenName, tokenSymbol string) (common.Address, error) {
+	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
+	// client, err := ethclient.Dial("http://localhost:8545")
 	if err != nil {
-		return "", err
+		return common.HexToAddress(""), err
 	}
 
 	privateKey, err := crypto.HexToECDSA(PRIVATE_KEY)
 	if err != nil {
-		return "", err
+		return common.HexToAddress(""), err
 	}
 
 	publicKey := privateKey.Public()
 	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
 	if !ok {
-		log.Fatal("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
+		return common.HexToAddress(""), publicKeyError
 	}
 
 	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
 
 	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
 	if err != nil {
-		return "", err
+		return common.HexToAddress(""), err
+	}
+
+	gasPrice, err := client.SuggestGasPrice(context.Background())
+	if err != nil {
+		return common.HexToAddress(""), err
 	}
 
 	auth := bind.NewKeyedTransactor(privateKey)
 
 	auth.Nonce = big.NewInt(int64(nonce))
-	auth.Value = big.NewInt(0)     // in wei
-	auth.GasLimit = uint64(200000) // in units
-	gasPrice := big.NewInt(41000000000)
+	auth.Value = big.NewInt(0)      // in wei
+	auth.GasLimit = uint64(3000000) // in units
 	auth.GasPrice = gasPrice
 
 	address, tx, _, err := erc721.DeployErc721(
@@ -68,15 +83,15 @@ func DeployERC721Contract(tokenName, tokenSymbol string) (string, error) {
 	)
 
 	if err != nil {
-		return "", err
+		return common.HexToAddress(""), err
 	}
 	fmt.Printf("https://rinkeby.etherscan.io/tx/%s\n", tx.Hash().Hex())
-	return address.Hex(), nil
+	return address, nil
 }
 
 // SendEther ...
 func SendEther(recipientAddress string, ethAmountInWei int64) (string, error) {
-	client, err := ethclient.Dial("https://rinkeby.infura.io")
+	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
 	if err != nil {
 		return "", err
 	}
@@ -89,7 +104,7 @@ func SendEther(recipientAddress string, ethAmountInWei int64) (string, error) {
 	publicKey := privateKey.Public()
 	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
 	if !ok {
-		log.Fatal("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
+		return "", publicKeyError
 	}
 
 	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
@@ -131,7 +146,7 @@ func SendEther(recipientAddress string, ethAmountInWei int64) (string, error) {
 
 // SendERC20Token ...
 func SendERC20Token(tokenAmount, recipientAddress string) (string, error) {
-	client, err := ethclient.Dial("https://rinkeby.infura.io")
+	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
 	if err != nil {
 		return "", err
 	}
