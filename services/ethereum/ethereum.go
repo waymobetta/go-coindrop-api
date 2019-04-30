@@ -40,7 +40,6 @@ var (
 // DeployERC721Contract
 func DeployERC721Contract(tokenName, tokenSymbol string) (common.Address, error) {
 	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
-	// client, err := ethclient.Dial("http://localhost:8545")
 	if err != nil {
 		return common.HexToAddress(""), err
 	}
@@ -87,6 +86,123 @@ func DeployERC721Contract(tokenName, tokenSymbol string) (common.Address, error)
 	}
 	fmt.Printf("https://rinkeby.etherscan.io/tx/%s\n", tx.Hash().Hex())
 	return address, nil
+}
+
+// MintERC721ForUser ...
+func MintERC721Token(
+	tokenId int,
+	contractAddress,
+	recipientAddress common.Address,
+	tokenURI string,
+) (string, error) {
+	tId := big.NewInt(int64(tokenId))
+
+	log.Println("[+] connecting to ethereum..")
+	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
+	if err != nil {
+		return "", err
+	}
+	log.Println("[*] connected to ethereum")
+
+	privateKey, err := crypto.HexToECDSA(PRIVATE_KEY)
+	if err != nil {
+		return "", err
+	}
+
+	publicKey := privateKey.Public()
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		return "", publicKeyError
+	}
+
+	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+
+	log.Println("[+] setting transaction details..")
+
+	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
+	if err != nil {
+		return "", err
+	}
+
+	gasPrice, err := client.SuggestGasPrice(context.Background())
+	if err != nil {
+		return "", err
+	}
+
+	auth := bind.NewKeyedTransactor(privateKey)
+	auth.Value = big.NewInt(0)     // in wei
+	auth.GasLimit = uint64(200000) // in units
+	auth.Nonce = big.NewInt(int64(nonce))
+	auth.GasPrice = gasPrice
+
+	log.Println("[*] transaction details set")
+
+	instance, err := erc721.NewErc721(contractAddress, client)
+	if err != nil {
+		return "", err
+	}
+
+	log.Println("[+] minting new ERC-721 token for:", recipientAddress.Hex())
+
+	tx, err := instance.Erc721Transactor.MintWithTokenURI(
+		auth,
+		recipientAddress,
+		tId,
+		tokenURI,
+	)
+	if err != nil {
+		return "", err
+	}
+	log.Printf("[TRANSACTION] https://rinkeby.etherscan.io/tx/%s\n", tx.Hash().Hex())
+	log.Println("[*] new ERC-721 successfully minted for:", recipientAddress.Hex())
+	return tx.Hash().Hex(), nil
+}
+
+// GetTotalSupply ...
+func GetTotalSupply(contractAddress common.Address) (*big.Int, error) {
+	log.Println("[+] connecting to ethereum..")
+	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
+	if err != nil {
+		return big.NewInt(0), err
+	}
+	log.Println("[*] connected to ethereum")
+	instance, err := erc721.NewErc721(contractAddress, client)
+	if err != nil {
+		return big.NewInt(0), err
+	}
+
+	log.Println("[+] getting total supply of ERC-721 tokens..")
+
+	totalSupply, err := instance.Erc721Caller.TotalSupply(nil)
+	if err != nil {
+		return big.NewInt(0), err
+	}
+	log.Println("[*] total supply of ERC-721 tokens:", totalSupply)
+	return totalSupply, nil
+}
+
+// GetBalanceOf ...
+func GetBalanceOf(ownerAddress, contractAddress common.Address) (*big.Int, error) {
+	log.Println("[+] connecting to ethereum..")
+	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
+	if err != nil {
+		return big.NewInt(0), err
+	}
+	log.Println("[*] connected to ethereum")
+
+	instance, err := erc721.NewErc721(contractAddress, client)
+	if err != nil {
+		return big.NewInt(0), err
+	}
+
+	log.Println("[+] getting total token balance of wallet:", ownerAddress.Hex())
+
+	ownerSupply, err := instance.Erc721Caller.BalanceOf(nil, ownerAddress)
+	if err != nil {
+		return big.NewInt(0), err
+	}
+	log.Printf("[*] %s has a total ERC-721 token balance of: %v", ownerAddress.Hex(), ownerSupply)
+	return ownerSupply, nil
 }
 
 // SendEther ...
