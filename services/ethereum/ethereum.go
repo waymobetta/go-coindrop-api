@@ -23,12 +23,16 @@ import (
 var (
 	// Private key of funding wallet
 	PRIVATE_KEY = os.Getenv("RINKEBY_PRIVATE_KEY")
+	// Private key for LOCAL_NODE
+	// PRIVATE_KEY = "77075a038b718c0a5b3ba5bc3ab62109acab3fa6bc06497cb2492aa65c0868f1"
 	// Infura API key
 	INFURA_API_KEY = os.Getenv("INFURA_API_KEY")
 	// Infura Rinkeby URL
 	INFURA_RINKEBY = fmt.Sprintf("https://rinkeby.infura.io/v3/%s", INFURA_API_KEY)
 	// Infura Mainnet URL
 	INFURA_MAINNET = fmt.Sprintf("https://mainnet.infura.io/v3/%s", INFURA_API_KEY)
+	// Local Ethereum Node
+	LOCAL_NODE = "http://localhost:8545"
 	// Ethereum Client endpoint
 	ETHEREUM_CLIENT_URL = INFURA_RINKEBY
 	// Rinkeby adToken address
@@ -37,7 +41,7 @@ var (
 	publicKeyError = errors.New("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
 )
 
-// DeployERC721Contract
+// DeployERC721Contract is an external method that deploys a new ERC-721 token contract given the contract name and token symbol
 func DeployERC721Contract(tokenName, tokenSymbol string) (common.Address, error) {
 	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
 	if err != nil {
@@ -88,7 +92,7 @@ func DeployERC721Contract(tokenName, tokenSymbol string) (common.Address, error)
 	return address, nil
 }
 
-// MintERC721ForUser ...
+// MintERC721ForUser is an external method that mints a unique ERC-721 token from a given ERC-721 contract address for a given recipient address
 func MintERC721Token(
 	tokenId int,
 	contractAddress,
@@ -158,7 +162,7 @@ func MintERC721Token(
 	return tx.Hash().Hex(), nil
 }
 
-// GetTotalSupply ...
+// GetTotalSupply is an external method that retrieves the total token supply at a given ERC-721 contract address
 func GetTotalSupply(contractAddress common.Address) (*big.Int, error) {
 	log.Println("[+] connecting to ethereum..")
 	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
@@ -181,7 +185,7 @@ func GetTotalSupply(contractAddress common.Address) (*big.Int, error) {
 	return totalSupply, nil
 }
 
-// GetBalanceOf ...
+// GetBalanceOf is an external method that retrieves the token balance at a given ERC-721 contract address by a given owner address
 func GetBalanceOf(ownerAddress, contractAddress common.Address) (*big.Int, error) {
 	log.Println("[+] connecting to ethereum..")
 	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
@@ -205,7 +209,7 @@ func GetBalanceOf(ownerAddress, contractAddress common.Address) (*big.Int, error
 	return ownerSupply, nil
 }
 
-// SendEther ...
+// SendEther is an external method that sends a given number of ether (in Wei) to a given recipient
 func SendEther(recipientAddress string, ethAmountInWei int64) (string, error) {
 	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
 	if err != nil {
@@ -260,7 +264,7 @@ func SendEther(recipientAddress string, ethAmountInWei int64) (string, error) {
 	return transaction, nil
 }
 
-// SendERC20Token ...
+// SendERC20Token is an external method that sends a given number of ERC-20 tokens from a pre-deployed contract to a given recipient
 func SendERC20Token(tokenAmount, recipientAddress string) (string, error) {
 	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
 	if err != nil {
@@ -344,7 +348,7 @@ func SendERC20Token(tokenAmount, recipientAddress string) (string, error) {
 	return transaction, nil
 }
 
-// VerifyAddress ...
+// VerifyAddress verifies the ownership of a given ethereum address
 func VerifyAddress(from, sigHex string, msg []byte) error {
 	fromAddr := common.HexToAddress(from)
 
@@ -369,6 +373,7 @@ func VerifyAddress(from, sigHex string, msg []byte) error {
 	return nil
 }
 
+// signHash is an internal method that re-signs the message in order to compare its validity
 func signHash(data []byte) []byte {
 	msg := fmt.Sprintf("\x19Ethereum Signed Message:\n%d%s", len(data), data)
 	return crypto.Keccak256([]byte(msg))
