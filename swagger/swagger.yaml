@@ -121,7 +121,7 @@ definitions:
     description: Community Object (default view)
     example:
       name: Fugit eaque reiciendis autem.
-      reputation: 4965089573172075729
+      reputation: 4.965089573172076e+18
     properties:
       name:
         description: Community name
@@ -129,7 +129,7 @@ definitions:
         type: string
       reputation:
         description: Calculated reputation/karma
-        example: 4965089573172075729
+        example: 4.965089573172076e+18
         format: int64
         type: integer
     required:
@@ -142,11 +142,11 @@ definitions:
       view)
     example:
     - name: Fugit eaque reiciendis autem.
-      reputation: 4965089573172075729
+      reputation: 4.965089573172076e+18
     - name: Fugit eaque reiciendis autem.
-      reputation: 4965089573172075729
+      reputation: 4.965089573172076e+18
     - name: Fugit eaque reiciendis autem.
-      reputation: 4965089573172075729
+      reputation: 4.965089573172076e+18
     items:
       $ref: '#/definitions/Community'
     title: 'Mediatype identifier: application/vnd.community+json; type=collection;
@@ -180,12 +180,12 @@ definitions:
   CreateStackOverflowUserPayload:
     description: Create Stack Overflow User payload
     example:
-      stackUserId: 2848341519588161418
+      stackUserId: 2.8483415195881615e+18
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
     properties:
       stackUserId:
         description: Stack Overflow Community-Specific Account ID
-        example: 2848341519588161418
+        example: 2.8483415195881615e+18
         format: int64
         type: integer
       userId:
@@ -242,7 +242,7 @@ definitions:
     example:
       contractAddress: Labore autem et non et.
       tokenId: Officiis odit vero eum.
-      totalMinted: 8490743513878251515
+      totalMinted: 8.490743513878252e+18
     properties:
       contractAddress:
         description: contract address
@@ -254,7 +254,7 @@ definitions:
         type: string
       totalMinted:
         description: total number minted
-        example: 8490743513878251515
+        example: 8.490743513878252e+18
         format: int64
         type: integer
     required:
@@ -269,7 +269,7 @@ definitions:
       erc721:
         contractAddress: Labore autem et non et.
         tokenId: Officiis odit vero eum.
-        totalMinted: 8490743513878251515
+        totalMinted: 8.490743513878252e+18
       task:
         author: Rerum saepe adipisci.
         badge:
@@ -286,7 +286,7 @@ definitions:
         resourceURL: Dolore quas et.
         title: Eos quia repellat optio nam voluptatem.
         token: Ut qui dolores expedita est.
-        tokenAllocation: 2154807424403512380
+        tokenAllocation: 2.1548074244035123e+18
         type: Ipsum iusto ad quia autem sed et.
     properties:
       erc721:
@@ -365,7 +365,7 @@ definitions:
         name: Quis ut unde aliquam voluptatibus.
         project: Aspernatur iure amet tenetur non ut.
       redditUsername: Sint sunt voluptatum recusandae facilis perferendis consectetur.
-      stackUserId: 3120674769674414976
+      stackUserId: 3.120674769674415e+18
     properties:
       badges:
         $ref: '#/definitions/BadgeCollection'
@@ -375,7 +375,7 @@ definitions:
         type: string
       stackUserId:
         description: Stack Overflow user ID
-        example: 3120674769674414976
+        example: 3.120674769674415e+18
         format: int64
         type: integer
     required:
@@ -484,19 +484,19 @@ definitions:
   QuizResultsPayload:
     description: Quiz results payload
     example:
-      questionsCorrect: 7067114288712034626
-      questionsIncorrect: 5326539124903331576
+      questionsCorrect: 7.067114288712034e+18
+      questionsIncorrect: 5.326539124903332e+18
       quizId: Sed non.
       userId: Voluptatem molestiae nam asperiores.
     properties:
       questionsCorrect:
         description: Number of questions that were answered correct
-        example: 7067114288712034626
+        example: 7.067114288712034e+18
         format: int64
         type: integer
       questionsIncorrect:
         description: Number of questions that were answered incorrect
-        example: 5326539124903331576
+        example: 5.326539124903332e+18
         format: int64
         type: integer
       quizId:
@@ -518,12 +518,12 @@ definitions:
     description: Reddit Targeting (default view)
     example:
       users:
-      - commentKarma: 399457654186110405
+      - commentKarma: 3.994576541861104e+17
         id: 9302608f-f6a4-4004-b088-63e5fb43cc26
-        linkKarma: 1439003262642310276
+        linkKarma: 1.4390032626423104e+18
         subreddits:
         - name: Fugit eaque reiciendis autem.
-          reputation: 4965089573172075729
+          reputation: 4.965089573172076e+18
         trophies:
         - Quia amet reiciendis velit.
         - Quia amet reiciendis velit.
@@ -534,12 +534,12 @@ definitions:
           confirmedVerificationCode: Sit amet non voluptatem id.
           postedVerificationCode: Sit et molestias sed possimus enim et.
           verified: false
-      - commentKarma: 399457654186110405
+      - commentKarma: 3.994576541861104e+17
         id: 9302608f-f6a4-4004-b088-63e5fb43cc26
-        linkKarma: 1439003262642310276
+        linkKarma: 1.4390032626423104e+18
         subreddits:
         - name: Fugit eaque reiciendis autem.
-          reputation: 4965089573172075729
+          reputation: 4.965089573172076e+18
         trophies:
         - Quia amet reiciendis velit.
         - Quia amet reiciendis velit.
@@ -550,12 +550,12 @@ definitions:
           confirmedVerificationCode: Sit amet non voluptatem id.
           postedVerificationCode: Sit et molestias sed possimus enim et.
           verified: false
-      - commentKarma: 399457654186110405
+      - commentKarma: 3.994576541861104e+17
         id: 9302608f-f6a4-4004-b088-63e5fb43cc26
-        linkKarma: 1439003262642310276
+        linkKarma: 1.4390032626423104e+18
         subreddits:
         - name: Fugit eaque reiciendis autem.
-          reputation: 4965089573172075729
+          reputation: 4.965089573172076e+18
         trophies:
         - Quia amet reiciendis velit.
         - Quia amet reiciendis velit.
@@ -576,12 +576,12 @@ definitions:
   Reddituser:
     description: A Reddit User (default view)
     example:
-      commentKarma: 399457654186110405
+      commentKarma: 3.994576541861104e+17
       id: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      linkKarma: 1439003262642310276
+      linkKarma: 1.4390032626423104e+18
       subreddits:
       - name: Fugit eaque reiciendis autem.
-        reputation: 4965089573172075729
+        reputation: 4.965089573172076e+18
       trophies:
       - Quia amet reiciendis velit.
       - Quia amet reiciendis velit.
@@ -595,7 +595,7 @@ definitions:
     properties:
       commentKarma:
         description: Comment Karma
-        example: 399457654186110405
+        example: 3.994576541861104e+17
         format: int64
         type: integer
       id:
@@ -605,7 +605,7 @@ definitions:
         type: string
       linkKarma:
         description: Link Karma
-        example: 1439003262642310276
+        example: 1.4390032626423104e+18
         format: int64
         type: integer
       subreddits:
@@ -646,12 +646,12 @@ definitions:
     description: ReddituserCollection is the media type for an array of Reddituser
       (default view)
     example:
-    - commentKarma: 399457654186110405
+    - commentKarma: 3.994576541861104e+17
       id: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      linkKarma: 1439003262642310276
+      linkKarma: 1.4390032626423104e+18
       subreddits:
       - name: Fugit eaque reiciendis autem.
-        reputation: 4965089573172075729
+        reputation: 4.965089573172076e+18
       trophies:
       - Quia amet reiciendis velit.
       - Quia amet reiciendis velit.
@@ -662,12 +662,12 @@ definitions:
         confirmedVerificationCode: Sit amet non voluptatem id.
         postedVerificationCode: Sit et molestias sed possimus enim et.
         verified: false
-    - commentKarma: 399457654186110405
+    - commentKarma: 3.994576541861104e+17
       id: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      linkKarma: 1439003262642310276
+      linkKarma: 1.4390032626423104e+18
       subreddits:
       - name: Fugit eaque reiciendis autem.
-        reputation: 4965089573172075729
+        reputation: 4.965089573172076e+18
       trophies:
       - Quia amet reiciendis velit.
       - Quia amet reiciendis velit.
@@ -678,12 +678,12 @@ definitions:
         confirmedVerificationCode: Sit amet non voluptatem id.
         postedVerificationCode: Sit et molestias sed possimus enim et.
         verified: false
-    - commentKarma: 399457654186110405
+    - commentKarma: 3.994576541861104e+17
       id: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      linkKarma: 1439003262642310276
+      linkKarma: 1.4390032626423104e+18
       subreddits:
       - name: Fugit eaque reiciendis autem.
-        reputation: 4965089573172075729
+        reputation: 4.965089573172076e+18
       trophies:
       - Quia amet reiciendis velit.
       - Quia amet reiciendis velit.
@@ -702,19 +702,19 @@ definitions:
   Results:
     description: Quiz results (default view)
     example:
-      questionsCorrect: 5883414777953173127
-      questionsIncorrect: 2844279069912922670
+      questionsCorrect: 5.883414777953174e+18
+      questionsIncorrect: 2.8442790699129226e+18
       quizId: Tempora maiores assumenda.
       userId: Distinctio quo blanditiis perferendis et facilis aspernatur.
     properties:
       questionsCorrect:
         description: Count of correct quiz answers
-        example: 5883414777953173127
+        example: 5.883414777953174e+18
         format: int64
         type: integer
       questionsIncorrect:
         description: Count of incorrect quiz answers
-        example: 2844279069912922670
+        example: 2.8442790699129226e+18
         format: int64
         type: integer
       quizId:
@@ -736,8 +736,8 @@ definitions:
     description: ResultsCollection is the media type for an array of Results (default
       view)
     example:
-    - questionsCorrect: 5883414777953173127
-      questionsIncorrect: 2844279069912922670
+    - questionsCorrect: 5.883414777953174e+18
+      questionsIncorrect: 2.8442790699129226e+18
       quizId: Tempora maiores assumenda.
       userId: Distinctio quo blanditiis perferendis et facilis aspernatur.
     items:
@@ -768,15 +768,15 @@ definitions:
     example:
       accounts:
       - name: Fugit eaque reiciendis autem.
-        reputation: 4965089573172075729
+        reputation: 4.965089573172076e+18
       - name: Fugit eaque reiciendis autem.
-        reputation: 4965089573172075729
+        reputation: 4.965089573172076e+18
       - name: Fugit eaque reiciendis autem.
-        reputation: 4965089573172075729
+        reputation: 4.965089573172076e+18
       displayName: Unde aut molestiae praesentium debitis ut.
-      exchangeAccountId: 2922008210910813631
+      exchangeAccountId: 2.9220082109108137e+18
       id: 9302608f-f6a4-4004-b088-63e5fb43cc26
-      stackUserId: 6459152547384194035
+      stackUserId: 6.459152547384194e+18
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
       verification:
         confirmedVerificationCode: Sit amet non voluptatem id.
@@ -791,7 +791,7 @@ definitions:
         type: string
       exchangeAccountId:
         description: Stack Exchange Account ID
-        example: 2922008210910813631
+        example: 2.9220082109108137e+18
         format: int64
         type: integer
       id:
@@ -801,7 +801,7 @@ definitions:
         type: string
       stackUserId:
         description: Stack Overflow Community-Specific Account ID
-        example: 6459152547384194035
+        example: 6.459152547384194e+18
         format: int64
         type: integer
       userId:
@@ -872,7 +872,7 @@ definitions:
       resourceURL: Dolore quas et.
       title: Eos quia repellat optio nam voluptatem.
       token: Ut qui dolores expedita est.
-      tokenAllocation: 2154807424403512380
+      tokenAllocation: 2.1548074244035123e+18
       type: Ipsum iusto ad quia autem sed et.
     properties:
       author:
@@ -915,7 +915,7 @@ definitions:
         type: string
       tokenAllocation:
         description: token allocation
-        example: 2154807424403512380
+        example: 2.1548074244035123e+18
         format: int64
         type: integer
       type:
@@ -955,7 +955,7 @@ definitions:
       resourceURL: Dolore quas et.
       title: Eos quia repellat optio nam voluptatem.
       token: Ut qui dolores expedita est.
-      tokenAllocation: 2154807424403512380
+      tokenAllocation: 2.1548074244035123e+18
       type: Ipsum iusto ad quia autem sed et.
     - author: Rerum saepe adipisci.
       badge:
@@ -972,7 +972,7 @@ definitions:
       resourceURL: Dolore quas et.
       title: Eos quia repellat optio nam voluptatem.
       token: Ut qui dolores expedita est.
-      tokenAllocation: 2154807424403512380
+      tokenAllocation: 2.1548074244035123e+18
       type: Ipsum iusto ad quia autem sed et.
     items:
       $ref: '#/definitions/Task'
@@ -1010,7 +1010,7 @@ definitions:
         resourceURL: Dolore quas et.
         title: Eos quia repellat optio nam voluptatem.
         token: Ut qui dolores expedita est.
-        tokenAllocation: 2154807424403512380
+        tokenAllocation: 2.1548074244035123e+18
         type: Ipsum iusto ad quia autem sed et.
       - author: Rerum saepe adipisci.
         badge:
@@ -1027,7 +1027,7 @@ definitions:
         resourceURL: Dolore quas et.
         title: Eos quia repellat optio nam voluptatem.
         token: Ut qui dolores expedita est.
-        tokenAllocation: 2154807424403512380
+        tokenAllocation: 2.1548074244035123e+18
         type: Ipsum iusto ad quia autem sed et.
     properties:
       tasks:
@@ -1114,11 +1114,11 @@ definitions:
   TypeformCalculatedPayload:
     description: Typeform calculatd data
     example:
-      score: 1746822080599364554
+      score: 1.7468220805993646e+18
     properties:
       score:
         description: Score
-        example: 1746822080599364554
+        example: 1.7468220805993646e+18
         format: int64
         type: integer
     title: TypeformCalculatedPayload
@@ -1128,8 +1128,8 @@ definitions:
     example:
       answers: 0.5980605041435555
       calculated:
-        score: 1746822080599364554
-      definition: 1263584531261615516
+        score: 1.7468220805993646e+18
+      definition: 1.2635845312616156e+18
       form_id: Iste dolores voluptatem ex delectus.
       hidden:
         user_id: Rerum similique rerum libero numquam neque accusantium.
@@ -1144,7 +1144,7 @@ definitions:
         $ref: '#/definitions/TypeformCalculatedPayload'
       definition:
         description: Definition
-        example: 1263584531261615516
+        example: 1.2635845312616156e+18
       form_id:
         description: Form ID
         example: Iste dolores voluptatem ex delectus.
@@ -1184,8 +1184,8 @@ definitions:
       form_response:
         answers: 0.5980605041435555
         calculated:
-          score: 1746822080599364554
-        definition: 1263584531261615516
+          score: 1.7468220805993646e+18
+        definition: 1.2635845312616156e+18
         form_id: Iste dolores voluptatem ex delectus.
         hidden:
           user_id: Rerum similique rerum libero numquam neque accusantium.
@@ -1228,12 +1228,12 @@ definitions:
   UpdateStackOverflowUserPayload:
     description: Update Stack Overflow User payload
     example:
-      stackUserId: 2668369685922451484
+      stackUserId: 2.6683696859224515e+18
       userId: 9302608f-f6a4-4004-b088-63e5fb43cc26
     properties:
       stackUserId:
         description: Stack Overflow Community-Specific Account ID
-        example: 2668369685922451484
+        example: 2.6683696859224515e+18
         format: int64
         type: integer
       userId:
