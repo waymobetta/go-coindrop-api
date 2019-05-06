@@ -24,7 +24,7 @@ var (
 	// Private key of funding wallet
 	PRIVATE_KEY = os.Getenv("RINKEBY_PRIVATE_KEY")
 	// Private key for LOCAL_NODE
-	// PRIVATE_KEY = "77075a038b718c0a5b3ba5bc3ab62109acab3fa6bc06497cb2492aa65c0868f1"
+	// PRIVATE_KEY = "0f98477e4825d6b682184acefc51d4ab7ecd6b86ce29f3c984534fc1d53786e7"
 	// Infura API key
 	INFURA_API_KEY = os.Getenv("INFURA_API_KEY")
 	// Infura Rinkeby URL
@@ -207,6 +207,52 @@ func GetBalanceOf(ownerAddress, contractAddress common.Address) (*big.Int, error
 	}
 	log.Printf("[*] %s has a total ERC-721 token balance of: %v", ownerAddress.Hex(), ownerSupply)
 	return ownerSupply, nil
+}
+
+// GetTokenSymbol is an external method that retrieves the ERC-721 token symbol at a given ERC-721 contract address
+func GetTokenSymbol(contractAddress common.Address) (string, error) {
+	log.Println("[+] connecting to ethereum..")
+	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
+	if err != nil {
+		return "", err
+	}
+	log.Println("[*] connected to ethereum")
+
+	instance, err := erc721.NewErc721(contractAddress, client)
+	if err != nil {
+		return "", err
+	}
+
+	log.Println("[+] getting token symbol of contract:", contractAddress.Hex())
+
+	tokenSymbol, err := instance.Erc721Caller.Symbol(nil)
+	if err != nil {
+		return "", err
+	}
+	return tokenSymbol, nil
+}
+
+// GetTokenName is an external method that retrieves the ERC-721 token name at a given ERC-721 contract address
+func GetTokenName(contractAddress common.Address) (string, error) {
+	log.Println("[+] connecting to ethereum..")
+	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
+	if err != nil {
+		return "", err
+	}
+	log.Println("[*] connected to ethereum")
+
+	instance, err := erc721.NewErc721(contractAddress, client)
+	if err != nil {
+		return "", err
+	}
+
+	log.Println("[+] getting name of contract:", contractAddress.Hex())
+
+	tokenName, err := instance.Erc721Caller.Name(nil)
+	if err != nil {
+		return "", err
+	}
+	return tokenName, nil
 }
 
 // SendEther is an external method that sends a given number of ether (in Wei) to a given recipient
