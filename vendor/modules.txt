@@ -21,24 +21,24 @@ github.com/dimfeld/httppath
 github.com/dimfeld/httptreemux
 # github.com/ethereum/go-ethereum v1.8.23
 github.com/ethereum/go-ethereum
-github.com/ethereum/go-ethereum/accounts/abi
 github.com/ethereum/go-ethereum/accounts/abi/bind
 github.com/ethereum/go-ethereum/common
 github.com/ethereum/go-ethereum/common/hexutil
 github.com/ethereum/go-ethereum/core/types
 github.com/ethereum/go-ethereum/crypto
 github.com/ethereum/go-ethereum/ethclient
-github.com/ethereum/go-ethereum/common/math
-github.com/ethereum/go-ethereum/accounts/keystore
+github.com/ethereum/go-ethereum/accounts/abi
 github.com/ethereum/go-ethereum/event
+github.com/ethereum/go-ethereum/accounts/keystore
 github.com/ethereum/go-ethereum/log
 github.com/ethereum/go-ethereum/params
 github.com/ethereum/go-ethereum/rlp
 github.com/ethereum/go-ethereum/trie
+github.com/ethereum/go-ethereum/common/math
 github.com/ethereum/go-ethereum/crypto/secp256k1
 github.com/ethereum/go-ethereum/rpc
-github.com/ethereum/go-ethereum/accounts
 github.com/ethereum/go-ethereum/common/mclock
+github.com/ethereum/go-ethereum/accounts
 github.com/ethereum/go-ethereum/common/prque
 github.com/ethereum/go-ethereum/ethdb
 github.com/ethereum/go-ethereum/metrics
@@ -127,7 +127,7 @@ golang.org/x/net/context/ctxhttp
 # golang.org/x/oauth2 v0.0.0-20190130055435-99b60b757ec1
 golang.org/x/oauth2
 golang.org/x/oauth2/internal
-# golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a
+# golang.org/x/sys v0.0.0-20190222072716-a9d3bda3a223
 golang.org/x/sys/cpu
 golang.org/x/sys/unix
 golang.org/x/sys/windows
