@@ -61,16 +61,6 @@ func (db *DB) GetQuizzes() ([]*types.Quiz, error) {
 			coindrop_quizzes
 		`
 
-	// execute db query by passing in prepared SQL statement
-	stmt, err := db.client.Prepare(sqlStatement)
-	if err != nil {
-		return nil, err
-	}
-
-	defer stmt.Close()
-
-	// TODO:
-	// need fix here
 	rows, err := db.client.Query(sqlStatement)
 	if err != nil {
 		return nil, err
