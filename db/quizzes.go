@@ -69,6 +69,8 @@ func (db *DB) GetQuizzes() ([]*types.Quiz, error) {
 
 	defer stmt.Close()
 
+	// TODO:
+	// need fix here
 	rows, err := db.client.Query(sqlStatement)
 	if err != nil {
 		return nil, err
